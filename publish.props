@@ -1,0 +1,12 @@
+<Project>
+  <PropertyGroup>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>
+      $(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb
+    </AllowedOutputExtensionsInPackageBuildOutputFolder>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+</Project>
