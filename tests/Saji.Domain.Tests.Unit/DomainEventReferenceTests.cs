@@ -12,6 +12,7 @@ public class DomainEventReferenceTests
             string name,
             int count,
             DateTime createdAt)
+            : base()
         {
             this.Name = name;
             this.Count = count;
