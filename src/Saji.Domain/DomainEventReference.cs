@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Saji.Domain;
@@ -18,13 +20,19 @@ public class DomainEventReference
     public Guid Id { get; protected set; }
 
     /// <summary>
-    /// Gets or sets the domain event type (full class path)
+    /// Gets or sets the assembly name of the underlying domain event
     /// </summary>
-    public string DomainEventType { get; protected set; }
+    public string DomainEventAssemblyName { get; protected set; }
+
+    /// <summary>
+    /// Gets or sets the class name of the underlying domain event
+    /// </summary>
+    public string DomainEventClassName { get; protected set; }
 
     /// <summary>
     /// Gets or sets the JSON representation of the underlying domain event
     /// </summary>
+    [JsonIgnore]
     public string DomainEventJson { get; protected set; }
 
     /// <summary>
@@ -53,15 +61,18 @@ public class DomainEventReference
     /// </returns>
     public static DomainEventReference From(IDomainEvent domainEvent)
     {
+        var domainEventType = domainEvent.GetType();
+
         var reference = new DomainEventReference
         {
             Id = Guid.NewGuid(),
-            DomainEventJson = JsonSerializer.Serialize(domainEvent),
-            DomainEventType = domainEvent.GetType().FullName,
+            DomainEventAssemblyName = domainEventType.Assembly.GetName().Name,
+            DomainEventClassName = domainEventType.FullName,
             PersistedAt = DateTime.UtcNow,
-            Dispatched = false,
-            DispatchedAt = null
+            Dispatched = false
         };
+
+        reference.DomainEventJson = JsonSerializer.Serialize(reference);
 
         return reference;
     }
@@ -79,10 +90,11 @@ public class DomainEventReference
             return null;
         }
 
-        var targetType = Type.GetType(this.DomainEventType);
+        var assembly = Assembly.Load(this.DomainEventAssemblyName);
+        var targetType = assembly.GetType(this.DomainEventClassName);
 
         var domainEvent = JsonSerializer.Deserialize(this.DomainEventJson, targetType);
 
-        return (IDomainEvent)domainEvent;
+        return domainEvent as IDomainEvent;
     }
 }
