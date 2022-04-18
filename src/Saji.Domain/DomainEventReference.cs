@@ -61,7 +61,7 @@ public class DomainEventReference
             Id = Guid.NewGuid(),
             DomainEventAssemblyName = domainEventType.Assembly.GetName().Name,
             DomainEventClassName = domainEventType.FullName,
-            DomainEventJson = JsonSerializer.Serialize(domainEvent),
+            DomainEventJson = JsonSerializer.Serialize(domainEvent, domainEventType),
             PersistedAt = DateTime.UtcNow,
             Dispatched = false
         };

@@ -7,7 +7,7 @@ namespace Saji.Domain.Tests.Unit;
 public partial class DomainEventReferenceTests
 {
     [Fact]
-    public static void ShouldCreateAppropriateObject()
+    public static void From()
     {
         // Arrange
         var domainEvent = new TestingDomainEvent(
@@ -16,6 +16,7 @@ public partial class DomainEventReferenceTests
             DateTime.UtcNow);
         var creationTime = DateTime.UtcNow;
         var expectedType = domainEvent.GetType();
+        var expectedJson = JsonSerializer.Serialize(domainEvent);
 
         // Act
         var result = DomainEventReference.From(domainEvent);
@@ -25,19 +26,31 @@ public partial class DomainEventReferenceTests
         result.Id.Should().NotBeEmpty();
         result.DomainEventAssemblyName.Should().Be(expectedType.Assembly.GetName().Name);
         result.DomainEventClassName.Should().Be(expectedType.FullName);
+        result.DomainEventJson.Should().Be(expectedJson);
         result.Dispatched.Should().BeFalse();
         result.PersistedAt.Should().BeAfter(creationTime);
         result.DispatchedAt.Should().BeNull();
+    }
 
-        // Act again
-        var derserializedDomainEvent = (TestingDomainEvent)result.ToDomainEvent();
+    [Fact]
+    public static void ToDomainEvent()
+    {
+        // Arrange
+        var domainEvent = new TestingDomainEvent(
+            "hello",
+            17,
+            DateTime.UtcNow);
+        var reference = DomainEventReference.From(domainEvent);
+
+        // Act
+        var result = (TestingDomainEvent)reference.ToDomainEvent();
 
         // Assert
-        derserializedDomainEvent.Should().NotBeNull();
-        derserializedDomainEvent.Id.Should().Be(domainEvent.Id);
-        derserializedDomainEvent.CorrelationId.Should().Be(domainEvent.CorrelationId);
-        derserializedDomainEvent.Name.Should().Be(domainEvent.Name);
-        derserializedDomainEvent.Count.Should().Be(domainEvent.Count);
-        derserializedDomainEvent.CreatedAt.Should().Be(domainEvent.CreatedAt);
+        result.Should().NotBeNull();
+        result.Id.Should().Be(domainEvent.Id);
+        result.CorrelationId.Should().Be(domainEvent.CorrelationId);
+        result.Name.Should().Be(domainEvent.Name);
+        result.Count.Should().Be(domainEvent.Count);
+        result.CreatedAt.Should().Be(domainEvent.CreatedAt);
     }
 }
