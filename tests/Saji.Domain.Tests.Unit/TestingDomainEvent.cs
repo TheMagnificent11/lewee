@@ -1,4 +1,6 @@
-﻿namespace Saji.Domain.Tests.Unit;
+﻿using System.Text.Json.Serialization;
+
+namespace Saji.Domain.Tests.Unit;
 
 public partial class DomainEventReferenceTests
 {
@@ -16,6 +18,8 @@ public partial class DomainEventReferenceTests
             this.CreatedAt = createdAt;
         }
 
+        // WORKAROUND: see https://github.com/dotnet/runtime/issues/68155
+        [JsonInclude]
         public Guid Id { get; protected set; }
 
         public string Name { get; protected set; }
