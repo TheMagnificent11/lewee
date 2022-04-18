@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\common.props" />
+
+  <Import Project="..\..\publish.props" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\Saji.Domain\Saji.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

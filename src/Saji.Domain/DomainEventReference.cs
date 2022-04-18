@@ -23,6 +23,11 @@ public class DomainEventReference
     public string DomainEventType { get; protected set; }
 
     /// <summary>
+    /// Gets or sets the JSON representation of the underlying domain event
+    /// </summary>
+    public string DomainEventJson { get; protected set; }
+
+    /// <summary>
     /// Gets or sets a value indicating whether the domain event has been dispatched
     /// </summary>
     public bool Dispatched { get; protected set; }
@@ -36,11 +41,6 @@ public class DomainEventReference
     /// Gets or sets teh UTC date-time at which the domain event was dispatched
     /// </summary>
     public DateTime? DispatchedAt { get; protected set; }
-
-    /// <summary>
-    /// Gets or sets the JSON representation of the underlying domain event
-    /// </summary>
-    public string DomainEventJson { get; protected set; }
 
     /// <summary>
     /// Converts the provided <see cref="IDomainEvent"/> into a <see cref="DomainEventReference"/>
