@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
+﻿using System.Reflection;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace Saji.Domain;
 
@@ -32,7 +26,6 @@ public class DomainEventReference
     /// <summary>
     /// Gets or sets the JSON representation of the underlying domain event
     /// </summary>
-    [JsonIgnore]
     public string DomainEventJson { get; protected set; }
 
     /// <summary>
@@ -68,11 +61,10 @@ public class DomainEventReference
             Id = Guid.NewGuid(),
             DomainEventAssemblyName = domainEventType.Assembly.GetName().Name,
             DomainEventClassName = domainEventType.FullName,
+            DomainEventJson = JsonSerializer.Serialize(domainEvent),
             PersistedAt = DateTime.UtcNow,
             Dispatched = false
         };
-
-        reference.DomainEventJson = JsonSerializer.Serialize(reference);
 
         return reference;
     }

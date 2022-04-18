@@ -11,8 +11,8 @@ public partial class DomainEventReferenceTests
     {
         // Arrange
         var domainEvent = new TestingDomainEvent(
-            "name",
-            1,
+            "hello",
+            17,
             DateTime.UtcNow);
         var creationTime = DateTime.UtcNow;
         var expectedType = domainEvent.GetType();
@@ -29,7 +29,7 @@ public partial class DomainEventReferenceTests
         result.PersistedAt.Should().BeAfter(creationTime);
         result.DispatchedAt.Should().BeNull();
 
-        // Re-act
+        // Act again
         var derserializedDomainEvent = (TestingDomainEvent)result.ToDomainEvent();
 
         // Assert
