@@ -11,9 +11,11 @@ public partial class DomainEventReferenceTests
     {
         // Arrange
         var domainEvent = new TestingDomainEvent(
+            Guid.NewGuid(),
             "hello",
             17,
-            DateTime.UtcNow);
+            DateTime.UtcNow,
+            Guid.NewGuid());
         var creationTime = DateTime.UtcNow;
         var expectedType = domainEvent.GetType();
         var expectedJson = JsonSerializer.Serialize(domainEvent);
@@ -37,9 +39,11 @@ public partial class DomainEventReferenceTests
     {
         // Arrange
         var domainEvent = new TestingDomainEvent(
+            Guid.NewGuid(),
             "hello",
             17,
-            DateTime.UtcNow);
+            DateTime.UtcNow,
+            Guid.NewGuid());
         var reference = new DomainEventReference(domainEvent);
 
         // Act

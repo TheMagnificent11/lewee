@@ -26,6 +26,7 @@ namespace Saji.Domain
             this.CreatedAtUtc = DateTime.UtcNow;
             this.ModifiedBy = currentUser;
             this.ModifiedAtUtc = DateTime.UtcNow;
+            this.DomainEvents = new DomainEventsCollection();
         }
 
         /// <summary>
@@ -57,6 +58,11 @@ namespace Saji.Domain
         /// Gets or sets the timestamp
         /// </summary>
         public byte[] Timestamp { get; protected set; } = default!;
+
+        /// <summary>
+        /// Gets or sets the domain events collection
+        /// </summary>
+        public DomainEventsCollection DomainEvents { get; protected set; }
 
         /// <summary>
         /// Applies the tracking data

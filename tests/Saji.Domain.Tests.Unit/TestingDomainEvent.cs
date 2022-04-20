@@ -4,31 +4,20 @@ namespace Saji.Domain.Tests.Unit;
 
 public partial class DomainEventReferenceTests
 {
-    public class TestingDomainEvent : IDomainEvent
+    public class TestingDomainEvent : BaseDomainEvent
     {
-        public TestingDomainEvent(
-            string name,
-            int count,
-            DateTime createdAt)
-        {
-            this.Id = Guid.NewGuid();
-            this.CorrelationId = Guid.NewGuid();
-            this.Name = name;
-            this.Count = count;
-            this.CreatedAt = createdAt;
-        }
-
-        [JsonConstructor]
         public TestingDomainEvent(
             Guid id,
             string name,
             int count,
-            DateTime createdAt)
+            DateTime createdAt,
+            Guid correlationId)
         {
             this.Id = id;
             this.Name = name;
             this.Count = count;
             this.CreatedAt = createdAt;
+            this.CorrelationId = correlationId;
         }
 
         public Guid Id { get; protected set; }
@@ -38,7 +27,5 @@ public partial class DomainEventReferenceTests
         public int Count { get; protected set; }
 
         public DateTime CreatedAt { get; protected set; }
-
-        public Guid CorrelationId { get; set; }
     }
 }

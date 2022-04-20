@@ -6,7 +6,7 @@
 public interface IDomainEvent
 {
     /// <summary>
-    /// Gets or sets the correlation ID
+    /// Gets the correlation ID of the event
     /// </summary>
-    Guid CorrelationId { get; set; }
+    Guid CorrelationId { get; }
 }

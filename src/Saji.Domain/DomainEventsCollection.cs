@@ -22,11 +22,6 @@ public class DomainEventsCollection
     {
         lock (this.syncLock)
         {
-            if (domainEvent.CorrelationId == Guid.Empty)
-            {
-                domainEvent.CorrelationId = Guid.NewGuid();
-            }
-
             this.domainEvents.Add(domainEvent);
         }
     }
