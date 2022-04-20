@@ -10,10 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
 		CodeAnalysis.ruleset = CodeAnalysis.ruleset
-		common.props = common.props
-		publish.props = publish.props
 		README.md = README.md
-		testing.props = testing.props
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saji.Infrastructure", "src\Saji.Infrastructure\Saji.Infrastructure.csproj", "{7C656A04-A229-4F0C-8683-0143403178BD}"
@@ -29,6 +26,13 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Infrastructure", "sample\Sample.Infrastructure\Sample.Infrastructure.csproj", "{8368E9E6-EFDD-4956-93BF-01010068A145}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Domain", "sample\Sample.Domain\Sample.Domain.csproj", "{6BA2CA2C-5579-4B6D-81E0-535F3F193FE1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Project Config", "Project Config", "{C981676A-E540-4D39-9BF4-80B3D184E1E7}"
+	ProjectSection(SolutionItems) = preProject
+		common.props = common.props
+		publish.props = publish.props
+		testing.props = testing.props
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -71,6 +75,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C981676A-E540-4D39-9BF4-80B3D184E1E7} = {7E790C5A-DAB6-407B-AC20-752D08869BEC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A223C33D-6D37-4C0E-8755-BA46F9759CB1}
