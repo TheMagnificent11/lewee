@@ -1,8 +1,11 @@
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
-using SampleBlazorServer.App.Areas.Identity;
-using SampleBlazorServer.App.Data;
+using Sample.BlazorServer.App.Areas.Identity;
+using Sample.BlazorServer.App.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

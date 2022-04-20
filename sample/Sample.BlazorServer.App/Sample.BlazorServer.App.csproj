@@ -4,7 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>aspnet-SampleBlazorServer.App-C5EA3461-D5F8-47C0-9C77-01B0215E3339</UserSecretsId>
+    <UserSecretsId>aspnet-Sample.BlazorServer.App-F535AF0E-1A91-4001-B449-0394EF6D84FE</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

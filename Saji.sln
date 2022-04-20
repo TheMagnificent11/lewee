@@ -22,7 +22,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saji.Domain.Tests.Unit", "t
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saji.Application", "src\Saji.Application\Saji.Application.csproj", "{CA68F196-F166-4A8F-A22E-3D74DD811DF5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleBlazorServer.App", "sample\SampleBlazorServer.App\SampleBlazorServer.App.csproj", "{0A162CC1-1D73-4E19-A981-FFA683E8E9F8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.BlazorServer.App", "sample\Sample.BlazorServer.App\Sample.BlazorServer.App.csproj", "{59768BF8-823F-4DB6-BD62-148AD7CB934A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,10 +46,10 @@ Global
 		{CA68F196-F166-4A8F-A22E-3D74DD811DF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA68F196-F166-4A8F-A22E-3D74DD811DF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CA68F196-F166-4A8F-A22E-3D74DD811DF5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0A162CC1-1D73-4E19-A981-FFA683E8E9F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0A162CC1-1D73-4E19-A981-FFA683E8E9F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0A162CC1-1D73-4E19-A981-FFA683E8E9F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0A162CC1-1D73-4E19-A981-FFA683E8E9F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59768BF8-823F-4DB6-BD62-148AD7CB934A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59768BF8-823F-4DB6-BD62-148AD7CB934A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59768BF8-823F-4DB6-BD62-148AD7CB934A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59768BF8-823F-4DB6-BD62-148AD7CB934A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

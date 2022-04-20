@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace SampleBlazorServer.App.Data
+namespace Sample.BlazorServer.App.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {

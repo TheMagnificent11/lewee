@@ -1,4 +1,4 @@
-namespace SampleBlazorServer.App.Data
+namespace Sample.BlazorServer.App.Data
 {
     public class WeatherForecast
     {
