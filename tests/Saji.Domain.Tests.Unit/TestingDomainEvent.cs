@@ -18,8 +18,19 @@ public partial class DomainEventReferenceTests
             this.CreatedAt = createdAt;
         }
 
-        // WORKAROUND: see https://github.com/dotnet/runtime/issues/68155
-        [JsonInclude]
+        [JsonConstructor]
+        public TestingDomainEvent(
+            Guid id,
+            string name,
+            int count,
+            DateTime createdAt)
+        {
+            this.Id = id;
+            this.Name = name;
+            this.Count = count;
+            this.CreatedAt = createdAt;
+        }
+
         public Guid Id { get; protected set; }
 
         public string Name { get; protected set; }

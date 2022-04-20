@@ -9,6 +9,41 @@ namespace Saji.Domain;
 public class DomainEventReference
 {
     /// <summary>
+    /// Initializes a new instance of the <see cref="DomainEventReference"/> class
+    /// </summary>
+    /// <param name="domainEvent">
+    /// Underlying domain event
+    /// </param>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown if type of the domain event cannot be determined
+    /// </exception>
+    public DomainEventReference(IDomainEvent domainEvent)
+    {
+        var domainEventType = domainEvent.GetType();
+
+        if (domainEventType == null
+            || domainEventType.Assembly == null
+            || domainEventType.FullName == null)
+        {
+            throw new InvalidOperationException("Invalid domain event type");
+        }
+
+        var assemblyName = domainEventType.Assembly.GetName();
+
+        if (assemblyName == null || assemblyName.Name == null)
+        {
+            throw new InvalidOperationException("Invalid domain event type");
+        }
+
+        this.Id = Guid.NewGuid();
+        this.DomainEventAssemblyName = assemblyName.Name;
+        this.DomainEventClassName = domainEventType.FullName;
+        this.DomainEventJson = JsonSerializer.Serialize(domainEvent, domainEventType);
+        this.PersistedAt = DateTime.UtcNow;
+        this.Dispatched = false;
+    }
+
+    /// <summary>
     /// Gets or sets the ID
     /// </summary>
     public Guid Id { get; protected set; }
@@ -44,38 +79,12 @@ public class DomainEventReference
     public DateTime? DispatchedAt { get; protected set; }
 
     /// <summary>
-    /// Converts the provided <see cref="IDomainEvent"/> into a <see cref="DomainEventReference"/>
-    /// </summary>
-    /// <param name="domainEvent">
-    /// The domain event to convert
-    /// </param>
-    /// <returns>
-    /// A <see cref="DomainEventReference"/>
-    /// </returns>
-    public static DomainEventReference From(IDomainEvent domainEvent)
-    {
-        var domainEventType = domainEvent.GetType();
-
-        var reference = new DomainEventReference
-        {
-            Id = Guid.NewGuid(),
-            DomainEventAssemblyName = domainEventType.Assembly.GetName().Name,
-            DomainEventClassName = domainEventType.FullName,
-            DomainEventJson = JsonSerializer.Serialize(domainEvent, domainEventType),
-            PersistedAt = DateTime.UtcNow,
-            Dispatched = false
-        };
-
-        return reference;
-    }
-
-    /// <summary>
     /// Coverts this <see cref="DomainEventReference"/> to a <see cref="IDomainEvent"/>
     /// </summary>
     /// <returns>
     /// A <see cref="IDomainEvent"/>
     /// </returns>
-    public IDomainEvent ToDomainEvent()
+    public IDomainEvent? ToDomainEvent()
     {
         if (string.IsNullOrWhiteSpace(this.DomainEventJson))
         {
@@ -84,6 +93,11 @@ public class DomainEventReference
 
         var assembly = Assembly.Load(this.DomainEventAssemblyName);
         var targetType = assembly.GetType(this.DomainEventClassName);
+
+        if (targetType == null)
+        {
+            return null;
+        }
 
         var domainEvent = JsonSerializer.Deserialize(this.DomainEventJson, targetType);
 

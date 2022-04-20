@@ -19,7 +19,7 @@ public partial class DomainEventReferenceTests
         var expectedJson = JsonSerializer.Serialize(domainEvent);
 
         // Act
-        var result = DomainEventReference.From(domainEvent);
+        var result = new DomainEventReference(domainEvent);
 
         // Assert
         result.Should().NotBeNull();
@@ -40,7 +40,7 @@ public partial class DomainEventReferenceTests
             "hello",
             17,
             DateTime.UtcNow);
-        var reference = DomainEventReference.From(domainEvent);
+        var reference = new DomainEventReference(domainEvent);
 
         // Act
         var result = (TestingDomainEvent)reference.ToDomainEvent();

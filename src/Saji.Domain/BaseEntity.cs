@@ -12,6 +12,23 @@ namespace Saji.Domain
     public abstract class BaseEntity<TId> : IEntity<TId>
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="BaseEntity{TId}"/> class
+        /// </summary>
+        /// <param name="id">
+        /// ID
+        /// </param>
+        protected BaseEntity(TId id)
+        {
+            var currentUser = GetCurrentUserName();
+
+            this.Id = id;
+            this.CreatedBy = currentUser;
+            this.CreatedAtUtc = DateTime.UtcNow;
+            this.ModifiedBy = currentUser;
+            this.ModifiedAtUtc = DateTime.UtcNow;
+        }
+
+        /// <summary>
         /// Gets or sets the ID of the entity
         /// </summary>
         public TId Id { get; protected set; }
@@ -39,7 +56,7 @@ namespace Saji.Domain
         /// <summary>
         /// Gets or sets the timestamp
         /// </summary>
-        public byte[] Timestamp { get; protected set; }
+        public byte[] Timestamp { get; protected set; } = default!;
 
         /// <summary>
         /// Applies the tracking data
@@ -57,6 +74,11 @@ namespace Saji.Domain
 
             this.ModifiedBy = userName;
             this.ModifiedAtUtc = now;
+        }
+
+        private static string GetCurrentUserName()
+        {
+            return Environment.UserName ?? "System";
         }
     }
 }
