@@ -18,7 +18,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saji.Infrastructure", "src\Saji.Infrastructure\Saji.Infrastructure.csproj", "{7C656A04-A229-4F0C-8683-0143403178BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saji.Domain.Tests.Unit", "tests\Saji.Domain.Tests.Unit\Saji.Domain.Tests.Unit.csproj", "{DBC07B8D-9CB0-40A0-B54F-0AF1325EF823}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saji.Domain.Tests.Unit", "tests\Saji.Domain.Tests.Unit\Saji.Domain.Tests.Unit.csproj", "{DBC07B8D-9CB0-40A0-B54F-0AF1325EF823}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saji.Application", "src\Saji.Application\Saji.Application.csproj", "{CA68F196-F166-4A8F-A22E-3D74DD811DF5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,6 +40,10 @@ Global
 		{DBC07B8D-9CB0-40A0-B54F-0AF1325EF823}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DBC07B8D-9CB0-40A0-B54F-0AF1325EF823}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DBC07B8D-9CB0-40A0-B54F-0AF1325EF823}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA68F196-F166-4A8F-A22E-3D74DD811DF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA68F196-F166-4A8F-A22E-3D74DD811DF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA68F196-F166-4A8F-A22E-3D74DD811DF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA68F196-F166-4A8F-A22E-3D74DD811DF5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
