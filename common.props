@@ -1,4 +1,5 @@
 <Project>
+  
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <LangVersion>10.0</LangVersion>
@@ -24,4 +25,5 @@
       <ExcludeAssets>all</ExcludeAssets>
     </PackageReference>
   </ItemGroup>
+  
 </Project>
