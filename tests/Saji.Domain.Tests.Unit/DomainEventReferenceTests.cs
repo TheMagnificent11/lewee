@@ -7,11 +7,10 @@ namespace Saji.Domain.Tests.Unit;
 public partial class DomainEventReferenceTests
 {
     [Fact]
-    public static void From()
+    public static void Ctor()
     {
         // Arrange
         var domainEvent = new TestingDomainEvent(
-            Guid.NewGuid(),
             "hello",
             17,
             DateTime.UtcNow,
@@ -39,7 +38,6 @@ public partial class DomainEventReferenceTests
     {
         // Arrange
         var domainEvent = new TestingDomainEvent(
-            Guid.NewGuid(),
             "hello",
             17,
             DateTime.UtcNow,

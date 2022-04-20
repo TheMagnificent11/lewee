@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel;
+using System.Text.Json.Serialization;
 
 namespace Saji.Domain.Tests.Unit;
 
@@ -6,6 +7,21 @@ public partial class DomainEventReferenceTests
 {
     public class TestingDomainEvent : BaseDomainEvent
     {
+        public TestingDomainEvent(
+            string name,
+            int count,
+            DateTime createdAt,
+            Guid correlationId)
+        {
+            this.Id = Guid.NewGuid();
+            this.Name = name;
+            this.Count = count;
+            this.CreatedAt = createdAt;
+            this.CorrelationId = correlationId;
+        }
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [JsonConstructor]
         public TestingDomainEvent(
             Guid id,
             string name,
