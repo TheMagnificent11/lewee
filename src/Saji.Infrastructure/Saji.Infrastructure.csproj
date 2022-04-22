@@ -5,7 +5,15 @@
   <Import Project="..\..\publish.props" />
 
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="6.3.0" />
+    <PackageReference Include="FluentValidation" Version="10.3.4" />
+    <PackageReference Include="MediatR" Version="10.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.4" />
+    <PackageReference Include="Serilog" Version="2.10.0" />
+    <PackageReference Include="SerilogAnalyzer" Version="0.15.0">
+      <ExcludeAssets>all</ExcludeAssets>
+    </PackageReference>
+    <PackageReference Include="SerilogMetrics" Version="2.1.0" />
   </ItemGroup>
 
   <ItemGroup>
