@@ -8,9 +8,9 @@ namespace Saji.Infrastructure.Data;
 public abstract class BaseApplicationDbContext : DbContext
 {
     /// <summary>
-    /// Gets the database schema for the context
+    /// Gets or sets the database schema for the context
     /// </summary>
-    protected abstract string Schema { get; }
+    public virtual string Schema { get; protected set; } = "dbo";
 
     /// <summary>
     /// Configures the database
