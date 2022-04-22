@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using FluentValidation.Results;
 
-namespace Sample.Application;
+namespace Saji.Application;
 
 /// <summary>
 /// Command Result

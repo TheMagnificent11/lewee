@@ -1,14 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+  <Import Project="..\..\common.props" />
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="10.4.0" />
-    <PackageReference Include="OneOf" Version="3.0.216" />
+    <ProjectReference Include="..\..\src\Saji.Application\Saji.Application.csproj" />
+    <ProjectReference Include="..\Sample.Domain\Sample.Domain.csproj" />
   </ItemGroup>
 
 </Project>
