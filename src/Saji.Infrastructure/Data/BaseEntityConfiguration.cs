@@ -24,19 +24,19 @@ public abstract class BaseEntityConfiguration<TEntity, TId> : IEntityTypeConfigu
     /// </param>
     public virtual void Configure(EntityTypeBuilder<TEntity> builder)
     {
-        builder.HasKey(i => i.Id);
+        builder.HasKey(x => x.Id);
 
-        builder.Property(i => i.CreatedBy)
+        builder.Property(x => x.CreatedBy)
             .IsRequired()
             .HasMaxLength(255);
 
-        builder.Property(i => i.ModifiedBy)
+        builder.Property(x => x.ModifiedBy)
             .IsRequired()
             .HasMaxLength(255);
 
-        builder.Property(i => i.Timestamp)
+        builder.Property(x => x.Timestamp)
             .IsRowVersion();
 
-        builder.Ignore(i => i.DomainEvents);
+        builder.Ignore(x => x.DomainEvents);
     }
 }

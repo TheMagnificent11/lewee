@@ -30,12 +30,12 @@ public class EnumEntityConfiguration<TEnum, TEnumEntity> : IEntityTypeConfigurat
             throw new ArgumentNullException(nameof(builder));
         }
 
-        builder.HasKey(i => i.Id);
+        builder.HasKey(x => x.Id);
 
-        builder.Property(i => i.Id)
+        builder.Property(x => x.Id)
             .ValueGeneratedNever();
 
-        builder.Property(i => i.Name)
+        builder.Property(x => x.Name)
             .IsRequired()
             .HasMaxLength(100);
     }
