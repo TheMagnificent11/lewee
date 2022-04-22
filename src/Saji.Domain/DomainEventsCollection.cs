@@ -27,13 +27,19 @@ public class DomainEventsCollection
     }
 
     /// <summary>
-    /// Clears domain events
+    /// Gets the domains events in the collection and then clears the collection
     /// </summary>
-    public void Clear()
+    /// <returns>
+    /// An array of domain events
+    /// </returns>
+    public IDomainEvent[] GetAndClear()
     {
         lock (this.syncLock)
         {
+            var events = this.domainEvents.ToArray();
             this.domainEvents.Clear();
+
+            return events;
         }
     }
 }

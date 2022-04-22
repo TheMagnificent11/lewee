@@ -6,22 +6,16 @@ namespace Saji.Domain
     /// <summary>
     /// Base Entity
     /// </summary>
-    /// <typeparam name="TId">
-    /// ID type
-    /// </typeparam>
-    public abstract class BaseEntity<TId> : IEntity<TId>
+    public abstract class BaseEntity : IEntity<Guid>, ISoftDeleteEntity
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BaseEntity{TId}"/> class
+        /// Initializes a new instance of the <see cref="BaseEntity"/> class
         /// </summary>
-        /// <param name="id">
-        /// ID
-        /// </param>
-        protected BaseEntity(TId id)
+        protected BaseEntity()
         {
             var currentUser = GetCurrentUserName();
 
-            this.Id = id;
+            this.Id = Guid.NewGuid();
             this.CreatedBy = currentUser;
             this.CreatedAtUtc = DateTime.UtcNow;
             this.ModifiedBy = currentUser;
@@ -32,7 +26,7 @@ namespace Saji.Domain
         /// <summary>
         /// Gets or sets the ID of the entity
         /// </summary>
-        public TId Id { get; protected set; }
+        public Guid Id { get; protected set; }
 
         /// <summary>
         /// Gets the username of the user that created the entity
@@ -53,6 +47,11 @@ namespace Saji.Domain
         /// Gets the date-time in UTC at which the entity was last updated
         /// </summary>
         public DateTime ModifiedAtUtc { get; private set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the entity is deleted
+        /// </summary>
+        public bool IsDeleted { get; protected set; }
 
         /// <summary>
         /// Gets or sets the timestamp

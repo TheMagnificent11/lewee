@@ -26,7 +26,7 @@ public class UnitOfWork<TContext> : IUnitOfWork
     }
 
     /// <summary>
-    /// Get all entities
+    /// Gets queryable collection of all entities
     /// </summary>
     /// <typeparam name="TEntity">
     /// Entiy type
@@ -47,7 +47,7 @@ public class UnitOfWork<TContext> : IUnitOfWork
     }
 
     /// <summary>
-    /// Get entity by ID
+    /// Get an entity by its ID
     /// </summary>
     /// <param name="id">
     /// ID of entity to lookup
@@ -74,7 +74,7 @@ public class UnitOfWork<TContext> : IUnitOfWork
     }
 
     /// <summary>
-    /// Gets the entities that satisifies the query
+    /// Gets the entities that satisify the query
     /// </summary>
     /// <param name="query">
     /// Query
@@ -104,7 +104,7 @@ public class UnitOfWork<TContext> : IUnitOfWork
     }
 
     /// <summary>
-    /// Add entity
+    /// Adds a new entity
     /// </summary>
     /// <param name="entity">
     /// Entity
@@ -125,7 +125,7 @@ public class UnitOfWork<TContext> : IUnitOfWork
     }
 
     /// <summary>
-    /// Update entity
+    /// Updates the entity
     /// </summary>
     /// <param name="entity">
     /// Entity
@@ -146,7 +146,7 @@ public class UnitOfWork<TContext> : IUnitOfWork
     }
 
     /// <summary>
-    /// Delete entity
+    /// Deletes the entity
     /// </summary>
     /// <param name="entity">
     /// Entity
