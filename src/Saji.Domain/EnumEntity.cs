@@ -1,18 +1,16 @@
-﻿using System;
-
-namespace Saji.Domain
+﻿namespace Saji.Domain
 {
     /// <summary>
-    /// Base Enum Entity
+    /// Enum Entity
     /// </summary>
     /// <typeparam name="TKey">
     /// Enum entity key type
     /// </typeparam>
-    public abstract class BaseEnumEntity<TKey> : IEnumEntity<TKey>
+    public class EnumEntity<TKey> : IEnumEntity<TKey>
         where TKey : struct, IConvertible, IComparable
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BaseEnumEntity{TKey}"/> class
+        /// Initializes a new instance of the <see cref="EnumEntity{TKey}"/> class
         /// </summary>
         /// <param name="id">
         /// ID
@@ -20,7 +18,7 @@ namespace Saji.Domain
         /// <param name="name">
         /// Name
         /// </param>
-        protected BaseEnumEntity(TKey id, string name)
+        protected EnumEntity(TKey id, string name)
         {
             this.Id = id;
             this.Name = name;

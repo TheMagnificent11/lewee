@@ -5,15 +5,12 @@ namespace Saji.Domain
     /// <summary>
     /// Entity Interface
     /// </summary>
-    /// <typeparam name="TId">
-    /// ID type
-    /// </typeparam>
-    public interface IEntity<TId>
+    public interface IEntity
     {
         /// <summary>
         /// Gets the ID of the entity
         /// </summary>
-        TId Id { get; }
+        Guid Id { get; }
 
         /// <summary>
         /// Gets the username of the user that created the entity

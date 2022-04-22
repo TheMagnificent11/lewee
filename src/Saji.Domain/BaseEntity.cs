@@ -1,12 +1,9 @@
-﻿using System;
-using System.Threading;
-
-namespace Saji.Domain
+﻿namespace Saji.Domain
 {
     /// <summary>
     /// Base Entity
     /// </summary>
-    public abstract class BaseEntity : IEntity<Guid>, ISoftDeleteEntity
+    public abstract class BaseEntity : IEntity, ISoftDeleteEntity
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseEntity"/> class

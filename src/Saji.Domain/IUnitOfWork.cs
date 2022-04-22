@@ -11,18 +11,14 @@ public interface IUnitOfWork
     /// <typeparam name="TEntity">
     /// Entiy type
     /// </typeparam>
-    /// <typeparam name="TId">
-    /// ID type
-    /// </typeparam>
     /// <returns>
     /// List of entities
     /// </returns>
-    IQueryable<TEntity> GetAll<TEntity, TId>()
-        where TEntity : class, IEntity<TId>
-        where TId : IComparable, IComparable<TId>, IEquatable<TId>;
+    IQueryable<TEntity> GetAll<TEntity>()
+        where TEntity : class;
 
     /// <summary>
-    /// Get entity by ID
+    /// Gets an entity by ID
     /// </summary>
     /// <param name="id">
     /// ID of entity to lookup
@@ -33,15 +29,33 @@ public interface IUnitOfWork
     /// <typeparam name="TEntity">
     /// Entity type
     /// </typeparam>
-    /// <typeparam name="TId">
-    /// ID type
-    /// </typeparam>
     /// <returns>
     /// An async task containing the entity if it exists, otherwise null
     /// </returns>
-    Task<TEntity?> GetByIdAsync<TEntity, TId>(TId id, CancellationToken cancellationToken)
-        where TEntity : class, IEntity<TId>
-        where TId : IComparable, IComparable<TId>, IEquatable<TId>;
+    Task<TEntity?> GetByIdAsync<TEntity>(Guid id, CancellationToken cancellationToken)
+        where TEntity : class, IEntity;
+
+    /// <summary>
+    /// Gets an enum entity by IS
+    /// </summary>
+    /// <typeparam name="TEnumEntity">
+    /// Enum entity type
+    /// </typeparam>
+    /// <typeparam name="TKey">
+    /// Enum type
+    /// </typeparam>
+    /// <param name="id">
+    /// ID of enum entity to retrieve
+    /// </param>
+    /// <param name="cancellationToken">
+    /// Cancellation token
+    /// </param>
+    /// <returns>
+    /// An async tass containing the enum entity if it exists, otherwise null
+    /// </returns>
+    Task<TEnumEntity?> GetByIdAsync<TEnumEntity, TKey>(TKey id, CancellationToken cancellationToken)
+        where TEnumEntity : class, IEnumEntity<TKey>
+        where TKey : struct, IConvertible, IComparable;
 
     /// <summary>
     /// Gets the entities that satisifies the query
@@ -55,49 +69,37 @@ public interface IUnitOfWork
     /// <typeparam name="TEntity">
     /// Entity type
     /// </typeparam>
-    /// <typeparam name="TId">
-    /// ID type
-    /// </typeparam>
     /// <returns>
     /// Async task containing the collection of entities that satisifies the query
     /// </returns>
-    Task<List<TEntity>> GetByQueryAsync<TEntity, TId>(
+    Task<List<TEntity>> GetByQueryAsync<TEntity>(
         Func<TEntity, bool> query,
         CancellationToken cancellationToken)
-        where TEntity : class, IEntity<TId>
-        where TId : IComparable, IComparable<TId>, IEquatable<TId>;
+        where TEntity : class;
 
     /// <summary>
-    /// Add entity
+    /// Adds an entity
     /// </summary>
     /// <param name="entity">
-    /// Entity
+    /// Entity to add
     /// </param>
     /// <typeparam name="TEntity">
     /// Entity type
     /// </typeparam>
-    /// <typeparam name="TId">
-    /// ID type
-    /// </typeparam>
-    void Add<TEntity, TId>(TEntity entity)
-        where TEntity : class, IEntity<TId>
-        where TId : IComparable, IComparable<TId>, IEquatable<TId>;
+    void Add<TEntity>(TEntity entity)
+        where TEntity : class;
 
     /// <summary>
-    /// Update entity
+    /// Updates an entity
     /// </summary>
     /// <param name="entity">
-    /// Entity
+    /// Entity to update
     /// </param>
     /// <typeparam name="TEntity">
     /// Entity type
     /// </typeparam>
-    /// <typeparam name="TId">
-    /// ID type
-    /// </typeparam>
-    void Update<TEntity, TId>(TEntity entity)
-        where TEntity : class, IEntity<TId>
-        where TId : IComparable, IComparable<TId>, IEquatable<TId>;
+    void Update<TEntity>(TEntity entity)
+        where TEntity : class;
 
     /// <summary>
     /// Delete entity
@@ -108,12 +110,8 @@ public interface IUnitOfWork
     /// <typeparam name="TEntity">
     /// Entity type
     /// </typeparam>
-    /// <typeparam name="TId">
-    /// ID type
-    /// </typeparam>
-    void Delete<TEntity, TId>(TEntity entity)
-        where TEntity : class, IEntity<TId>
-        where TId : IComparable, IComparable<TId>, IEquatable<TId>;
+    void Delete<TEntity>(TEntity entity)
+        where TEntity : class;
 
     /// <summary>
     /// Persists changes to the database

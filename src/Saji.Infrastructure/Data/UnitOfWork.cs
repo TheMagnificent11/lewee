@@ -31,15 +31,11 @@ public class UnitOfWork<TContext> : IUnitOfWork
     /// <typeparam name="TEntity">
     /// Entiy type
     /// </typeparam>
-    /// <typeparam name="TId">
-    /// ID type
-    /// </typeparam>
     /// <returns>
     /// List of entities
     /// </returns>
-    public IQueryable<TEntity> GetAll<TEntity, TId>()
-        where TEntity : class, IEntity<TId>
-        where TId : IComparable, IComparable<TId>, IEquatable<TId>
+    public IQueryable<TEntity> GetAll<TEntity>()
+        where TEntity : class
     {
         return this.context
             .Set<TEntity>()
@@ -58,18 +54,41 @@ public class UnitOfWork<TContext> : IUnitOfWork
     /// <typeparam name="TEntity">
     /// Entity type
     /// </typeparam>
-    /// <typeparam name="TId">
-    /// ID type
-    /// </typeparam>
     /// <returns>
     /// An async task containing the entity if it exists, otherwise null
     /// </returns>
-    public Task<TEntity?> GetByIdAsync<TEntity, TId>(TId id, CancellationToken cancellationToken)
-        where TEntity : class, IEntity<TId>
-        where TId : IComparable, IComparable<TId>, IEquatable<TId>
+    public Task<TEntity?> GetByIdAsync<TEntity>(Guid id, CancellationToken cancellationToken)
+        where TEntity : class, IEntity
     {
         return this.context
             .Set<TEntity>()
+            .SingleOrDefaultAsync(x => x.Id.Equals(id), cancellationToken);
+    }
+
+    /// <summary>
+    /// Gets an enum entity by its ID
+    /// </summary>
+    /// <typeparam name="TEnumEntity">
+    /// Enum entity type
+    /// </typeparam>
+    /// <typeparam name="TKey">
+    /// Enum type
+    /// </typeparam>
+    /// <param name="id">
+    /// ID of the enum entity to retrieve
+    /// </param>
+    /// <param name="cancellationToken">
+    /// Cancellation token
+    /// </param>
+    /// <returns>
+    /// An async task containing the enum entity if it exists, otherwise null
+    /// </returns>
+    public Task<TEnumEntity?> GetByIdAsync<TEnumEntity, TKey>(TKey id, CancellationToken cancellationToken)
+        where TEnumEntity : class, IEnumEntity<TKey>
+        where TKey : struct, IConvertible, IComparable
+    {
+        return this.context
+            .Set<TEnumEntity>()
             .SingleOrDefaultAsync(x => x.Id.Equals(id), cancellationToken);
     }
 
@@ -85,17 +104,13 @@ public class UnitOfWork<TContext> : IUnitOfWork
     /// <typeparam name="TEntity">
     /// Entity type
     /// </typeparam>
-    /// <typeparam name="TId">
-    /// ID type
-    /// </typeparam>
     /// <returns>
     /// Async task containing the collection of entities that satisifies the query
     /// </returns>
-    public Task<List<TEntity>> GetByQueryAsync<TEntity, TId>(
+    public Task<List<TEntity>> GetByQueryAsync<TEntity>(
         Func<TEntity, bool> query,
         CancellationToken cancellationToken)
-        where TEntity : class, IEntity<TId>
-        where TId : IComparable, IComparable<TId>, IEquatable<TId>
+        where TEntity : class
     {
         return this.context
             .Set<TEntity>()
@@ -112,12 +127,8 @@ public class UnitOfWork<TContext> : IUnitOfWork
     /// <typeparam name="TEntity">
     /// Entity type
     /// </typeparam>
-    /// <typeparam name="TId">
-    /// ID type
-    /// </typeparam>
-    public void Add<TEntity, TId>(TEntity entity)
-        where TEntity : class, IEntity<TId>
-        where TId : IComparable, IComparable<TId>, IEquatable<TId>
+    public void Add<TEntity>(TEntity entity)
+        where TEntity : class
     {
         this.context
             .Set<TEntity>()
@@ -133,12 +144,8 @@ public class UnitOfWork<TContext> : IUnitOfWork
     /// <typeparam name="TEntity">
     /// Entity type
     /// </typeparam>
-    /// <typeparam name="TId">
-    /// ID type
-    /// </typeparam>
-    public void Update<TEntity, TId>(TEntity entity)
-        where TEntity : class, IEntity<TId>
-        where TId : IComparable, IComparable<TId>, IEquatable<TId>
+    public void Update<TEntity>(TEntity entity)
+        where TEntity : class
     {
         this.context
             .Set<TEntity>()
@@ -154,12 +161,8 @@ public class UnitOfWork<TContext> : IUnitOfWork
     /// <typeparam name="TEntity">
     /// Entity type
     /// </typeparam>
-    /// <typeparam name="TId">
-    /// ID type
-    /// </typeparam>
-    public void Delete<TEntity, TId>(TEntity entity)
-        where TEntity : class, IEntity<TId>
-        where TId : IComparable, IComparable<TId>, IEquatable<TId>
+    public void Delete<TEntity>(TEntity entity)
+        where TEntity : class
     {
         this.context
             .Set<TEntity>()

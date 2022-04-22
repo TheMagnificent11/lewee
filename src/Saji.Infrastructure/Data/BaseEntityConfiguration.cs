@@ -10,14 +10,11 @@ namespace Saji.Infrastructure.Data;
 /// <typeparam name="TEntity">
 /// Entity type to be configured
 /// </typeparam>
-/// <typeparam name="TId">
-/// Entity key type
-/// </typeparam>
-public abstract class BaseEntityConfiguration<TEntity, TId> : IEntityTypeConfiguration<TEntity>
-    where TEntity : BaseEntity<TId>
+public abstract class BaseEntityConfiguration<TEntity> : IEntityTypeConfiguration<TEntity>
+    where TEntity : BaseEntity
 {
     /// <summary>
-    /// Configures the entity of type <see cref="IEntity{TId}"/>
+    /// Configures the database table for the entity type
     /// </summary>
     /// <param name="builder">
     /// The builder to be used to configure the entity type
