@@ -39,5 +39,9 @@ public class DomainEventReferenceConfiguration : IEntityTypeConfiguration<Domain
 
         builder.Property(x => x.DispatchedAt)
             .IsRequired(false);
+
+        builder.HasIndex(
+            nameof(DomainEventReference.Dispatched),
+            nameof(DomainEventReference.PersistedAt));
     }
 }
