@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Saji.Domain;
+using Saji.Infrastructure.Data;
 using Serilog;
 
 namespace Saji.Infrastructure.Events;
@@ -14,7 +15,7 @@ namespace Saji.Infrastructure.Events;
 public class DomainEventDispatcher<TContext>
     where TContext : DbContext
 {
-    private readonly TContext context;
+    private readonly TransactionScopeFactory<TContext> transactionScopeFactory;
     private readonly IMediator mediator;
     private readonly int batchSize;
     private readonly ILogger logger;
@@ -22,8 +23,8 @@ public class DomainEventDispatcher<TContext>
     /// <summary>
     /// Initializes a new instance of the <see cref="DomainEventDispatcher{TContext}"/> class
     /// </summary>
-    /// <param name="context">
-    /// Database context
+    /// <param name="transactionScopeFactory">
+    /// Transaction scope factory
     /// </param>
     /// <param name="mediator">
     /// Mediator
@@ -35,12 +36,12 @@ public class DomainEventDispatcher<TContext>
     /// Logger
     /// </param>
     public DomainEventDispatcher(
-        TContext context,
+        TransactionScopeFactory<TContext> transactionScopeFactory,
         IMediator mediator,
         int batchSize,
         ILogger logger)
     {
-        this.context = context;
+        this.transactionScopeFactory = transactionScopeFactory;
         this.mediator = mediator;
         this.batchSize = batchSize;
         this.logger = logger.ForContext<DomainEventDispatcher<TContext>>();
@@ -69,59 +70,67 @@ public class DomainEventDispatcher<TContext>
 
     private async Task<bool> ThereAreEventsToDispatch(CancellationToken token)
     {
-        var dbSet = this.context.Set<DomainEventReference>();
-
-        if (dbSet == null)
+        using (var scope = this.transactionScopeFactory.CreateContext())
         {
-            return false;
-        }
+            var dbSet = scope.Set<DomainEventReference>();
 
-        return await dbSet
-            .Where(x => x.Dispatched == false)
-            .OrderBy(x => x.PersistedAt)
-            .AnyAsync(token);
+            if (dbSet == null)
+            {
+                return false;
+            }
+
+            return await dbSet
+                .Where(x => x.Dispatched == false)
+                .OrderBy(x => x.PersistedAt)
+                .AnyAsync(token);
+        }
     }
 
     private async Task DispatchBatch(CancellationToken token)
     {
-        var dbSet = this.context.Set<DomainEventReference>();
-        if (dbSet == null)
+        using (var scope = this.transactionScopeFactory.CreateContext())
         {
-            return;
-        }
-
-        var events = await dbSet
-            .Where(x => !x.Dispatched)
-            .OrderBy(x => x.PersistedAt)
-            .Take(this.batchSize)
-            .ToArrayAsync(token);
-
-        var domainEvents = new List<IDomainEvent>();
-
-        foreach (var domainEventReference in events)
-        {
-            domainEventReference.Dispatch();
-
-            var domainEvent = domainEventReference.ToDomainEvent();
-
-            if (domainEvent == null)
+            var dbSet = scope.Set<DomainEventReference>();
+            if (dbSet == null)
             {
-                this.logger.Warning(
-                    "Could not deserialize DomainEventReference {Id}",
-                    domainEventReference.Id);
+                return;
             }
-            else
-            {
-                domainEvents.Add(domainEvent);
-            }
-        }
 
-        if (domainEvents.Any())
-        {
-            foreach (var domainEvent in domainEvents)
+            var events = await dbSet
+                .Where(x => !x.Dispatched)
+                .OrderBy(x => x.PersistedAt)
+                .Take(this.batchSize)
+                .ToArrayAsync(token);
+
+            var domainEvents = new List<IDomainEvent>();
+
+            foreach (var domainEventReference in events)
             {
-                await this.mediator.Publish(domainEvent, token);
+                domainEventReference.Dispatch();
+
+                var domainEvent = domainEventReference.ToDomainEvent();
+
+                if (domainEvent == null)
+                {
+                    this.logger.Warning(
+                        "Could not deserialize DomainEventReference {Id}",
+                        domainEventReference.Id);
+                }
+                else
+                {
+                    domainEvents.Add(domainEvent);
+                }
             }
+
+            if (domainEvents.Any())
+            {
+                foreach (var domainEvent in domainEvents)
+                {
+                    await this.mediator.Publish(domainEvent, token);
+                }
+            }
+
+            await scope.SaveChangesAsync(token);
         }
     }
 }
