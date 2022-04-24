@@ -103,4 +103,13 @@ public class DomainEventReference
 
         return domainEvent as IDomainEvent;
     }
+
+    /// <summary>
+    /// Marks the underlying domain event as dispatched
+    /// </summary>
+    public void Dispatch()
+    {
+        this.Dispatched = true;
+        this.DispatchedAt = DateTime.UtcNow;
+    }
 }
