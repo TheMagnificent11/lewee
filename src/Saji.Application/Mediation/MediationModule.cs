@@ -4,7 +4,7 @@ using FluentValidation;
 using MediatR;
 using MediatR.Pipeline;
 
-namespace Saji.Application;
+namespace Saji.Application.Mediation;
 
 /// <summary>
 /// Request Management Autofac Module
@@ -64,6 +64,7 @@ public class MediationModule : Autofac.Module
             }
         }
 
+        builder.RegisterGeneric(typeof(LoggingBehavior<,>)).As(typeof(IPipelineBehavior<,>)).WithMetadata("Order", -600);
         builder.RegisterGeneric(typeof(ValidationBehavior<,>)).As(typeof(IPipelineBehavior<,>)).WithMetadata("Order", -500);
         builder.RegisterGeneric(typeof(RequestPreProcessorBehavior<,>)).As(typeof(IPipelineBehavior<,>)).WithMetadata("Order", -100);
         builder.RegisterGeneric(typeof(RequestPostProcessorBehavior<,>)).As(typeof(IPipelineBehavior<,>)).WithMetadata("Order", 100);

@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using MediatR;
 
-namespace Saji.Application;
+namespace Saji.Application.Mediation;
 
 /// <summary>
 /// Validation Behaviour
@@ -29,10 +29,10 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
     }
 
     /// <summary>
-    /// Handles request
+    /// Handles request and runs FluentValidation and returns early if validation fails
     /// </summary>
     /// <param name="request">
-    /// Request
+    /// Request to validate
     /// </param>
     /// <param name="cancellationToken">
     /// Cancellation token
