@@ -16,10 +16,10 @@ public abstract class BaseResult : IResult
     /// </param>
     protected BaseResult(
         ResultStatus status,
-        Dictionary<string, string[]>? errors)
+        Dictionary<string, List<string>>? errors)
     {
         this.Status = status;
-        this.Errors = errors ?? new Dictionary<string, string[]>();
+        this.Errors = errors ?? new Dictionary<string, List<string>>();
         this.IsSuccess = status == ResultStatus.Success;
     }
 
@@ -36,7 +36,7 @@ public abstract class BaseResult : IResult
     /// <summary>
     /// Gets a dictionary of error messages keyed by request property
     /// </summary>
-    public Dictionary<string, string[]> Errors { get; private set; }
+    public Dictionary<string, List<string>> Errors { get; private set; }
 
     /// <summary>
     /// Checks if the status provided is a failure status

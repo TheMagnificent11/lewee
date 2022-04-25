@@ -7,7 +7,7 @@ public class CommandResult : BaseResult
 {
     private CommandResult(
         ResultStatus status,
-        Dictionary<string, string[]>? errors)
+        Dictionary<string, List<string>>? errors)
         : base(status, errors)
     {
     }
@@ -42,9 +42,9 @@ public class CommandResult : BaseResult
     {
         CheckIfFailure(status);
 
-        var errors = new Dictionary<string, string[]>()
+        var errors = new Dictionary<string, List<string>>()
         {
-            { string.Empty, new string[] { errorMessage } }
+            { string.Empty, new List<string> { errorMessage } }
         };
 
         return new CommandResult(status, errors);
@@ -65,7 +65,7 @@ public class CommandResult : BaseResult
     /// <exception cref="InvalidOperationException">
     /// Thrown if <see cref="ResultStatus"/> is <see cref="ResultStatus.Success"/> or <see cref="ResultStatus.NotApplicable"/>
     /// </exception>
-    public static CommandResult Fail(ResultStatus status, Dictionary<string, string[]> errors)
+    public static CommandResult Fail(ResultStatus status, Dictionary<string, List<string>> errors)
     {
         CheckIfFailure(status);
 

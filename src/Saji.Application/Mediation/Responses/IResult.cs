@@ -18,5 +18,5 @@ public interface IResult
     /// <summary>
     /// Gets a dictionary of error messages keyed by request property
     /// </summary>
-    Dictionary<string, string[]> Errors { get; }
+    Dictionary<string, List<string>> Errors { get; }
 }

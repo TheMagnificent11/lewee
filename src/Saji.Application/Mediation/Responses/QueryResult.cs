@@ -12,7 +12,7 @@ public class QueryResult<T> : BaseResult
     private QueryResult(
         T? data,
         ResultStatus status,
-        Dictionary<string, string[]>? errors)
+        Dictionary<string, List<string>>? errors)
         : base(status, errors)
     {
         this.Data = data;
@@ -56,9 +56,9 @@ public class QueryResult<T> : BaseResult
     {
         CheckIfFailure(status);
 
-        var errors = new Dictionary<string, string[]>()
+        var errors = new Dictionary<string, List<string>>()
         {
-            { string.Empty, new string[] { errorMessage } }
+            { string.Empty, new List<string>() { errorMessage } }
         };
 
         return new QueryResult<T>(null, status, errors);
@@ -79,7 +79,7 @@ public class QueryResult<T> : BaseResult
     /// <exception cref="InvalidOperationException">
     /// Thrown if <see cref="ResultStatus"/> is <see cref="ResultStatus.Success"/> or <see cref="ResultStatus.NotApplicable"/>
     /// </exception>
-    public static QueryResult<T> Fail(ResultStatus status, Dictionary<string, string[]> errors)
+    public static QueryResult<T> Fail(ResultStatus status, Dictionary<string, List<string>> errors)
     {
         CheckIfFailure(status);
 
