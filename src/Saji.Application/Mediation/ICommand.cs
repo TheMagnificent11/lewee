@@ -3,6 +3,6 @@
 /// <summary>
 /// Command Interface
 /// </summary>
-public interface ICommand : IRequest
+public interface ICommand : IApplicationRequest
 {
 }

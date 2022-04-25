@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
 using Serilog.Context;
 
 namespace Saji.Application.Mediation;
@@ -18,7 +13,7 @@ namespace Saji.Application.Mediation;
 /// Response type
 /// </typeparam>
 public class LoggingBehavior<TRequest, TReponse> : IPipelineBehavior<TRequest, TReponse>
-    where TRequest : IRequest
+    where TRequest : IRequest<TReponse>, IApplicationRequest
 {
     /// <summary>
     /// Handles request adds stuctural logging properties
@@ -35,15 +30,14 @@ public class LoggingBehavior<TRequest, TReponse> : IPipelineBehavior<TRequest, T
     /// <returns>
     /// Response
     /// </returns>
-    public override async Task<TReponse> Handle(
-        TRequest request,
-        CancellationToken cancellationToken,
-        RequestHandlerDelegate<TReponse> next)
+    public Task<TReponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TReponse> next)
     {
         using (LogContext.PushProperty("CorrelationId", request.CorrelationId))
+#pragma warning disable IDE0030 // Use coalesce expression (both values need to be same type to use coalesce)
         using (LogContext.PushProperty("TenantId", request.TenantId.HasValue ? request.TenantId.Value : "No Tenant"))
+#pragma warning restore IDE0030 // Use coalesce expression
         {
-            return await next();
+            return next();
         }
     }
 }

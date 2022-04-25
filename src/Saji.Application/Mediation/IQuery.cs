@@ -3,6 +3,6 @@
 /// <summary>
 /// Query Interface
 /// </summary>
-public interface IQuery : IRequest
+public interface IQuery : IApplicationRequest
 {
 }

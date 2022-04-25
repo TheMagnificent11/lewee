@@ -3,7 +3,7 @@
 /// <summary>
 /// Request Interface
 /// </summary>
-public interface IRequest
+public interface IApplicationRequest
 {
     /// <summary>
     /// Gets the correlation
