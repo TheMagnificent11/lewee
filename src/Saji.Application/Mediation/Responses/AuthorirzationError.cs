@@ -1,4 +1,4 @@
-﻿namespace Saji.Application.Errors;
+﻿namespace Saji.Application.Mediation.Responses;
 
 /// <summary>
 /// Authorization Error

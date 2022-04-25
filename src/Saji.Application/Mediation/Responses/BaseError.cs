@@ -1,9 +1,9 @@
-﻿namespace Saji.Application.Errors;
+﻿namespace Saji.Application.Mediation.Responses;
 
 /// <summary>
 /// Base Error
 /// </summary>
-public abstract class BaseError
+public abstract class BaseError : IResult
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="BaseError"/> class
