@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Saji.Application\Saji.Application.csproj" />
     <ProjectReference Include="..\Saji.Domain\Saji.Domain.csproj" />
   </ItemGroup>
 

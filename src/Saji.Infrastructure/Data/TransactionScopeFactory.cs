@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Saji.Application.Data;
 
 namespace Saji.Infrastructure.Data;
 
@@ -8,7 +9,7 @@ namespace Saji.Infrastructure.Data;
 /// <typeparam name="TContext">
 /// Database context
 /// </typeparam>
-public class TransactionScopeFactory<TContext> : IDisposable
+public class TransactionScopeFactory<TContext> : ITransactionScopeFactory<TContext>, IDisposable
     where TContext : DbContext
 {
     private readonly IDbContextFactory<TContext> contextFactory;
