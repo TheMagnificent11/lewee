@@ -1,6 +1,11 @@
 <Project>
   
   <PropertyGroup>
+    <PackageProjectUrl>https://github.com/TheMagnificent11/saji</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/TheMagnificent11/saji.git</RepositoryUrl>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <Authors>Saji Weerasingham</Authors>
+    <Company>NA</Company>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
