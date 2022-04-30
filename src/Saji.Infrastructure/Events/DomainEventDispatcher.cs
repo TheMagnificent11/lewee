@@ -80,7 +80,7 @@ public class DomainEventDispatcher<TContext>
             }
 
             return await dbSet
-                .Where(x => x.Dispatched == false)
+                .Where(x => !x.Dispatched)
                 .OrderBy(x => x.PersistedAt)
                 .AnyAsync(token);
         }
