@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,10 +10,10 @@ public static class DatabaseConfiguration
     public static void ConfigureIdentityDatabase(this IServiceCollection services, string connectionString)
     {
         services
-            .AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
+            .AddDbContext<IdentityDbContext>(options => options.UseSqlServer(connectionString));
 
         services
             .AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-            .AddEntityFrameworkStores<ApplicationDbContext>();
+            .AddEntityFrameworkStores<IdentityDbContext>();
     }
 }

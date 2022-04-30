@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Saji.Infrastructure\Saji.Infrastructure.csproj" />
+    <ProjectReference Include="..\Sample.Customers.Domain\Sample.Customers.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
