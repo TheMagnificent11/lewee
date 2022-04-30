@@ -1,2 +1,3 @@
 Remove-Item src/**/obj -Recurse
-Remove-Item test/**/obj -Recurse
+Remove-Item tests/**/obj -Recurse
+Remove-Item sample/**/obj -Recurse
