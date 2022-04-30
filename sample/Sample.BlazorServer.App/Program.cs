@@ -1,15 +1,18 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Saji.Infrastructure.Data;
 using Sample.BlazorServer.App.Areas.Identity;
+using Sample.Customers.Infrastructure.Data;
 using Sample.Identity.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("Identity");
+var identityConnectionString = builder.Configuration.GetConnectionString("Identity");
+var customersConnectionString = builder.Configuration.GetConnectionString("Customers");
 
-builder.Services.ConfigureIdentityDatabase(connectionString);
+builder.Services.ConfigureIdentityDatabase(identityConnectionString);
+builder.Services.ConfigureDatabase<CustomerDbContext>(customersConnectionString);
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 

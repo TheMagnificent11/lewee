@@ -7,12 +7,27 @@ namespace Saji.Infrastructure.Data;
 /// <summary>
 /// Base Appliation Database Context
 /// </summary>
-public abstract class BaseApplicationDbContext : DbContext
+/// <typeparam name="T">
+/// The type of this database context
+/// </typeparam>
+public abstract class BaseApplicationDbContext<T> : DbContext
+    where T : DbContext
 {
     /// <summary>
-    /// Gets or sets the database schema for the context
+    /// Initializes a new instance of the <see cref="BaseApplicationDbContext{T}"/> class
     /// </summary>
-    public virtual string Schema { get; protected set; } = "dbo";
+    /// <param name="options">
+    /// Database context options
+    /// </param>
+    protected BaseApplicationDbContext(DbContextOptions<T> options)
+        : base(options)
+    {
+    }
+
+    /// <summary>
+    /// Gets the database schema for the context
+    /// </summary>
+    public virtual string Schema { get; } = "dbo";
 
     /* TODO: make non-nullable */
 
@@ -50,7 +65,17 @@ public abstract class BaseApplicationDbContext : DbContext
         /* TODO: configure schema */
 
         modelBuilder.ApplyConfiguration(new DomainEventReferenceConfiguration());
+
+        this.ConfigureDatabaseModel(modelBuilder);
     }
+
+    /// <summary>
+    /// Conigures the database model
+    /// </summary>
+    /// <param name="modelBuilder">
+    /// Database model builder
+    /// </param>
+    protected abstract void ConfigureDatabaseModel(ModelBuilder modelBuilder);
 
     private void OnBeforeSaving()
     {

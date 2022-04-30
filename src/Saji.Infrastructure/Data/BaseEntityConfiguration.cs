@@ -35,5 +35,15 @@ public abstract class BaseEntityConfiguration<TEntity> : IEntityTypeConfiguratio
             .IsRowVersion();
 
         builder.Ignore(x => x.DomainEvents);
+
+        this.ConfigureEntity(builder);
     }
+
+    /// <summary>
+    /// Configures the database table for the entity type
+    /// </summary>
+    /// <param name="builder">
+    /// The builder to be used to configure the entity type
+    /// </param>
+    protected abstract void ConfigureEntity(EntityTypeBuilder<TEntity> builder);
 }

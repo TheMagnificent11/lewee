@@ -82,4 +82,13 @@ public class Customer : BaseEntity
         this.ApplyTrackingData();
         this.DomainEvents.Raise(new CustomerUpdatedEvent(correlationId, this.Id));
     }
+
+    public static class MaxFieldLengths
+    {
+        public const int EmailAddress = 255;
+
+        public const int GivenName = 100;
+
+        public const int Surname = 100;
+    }
 }
