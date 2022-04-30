@@ -62,6 +62,8 @@ public abstract class BaseApplicationDbContext<T> : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
+        /* TODO: ensure plurals used for table names */
+
         /* TODO: configure schema */
 
         modelBuilder.ApplyConfiguration(new DomainEventReferenceConfiguration());

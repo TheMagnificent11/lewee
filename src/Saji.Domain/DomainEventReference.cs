@@ -43,6 +43,17 @@ public class DomainEventReference
         this.Dispatched = false;
     }
 
+    // EF constructor
+    private DomainEventReference()
+    {
+        this.Id = Guid.NewGuid();
+        this.DomainEventAssemblyName = string.Empty;
+        this.DomainEventClassName = string.Empty;
+        this.DomainEventJson = "{}";
+        this.PersistedAt = DateTime.UtcNow;
+        this.Dispatched = false;
+    }
+
     /// <summary>
     /// Gets or sets the ID
     /// </summary>

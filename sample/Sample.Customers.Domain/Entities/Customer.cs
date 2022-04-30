@@ -5,6 +5,8 @@ namespace Sample.Customers.Domain.Entities;
 
 public class Customer : BaseEntity
 {
+    /* TODO: Guard against empty strings */
+
     public Customer(
         string emailAddress,
         string givenName,
@@ -22,6 +24,15 @@ public class Customer : BaseEntity
         }
 
         this.DomainEvents.Raise(new CustomerCreatedEvent(correlationId, this.Id));
+    }
+
+    // EF constructor
+    private Customer()
+        : base()
+    {
+        this.EmailAddress = string.Empty;
+        this.GivenName = string.Empty;
+        this.Surname = string.Empty;
     }
 
     public string EmailAddress { get; protected set; }
