@@ -2,21 +2,16 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Sample.BlazorServer.App.Areas.Identity;
-using Sample.BlazorServer.App.Data;
+using Sample.Identity.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = builder.Configuration.GetConnectionString("Identity");
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+builder.Services.ConfigureIdentityDatabase(connectionString);
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
-builder.Services
-    .AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
