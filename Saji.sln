@@ -28,7 +28,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Project Config", "Project C
 		testing.props = testing.props
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Customers.Domain", "sample\Sample.Customers.Domain\Sample.Customers.Domain.csproj", "{96F2A070-B6DA-40F8-9F21-9BA09006DB0C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Customers.Domain", "sample\Sample.Customers.Domain\Sample.Customers.Domain.csproj", "{96F2A070-B6DA-40F8-9F21-9BA09006DB0C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saji.Api", "src\Saji.Api\Saji.Api.csproj", "{B2347B97-4690-422B-B61F-E0826EC4329F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -60,6 +62,10 @@ Global
 		{96F2A070-B6DA-40F8-9F21-9BA09006DB0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96F2A070-B6DA-40F8-9F21-9BA09006DB0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{96F2A070-B6DA-40F8-9F21-9BA09006DB0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2347B97-4690-422B-B61F-E0826EC4329F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2347B97-4690-422B-B61F-E0826EC4329F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2347B97-4690-422B-B61F-E0826EC4329F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2347B97-4690-422B-B61F-E0826EC4329F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
