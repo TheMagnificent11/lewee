@@ -3,7 +3,7 @@ using FluentValidation.Results;
 using MediatR;
 using Saji.Application.Mediation.Responses;
 
-namespace Saji.Application.Mediation;
+namespace Saji.Application.Mediation.Behaviors;
 
 /// <summary>
 /// Validation Behaviour

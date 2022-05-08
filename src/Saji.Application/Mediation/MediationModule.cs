@@ -3,6 +3,7 @@ using Autofac;
 using FluentValidation;
 using MediatR;
 using MediatR.Pipeline;
+using Saji.Application.Mediation.Behaviors;
 
 namespace Saji.Application.Mediation;
 
@@ -64,7 +65,8 @@ public class MediationModule : Autofac.Module
             }
         }
 
-        builder.RegisterGeneric(typeof(LoggingBehavior<,>)).As(typeof(IPipelineBehavior<,>)).WithMetadata("Order", -600);
+        builder.RegisterGeneric(typeof(LoggingBehavior<,>)).As(typeof(IPipelineBehavior<,>)).WithMetadata("Order", -700);
+        builder.RegisterGeneric(typeof(PerformanceBehavior<,>)).As(typeof(IPipelineBehavior<,>)).WithMetadata("Order", -600);
         builder.RegisterGeneric(typeof(ValidationBehavior<>)).As(typeof(IPipelineBehavior<,>)).WithMetadata("Order", -500);
         builder.RegisterGeneric(typeof(RequestPreProcessorBehavior<,>)).As(typeof(IPipelineBehavior<,>)).WithMetadata("Order", -100);
         builder.RegisterGeneric(typeof(RequestPostProcessorBehavior<,>)).As(typeof(IPipelineBehavior<,>)).WithMetadata("Order", 100);

@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Serilog.Context;
 
-namespace Saji.Application.Mediation;
+namespace Saji.Application.Mediation.Behaviors;
 
 /// <summary>
 /// Logging Behavior
@@ -16,7 +16,7 @@ public class LoggingBehavior<TRequest, TReponse> : IPipelineBehavior<TRequest, T
     where TRequest : IRequest<TReponse>, IApplicationRequest
 {
     /// <summary>
-    /// Handles request adds stuctural logging properties
+    /// Handles request and adds stuctural logging properties
     /// </summary>
     /// <param name="request">
     /// Request to validate
