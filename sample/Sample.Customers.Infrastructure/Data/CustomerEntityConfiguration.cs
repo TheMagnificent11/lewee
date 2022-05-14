@@ -8,9 +8,9 @@ public sealed class CustomerEntityConfiguration : BaseEntityConfiguration<Custom
 {
     protected override void ConfigureEntity(EntityTypeBuilder<Customer> builder)
     {
-        builder.Property(x => x.EmailAddress)
+        builder.Property(x => x.UserId)
             .IsRequired()
-            .HasMaxLength(Customer.MaxFieldLengths.EmailAddress);
+            .HasMaxLength(Customer.MaxFieldLengths.UserId);
 
         builder.Property(x => x.GivenName)
             .IsRequired()

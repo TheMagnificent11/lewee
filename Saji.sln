@@ -41,6 +41,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Weather.Application"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{30F833D3-1DBF-4B61-A479-E293C3DE0FB7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Customers.Contracts", "sample\Sample.Customers.Contracts\Sample.Customers.Contracts.csproj", "{380E6A00-9F9E-4896-B530-0572073B227A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,6 +97,10 @@ Global
 		{30F833D3-1DBF-4B61-A479-E293C3DE0FB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30F833D3-1DBF-4B61-A479-E293C3DE0FB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{30F833D3-1DBF-4B61-A479-E293C3DE0FB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{380E6A00-9F9E-4896-B530-0572073B227A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{380E6A00-9F9E-4896-B530-0572073B227A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{380E6A00-9F9E-4896-B530-0572073B227A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{380E6A00-9F9E-4896-B530-0572073B227A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

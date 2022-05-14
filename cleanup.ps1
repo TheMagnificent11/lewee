@@ -1,3 +1,1 @@
-Remove-Item src/**/obj -Recurse
-Remove-Item tests/**/obj -Recurse
-Remove-Item sample/**/obj -Recurse
+Get-ChildItem .\ -include bin,obj -Recurse | ForEach-Object ($_) { remove-item $_.fullname -Force -Recurse }

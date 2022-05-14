@@ -12,8 +12,8 @@ using Sample.Customers.Infrastructure.Data;
 namespace Sample.Customers.Infrastructure.Migrations
 {
     [DbContext(typeof(CustomerDbContext))]
-    [Migration("20220514063325_CustomersTable")]
-    partial class CustomersTable
+    [Migration("20220514124953_Customers")]
+    partial class Customers
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -76,11 +76,6 @@ namespace Sample.Customers.Infrastructure.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<string>("EmailAddress")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
                     b.Property<string>("GivenName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -107,6 +102,11 @@ namespace Sample.Customers.Infrastructure.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 

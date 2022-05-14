@@ -1,9 +1,15 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="..\..\common.props" />
 
   <ItemGroup>
+    <PackageReference Include="Guard.Net" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\Saji.Domain\Saji.Domain.csproj" />
+    <ProjectReference Include="..\Sample.Customers.Contracts\Sample.Customers.Contracts.csproj" />
   </ItemGroup>
 
 </Project>
