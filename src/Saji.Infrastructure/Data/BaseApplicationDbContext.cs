@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Data.Entity.ModelConfiguration.Conventions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
