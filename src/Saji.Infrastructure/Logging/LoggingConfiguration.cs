@@ -65,9 +65,9 @@ public static class LoggingConfiguration
             config.WriteTo.Seq(seqSettings.Uri, apiKey: seqSettings.Key, controlLevelSwitch: seqLevelSwitch);
         }
 
-        Log.Logger = config.CreateLogger();
+        var logger = config.CreateLogger();
 
-        Log.Logger.Information("================= {ApplicationName} Started =================", applicationSettings.Name);
+        logger.Information("================= {ApplicationName} Started =================", applicationSettings.Name);
 
         services.AddLogging(builder => builder.AddSerilog(dispose: true));
     }

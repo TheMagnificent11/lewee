@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.Extensions.Logging;
 using Saji.Application.Mediation;
 using Sample.Weather.Domain;
 
@@ -17,13 +16,6 @@ public class GetWeatherForecastsQuery : IQuery<IEnumerable<WeatherForecast>>
 
     internal class GetWeatherForecastQueryHandler : IRequestHandler<GetWeatherForecastsQuery, IEnumerable<WeatherForecast>>
     {
-        private readonly ILogger<GetWeatherForecastQueryHandler> logger;
-
-        public GetWeatherForecastQueryHandler(ILogger<GetWeatherForecastQueryHandler> logger)
-        {
-            this.logger = logger;
-        }
-
         public Task<IEnumerable<WeatherForecast>> Handle(GetWeatherForecastsQuery request, CancellationToken cancellationToken)
         {
             var range = new Random();
@@ -33,8 +25,6 @@ public class GetWeatherForecastsQuery : IQuery<IEnumerable<WeatherForecast>>
                 .Select(item => new WeatherForecast(
                     DateOnly.FromDateTime(DateTime.Now.AddDays(item)),
                     range.Next(-20, 55)));
-
-            this.logger.LogInformation("GetWeatherForecastsQuery Result {@Result}", result);
 
             return Task.FromResult(result);
         }
