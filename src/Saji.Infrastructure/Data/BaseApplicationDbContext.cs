@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Saji.Domain;
+using Serilog;
 
 namespace Saji.Infrastructure.Data;
 
@@ -13,15 +15,22 @@ namespace Saji.Infrastructure.Data;
 public abstract class BaseApplicationDbContext<T> : DbContext
     where T : DbContext
 {
+    private readonly IMediator mediator;
+    private readonly ILogger logger;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="BaseApplicationDbContext{T}"/> class
     /// </summary>
     /// <param name="options">
     /// Database context options
     /// </param>
-    protected BaseApplicationDbContext(DbContextOptions<T> options)
+    /// <param name="mediator">Mediator</param>
+    /// <param name="logger">Logger</param>
+    protected BaseApplicationDbContext(DbContextOptions<T> options, IMediator mediator, ILogger logger)
         : base(options)
     {
+        this.mediator = mediator;
+        this.logger = logger.ForContext<BaseApplicationDbContext<T>>();
     }
 
     /// <summary>
@@ -45,11 +54,11 @@ public abstract class BaseApplicationDbContext<T> : DbContext
     /// <returns>
     /// An async task that contains the number of changes that were persisted to the database
     /// </returns>
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        this.OnBeforeSaving();
+        await this.OnBeforeSaving(cancellationToken);
 
-        return base.SaveChangesAsync(cancellationToken);
+        return await base.SaveChangesAsync(cancellationToken);
     }
 
     /// <summary>
@@ -79,15 +88,15 @@ public abstract class BaseApplicationDbContext<T> : DbContext
     /// </param>
     protected abstract void ConfigureDatabaseModel(ModelBuilder modelBuilder);
 
-    private void OnBeforeSaving()
+    private async Task OnBeforeSaving(CancellationToken cancellationToken)
     {
         foreach (var entry in this.ChangeTracker.Entries().ToList())
         {
-            this.StoredDomainEvents(entry);
+            await this.StoreAndDispatchDomainEvents(entry, cancellationToken);
         }
     }
 
-    private void StoredDomainEvents(EntityEntry entry)
+    private async Task StoreAndDispatchDomainEvents(EntityEntry entry, CancellationToken cancellationToken)
     {
         if (entry.Entity is not BaseEntity baseEntity)
         {
@@ -105,7 +114,20 @@ public abstract class BaseApplicationDbContext<T> : DbContext
 
             var reference = new DomainEventReference(domainEvent);
 
-            this.Add(reference);
+            try
+            {
+                await this.mediator.Publish(domainEvent, cancellationToken);
+
+                reference.Dispatch();
+
+                this.logger.Information("Domain event dispatched {@DomainEvent}", domainEvent);
+            }
+            catch (Exception ex)
+            {
+                this.logger.Error(ex, "Failed to dispatch domain event {@DomainEvent}", domainEvent);
+            }
+
+            this.DomainEventReferences?.Add(reference);
         }
     }
 }

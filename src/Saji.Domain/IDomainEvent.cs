@@ -1,9 +1,11 @@
-﻿namespace Saji.Domain;
+﻿using MediatR;
+
+namespace Saji.Domain;
 
 /// <summary>
 /// Domain Event Interface
 /// </summary>
-public interface IDomainEvent
+public interface IDomainEvent : INotification
 {
     /// <summary>
     /// Gets the correlation ID of the event
