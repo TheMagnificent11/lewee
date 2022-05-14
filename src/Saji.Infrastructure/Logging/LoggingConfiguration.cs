@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Saji.Infrastructure.Settings;
 using Serilog;
 using Serilog.Core;
@@ -13,8 +14,8 @@ public static class LoggingConfiguration
     /// <summary>
     /// <see cref="IServiceCollection"/> extension method to configure logging
     /// </summary>
-    /// <param name="services">
-    /// Services collection
+    /// <param name="builder">
+    /// Logging builder
     /// </param>
     /// <param name="applicationSettings">
     /// Application settings
@@ -23,7 +24,7 @@ public static class LoggingConfiguration
     /// Seq settings
     /// </param>
     public static void ConfigureLogging(
-        this IServiceCollection services,
+        this ILoggingBuilder builder,
         ApplicationSettings applicationSettings,
         SeqSettings seqSettings)
     {
@@ -69,6 +70,6 @@ public static class LoggingConfiguration
 
         logger.Information("================= {ApplicationName} Started =================", applicationSettings.Name);
 
-        services.AddLogging(builder => builder.AddSerilog(dispose: true));
+        builder.AddSerilog(logger);
     }
 }
