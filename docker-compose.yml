@@ -21,3 +21,14 @@ services:
       - saji-network
     environment:
       - ACCEPT_EULA=Y
+  database:
+    container_name: saji_database
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    ports:
+      - 5434:1433
+    networks:
+      - saji-network
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=qwerasdfzxcv123
+      - MSSQL_PID=Express
