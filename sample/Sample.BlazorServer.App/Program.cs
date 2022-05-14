@@ -57,6 +57,9 @@ else
     app.UseHsts();
 }
 
+app.MigrationDatabase<IdentityDbContext>();
+app.MigrationDatabase<CustomerDbContext>();
+
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();

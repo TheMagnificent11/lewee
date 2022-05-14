@@ -8,14 +8,10 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["sample/Sample.BlazorServer.App/Sample.BlazorServer.App.csproj", "sample/Sample.BlazorServer.App/"]
-COPY ["sample/Sample.Identity.Infrastructure/Sample.Identity.Infrastructure.csproj", "sample/Sample.Identity.Infrastructure/"]
-COPY ["sample/Sample.Customers.Infrastructure/Sample.Customers.Infrastructure.csproj", "sample/Sample.Customers.Infrastructure/"]
 RUN dotnet restore "sample/Sample.BlazorServer.App/Sample.BlazorServer.App.csproj"
 COPY . .
 WORKDIR "/src/sample/Sample.BlazorServer.App"
 RUN dotnet build "Sample.BlazorServer.App.csproj" -c Release -o /app/build
-RUN dotnet ef database update -p "../Sample.Identity.Infrastructure" -c "IdentityDbContext"
-RUN dotnet ef database update -p "../Sample.Customers.Infrastructure" -c "CustomersDbContext"
 
 FROM build AS publish
 RUN dotnet publish "Sample.BlazorServer.App.csproj" -c Release -o /app/publish

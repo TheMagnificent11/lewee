@@ -12,6 +12,9 @@ services:
       dockerfile: sample/Sample.BlazorServer.App/Dockerfile
     networks:
       - saji-network
+    depends_on:
+      - database
+      - seq
   seq:
     container_name: saji_seq
     image: datalust/seq
@@ -30,5 +33,5 @@ services:
       - saji-network
     environment:
       - ACCEPT_EULA=Y
-      - SA_PASSWORD=qwerasdfzxcv123
+      - SA_PASSWORD=reqwfdasvczx431!
       - MSSQL_PID=Express
