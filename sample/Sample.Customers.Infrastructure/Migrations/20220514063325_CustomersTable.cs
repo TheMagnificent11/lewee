@@ -9,8 +9,12 @@ namespace Sample.Customers.Infrastructure.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "cus");
+
             migrationBuilder.CreateTable(
-                name: "Customer",
+                name: "Customers",
+                schema: "cus",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -26,11 +30,12 @@ namespace Sample.Customers.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Customer", x => x.Id);
+                    table.PrimaryKey("PK_Customers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "DomainEventReferences",
+                schema: "cus",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -48,6 +53,7 @@ namespace Sample.Customers.Infrastructure.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_DomainEventReferences_Dispatched_PersistedAt",
+                schema: "cus",
                 table: "DomainEventReferences",
                 columns: new[] { "Dispatched", "PersistedAt" });
         }
@@ -55,10 +61,12 @@ namespace Sample.Customers.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Customer");
+                name: "Customers",
+                schema: "cus");
 
             migrationBuilder.DropTable(
-                name: "DomainEventReferences");
+                name: "DomainEventReferences",
+                schema: "cus");
         }
     }
 }

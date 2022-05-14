@@ -2,6 +2,14 @@
 
   <Import Project="..\..\testing.props" />
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <CodeAnalysisRuleSet />
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <CodeAnalysisRuleSet />
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\src\Saji.Domain\Saji.Domain.csproj" />
   </ItemGroup>

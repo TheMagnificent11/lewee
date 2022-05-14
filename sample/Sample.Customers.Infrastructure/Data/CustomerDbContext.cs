@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Saji.Infrastructure.Data;
+using Sample.Customers.Domain.Entities;
 using Serilog;
 
 namespace Sample.Customers.Infrastructure.Data;
@@ -12,7 +13,14 @@ public sealed class CustomerDbContext : BaseApplicationDbContext<CustomerDbConte
     {
     }
 
-    /* TODO: public override string Schema => "cus"; */
+    public CustomerDbContext(DbContextOptions<CustomerDbContext> options)
+        : base(options)
+    {
+    }
+
+    public override string Schema => "cus";
+
+    public DbSet<Customer>? Customers { get; set; }
 
     protected override void ConfigureDatabaseModel(ModelBuilder modelBuilder)
     {

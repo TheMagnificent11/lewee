@@ -67,9 +67,7 @@ public static class LoggingConfiguration
 
         Log.Logger = config.CreateLogger();
 
-#pragma warning disable Serilog004 // Constant MessageTemplate verifier
-        Log.Logger.Information($"================= {applicationSettings.Name} Started =================");
-#pragma warning restore Serilog004 // Constant MessageTemplate verifier
+        Log.Logger.Information("================= {ApplicationName} Started =================", applicationSettings.Name);
 
         services.AddLogging(builder => builder.AddSerilog(dispose: true));
     }

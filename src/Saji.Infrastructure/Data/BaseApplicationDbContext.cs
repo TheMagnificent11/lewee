@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using System.Collections;
+using System.Data.Entity.ModelConfiguration.Conventions;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Saji.Domain;
@@ -31,6 +33,27 @@ public abstract class BaseApplicationDbContext<T> : DbContext
     {
         this.mediator = mediator;
         this.logger = logger.ForContext<BaseApplicationDbContext<T>>();
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BaseApplicationDbContext{T}"/> class
+    /// </summary>
+    /// <param name="options">
+    /// Database context options
+    /// </param>
+    /// <remarks>
+    /// EF migrations constructor
+    /// </remarks>
+    protected BaseApplicationDbContext(DbContextOptions<T> options)
+        : base(options)
+    {
+        var serviceFactory = new ServiceFactory(type =>
+            typeof(IEnumerable).IsAssignableFrom(type)
+                ? Array.CreateInstance(type.GetGenericArguments().First(), 0)
+                : Array.Empty<object>());
+
+        this.mediator = new Mediator(serviceFactory);
+        this.logger = Log.Logger;
     }
 
     /// <summary>
@@ -71,9 +94,7 @@ public abstract class BaseApplicationDbContext<T> : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        /* TODO: ensure plurals used for table names */
-
-        /* TODO: configure schema */
+        modelBuilder.HasDefaultSchema(this.Schema);
 
         modelBuilder.ApplyConfiguration(new DomainEventReferenceConfiguration());
 

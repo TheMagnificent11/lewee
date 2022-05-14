@@ -17,6 +17,7 @@ namespace Sample.Customers.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("cus")
                 .HasAnnotation("ProductVersion", "6.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
@@ -56,7 +57,7 @@ namespace Sample.Customers.Infrastructure.Migrations
 
                     b.HasIndex("Dispatched", "PersistedAt");
 
-                    b.ToTable("DomainEventReferences");
+                    b.ToTable("DomainEventReferences", "cus");
                 });
 
             modelBuilder.Entity("Sample.Customers.Domain.Entities.Customer", b =>
@@ -107,7 +108,7 @@ namespace Sample.Customers.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customer");
+                    b.ToTable("Customers", "cus");
                 });
 #pragma warning restore 612, 618
         }
