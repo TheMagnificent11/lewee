@@ -11,13 +11,17 @@ namespace Saji.Application.Mediation.Behaviors;
 /// <typeparam name="TRequest">
 /// Request type
 /// </typeparam>
-public class ValidationBehavior<TRequest> : IPipelineBehavior<TRequest, CommandResult>
-    where TRequest : ICommand
+/// <typeparam name="TResponse">
+/// Response type
+/// </typeparam>
+public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    where TRequest : IRequest<TResponse>, ICommand
+    where TResponse : CommandResult
 {
     private readonly IEnumerable<IValidator<TRequest>> validators;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ValidationBehavior{TRequest}"/> class
+    /// Initializes a new instance of the <see cref="ValidationBehavior{TRequest, TResponse}"/> class
     /// </summary>
     /// <param name="validators">
     /// Validators
@@ -42,10 +46,10 @@ public class ValidationBehavior<TRequest> : IPipelineBehavior<TRequest, CommandR
     /// <returns>
     /// Response
     /// </returns>
-    public async Task<CommandResult> Handle(
+    public async Task<TResponse> Handle(
         TRequest request,
         CancellationToken cancellationToken,
-        RequestHandlerDelegate<CommandResult> next)
+        RequestHandlerDelegate<TResponse> next)
     {
         var tasks = this.validators.Select(v => v.ValidateAsync(request, cancellationToken));
         var results = await Task.WhenAll(tasks);
@@ -56,7 +60,7 @@ public class ValidationBehavior<TRequest> : IPipelineBehavior<TRequest, CommandR
 
         if (failures.Any())
         {
-            return GetBadRequestCommandResult(failures);
+            return (TResponse)GetBadRequestCommandResult(failures);
         }
 
         return await next();
