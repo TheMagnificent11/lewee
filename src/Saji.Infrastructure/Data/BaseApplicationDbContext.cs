@@ -35,27 +35,6 @@ public abstract class BaseApplicationDbContext<T> : DbContext
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="BaseApplicationDbContext{T}"/> class
-    /// </summary>
-    /// <param name="options">
-    /// Database context options
-    /// </param>
-    /// <remarks>
-    /// EF migrations constructor
-    /// </remarks>
-    protected BaseApplicationDbContext(DbContextOptions<T> options)
-        : base(options)
-    {
-        var serviceFactory = new ServiceFactory(type =>
-            typeof(IEnumerable).IsAssignableFrom(type)
-                ? Array.CreateInstance(type.GetGenericArguments().First(), 0)
-                : Array.Empty<object>());
-
-        this.mediator = new Mediator(serviceFactory);
-        this.logger = Log.Logger;
-    }
-
-    /// <summary>
     /// Gets the database schema for the context
     /// </summary>
     public virtual string Schema { get; } = "dbo";

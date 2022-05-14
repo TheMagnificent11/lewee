@@ -13,11 +13,6 @@ public sealed class CustomerDbContext : BaseApplicationDbContext<CustomerDbConte
     {
     }
 
-    public CustomerDbContext(DbContextOptions<CustomerDbContext> options)
-        : base(options)
-    {
-    }
-
     public override string Schema => "cus";
 
     public DbSet<Customer>? Customers { get; set; }

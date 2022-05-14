@@ -19,7 +19,7 @@ var customersConnectionString = builder.Configuration.GetConnectionString("Custo
 var appSettings = builder.Configuration.GetSettings<ApplicationSettings>("ApplicationSettings");
 var seqSettings = builder.Configuration.GetSettings<SeqSettings>("SeqSettings");
 
-builder.Logging.ConfigureLogging(appSettings, seqSettings);
+builder.Host.ConfigureLogging(appSettings, seqSettings);
 
 builder.Services
     .AddApplication(typeof(CreateCustomerCommand).Assembly)
