@@ -18,6 +18,7 @@
     <ProjectReference Include="..\Sample.Customers.Application\Sample.Customers.Application.csproj" />
     <ProjectReference Include="..\Sample.Customers.Infrastructure\Sample.Customers.Infrastructure.csproj" />
     <ProjectReference Include="..\Sample.Identity.Infrastructure\Sample.Identity.Infrastructure.csproj" />
+    <ProjectReference Include="..\Sample.Weather.Application\Sample.Weather.Application.csproj" />
   </ItemGroup>
 
 </Project>

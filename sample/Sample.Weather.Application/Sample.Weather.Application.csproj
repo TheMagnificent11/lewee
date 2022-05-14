@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\common.props" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Saji.Application\Saji.Application.csproj" />
+    <ProjectReference Include="..\Sample.Weather.Domain\Sample.Weather.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

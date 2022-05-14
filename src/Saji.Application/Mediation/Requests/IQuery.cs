@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Saji.Application.Mediation.Responses;
 
 namespace Saji.Application.Mediation;
 
@@ -9,7 +8,7 @@ namespace Saji.Application.Mediation;
 /// <typeparam name="T">
 /// Query response type
 /// </typeparam>
-public interface IQuery<T> : IApplicationRequest, IRequest<QueryResult<T>>
+public interface IQuery<T> : IApplicationRequest, IRequest<T>
     where T : class
 {
 }

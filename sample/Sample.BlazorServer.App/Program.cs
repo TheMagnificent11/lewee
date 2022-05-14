@@ -9,6 +9,7 @@ using Sample.BlazorServer.App.Areas.Identity;
 using Sample.Customers.Application;
 using Sample.Customers.Infrastructure.Data;
 using Sample.Identity.Infrastructure.Data;
+using Sample.Weather.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,7 @@ builder.Services.ConfigureLogging(appSettings, seqSettings);
 
 builder.Services
     .AddApplication(typeof(CreateCustomerCommand).Assembly)
+    .AddApplication(typeof(GetWeatherForecastsQuery).Assembly)
     .AddPipelineBehaviors();
 
 builder.Services.ConfigureIdentityDatabase(identityConnectionString);
@@ -34,8 +36,6 @@ builder.Services.AddServerSideBlazor();
 
 builder.Services
     .AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
-
-builder.Services.AddSingleton<WeatherForecastService>();
 
 builder.Services
     .AddHealthChecks()

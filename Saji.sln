@@ -33,7 +33,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Customers.Infrastruc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Identity.Infrastructure", "sample\Sample.Identity.Infrastructure\Sample.Identity.Infrastructure.csproj", "{767C9C67-AB67-4626-93FF-57FCAF80222F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Customers.Application", "sample\Sample.Customers.Application\Sample.Customers.Application.csproj", "{8F35E07F-352F-4123-9FCE-87C790A44DC8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Customers.Application", "sample\Sample.Customers.Application\Sample.Customers.Application.csproj", "{8F35E07F-352F-4123-9FCE-87C790A44DC8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Weather.Domain", "sample\Sample.Weather.Domain\Sample.Weather.Domain.csproj", "{A2015C51-C49A-469F-BD42-E8334B476D9F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Weather.Application", "sample\Sample.Weather.Application\Sample.Weather.Application.csproj", "{EFB6D6BB-2B8A-4494-959C-6501C05EDCCC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -77,6 +81,14 @@ Global
 		{8F35E07F-352F-4123-9FCE-87C790A44DC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8F35E07F-352F-4123-9FCE-87C790A44DC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8F35E07F-352F-4123-9FCE-87C790A44DC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2015C51-C49A-469F-BD42-E8334B476D9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2015C51-C49A-469F-BD42-E8334B476D9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2015C51-C49A-469F-BD42-E8334B476D9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2015C51-C49A-469F-BD42-E8334B476D9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFB6D6BB-2B8A-4494-959C-6501C05EDCCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFB6D6BB-2B8A-4494-959C-6501C05EDCCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFB6D6BB-2B8A-4494-959C-6501C05EDCCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFB6D6BB-2B8A-4494-959C-6501C05EDCCC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
