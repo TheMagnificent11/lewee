@@ -20,3 +20,5 @@ Obj/
 
 # Visual Studio 2015 cache/options directory
 .vs/
+
+/data

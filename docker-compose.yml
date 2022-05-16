@@ -35,3 +35,5 @@ services:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=reqwfdasvczx431!
       - MSSQL_PID=Express
+    volumes:
+      - ./data:/var/opt/mssql/data
