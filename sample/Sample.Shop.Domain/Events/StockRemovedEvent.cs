@@ -4,16 +4,16 @@ namespace Sample.Shop.Domain.Events;
 
 public class StockRemovedEvent : IDomainEvent
 {
-    public StockRemovedEvent(Guid correlationId, Guid catalogueItemId, int quantity, int newStockLevel)
+    public StockRemovedEvent(Guid correlationId, Guid productId, int quantity, int newStockLevel)
     {
         this.CorrelationId = correlationId;
-        this.ItemId = catalogueItemId;
+        this.ProductId = productId;
         this.Quantity = quantity;
         this.NewStockLevel = newStockLevel;
     }
 
     public Guid CorrelationId { get; }
-    public Guid ItemId { get; }
+    public Guid ProductId { get; }
     public int Quantity { get; }
     public int NewStockLevel { get; }
 }
