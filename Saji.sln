@@ -27,13 +27,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Project Config", "Project C
 		testing.props = testing.props
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Customers.Domain", "sample\Sample.Customers.Domain\Sample.Customers.Domain.csproj", "{96F2A070-B6DA-40F8-9F21-9BA09006DB0C}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Customers.Infrastructure", "sample\Sample.Customers.Infrastructure\Sample.Customers.Infrastructure.csproj", "{2A65B57B-799D-4091-9CB2-27BE3D256211}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Identity.Infrastructure", "sample\Sample.Identity.Infrastructure\Sample.Identity.Infrastructure.csproj", "{767C9C67-AB67-4626-93FF-57FCAF80222F}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Customers.Application", "sample\Sample.Customers.Application\Sample.Customers.Application.csproj", "{8F35E07F-352F-4123-9FCE-87C790A44DC8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Weather.Domain", "sample\Sample.Weather.Domain\Sample.Weather.Domain.csproj", "{A2015C51-C49A-469F-BD42-E8334B476D9F}"
 EndProject
@@ -41,9 +35,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Weather.Application"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{30F833D3-1DBF-4B61-A479-E293C3DE0FB7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Customers.Contracts", "sample\Sample.Customers.Contracts\Sample.Customers.Contracts.csproj", "{380E6A00-9F9E-4896-B530-0572073B227A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Shop.Domain", "sample\Sample.Shop.Domain\Sample.Shop.Domain.csproj", "{8D976386-DF75-4261-9BE6-D8C2632EDC85}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Shop.Domain", "sample\Sample.Shop.Domain\Sample.Shop.Domain.csproj", "{8D976386-DF75-4261-9BE6-D8C2632EDC85}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -71,22 +63,10 @@ Global
 		{59768BF8-823F-4DB6-BD62-148AD7CB934A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59768BF8-823F-4DB6-BD62-148AD7CB934A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59768BF8-823F-4DB6-BD62-148AD7CB934A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{96F2A070-B6DA-40F8-9F21-9BA09006DB0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{96F2A070-B6DA-40F8-9F21-9BA09006DB0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{96F2A070-B6DA-40F8-9F21-9BA09006DB0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{96F2A070-B6DA-40F8-9F21-9BA09006DB0C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2A65B57B-799D-4091-9CB2-27BE3D256211}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2A65B57B-799D-4091-9CB2-27BE3D256211}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2A65B57B-799D-4091-9CB2-27BE3D256211}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2A65B57B-799D-4091-9CB2-27BE3D256211}.Release|Any CPU.Build.0 = Release|Any CPU
 		{767C9C67-AB67-4626-93FF-57FCAF80222F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{767C9C67-AB67-4626-93FF-57FCAF80222F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{767C9C67-AB67-4626-93FF-57FCAF80222F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{767C9C67-AB67-4626-93FF-57FCAF80222F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8F35E07F-352F-4123-9FCE-87C790A44DC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8F35E07F-352F-4123-9FCE-87C790A44DC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8F35E07F-352F-4123-9FCE-87C790A44DC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8F35E07F-352F-4123-9FCE-87C790A44DC8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A2015C51-C49A-469F-BD42-E8334B476D9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A2015C51-C49A-469F-BD42-E8334B476D9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2015C51-C49A-469F-BD42-E8334B476D9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -99,10 +79,6 @@ Global
 		{30F833D3-1DBF-4B61-A479-E293C3DE0FB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30F833D3-1DBF-4B61-A479-E293C3DE0FB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{30F833D3-1DBF-4B61-A479-E293C3DE0FB7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{380E6A00-9F9E-4896-B530-0572073B227A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{380E6A00-9F9E-4896-B530-0572073B227A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{380E6A00-9F9E-4896-B530-0572073B227A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{380E6A00-9F9E-4896-B530-0572073B227A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8D976386-DF75-4261-9BE6-D8C2632EDC85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8D976386-DF75-4261-9BE6-D8C2632EDC85}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D976386-DF75-4261-9BE6-D8C2632EDC85}.Release|Any CPU.ActiveCfg = Release|Any CPU
