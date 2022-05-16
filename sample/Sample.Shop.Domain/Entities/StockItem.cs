@@ -5,12 +5,14 @@ namespace Sample.Shop.Domain.Entities;
 
 public class StockItem : BaseEntity
 {
-    public StockItem(string name, string description, decimal salePrice, int stockLevel)
+    public StockItem(Guid correlationId, string name, string description, decimal salePrice, int stockLevel)
     {
         this.Name = name;
         this.Description = description;
         this.SalePrice = salePrice;
         this.StockLevel = stockLevel;
+
+        this.DomainEvents.Raise(new StockItemCreatedEvent(correlationId, this));
     }
 
     // EF Constructor
