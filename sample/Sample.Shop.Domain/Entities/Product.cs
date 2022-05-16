@@ -5,7 +5,7 @@ namespace Sample.Shop.Domain.Entities;
 
 public class Product : BaseEntity
 {
-    public Product(Guid correlationId, string name, string description, decimal salePrice, int stockLevel)
+    public Product(string name, string description, decimal salePrice, int stockLevel, Guid correlationId)
     {
         this.Name = name;
         this.Description = description;
