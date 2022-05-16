@@ -3,20 +3,20 @@ using Sample.Shop.Domain.Events;
 
 namespace Sample.Shop.Domain.Entities;
 
-public class StockItem : BaseEntity
+public class Item : BaseEntity
 {
-    public StockItem(Guid correlationId, string name, string description, decimal salePrice, int stockLevel)
+    public Item(Guid correlationId, string name, string description, decimal salePrice, int stockLevel)
     {
         this.Name = name;
         this.Description = description;
         this.SalePrice = salePrice;
         this.StockLevel = stockLevel;
 
-        this.DomainEvents.Raise(new StockItemCreatedEvent(correlationId, this));
+        this.DomainEvents.Raise(new ItemCreatedEvent(correlationId, this));
     }
 
     // EF Constructor
-    private StockItem()
+    private Item()
     {
         this.Name = string.Empty;
         this.Description = string.Empty;
