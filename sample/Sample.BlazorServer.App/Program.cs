@@ -74,4 +74,10 @@ app.MapControllers();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
+if (app.Environment.IsDevelopment())
+{
+    app.MigrationDatabase<IdentityDbContext>();
+    app.MigrationDatabase<ShopDbContext>();
+}
+
 app.Run();
