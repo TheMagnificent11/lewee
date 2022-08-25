@@ -16,6 +16,9 @@ public sealed class ProductConfiguration : BaseEntityConfiguration<Product>
         builder.Property(x => x.Description)
             .HasMaxLength(Product.MaxLengths.Description);
 
+        builder.Property(x => x.SalePrice)
+            .HasPrecision(10, 2);
+
         builder.HasMany(x => x.OrdersLines)
             .WithOne(x => x.Product)
             .HasForeignKey(x => x.ProductId)

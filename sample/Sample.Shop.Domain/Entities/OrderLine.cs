@@ -13,6 +13,7 @@ public class OrderLine : BaseEntity
 
         this.OrderId = order.Id;
         this.ProductId = product.Id;
+        this.Price = product.SalePrice;
         this.Cost = product.SalePrice * quantity;
     }
 
@@ -32,6 +33,8 @@ public class OrderLine : BaseEntity
     public Product Product { get; protected set; }
 
     public int Quantity { get; protected set; }
+
+    public decimal Price { get; protected set; }
 
     public decimal Cost { get; protected set; }
 }

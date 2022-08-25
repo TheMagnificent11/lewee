@@ -9,6 +9,12 @@ public sealed class OrderLineConfiguration : BaseEntityConfiguration<OrderLine>
 {
     protected override void ConfigureEntity(EntityTypeBuilder<OrderLine> builder)
     {
+        builder.Property(x => x.Price)
+            .HasPrecision(10, 2);
+
+        builder.Property(x => x.Cost)
+            .HasPrecision(10, 2);
+
         builder.HasOne(x => x.Order)
             .WithMany(x => x.OrderLines)
             .HasForeignKey(x => x.OrderId)
