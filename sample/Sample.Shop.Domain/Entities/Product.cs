@@ -36,11 +36,13 @@ public class Product : BaseEntity
         this.DomainEvents.Raise(new StockAddedEvent(correlationId, this.Id, quantity, this.StockLevel));
     }
 
-    public void Sell(int quantity, Guid correlationId)
+    public void AddToOrder(Order order, int quantity)
     {
-        this.StockLevel -= quantity;
+        order.AddToCart(this, quantity);
 
-        this.DomainEvents.Raise(new StockRemovedEvent(correlationId, this.Id, quantity, this.StockLevel));
+        // TODO: reduce stock levels checkout is complete
+        ////this.StockLevel -= quantity;
+        ////this.DomainEvents.Raise(new StockRemovedEvent(correlationId, this.Id, quantity, this.StockLevel));
     }
 
     public void ChangeSalePrice(decimal newPrice, Guid correlationId)
