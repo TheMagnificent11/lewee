@@ -1,12 +1,17 @@
-﻿namespace Sample.Shop.Domain.Entities;
+﻿using System.Collections.ObjectModel;
+using Saji.Domain;
 
-public class OrderLine
+namespace Sample.Shop.Domain.Entities;
+
+public class OrderLine : BaseEntity
 {
-    internal OrderLine(Product product, int quantity)
+    internal OrderLine(Order order, Product product, int quantity)
     {
+        this.Order = order;
         this.Product = product;
         this.Quantity = quantity;
 
+        this.OrderId = order.Id;
         this.ProductId = product.Id;
         this.Cost = product.SalePrice * quantity;
     }
@@ -14,8 +19,13 @@ public class OrderLine
     // EF Constructor
     private OrderLine()
     {
-        this.Product = new Product("EF Constructor", "EF Constructor", 0, 1, Guid.NewGuid());
+        this.Order = new Order(Guid.Empty);
+        this.Product = new Product("EF Constructor", "EF Constructor", 0, 1, Guid.Empty);
     }
+
+    public Guid OrderId { get; protected set; }
+
+    public Order Order { get; protected set; }
 
     public Guid ProductId { get; protected set; }
 
