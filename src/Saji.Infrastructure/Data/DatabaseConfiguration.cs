@@ -32,7 +32,7 @@ public static class DatabaseConfiguration
         where T : DbContext
     {
         services
-            .AddDbContext<T>(options => options.UseSqlServer(connectionString));
+            .AddDbContextFactory<T>(options => options.UseSqlServer(connectionString));
 
         if (!addDomainEventDispatcher)
         {

@@ -15,9 +15,10 @@ namespace Saji.Infrastructure.Events;
 public class DomainEventDispatcher<TContext>
     where TContext : DbContext
 {
+    private const int BatchSize = 50;
+
     private readonly TransactionScopeFactory<TContext> transactionScopeFactory;
     private readonly IMediator mediator;
-    private readonly int batchSize;
     private readonly ILogger logger;
 
     /// <summary>
@@ -29,21 +30,16 @@ public class DomainEventDispatcher<TContext>
     /// <param name="mediator">
     /// Mediator
     /// </param>
-    /// <param name="batchSize">
-    /// Maximum size of batch on domain events that will be dispatched for each cycle
-    /// </param>
     /// <param name="logger">
     /// Logger
     /// </param>
     public DomainEventDispatcher(
         TransactionScopeFactory<TContext> transactionScopeFactory,
         IMediator mediator,
-        int batchSize,
         ILogger logger)
     {
         this.transactionScopeFactory = transactionScopeFactory;
         this.mediator = mediator;
-        this.batchSize = batchSize;
         this.logger = logger.ForContext<DomainEventDispatcher<TContext>>();
     }
 
@@ -99,7 +95,7 @@ public class DomainEventDispatcher<TContext>
             var events = await dbSet
                 .Where(x => !x.Dispatched)
                 .OrderBy(x => x.PersistedAt)
-                .Take(this.batchSize)
+                .Take(BatchSize)
                 .ToArrayAsync(token);
 
             var domainEvents = new List<IDomainEvent>();
