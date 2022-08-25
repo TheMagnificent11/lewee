@@ -28,6 +28,8 @@ public sealed class ShopDbContext : BaseApplicationDbContext<ShopDbContext>
 
 #nullable enable
 
+    public override string Schema => "shp";
+
     protected override void ConfigureDatabaseModel(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new ProductConfiguration());

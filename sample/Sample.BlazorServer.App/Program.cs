@@ -7,11 +7,13 @@ using Saji.Infrastructure.Logging;
 using Saji.Infrastructure.Settings;
 using Sample.BlazorServer.App.Areas.Identity;
 using Sample.Identity.Infrastructure.Data;
+using Sample.Shop.Infrastructure.Data;
 using Sample.Weather.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var identityConnectionString = builder.Configuration.GetConnectionString("Identity");
+var shopConnectionString = builder.Configuration.GetConnectionString("Shop");
 
 var appSettings = builder.Configuration.GetSettings<ApplicationSettings>("ApplicationSettings");
 var seqSettings = builder.Configuration.GetSettings<SeqSettings>("SeqSettings");
@@ -27,6 +29,8 @@ builder.Services.ConfigureDatabase<IdentityDbContext>(identityConnectionString);
 builder.Services
     .AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<IdentityDbContext>();
+
+builder.Services.ConfigureDatabase<ShopDbContext>(shopConnectionString);
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 

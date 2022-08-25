@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Saji.Infrastructure.Events;
 
 namespace Saji.Infrastructure.Data;
 
@@ -26,6 +27,9 @@ public static class DatabaseConfiguration
     {
         services
             .AddDbContext<T>(options => options.UseSqlServer(connectionString));
+
+        services.AddTransient<DomainEventDispatcher<T>>();
+        services.AddTransient<TransactionScopeFactory<T>>();
     }
 
     /// <summary>
