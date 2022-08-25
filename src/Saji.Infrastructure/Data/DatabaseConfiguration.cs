@@ -22,11 +22,22 @@ public static class DatabaseConfiguration
     /// <param name="connectionString">
     /// Database connection string
     /// </param>
-    public static void ConfigureDatabase<T>(this IServiceCollection services, string connectionString)
+    /// <param name="addDomainEventDispatcher">
+    /// Whether to add a domain event dispatcher for the database context
+    /// </param>
+    public static void ConfigureDatabase<T>(
+        this IServiceCollection services,
+        string connectionString,
+        bool addDomainEventDispatcher)
         where T : DbContext
     {
         services
             .AddDbContext<T>(options => options.UseSqlServer(connectionString));
+
+        if (!addDomainEventDispatcher)
+        {
+            return;
+        }
 
         services.AddTransient<DomainEventDispatcher<T>>();
         services.AddTransient<TransactionScopeFactory<T>>();

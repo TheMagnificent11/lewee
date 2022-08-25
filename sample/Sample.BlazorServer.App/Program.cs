@@ -24,13 +24,12 @@ builder.Services
     .AddApplication(typeof(GetWeatherForecastsQuery).Assembly)
     .AddPipelineBehaviors();
 
-builder.Services.ConfigureDatabase<IdentityDbContext>(identityConnectionString);
+builder.Services.ConfigureDatabase<IdentityDbContext>(identityConnectionString, false);
+builder.Services.ConfigureDatabase<ShopDbContext>(shopConnectionString, true);
 
 builder.Services
     .AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<IdentityDbContext>();
-
-builder.Services.ConfigureDatabase<ShopDbContext>(shopConnectionString);
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -42,7 +41,8 @@ builder.Services
 
 builder.Services
     .AddHealthChecks()
-    .AddDbContextCheck<IdentityDbContext>();
+    .AddDbContextCheck<IdentityDbContext>()
+    .AddDbContextCheck<ShopDbContext>();
 
 var app = builder.Build();
 
