@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Saji.Domain;
+using Saji.Infrastructure.Events;
 using Serilog;
 
 namespace Saji.Infrastructure.Data;
@@ -16,8 +17,9 @@ namespace Saji.Infrastructure.Data;
 public abstract class BaseApplicationDbContext<T> : DbContext
     where T : DbContext
 {
-    private readonly IMediator mediator;
-    private readonly ILogger logger;
+    private readonly DomainEventDispatcher<T> domainEventDispatcher;
+
+    private bool domainEventsAdded = false;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BaseApplicationDbContext{T}"/> class
@@ -25,17 +27,11 @@ public abstract class BaseApplicationDbContext<T> : DbContext
     /// <param name="options">
     /// Database context options
     /// </param>
-    /// <param name="mediator">
-    /// Mediator
-    /// </param>
-    /// <param name="logger">
-    /// Logger
-    /// </param>
-    protected BaseApplicationDbContext(DbContextOptions<T> options, IMediator mediator, ILogger logger)
+    /// <param name="domainEventDispatcher">Domain event dispatcher</param>
+    protected BaseApplicationDbContext(DbContextOptions<T> options, DomainEventDispatcher<T> domainEventDispatcher)
         : base(options)
     {
-        this.mediator = mediator;
-        this.logger = logger.ForContext<BaseApplicationDbContext<T>>();
+        this.domainEventDispatcher = domainEventDispatcher;
     }
 
     /// <summary>
@@ -61,9 +57,16 @@ public abstract class BaseApplicationDbContext<T> : DbContext
     /// </returns>
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        await this.OnBeforeSaving(cancellationToken);
+        this.OnBeforeSaving();
 
-        return await base.SaveChangesAsync(cancellationToken);
+        var changes = await base.SaveChangesAsync(cancellationToken);
+
+        if (this.domainEventsAdded)
+        {
+            await this.domainEventDispatcher.DispatchEvents(cancellationToken);
+        }
+
+        return changes;
     }
 
     /// <summary>
@@ -91,15 +94,17 @@ public abstract class BaseApplicationDbContext<T> : DbContext
     /// </param>
     protected abstract void ConfigureDatabaseModel(ModelBuilder modelBuilder);
 
-    private async Task OnBeforeSaving(CancellationToken cancellationToken)
+    private void OnBeforeSaving()
     {
+        this.domainEventsAdded = false;
+
         foreach (var entry in this.ChangeTracker.Entries().ToList())
         {
-            await this.StoreAndDispatchDomainEvents(entry, cancellationToken);
+            this.StoreAndDispatchDomainEvents(entry);
         }
     }
 
-    private async Task StoreAndDispatchDomainEvents(EntityEntry entry, CancellationToken cancellationToken)
+    private void StoreAndDispatchDomainEvents(EntityEntry entry)
     {
         if (entry.Entity is not BaseEntity baseEntity)
         {
@@ -117,20 +122,9 @@ public abstract class BaseApplicationDbContext<T> : DbContext
 
             var reference = new DomainEventReference(domainEvent);
 
-            try
-            {
-                await this.mediator.Publish(domainEvent, cancellationToken);
-
-                reference.Dispatch();
-
-                this.logger.Information("Domain event dispatched {@DomainEvent}", domainEvent);
-            }
-            catch (Exception ex)
-            {
-                this.logger.Error(ex, "Failed to dispatch domain event {@DomainEvent}", domainEvent);
-            }
-
             this.DomainEventReferences?.Add(reference);
+
+            this.domainEventsAdded = true;
         }
     }
 }

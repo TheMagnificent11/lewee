@@ -4,19 +4,21 @@
 
   <PropertyGroup>
     <UserSecretsId>aspnet-Sample.BlazorServer.App-F535AF0E-1A91-4001-B449-0394EF6D84FE</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..</DockerfileContext>
+    <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="6.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Saji.Infrastructure\Saji.Infrastructure.csproj" />
-    <ProjectReference Include="..\Sample.Customers.Application\Sample.Customers.Application.csproj" />
-    <ProjectReference Include="..\Sample.Customers.Infrastructure\Sample.Customers.Infrastructure.csproj" />
     <ProjectReference Include="..\Sample.Identity.Infrastructure\Sample.Identity.Infrastructure.csproj" />
     <ProjectReference Include="..\Sample.Weather.Application\Sample.Weather.Application.csproj" />
   </ItemGroup>

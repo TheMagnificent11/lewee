@@ -1,0 +1,39 @@
+version: '3.4'
+
+networks:
+  saji-network:
+    name: saji_network
+
+services:
+  sample.blazorserver.app:
+    image: ${DOCKER_REGISTRY-}sampleblazorserverapp
+    build:
+      context: .
+      dockerfile: sample/Sample.BlazorServer.App/Dockerfile
+    networks:
+      - saji-network
+    depends_on:
+      - database
+      - seq
+  seq:
+    container_name: saji_seq
+    image: datalust/seq
+    ports:
+      - 5341:80
+    networks:
+      - saji-network
+    environment:
+      - ACCEPT_EULA=Y
+  database:
+    container_name: saji_database
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    ports:
+      - 5434:1433
+    networks:
+      - saji-network
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=reqwfdasvczx431!
+      - MSSQL_PID=Express
+    volumes:
+      - ./data:/var/opt/mssql/data
