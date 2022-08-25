@@ -5,17 +5,13 @@ using Saji.Domain;
 namespace Saji.Infrastructure.Data;
 
 /// <summary>
-/// <see cref="IEnumEntity{TKey}"/> Configuration
+/// Base Enum Entity Configuration
 /// </summary>
 /// <typeparam name="TEnum">
 /// Enum type
 /// </typeparam>
-/// <typeparam name="TEnumEntity">
-/// Enum lookup table type
-/// </typeparam>
-public class EnumEntityConfiguration<TEnum, TEnumEntity> : IEntityTypeConfiguration<TEnumEntity>
+public abstract class BaseEnumEntityConfiguration<TEnum> : IEntityTypeConfiguration<EnumEntity<TEnum>>
     where TEnum : struct, IConvertible, IComparable
-    where TEnumEntity : class, IEnumEntity<TEnum>
 {
     /// <summary>
     /// Configures enum entity lookup database table
@@ -23,7 +19,7 @@ public class EnumEntityConfiguration<TEnum, TEnumEntity> : IEntityTypeConfigurat
     /// <param name="builder">
     /// Table builder
     /// </param>
-    public virtual void Configure(EntityTypeBuilder<TEnumEntity> builder)
+    public virtual void Configure(EntityTypeBuilder<EnumEntity<TEnum>> builder)
     {
         if (builder is null)
         {
