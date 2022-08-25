@@ -25,8 +25,12 @@ public abstract class BaseApplicationDbContext<T> : DbContext
     /// <param name="options">
     /// Database context options
     /// </param>
-    /// <param name="mediator">Mediator</param>
-    /// <param name="logger">Logger</param>
+    /// <param name="mediator">
+    /// Mediator
+    /// </param>
+    /// <param name="logger">
+    /// Logger
+    /// </param>
     protected BaseApplicationDbContext(DbContextOptions<T> options, IMediator mediator, ILogger logger)
         : base(options)
     {

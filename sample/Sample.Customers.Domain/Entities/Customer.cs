@@ -5,18 +5,18 @@ namespace Sample.Customers.Domain.Entities;
 
 public class Customer : BaseEntity
 {
-    /* TODO: Guard against empty strings */
-
     public Customer(
         string emailAddress,
         string givenName,
         string surname,
+        string? userId,
         Guid correlationId)
         : base()
     {
         this.EmailAddress = emailAddress.Trim().ToLower();
         this.GivenName = givenName.Trim();
         this.Surname = surname.Trim();
+        this.UserId = userId;
 
         if (correlationId == Guid.Empty)
         {
@@ -24,6 +24,11 @@ public class Customer : BaseEntity
         }
 
         this.DomainEvents.Raise(new CustomerCreatedEvent(correlationId, this.Id));
+
+        if (!string.IsNullOrEmpty(this.UserId))
+        {
+            this.DomainEvents.Raise(new UserSetEvent(correlationId, this.Id, this.UserId));
+        }
     }
 
     // EF constructor
@@ -40,6 +45,26 @@ public class Customer : BaseEntity
     public string GivenName { get; protected set; }
 
     public string Surname { get; protected set; }
+
+    public string? UserId { get; protected set; }
+
+    public void SetUser(string userId, Guid correlationId)
+    {
+        if (string.IsNullOrWhiteSpace(this.UserId))
+        {
+            this.UserId = userId;
+            return;
+        }
+
+        if (this.UserId == userId)
+        {
+            return;
+        }
+
+        this.UserId = userId;
+
+        this.DomainEvents.Raise(new UserSetEvent(correlationId, this.Id, this.UserId));
+    }
 
     public void ChangeName(string givenName, string surname, Guid correlationId)
     {
