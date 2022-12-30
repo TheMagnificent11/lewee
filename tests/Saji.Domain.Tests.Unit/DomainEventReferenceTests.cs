@@ -51,16 +51,11 @@ public partial class DomainEventReferenceTests
         result.Should().NotBeNull();
         result.Should().BeOfType<TestingDomainEvent>();
 
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
         var domainEventResult = (TestingDomainEvent)result;
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
-
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
         domainEventResult.Id.Should().Be(domainEvent.Id);
         domainEventResult.CorrelationId.Should().Be(domainEvent.CorrelationId);
         domainEventResult.Name.Should().Be(domainEvent.Name);
         domainEventResult.Count.Should().Be(domainEvent.Count);
         domainEventResult.CreatedAt.Should().Be(domainEvent.CreatedAt);
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
     }
 }
