@@ -45,14 +45,22 @@ public partial class DomainEventReferenceTests
         var reference = new DomainEventReference(domainEvent);
 
         // Act
-        var result = (TestingDomainEvent)reference.ToDomainEvent();
+        var result = reference.ToDomainEvent();
 
         // Assert
         result.Should().NotBeNull();
-        result.Id.Should().Be(domainEvent.Id);
-        result.CorrelationId.Should().Be(domainEvent.CorrelationId);
-        result.Name.Should().Be(domainEvent.Name);
-        result.Count.Should().Be(domainEvent.Count);
-        result.CreatedAt.Should().Be(domainEvent.CreatedAt);
+        result.Should().BeOfType<TestingDomainEvent>();
+
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+        var domainEventResult = (TestingDomainEvent)result;
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+        domainEventResult.Id.Should().Be(domainEvent.Id);
+        domainEventResult.CorrelationId.Should().Be(domainEvent.CorrelationId);
+        domainEventResult.Name.Should().Be(domainEvent.Name);
+        domainEventResult.Count.Should().Be(domainEvent.Count);
+        domainEventResult.CreatedAt.Should().Be(domainEvent.CreatedAt);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
     }
 }

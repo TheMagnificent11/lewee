@@ -4,15 +4,9 @@
     <TargetFramework>net6.0</TargetFramework>
     <LangVersion>10.0</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
-    <CodeAnalysisRuleSet>..\..\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
-    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    <PackageProjectUrl>https://github.com/TheMagnificent11/saji</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/TheMagnificent11/saji.git</RepositoryUrl>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <Authors>Saji Weerasingham</Authors>
-    <Company>NA</Company>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>  
   </PropertyGroup>
 
   <ItemGroup>
