@@ -22,7 +22,6 @@ public class Person : BaseEntity
     public DateOnly? DateOfBirth { get; private set; }
     public string? EmailAddress { get; private set; }
     public Address? Address { get; private set; }
-    public Address? PostalAddress { get; private set; }
 
     public void SetEmailAddress(string emailAddress)
     {
@@ -35,11 +34,6 @@ public class Person : BaseEntity
     }
 
     public void SetAddress(Address address)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void SetPostalAddress(Address address)
     {
         throw new NotImplementedException();
     }
