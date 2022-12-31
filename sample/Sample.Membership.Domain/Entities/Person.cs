@@ -25,7 +25,7 @@ public class Person : BaseEntity
 
     public void SetEmailAddress(string emailAddress)
     {
-        if (emailAddress.Equals(this.EmailAddress, StringComparison.InvariantCultureIgnoreCase))
+        if (emailAddress.Equals(this.EmailAddress, StringComparison.OrdinalIgnoreCase))
         {
             return;
         }
