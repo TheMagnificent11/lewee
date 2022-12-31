@@ -26,10 +26,10 @@ public class UnhandledExceptionBehavior<TRequest, TResponse> : IPipelineBehavior
     /// Handle the request
     /// </summary>
     /// <param name="request">Request to handle</param>
-    /// <param name="cancellationToken">Cancellation token</param>
     /// <param name="next">Next handler</param>
-    /// <returns>An asynchronous task containing the response</returns>
-    public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>An asynchronous task containing a <typeparamref name="TResponse"/></returns>
+    public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         try
         {

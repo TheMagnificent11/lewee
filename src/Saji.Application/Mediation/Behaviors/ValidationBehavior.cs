@@ -37,19 +37,19 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
     /// <param name="request">
     /// Request to validate
     /// </param>
-    /// <param name="cancellationToken">
-    /// Cancellation token
-    /// </param>
     /// <param name="next">
     /// Next behaviour
     /// </param>
+    /// <param name="cancellationToken">
+    /// Cancellation token
+    /// </param>
     /// <returns>
-    /// Response
+    /// Asynchronous task contain a <typeparamref name="TResponse"/>
     /// </returns>
     public async Task<TResponse> Handle(
         TRequest request,
-        CancellationToken cancellationToken,
-        RequestHandlerDelegate<TResponse> next)
+        RequestHandlerDelegate<TResponse> next,
+        CancellationToken cancellationToken)
     {
         var tasks = this.validators.Select(v => v.ValidateAsync(request, cancellationToken));
         var results = await Task.WhenAll(tasks);

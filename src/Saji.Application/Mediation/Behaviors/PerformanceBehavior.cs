@@ -34,16 +34,16 @@ public class PerformanceBehavior<TRequest, TResponse> : IPipelineBehavior<TReque
     /// <param name="request">
     /// Request
     /// </param>
-    /// <param name="cancellationToken">
-    /// Cancellation token
-    /// </param>
     /// <param name="next">
     /// Next behavior
     /// </param>
+    /// <param name="cancellationToken">
+    /// Cancellation token
+    /// </param>
     /// <returns>
-    /// Response
+    /// Asynchronous task contain a <typeparamref name="TResponse"/>
     /// </returns>
-    public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+    public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         using (this.logger.BeginTimedOperation($"{nameof(TRequest)}Handler"))
         {
