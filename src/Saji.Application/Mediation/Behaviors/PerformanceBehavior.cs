@@ -45,7 +45,7 @@ public class PerformanceBehavior<TRequest, TResponse> : IPipelineBehavior<TReque
     /// </returns>
     public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
-        using (this.logger.BeginTimedOperation($"{nameof(TRequest)}Handler"))
+        using (this.logger.BeginTimedOperation($"{typeof(TRequest).FullName} Handler"))
         {
             return next();
         }

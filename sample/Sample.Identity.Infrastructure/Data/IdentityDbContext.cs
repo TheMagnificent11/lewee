@@ -9,4 +9,10 @@ public sealed class IdentityDbContext : EfIdentityDbContext
         : base(options)
     {
     }
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        builder.HasDefaultSchema("ids");
+        base.OnModelCreating(builder);
+    }
 }

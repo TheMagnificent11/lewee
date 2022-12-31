@@ -21,4 +21,9 @@ Obj/
 # Visual Studio 2015 cache/options directory
 .vs/
 
-/data
+# Tye
+/.tye
+
+# Seq logs
+/.logs
+
