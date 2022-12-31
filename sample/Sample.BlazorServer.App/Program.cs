@@ -13,7 +13,16 @@ using Sample.Weather.Application;
 var builder = WebApplication.CreateBuilder(args);
 
 var identityConnectionString = builder.Configuration.GetConnectionString("Identity");
+if (string.IsNullOrWhiteSpace(identityConnectionString))
+{
+    throw new ApplicationException("Could not find Identity database connection string");
+}
+
 var shopConnectionString = builder.Configuration.GetConnectionString("Shop");
+if (string.IsNullOrWhiteSpace(shopConnectionString))
+{
+    throw new ApplicationException("Could not find Shop database connection string");
+}
 
 var appSettings = builder.Configuration.GetSettings<ApplicationSettings>("ApplicationSettings");
 var seqSettings = builder.Configuration.GetSettings<SeqSettings>("SeqSettings");

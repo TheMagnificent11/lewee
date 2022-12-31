@@ -3,19 +3,19 @@
   <ItemGroup>
     <PackageReference Update="FluentAssertions" Version="6.6.0" />
     <PackageReference Update="FluentAssertions.Analyzers" Version="0.17.2" />
-    <PackageReference Update="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0" />
     <PackageReference Update="FluentValidation" Version="10.4.0" />
     <PackageReference Update="FluentValidation.DependencyInjectionExtensions" Version="10.4.0" />
     <PackageReference Update="MediatR" Version="10.0.1" />
     <PackageReference Update="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
     <PackageReference Update="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.0" />
-    <PackageReference Update="Microsoft.AspNetCore.Diagnostics.HealthChecks" Version="2.2.0" />
     <PackageReference Update="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.0" />
     <PackageReference Update="Microsoft.AspNetCore.Identity.UI" Version="6.0.0" />
+    <PackageReference Update="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0" />
     <PackageReference Update="Microsoft.EntityFrameworkCore" Version="6.0.0" />
     <PackageReference Update="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
     <PackageReference Update="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0" />
     <PackageReference Update="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
+    <PackageReference Update="Microsoft.Extensions.Diagnostics.HealthChecks" Version="6.0.0" />
     <PackageReference Update="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="6.0.0" />
     <PackageReference Update="Microsoft.Extensions.DependencyModel" Version="6.0.0" />
     <PackageReference Update="Microsoft.NET.Test.Sdk" Version="17.1.0" />
