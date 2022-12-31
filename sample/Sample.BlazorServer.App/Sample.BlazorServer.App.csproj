@@ -17,7 +17,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Saji.Infrastructure\Saji.Infrastructure.csproj" />
     <ProjectReference Include="..\Sample.Identity.Infrastructure\Sample.Identity.Infrastructure.csproj" />
-    <ProjectReference Include="..\Sample.Shop.Infrastructure\Sample.Shop.Infrastructure.csproj" />
     <ProjectReference Include="..\Sample.Weather.Application\Sample.Weather.Application.csproj" />
   </ItemGroup>
 
