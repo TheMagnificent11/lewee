@@ -1,10 +1,7 @@
-﻿using System.Collections;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Saji.Domain;
 using Saji.Infrastructure.Events;
-using Serilog;
 
 namespace Saji.Infrastructure.Data;
 
@@ -38,8 +35,6 @@ public abstract class BaseApplicationDbContext<T> : DbContext
     /// Gets the database schema for the context
     /// </summary>
     public virtual string Schema { get; } = "dbo";
-
-    /* TODO: make non-nullable */
 
     /// <summary>
     /// Gets or sets the domain event referecnce database set
