@@ -27,3 +27,5 @@ Obj/
 # Seq logs
 /.logs
 
+# XPlat Code Coverage
+/coverage

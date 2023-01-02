@@ -17,6 +17,8 @@
 
   <PropertyGroup Condition="!$(MSBuildProjectName.Contains('.Tests.'))">
     <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <RunSettingsFilePath>$(SolutionDir)\tests.runsettings</RunSettingsFilePath>
   </PropertyGroup>
 
   <PropertyGroup Condition="!$(MSBuildProjectName.Contains('.Tests.')) AND !$(MSBuildProjectName.StartsWith('Sample.'))">
@@ -54,6 +56,10 @@
   </ItemGroup>
 
   <ItemGroup Condition="$(MSBuildProjectName.Contains('.Tests.'))">
+    <PackageReference Include="coverlet.msbuild">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="FluentAssertions" />
     <PackageReference Include="FluentAssertions.Analyzers">
       <PrivateAssets>all</PrivateAssets>

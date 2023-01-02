@@ -1,0 +1,489 @@
+{
+  "Saji.Domain.dll": {
+    "C:\\src\\Saji\\src\\Saji.Domain\\BaseDomainEvent.cs": {
+      "Saji.Domain.BaseDomainEvent": {
+        "System.Guid Saji.Domain.BaseDomainEvent::get_CorrelationId()": {
+          "Lines": {
+            "19": 11
+          },
+          "Branches": []
+        },
+        "System.Void Saji.Domain.BaseDomainEvent::.ctor()": {
+          "Lines": {
+            "11": 3,
+            "12": 3,
+            "13": 3,
+            "14": 3
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\src\\Saji\\src\\Saji.Domain\\BaseEntity.cs": {
+      "Saji.Domain.BaseEntity": {
+        "System.Guid Saji.Domain.BaseEntity::get_Id()": {
+          "Lines": {
+            "26": 0
+          },
+          "Branches": []
+        },
+        "System.String Saji.Domain.BaseEntity::get_CreatedBy()": {
+          "Lines": {
+            "31": 0
+          },
+          "Branches": []
+        },
+        "System.DateTime Saji.Domain.BaseEntity::get_CreatedAtUtc()": {
+          "Lines": {
+            "36": 0
+          },
+          "Branches": []
+        },
+        "System.String Saji.Domain.BaseEntity::get_ModifiedBy()": {
+          "Lines": {
+            "41": 0
+          },
+          "Branches": []
+        },
+        "System.DateTime Saji.Domain.BaseEntity::get_ModifiedAtUtc()": {
+          "Lines": {
+            "46": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean Saji.Domain.BaseEntity::get_IsDeleted()": {
+          "Lines": {
+            "51": 0
+          },
+          "Branches": []
+        },
+        "System.Byte[] Saji.Domain.BaseEntity::get_Timestamp()": {
+          "Lines": {
+            "56": 0
+          },
+          "Branches": []
+        },
+        "Saji.Domain.DomainEventsCollection Saji.Domain.BaseEntity::get_DomainEvents()": {
+          "Lines": {
+            "61": 0
+          },
+          "Branches": []
+        },
+        "System.Void Saji.Domain.BaseEntity::ApplyTrackingData()": {
+          "Lines": {
+            "67": 0,
+            "68": 0,
+            "69": 0,
+            "71": 0,
+            "72": 0,
+            "73": 0,
+            "74": 0,
+            "75": 0,
+            "77": 0,
+            "78": 0,
+            "79": 0
+          },
+          "Branches": [
+            {
+              "Line": 68,
+              "Offset": 7,
+              "EndOffset": 9,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 68,
+              "Offset": 7,
+              "EndOffset": 13,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            },
+            {
+              "Line": 68,
+              "Offset": 19,
+              "EndOffset": 21,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 0
+            },
+            {
+              "Line": 68,
+              "Offset": 19,
+              "EndOffset": 25,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 0
+            },
+            {
+              "Line": 68,
+              "Offset": 31,
+              "EndOffset": 33,
+              "Path": 0,
+              "Ordinal": 4,
+              "Hits": 0
+            },
+            {
+              "Line": 68,
+              "Offset": 31,
+              "EndOffset": 39,
+              "Path": 1,
+              "Ordinal": 5,
+              "Hits": 0
+            },
+            {
+              "Line": 71,
+              "Offset": 59,
+              "EndOffset": 61,
+              "Path": 0,
+              "Ordinal": 6,
+              "Hits": 0
+            },
+            {
+              "Line": 71,
+              "Offset": 59,
+              "EndOffset": 79,
+              "Path": 1,
+              "Ordinal": 7,
+              "Hits": 0
+            }
+          ]
+        },
+        "System.String Saji.Domain.BaseEntity::GetCurrentUserName()": {
+          "Lines": {
+            "82": 0,
+            "83": 0,
+            "84": 0
+          },
+          "Branches": [
+            {
+              "Line": 83,
+              "Offset": 7,
+              "EndOffset": 9,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 83,
+              "Offset": 7,
+              "EndOffset": 15,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            }
+          ]
+        },
+        "System.Void Saji.Domain.BaseEntity::.ctor()": {
+          "Lines": {
+            "11": 0,
+            "12": 0,
+            "13": 0,
+            "15": 0,
+            "16": 0,
+            "17": 0,
+            "18": 0,
+            "19": 0,
+            "20": 0,
+            "21": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\src\\Saji\\src\\Saji.Domain\\DomainEventReference.cs": {
+      "Saji.Domain.DomainEventReference": {
+        "System.Guid Saji.Domain.DomainEventReference::get_Id()": {
+          "Lines": {
+            "60": 3
+          },
+          "Branches": []
+        },
+        "System.String Saji.Domain.DomainEventReference::get_DomainEventAssemblyName()": {
+          "Lines": {
+            "65": 4
+          },
+          "Branches": []
+        },
+        "System.String Saji.Domain.DomainEventReference::get_DomainEventClassName()": {
+          "Lines": {
+            "70": 4
+          },
+          "Branches": []
+        },
+        "System.String Saji.Domain.DomainEventReference::get_DomainEventJson()": {
+          "Lines": {
+            "75": 5
+          },
+          "Branches": []
+        },
+        "System.Boolean Saji.Domain.DomainEventReference::get_Dispatched()": {
+          "Lines": {
+            "80": 3
+          },
+          "Branches": []
+        },
+        "System.DateTime Saji.Domain.DomainEventReference::get_PersistedAt()": {
+          "Lines": {
+            "85": 3
+          },
+          "Branches": []
+        },
+        "System.Nullable`1<System.DateTime> Saji.Domain.DomainEventReference::get_DispatchedAt()": {
+          "Lines": {
+            "90": 1
+          },
+          "Branches": []
+        },
+        "Saji.Domain.IDomainEvent Saji.Domain.DomainEventReference::ToDomainEvent()": {
+          "Lines": {
+            "99": 1,
+            "100": 1,
+            "101": 0,
+            "102": 0,
+            "105": 1,
+            "106": 1,
+            "108": 1,
+            "109": 0,
+            "110": 0,
+            "113": 1,
+            "115": 1,
+            "116": 1
+          },
+          "Branches": [
+            {
+              "Line": 100,
+              "Offset": 14,
+              "EndOffset": 16,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 100,
+              "Offset": 14,
+              "EndOffset": 22,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 1
+            },
+            {
+              "Line": 108,
+              "Offset": 58,
+              "EndOffset": 60,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 0
+            },
+            {
+              "Line": 108,
+              "Offset": 58,
+              "EndOffset": 66,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 1
+            }
+          ]
+        },
+        "System.Void Saji.Domain.DomainEventReference::Dispatch()": {
+          "Lines": {
+            "122": 0,
+            "123": 0,
+            "124": 0,
+            "125": 0
+          },
+          "Branches": []
+        },
+        "System.Void Saji.Domain.DomainEventReference::.ctor(Saji.Domain.IDomainEvent)": {
+          "Lines": {
+            "20": 2,
+            "21": 2,
+            "22": 2,
+            "24": 2,
+            "25": 2,
+            "26": 2,
+            "27": 0,
+            "28": 0,
+            "31": 2,
+            "33": 2,
+            "34": 0,
+            "35": 0,
+            "38": 2,
+            "39": 2,
+            "40": 2,
+            "41": 2,
+            "42": 2,
+            "43": 2,
+            "44": 2
+          },
+          "Branches": [
+            {
+              "Line": 24,
+              "Offset": 22,
+              "EndOffset": 24,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 2
+            },
+            {
+              "Line": 24,
+              "Offset": 36,
+              "EndOffset": 38,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 2
+            },
+            {
+              "Line": 24,
+              "Offset": 22,
+              "EndOffset": 49,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            },
+            {
+              "Line": 24,
+              "Offset": 36,
+              "EndOffset": 49,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 0
+            },
+            {
+              "Line": 24,
+              "Offset": 52,
+              "EndOffset": 54,
+              "Path": 0,
+              "Ordinal": 4,
+              "Hits": 0
+            },
+            {
+              "Line": 24,
+              "Offset": 52,
+              "EndOffset": 66,
+              "Path": 1,
+              "Ordinal": 5,
+              "Hits": 2
+            },
+            {
+              "Line": 33,
+              "Offset": 79,
+              "EndOffset": 81,
+              "Path": 0,
+              "Ordinal": 6,
+              "Hits": 2
+            },
+            {
+              "Line": 33,
+              "Offset": 79,
+              "EndOffset": 92,
+              "Path": 1,
+              "Ordinal": 7,
+              "Hits": 0
+            },
+            {
+              "Line": 33,
+              "Offset": 95,
+              "EndOffset": 97,
+              "Path": 0,
+              "Ordinal": 8,
+              "Hits": 0
+            },
+            {
+              "Line": 33,
+              "Offset": 95,
+              "EndOffset": 109,
+              "Path": 1,
+              "Ordinal": 9,
+              "Hits": 2
+            }
+          ]
+        },
+        "System.Void Saji.Domain.DomainEventReference::.ctor()": {
+          "Lines": {
+            "47": 0,
+            "48": 0,
+            "49": 0,
+            "50": 0,
+            "51": 0,
+            "52": 0,
+            "53": 0,
+            "54": 0,
+            "55": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\src\\Saji\\src\\Saji.Domain\\DomainEventsCollection.cs": {
+      "Saji.Domain.DomainEventsCollection": {
+        "System.Void Saji.Domain.DomainEventsCollection::Raise(T)": {
+          "Lines": {
+            "22": 0,
+            "23": 0,
+            "24": 0,
+            "25": 0,
+            "26": 0,
+            "27": 0
+          },
+          "Branches": []
+        },
+        "Saji.Domain.IDomainEvent[] Saji.Domain.DomainEventsCollection::GetAndClear()": {
+          "Lines": {
+            "36": 0,
+            "37": 0,
+            "38": 0,
+            "39": 0,
+            "40": 0,
+            "42": 0,
+            "44": 0
+          },
+          "Branches": []
+        },
+        "System.Void Saji.Domain.DomainEventsCollection::.ctor()": {
+          "Lines": {
+            "8": 0,
+            "9": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\src\\Saji\\src\\Saji.Domain\\EnumEntity.cs": {
+      "Saji.Domain.EnumEntity`1": {
+        "TKey Saji.Domain.EnumEntity`1::get_Id()": {
+          "Lines": {
+            "36": 0
+          },
+          "Branches": []
+        },
+        "System.String Saji.Domain.EnumEntity`1::get_Name()": {
+          "Lines": {
+            "41": 0
+          },
+          "Branches": []
+        },
+        "System.Void Saji.Domain.EnumEntity`1::.ctor(TKey,System.String)": {
+          "Lines": {
+            "21": 0,
+            "22": 0,
+            "23": 0,
+            "24": 0,
+            "25": 0
+          },
+          "Branches": []
+        },
+        "System.Void Saji.Domain.EnumEntity`1::.ctor()": {
+          "Lines": {
+            "28": 0,
+            "29": 0,
+            "30": 0,
+            "31": 0
+          },
+          "Branches": []
+        }
+      }
+    }
+  }
+}

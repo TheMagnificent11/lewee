@@ -1,0 +1,1008 @@
+{
+  "Saji.Domain.dll": {
+    "C:\\src\\Saji\\src\\Saji.Domain\\BaseDomainEvent.cs": {
+      "Saji.Domain.BaseDomainEvent": {
+        "System.Guid Saji.Domain.BaseDomainEvent::get_CorrelationId()": {
+          "Lines": {
+            "19": 0
+          },
+          "Branches": []
+        },
+        "System.Void Saji.Domain.BaseDomainEvent::.ctor()": {
+          "Lines": {
+            "11": 0,
+            "12": 0,
+            "13": 0,
+            "14": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\src\\Saji\\src\\Saji.Domain\\BaseEntity.cs": {
+      "Saji.Domain.BaseEntity": {
+        "System.Guid Saji.Domain.BaseEntity::get_Id()": {
+          "Lines": {
+            "26": 0
+          },
+          "Branches": []
+        },
+        "System.String Saji.Domain.BaseEntity::get_CreatedBy()": {
+          "Lines": {
+            "31": 0
+          },
+          "Branches": []
+        },
+        "System.DateTime Saji.Domain.BaseEntity::get_CreatedAtUtc()": {
+          "Lines": {
+            "36": 0
+          },
+          "Branches": []
+        },
+        "System.String Saji.Domain.BaseEntity::get_ModifiedBy()": {
+          "Lines": {
+            "41": 0
+          },
+          "Branches": []
+        },
+        "System.DateTime Saji.Domain.BaseEntity::get_ModifiedAtUtc()": {
+          "Lines": {
+            "46": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean Saji.Domain.BaseEntity::get_IsDeleted()": {
+          "Lines": {
+            "51": 0
+          },
+          "Branches": []
+        },
+        "System.Byte[] Saji.Domain.BaseEntity::get_Timestamp()": {
+          "Lines": {
+            "56": 0
+          },
+          "Branches": []
+        },
+        "Saji.Domain.DomainEventsCollection Saji.Domain.BaseEntity::get_DomainEvents()": {
+          "Lines": {
+            "61": 0
+          },
+          "Branches": []
+        },
+        "System.Void Saji.Domain.BaseEntity::ApplyTrackingData()": {
+          "Lines": {
+            "67": 0,
+            "68": 0,
+            "69": 0,
+            "71": 0,
+            "72": 0,
+            "73": 0,
+            "74": 0,
+            "75": 0,
+            "77": 0,
+            "78": 0,
+            "79": 0
+          },
+          "Branches": [
+            {
+              "Line": 68,
+              "Offset": 7,
+              "EndOffset": 9,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 68,
+              "Offset": 7,
+              "EndOffset": 13,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            },
+            {
+              "Line": 68,
+              "Offset": 19,
+              "EndOffset": 21,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 0
+            },
+            {
+              "Line": 68,
+              "Offset": 19,
+              "EndOffset": 25,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 0
+            },
+            {
+              "Line": 68,
+              "Offset": 31,
+              "EndOffset": 33,
+              "Path": 0,
+              "Ordinal": 4,
+              "Hits": 0
+            },
+            {
+              "Line": 68,
+              "Offset": 31,
+              "EndOffset": 39,
+              "Path": 1,
+              "Ordinal": 5,
+              "Hits": 0
+            },
+            {
+              "Line": 71,
+              "Offset": 59,
+              "EndOffset": 61,
+              "Path": 0,
+              "Ordinal": 6,
+              "Hits": 0
+            },
+            {
+              "Line": 71,
+              "Offset": 59,
+              "EndOffset": 79,
+              "Path": 1,
+              "Ordinal": 7,
+              "Hits": 0
+            }
+          ]
+        },
+        "System.String Saji.Domain.BaseEntity::GetCurrentUserName()": {
+          "Lines": {
+            "82": 0,
+            "83": 0,
+            "84": 0
+          },
+          "Branches": [
+            {
+              "Line": 83,
+              "Offset": 7,
+              "EndOffset": 9,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 83,
+              "Offset": 7,
+              "EndOffset": 15,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            }
+          ]
+        },
+        "System.Void Saji.Domain.BaseEntity::.ctor()": {
+          "Lines": {
+            "11": 0,
+            "12": 0,
+            "13": 0,
+            "15": 0,
+            "16": 0,
+            "17": 0,
+            "18": 0,
+            "19": 0,
+            "20": 0,
+            "21": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\src\\Saji\\src\\Saji.Domain\\DomainEventReference.cs": {
+      "Saji.Domain.DomainEventReference": {
+        "System.Guid Saji.Domain.DomainEventReference::get_Id()": {
+          "Lines": {
+            "60": 0
+          },
+          "Branches": []
+        },
+        "System.String Saji.Domain.DomainEventReference::get_DomainEventAssemblyName()": {
+          "Lines": {
+            "65": 0
+          },
+          "Branches": []
+        },
+        "System.String Saji.Domain.DomainEventReference::get_DomainEventClassName()": {
+          "Lines": {
+            "70": 0
+          },
+          "Branches": []
+        },
+        "System.String Saji.Domain.DomainEventReference::get_DomainEventJson()": {
+          "Lines": {
+            "75": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean Saji.Domain.DomainEventReference::get_Dispatched()": {
+          "Lines": {
+            "80": 0
+          },
+          "Branches": []
+        },
+        "System.DateTime Saji.Domain.DomainEventReference::get_PersistedAt()": {
+          "Lines": {
+            "85": 0
+          },
+          "Branches": []
+        },
+        "System.Nullable`1<System.DateTime> Saji.Domain.DomainEventReference::get_DispatchedAt()": {
+          "Lines": {
+            "90": 0
+          },
+          "Branches": []
+        },
+        "Saji.Domain.IDomainEvent Saji.Domain.DomainEventReference::ToDomainEvent()": {
+          "Lines": {
+            "99": 0,
+            "100": 0,
+            "101": 0,
+            "102": 0,
+            "105": 0,
+            "106": 0,
+            "108": 0,
+            "109": 0,
+            "110": 0,
+            "113": 0,
+            "115": 0,
+            "116": 0
+          },
+          "Branches": [
+            {
+              "Line": 100,
+              "Offset": 14,
+              "EndOffset": 16,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 100,
+              "Offset": 14,
+              "EndOffset": 22,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            },
+            {
+              "Line": 108,
+              "Offset": 58,
+              "EndOffset": 60,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 0
+            },
+            {
+              "Line": 108,
+              "Offset": 58,
+              "EndOffset": 66,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 0
+            }
+          ]
+        },
+        "System.Void Saji.Domain.DomainEventReference::Dispatch()": {
+          "Lines": {
+            "122": 0,
+            "123": 0,
+            "124": 0,
+            "125": 0
+          },
+          "Branches": []
+        },
+        "System.Void Saji.Domain.DomainEventReference::.ctor(Saji.Domain.IDomainEvent)": {
+          "Lines": {
+            "20": 0,
+            "21": 0,
+            "22": 0,
+            "24": 0,
+            "25": 0,
+            "26": 0,
+            "27": 0,
+            "28": 0,
+            "31": 0,
+            "33": 0,
+            "34": 0,
+            "35": 0,
+            "38": 0,
+            "39": 0,
+            "40": 0,
+            "41": 0,
+            "42": 0,
+            "43": 0,
+            "44": 0
+          },
+          "Branches": [
+            {
+              "Line": 24,
+              "Offset": 22,
+              "EndOffset": 24,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 24,
+              "Offset": 36,
+              "EndOffset": 38,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 0
+            },
+            {
+              "Line": 24,
+              "Offset": 22,
+              "EndOffset": 49,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            },
+            {
+              "Line": 24,
+              "Offset": 36,
+              "EndOffset": 49,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 0
+            },
+            {
+              "Line": 24,
+              "Offset": 52,
+              "EndOffset": 54,
+              "Path": 0,
+              "Ordinal": 4,
+              "Hits": 0
+            },
+            {
+              "Line": 24,
+              "Offset": 52,
+              "EndOffset": 66,
+              "Path": 1,
+              "Ordinal": 5,
+              "Hits": 0
+            },
+            {
+              "Line": 33,
+              "Offset": 79,
+              "EndOffset": 81,
+              "Path": 0,
+              "Ordinal": 6,
+              "Hits": 0
+            },
+            {
+              "Line": 33,
+              "Offset": 79,
+              "EndOffset": 92,
+              "Path": 1,
+              "Ordinal": 7,
+              "Hits": 0
+            },
+            {
+              "Line": 33,
+              "Offset": 95,
+              "EndOffset": 97,
+              "Path": 0,
+              "Ordinal": 8,
+              "Hits": 0
+            },
+            {
+              "Line": 33,
+              "Offset": 95,
+              "EndOffset": 109,
+              "Path": 1,
+              "Ordinal": 9,
+              "Hits": 0
+            }
+          ]
+        },
+        "System.Void Saji.Domain.DomainEventReference::.ctor()": {
+          "Lines": {
+            "47": 0,
+            "48": 0,
+            "49": 0,
+            "50": 0,
+            "51": 0,
+            "52": 0,
+            "53": 0,
+            "54": 0,
+            "55": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\src\\Saji\\src\\Saji.Domain\\DomainEventsCollection.cs": {
+      "Saji.Domain.DomainEventsCollection": {
+        "System.Void Saji.Domain.DomainEventsCollection::Raise(T)": {
+          "Lines": {
+            "22": 0,
+            "23": 0,
+            "24": 0,
+            "25": 0,
+            "26": 0,
+            "27": 0
+          },
+          "Branches": []
+        },
+        "Saji.Domain.IDomainEvent[] Saji.Domain.DomainEventsCollection::GetAndClear()": {
+          "Lines": {
+            "36": 0,
+            "37": 0,
+            "38": 0,
+            "39": 0,
+            "40": 0,
+            "42": 0,
+            "44": 0
+          },
+          "Branches": []
+        },
+        "System.Void Saji.Domain.DomainEventsCollection::.ctor()": {
+          "Lines": {
+            "8": 0,
+            "9": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\src\\Saji\\src\\Saji.Domain\\EnumEntity.cs": {
+      "Saji.Domain.EnumEntity`1": {
+        "TKey Saji.Domain.EnumEntity`1::get_Id()": {
+          "Lines": {
+            "36": 0
+          },
+          "Branches": []
+        },
+        "System.String Saji.Domain.EnumEntity`1::get_Name()": {
+          "Lines": {
+            "41": 0
+          },
+          "Branches": []
+        },
+        "System.Void Saji.Domain.EnumEntity`1::.ctor(TKey,System.String)": {
+          "Lines": {
+            "21": 0,
+            "22": 0,
+            "23": 0,
+            "24": 0,
+            "25": 0
+          },
+          "Branches": []
+        },
+        "System.Void Saji.Domain.EnumEntity`1::.ctor()": {
+          "Lines": {
+            "28": 0,
+            "29": 0,
+            "30": 0,
+            "31": 0
+          },
+          "Branches": []
+        }
+      }
+    }
+  },
+  "Sample.Membership.Domain.dll": {
+    "C:\\src\\Saji\\sample\\Sample.Membership.Domain\\ValueObjects\\Address.cs": {
+      "Sample.Membership.Domain.ValueObjects.Address": {
+        "System.String Sample.Membership.Domain.ValueObjects.Address::get_Address1()": {
+          "Lines": {
+            "27": 18
+          },
+          "Branches": []
+        },
+        "System.String Sample.Membership.Domain.ValueObjects.Address::get_Address2()": {
+          "Lines": {
+            "28": 14
+          },
+          "Branches": []
+        },
+        "System.String Sample.Membership.Domain.ValueObjects.Address::get_Address3()": {
+          "Lines": {
+            "29": 14
+          },
+          "Branches": []
+        },
+        "System.String Sample.Membership.Domain.ValueObjects.Address::get_Locality()": {
+          "Lines": {
+            "30": 14
+          },
+          "Branches": []
+        },
+        "System.String Sample.Membership.Domain.ValueObjects.Address::get_StateProvince()": {
+          "Lines": {
+            "31": 12
+          },
+          "Branches": []
+        },
+        "System.String Sample.Membership.Domain.ValueObjects.Address::get_Country()": {
+          "Lines": {
+            "32": 10
+          },
+          "Branches": []
+        },
+        "System.String Sample.Membership.Domain.ValueObjects.Address::get_Postcode()": {
+          "Lines": {
+            "33": 8
+          },
+          "Branches": []
+        },
+        "System.String Sample.Membership.Domain.ValueObjects.Address::get_PropertyIdentificationCode()": {
+          "Lines": {
+            "34": 40
+          },
+          "Branches": []
+        },
+        "System.Boolean Sample.Membership.Domain.ValueObjects.Address::Equals(Sample.Membership.Domain.ValueObjects.Address)": {
+          "Lines": {
+            "37": 11,
+            "38": 11,
+            "39": 0,
+            "40": 0,
+            "43": 11,
+            "44": 2,
+            "45": 2,
+            "48": 9,
+            "49": 2,
+            "50": 2,
+            "53": 7,
+            "54": 0,
+            "55": 0,
+            "58": 7,
+            "59": 0,
+            "60": 0,
+            "63": 7,
+            "64": 1,
+            "65": 1,
+            "68": 6,
+            "69": 1,
+            "70": 1,
+            "73": 5,
+            "74": 1,
+            "75": 1,
+            "78": 4,
+            "79": 1,
+            "80": 1,
+            "83": 3,
+            "84": 11
+          },
+          "Branches": [
+            {
+              "Line": 38,
+              "Offset": 7,
+              "EndOffset": 9,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 38,
+              "Offset": 7,
+              "EndOffset": 17,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 11
+            },
+            {
+              "Line": 43,
+              "Offset": 28,
+              "EndOffset": 30,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 3
+            },
+            {
+              "Line": 43,
+              "Offset": 28,
+              "EndOffset": 46,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 8
+            },
+            {
+              "Line": 43,
+              "Offset": 49,
+              "EndOffset": 51,
+              "Path": 0,
+              "Ordinal": 4,
+              "Hits": 2
+            },
+            {
+              "Line": 43,
+              "Offset": 49,
+              "EndOffset": 76,
+              "Path": 1,
+              "Ordinal": 5,
+              "Hits": 9
+            },
+            {
+              "Line": 48,
+              "Offset": 99,
+              "EndOffset": 101,
+              "Path": 0,
+              "Ordinal": 6,
+              "Hits": 2
+            },
+            {
+              "Line": 48,
+              "Offset": 99,
+              "EndOffset": 109,
+              "Path": 1,
+              "Ordinal": 7,
+              "Hits": 7
+            },
+            {
+              "Line": 53,
+              "Offset": 133,
+              "EndOffset": 135,
+              "Path": 0,
+              "Ordinal": 8,
+              "Hits": 0
+            },
+            {
+              "Line": 53,
+              "Offset": 133,
+              "EndOffset": 143,
+              "Path": 1,
+              "Ordinal": 9,
+              "Hits": 7
+            },
+            {
+              "Line": 58,
+              "Offset": 167,
+              "EndOffset": 169,
+              "Path": 0,
+              "Ordinal": 10,
+              "Hits": 0
+            },
+            {
+              "Line": 58,
+              "Offset": 167,
+              "EndOffset": 177,
+              "Path": 1,
+              "Ordinal": 11,
+              "Hits": 7
+            },
+            {
+              "Line": 63,
+              "Offset": 202,
+              "EndOffset": 204,
+              "Path": 0,
+              "Ordinal": 12,
+              "Hits": 1
+            },
+            {
+              "Line": 63,
+              "Offset": 202,
+              "EndOffset": 209,
+              "Path": 1,
+              "Ordinal": 13,
+              "Hits": 6
+            },
+            {
+              "Line": 68,
+              "Offset": 234,
+              "EndOffset": 236,
+              "Path": 0,
+              "Ordinal": 14,
+              "Hits": 1
+            },
+            {
+              "Line": 68,
+              "Offset": 234,
+              "EndOffset": 241,
+              "Path": 1,
+              "Ordinal": 15,
+              "Hits": 5
+            },
+            {
+              "Line": 73,
+              "Offset": 266,
+              "EndOffset": 268,
+              "Path": 0,
+              "Ordinal": 16,
+              "Hits": 1
+            },
+            {
+              "Line": 73,
+              "Offset": 266,
+              "EndOffset": 273,
+              "Path": 1,
+              "Ordinal": 17,
+              "Hits": 4
+            },
+            {
+              "Line": 78,
+              "Offset": 298,
+              "EndOffset": 300,
+              "Path": 0,
+              "Ordinal": 18,
+              "Hits": 1
+            },
+            {
+              "Line": 78,
+              "Offset": 298,
+              "EndOffset": 305,
+              "Path": 1,
+              "Ordinal": 19,
+              "Hits": 3
+            }
+          ]
+        },
+        "System.Boolean Sample.Membership.Domain.ValueObjects.Address::Equals(System.Object)": {
+          "Lines": {
+            "87": 0,
+            "88": 0,
+            "89": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 Sample.Membership.Domain.ValueObjects.Address::GetHashCode()": {
+          "Lines": {
+            "92": 0,
+            "93": 0,
+            "94": 0,
+            "95": 0,
+            "96": 0,
+            "97": 0,
+            "99": 0,
+            "100": 0,
+            "101": 0,
+            "102": 0,
+            "104": 0,
+            "105": 0,
+            "106": 0,
+            "107": 0,
+            "109": 0,
+            "110": 0,
+            "111": 0,
+            "112": 0,
+            "114": 0,
+            "115": 0
+          },
+          "Branches": [
+            {
+              "Line": 99,
+              "Offset": 72,
+              "EndOffset": 74,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 99,
+              "Offset": 72,
+              "EndOffset": 90,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            },
+            {
+              "Line": 104,
+              "Offset": 101,
+              "EndOffset": 103,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 0
+            },
+            {
+              "Line": 104,
+              "Offset": 101,
+              "EndOffset": 119,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 0
+            },
+            {
+              "Line": 109,
+              "Offset": 130,
+              "EndOffset": 132,
+              "Path": 0,
+              "Ordinal": 4,
+              "Hits": 0
+            },
+            {
+              "Line": 109,
+              "Offset": 130,
+              "EndOffset": 148,
+              "Path": 1,
+              "Ordinal": 5,
+              "Hits": 0
+            }
+          ]
+        },
+        "System.Void Sample.Membership.Domain.ValueObjects.Address::SetPropertyIdentificationCode(System.String)": {
+          "Lines": {
+            "118": 0,
+            "119": 0,
+            "120": 0,
+            "121": 0,
+            "124": 0,
+            "125": 0
+          },
+          "Branches": [
+            {
+              "Line": 119,
+              "Offset": 16,
+              "EndOffset": 18,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 119,
+              "Offset": 16,
+              "EndOffset": 21,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            }
+          ]
+        },
+        "System.Boolean Sample.Membership.Domain.ValueObjects.Address::IsEqual(System.String,System.String)": {
+          "Lines": {
+            "128": 14,
+            "129": 14,
+            "130": 14,
+            "131": 14,
+            "132": 0,
+            "133": 0,
+            "136": 14,
+            "139": 0,
+            "140": 14
+          },
+          "Branches": [
+            {
+              "Line": 129,
+              "Offset": 9,
+              "EndOffset": 11,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 14
+            },
+            {
+              "Line": 131,
+              "Offset": 23,
+              "EndOffset": 25,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 0
+            },
+            {
+              "Line": 131,
+              "Offset": 23,
+              "EndOffset": 30,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 14
+            },
+            {
+              "Line": 129,
+              "Offset": 9,
+              "EndOffset": 34,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            }
+          ]
+        },
+        "System.Void Sample.Membership.Domain.ValueObjects.Address::.ctor(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String)": {
+          "Lines": {
+            "7": 22,
+            "8": 22,
+            "9": 22,
+            "10": 22,
+            "11": 22,
+            "12": 22,
+            "13": 22,
+            "14": 22,
+            "15": 22,
+            "16": 22,
+            "17": 22,
+            "18": 22,
+            "19": 22,
+            "20": 22,
+            "21": 22,
+            "22": 22,
+            "23": 22,
+            "24": 22,
+            "25": 22
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\src\\Saji\\sample\\Sample.Membership.Domain\\Entities\\Person.cs": {
+      "Sample.Membership.Domain.Entities.Person": {
+        "System.String Sample.Membership.Domain.Entities.Person::get_GivenName()": {
+          "Lines": {
+            "20": 0
+          },
+          "Branches": []
+        },
+        "System.String Sample.Membership.Domain.Entities.Person::get_Surname()": {
+          "Lines": {
+            "21": 0
+          },
+          "Branches": []
+        },
+        "System.Nullable`1<System.DateOnly> Sample.Membership.Domain.Entities.Person::get_DateOfBirth()": {
+          "Lines": {
+            "22": 0
+          },
+          "Branches": []
+        },
+        "System.String Sample.Membership.Domain.Entities.Person::get_EmailAddress()": {
+          "Lines": {
+            "23": 0
+          },
+          "Branches": []
+        },
+        "Sample.Membership.Domain.ValueObjects.Address Sample.Membership.Domain.Entities.Person::get_Address()": {
+          "Lines": {
+            "24": 0
+          },
+          "Branches": []
+        },
+        "System.Void Sample.Membership.Domain.Entities.Person::SetEmailAddress(System.String)": {
+          "Lines": {
+            "27": 0,
+            "28": 0,
+            "29": 0,
+            "30": 0,
+            "33": 0,
+            "34": 0
+          },
+          "Branches": [
+            {
+              "Line": 28,
+              "Offset": 16,
+              "EndOffset": 18,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 28,
+              "Offset": 16,
+              "EndOffset": 21,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            }
+          ]
+        },
+        "System.Void Sample.Membership.Domain.Entities.Person::SetAddress(Sample.Membership.Domain.ValueObjects.Address)": {
+          "Lines": {
+            "37": 0,
+            "38": 0
+          },
+          "Branches": []
+        },
+        "System.Void Sample.Membership.Domain.Entities.Person::.ctor(System.String,System.String)": {
+          "Lines": {
+            "8": 0,
+            "9": 0,
+            "10": 0,
+            "11": 0,
+            "12": 0
+          },
+          "Branches": []
+        },
+        "System.Void Sample.Membership.Domain.Entities.Person::.ctor(System.String,System.String,System.DateOnly)": {
+          "Lines": {
+            "15": 0,
+            "16": 0,
+            "17": 0,
+            "18": 0
+          },
+          "Branches": []
+        }
+      }
+    }
+  }
+}
