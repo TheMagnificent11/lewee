@@ -11,7 +11,8 @@ public class Address : IValueObject<Address>
         string locality,
         string stateProvince,
         string country,
-        string postcode)
+        string postcode,
+        string? propertyIdentificationCode = null)
     {
         this.Address1 = address1;
         this.Address2 = address2;
@@ -20,6 +21,7 @@ public class Address : IValueObject<Address>
         this.StateProvince = stateProvince;
         this.Country = country;
         this.Postcode = postcode;
+        this.PropertyIdentificationCode = propertyIdentificationCode;
     }
 
     public string Address1 { get; }
@@ -38,11 +40,9 @@ public class Address : IValueObject<Address>
             return false;
         }
 
-        if (this.PropertyIdentificationCode != null &&
-            other.PropertyIdentificationCode != null &&
-            !this.PropertyIdentificationCode.Equals(other.PropertyIdentificationCode, StringComparison.OrdinalIgnoreCase))
+        if (!string.IsNullOrWhiteSpace(this.PropertyIdentificationCode) && !string.IsNullOrWhiteSpace(other.PropertyIdentificationCode))
         {
-            return false;
+            return this.PropertyIdentificationCode.Equals(other.PropertyIdentificationCode, StringComparison.OrdinalIgnoreCase);
         }
 
         if (!this.Address1.Equals(other.Address1, StringComparison.OrdinalIgnoreCase))
@@ -126,21 +126,16 @@ public class Address : IValueObject<Address>
 
     private static bool IsEqual(string? string1, string? string2)
     {
-        if (string1 == null)
+        if (string.IsNullOrWhiteSpace(string1))
         {
-            if (string2 != null)
+            if (!string.IsNullOrWhiteSpace(string2))
             {
                 return false;
             }
-        }
-        else
-        {
-            if (string1.Equals(string2, StringComparison.OrdinalIgnoreCase))
-            {
-                return false;
-            }
+
+            return true;
         }
 
-        return true;
+        return string1.Equals(string2, StringComparison.OrdinalIgnoreCase);
     }
 }
