@@ -29,3 +29,6 @@ Obj/
 
 # XPlat Code Coverage
 /coverage
+
+# Coverage Report
+/coverage-Report

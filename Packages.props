@@ -4,9 +4,11 @@
     <DOTNET_VERSION>7.0.1</DOTNET_VERSION>
     <FLUENTVALIDATOR_VERSION>11.4.0</FLUENTVALIDATOR_VERSION>
     <MEDIATR_VERSION>11.1.0</MEDIATR_VERSION>
+    <COVERLET_VERSION>3.2.0</COVERLET_VERSION>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Update="coverlet.msbuild" Version="3.2.0" />
+    <PackageReference Update="coverlet.collector" Version="1.2.0" />
+    <PackageReference Update="coverlet.msbuild" Version="$(COVERLET_VERSION)" />
     <PackageReference Update="FluentAssertions" Version="6.8.0" />
     <PackageReference Update="FluentAssertions.Analyzers" Version="0.17.2" />
     <PackageReference Update="FluentValidation" Version="$(FLUENTVALIDATOR_VERSION)" />
