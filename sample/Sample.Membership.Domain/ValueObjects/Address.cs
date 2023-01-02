@@ -83,18 +83,36 @@ public class Address : IValueObject<Address>
         return true;
     }
 
-    /*
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         return this.Equals(obj as Address);
     }
 
     public override int GetHashCode()
     {
-        // TODO
-        throw new NotImplementedException();
+        var hashCode =
+            this.Address1.GetHashCode() +
+            this.Locality.GetHashCode() +
+            this.StateProvince.GetHashCode() +
+            this.Country.GetHashCode() + this.Postcode.GetHashCode();
+
+        if (this.Address2 != null)
+        {
+            hashCode += this.Address2.GetHashCode();
+        }
+
+        if (this.Address3 != null)
+        {
+            hashCode += this.Address3.GetHashCode();
+        }
+
+        if (this.PropertyIdentificationCode != null)
+        {
+            hashCode += this.PropertyIdentificationCode.GetHashCode();
+        }
+
+        return hashCode;
     }
-    */
 
     public void SetPropertyIdentificationCode(string propertyIdentificationCode)
     {
