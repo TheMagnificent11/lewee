@@ -22,6 +22,7 @@
 
   <PropertyGroup Condition="!$(MSBuildProjectName.Contains('.Tests.')) AND !$(MSBuildProjectName.StartsWith('Sample.'))">
     <Nullable>enable</Nullable>
+    <IsPackable>true</IsPackable>
     <PackageProjectUrl>https://github.com/TheMagnificent11/saji</PackageProjectUrl>
     <RepositoryUrl>https://github.com/TheMagnificent11/saji.git</RepositoryUrl>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
