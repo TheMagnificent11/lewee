@@ -9,6 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
+		.github\workflows\ci.yml = .github\workflows\ci.yml
 		Directory.Build.props = Directory.Build.props
 		Directory.Build.targets = Directory.Build.targets
 		Packages.props = Packages.props
@@ -32,7 +33,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Weather.Application"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Membership.Domain", "sample\Sample.Membership.Domain\Sample.Membership.Domain.csproj", "{37E7DCC3-822A-4679-9A46-792B5522D154}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Membership.Domain.Tests.Unit", "sample-tests\Sample.Membership.Domain.Tests.Unit\Sample.Membership.Domain.Tests.Unit.csproj", "{B8929464-2EF2-43DB-97E6-ED59B957630A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Membership.Domain.Tests.Unit", "sample-tests\Sample.Membership.Domain.Tests.Unit\Sample.Membership.Domain.Tests.Unit.csproj", "{B8929464-2EF2-43DB-97E6-ED59B957630A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
