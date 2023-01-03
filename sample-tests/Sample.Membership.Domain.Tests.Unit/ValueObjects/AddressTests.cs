@@ -14,6 +14,10 @@ public static class AddressTests
     [InlineData("123 Test Street", null, null, "Testville", "QLD", "Australia", "4999", "ABC123", "123 Test Street", null, null, "Testville", "QLD", "Australia", "4999", null, true)] // only one has pic
     [InlineData("Unit 11", "123 Test Street", null, "Testville", "QLD", "Australia", "4999", null, "123 Test Street", null, null, "Testville", "QLD", "Australia", "4999", null, false)] // different
     [InlineData("123 Test Street", null, null, "Testville", "QLD", "Australia", "4999", null, "1234 Test Street", null, null, "Testville", "QLD", "Australia", "4999", null, false)] // different address 1
+    [InlineData("Unit 17", "123 Test Street", null, "Testville", "QLD", "Australia", "4999", "Unit 17", "124 Test Street", null, null, "Testville", "QLD", "Australia", "4999", null, false)] // different address 2
+    [InlineData("Unit 17", "Level 4", "123 Test Street", "Testville", "QLD", "Australia", "4999", "Unit 17", "Level 4", "123 Test Road", null, "Testville", "QLD", "Australia", "4999", null, false)] // different address 3
+    [InlineData("123 Test Street", null, null, "Testville", "QLD", "Australia", "4999", null, "123 Test Street", "test", null, "Testville", "QLD", "Australia", "4999", null, false)] // different address 2 (prop 1 null, prop 2 not null)
+    [InlineData("123 Test Street", null, null, "Testville", "QLD", "Australia", "4999", null, "123 Test Street", null, "test", "Testville", "QLD", "Australia", "4999", null, false)] // different address 3 (prop 1 null, prop 2 not null)
     [InlineData("123 Test Street", null, null, "Testville", "QLD", "Australia", "4999", null, "123 Test Street", null, null, "Testington", "QLD", "Australia", "4999", null, false)] // different locality
     [InlineData("123 Test Street", null, null, "Testville", "QLD", "Australia", "4999", null, "123 Test Street", null, null, "Testville", "NSW", "Australia", "4999", null, false)] // different state
     [InlineData("123 Test Street", null, null, "Testville", "QLD", "Australia", "4999", null, "123 Test Street", null, null, "Testville", "QLD", "New Zealand", "4999", null, false)] // different country
