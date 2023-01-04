@@ -3,7 +3,7 @@ using Sample.Membership.Domain.ValueObjects;
 
 namespace Sample.Membership.Domain.Entities;
 
-public class Person : BaseEntity
+public class Person : BaseEntity, IAggregateRoot
 {
     public Person(string givenName, string surname)
     {
