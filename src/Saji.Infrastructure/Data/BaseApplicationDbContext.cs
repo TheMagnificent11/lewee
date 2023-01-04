@@ -8,13 +8,13 @@ namespace Saji.Infrastructure.Data;
 /// <summary>
 /// Base Appliation Database Context
 /// </summary>
-/// <typeparam name="T">
+/// <typeparam name="TContext">
 /// The type of this database context
 /// </typeparam>
-public abstract class BaseApplicationDbContext<T> : DbContext
-    where T : DbContext
+public abstract class BaseApplicationDbContext<TContext> : DbContext, IDbContext
+    where TContext : DbContext, IDbContext
 {
-    private readonly DomainEventDispatcher<T> domainEventDispatcher;
+    private readonly DomainEventDispatcher<TContext> domainEventDispatcher;
 
     private bool domainEventsAdded = false;
 
@@ -25,7 +25,7 @@ public abstract class BaseApplicationDbContext<T> : DbContext
     /// Database context options
     /// </param>
     /// <param name="domainEventDispatcher">Domain event dispatcher</param>
-    protected BaseApplicationDbContext(DbContextOptions<T> options, DomainEventDispatcher<T> domainEventDispatcher)
+    protected BaseApplicationDbContext(DbContextOptions<TContext> options, DomainEventDispatcher<TContext> domainEventDispatcher)
         : base(options)
     {
         this.domainEventDispatcher = domainEventDispatcher;
@@ -40,6 +40,17 @@ public abstract class BaseApplicationDbContext<T> : DbContext
     /// Gets or sets the domain event referecnce database set
     /// </summary>
     public DbSet<DomainEventReference>? DomainEventReferences { get; protected set; }
+
+    /// <summary>
+    /// Returns a queryable collection for an <see cref="IAggregateRoot"/> entity type
+    /// </summary>
+    /// <typeparam name="T">Aggregate root type</typeparam>
+    /// <returns>A ueryable collection for an <see cref="IAggregateRoot"/> entity type</returns>
+    public IQueryable<T> AggregateRoot<T>()
+        where T : class, IAggregateRoot
+    {
+        return this.Set<T>();
+    }
 
     /// <summary>
     /// Saves all changes made in this context to the database

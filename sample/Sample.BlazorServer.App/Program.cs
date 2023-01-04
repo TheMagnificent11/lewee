@@ -26,7 +26,7 @@ builder.Services
     .AddApplication(typeof(GetWeatherForecastsQuery).Assembly)
     .AddPipelineBehaviors();
 
-builder.Services.ConfigureDatabase<IdentityDbContext>(identityConnectionString, false);
+builder.Services.AddDbContextFactory<IdentityDbContext>(options => options.UseSqlServer(identityConnectionString));
 
 builder.Services
     .AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)

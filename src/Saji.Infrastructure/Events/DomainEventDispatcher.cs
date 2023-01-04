@@ -13,7 +13,7 @@ namespace Saji.Infrastructure.Events;
 /// Databae context type
 /// </typeparam>
 public class DomainEventDispatcher<TContext>
-    where TContext : DbContext
+    where TContext : DbContext, IDbContext
 {
     private const int BatchSize = 50;
 

@@ -10,7 +10,7 @@ namespace Saji.Infrastructure.Data;
 /// Database context
 /// </typeparam>
 public class TransactionScopeFactory<TContext> : ITransactionScopeFactory<TContext>, IDisposable
-    where TContext : DbContext
+    where TContext : DbContext, IDbContext
 {
     private readonly IDbContextFactory<TContext> contextFactory;
 
