@@ -1,5 +1,5 @@
-﻿using MediatR;
-using Saji.Application.Mediation;
+﻿using Lewee.Application.Mediation;
+using MediatR;
 using Sample.Weather.Domain;
 
 namespace Sample.Weather.Application;

@@ -8,8 +8,8 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    <PackageProjectUrl>https://github.com/TheMagnificent11/saji</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/TheMagnificent11/saji.git</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/TheMagnificent11/Lewee</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/TheMagnificent11/Lewee.git</RepositoryUrl>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <Authors>Saji Weerasingham</Authors>
     <Company>NA</Company>

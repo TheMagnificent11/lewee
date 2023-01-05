@@ -16,8 +16,6 @@
     <PackageReference Update="MediatR" Version="$(MEDIATR_VERSION)" />
     <PackageReference Update="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" /><!-- Out-of-sync with property group version -->
     <PackageReference Update="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="$(DOTNET_VERSION)" />
-    <PackageReference Update="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="$(DOTNET_VERSION)" />
-    <PackageReference Update="Microsoft.AspNetCore.Identity.UI" Version="$(DOTNET_VERSION)" />
     <PackageReference Update="Microsoft.CodeAnalysis.NetAnalyzers" Version="7.0.0" /><!-- Out-of-sync with property group version -->
     <PackageReference Update="Microsoft.EntityFrameworkCore" Version="$(DOTNET_VERSION)" />
     <PackageReference Update="Microsoft.EntityFrameworkCore.SqlServer" Version="$(DOTNET_VERSION)" />

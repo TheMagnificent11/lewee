@@ -28,4 +28,4 @@ services:
     target: /var/opt/mssql
   bindings:
   - port: 1433
-    connectionString: Server=${host},${port};Database=Saji.Sample;MultipleActiveResultSets=true;User Id=sa;Password=${env:SA_PASSWORD};TrustServerCertificate=true
+    connectionString: Server=${host},${port};Database=Lewee.Sample;MultipleActiveResultSets=true;User Id=sa;Password=${env:SA_PASSWORD};TrustServerCertificate=true

@@ -1,12 +1,7 @@
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Identity;
+using Lewee.Application;
+using Lewee.Infrastructure.Logging;
+using Lewee.Infrastructure.Settings;
 using Microsoft.EntityFrameworkCore;
-using Saji.Application;
-using Saji.Infrastructure.Data;
-using Saji.Infrastructure.Logging;
-using Saji.Infrastructure.Settings;
-using Sample.BlazorServer.App.Areas.Identity;
-using Sample.Identity.Infrastructure.Data;
 using Sample.Weather.Application;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,23 +21,12 @@ builder.Services
     .AddApplication(typeof(GetWeatherForecastsQuery).Assembly)
     .AddPipelineBehaviors();
 
-builder.Services.AddDbContextFactory<IdentityDbContext>(options => options.UseSqlServer(identityConnectionString));
-
-builder.Services
-    .AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<IdentityDbContext>();
-
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
-builder.Services
-    .AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
-
-builder.Services
-    .AddHealthChecks()
-    .AddDbContextCheck<IdentityDbContext>();
+builder.Services.AddHealthChecks();
 
 var app = builder.Build();
 
@@ -72,9 +56,9 @@ app.MapControllers();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
-if (app.Environment.IsDevelopment())
-{
-    app.MigrationDatabase<IdentityDbContext>();
-}
+////if (app.Environment.IsDevelopment())
+////{
+////    app.MigrationDatabase<IdentityDbContext>();
+////}
 
 app.Run();
