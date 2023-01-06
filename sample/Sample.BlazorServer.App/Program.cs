@@ -66,11 +66,9 @@ app.MapControllers();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
-/*
 if (app.Environment.IsDevelopment())
 {
     app.MigrationDatabase<OrdersDbContext>();
 }
-*/
 
 app.Run();
