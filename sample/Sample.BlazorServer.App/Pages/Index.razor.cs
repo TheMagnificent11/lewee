@@ -11,6 +11,9 @@ public partial class Index
     [Inject]
     private IMediator? Mediator { get; set; }
 
+    [Inject]
+    private NavigationManager? Navigation { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         if (this.Mediator == null)
@@ -22,5 +25,10 @@ public partial class Index
         var result = await this.Mediator.Send(new GetOrdersQuery(Guid.NewGuid()));
 
         this.orders = result.ToArray();
+    }
+
+    private void CreateNewOrder()
+    {
+        this.Navigation?.NavigateTo("new-order");
     }
 }
