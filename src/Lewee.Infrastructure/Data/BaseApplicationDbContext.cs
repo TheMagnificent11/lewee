@@ -1,5 +1,5 @@
-﻿using Lewee.Domain;
-using Lewee.Infrastructure.Events;
+﻿using Lewee.Application.Data;
+using Lewee.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
@@ -14,9 +14,11 @@ namespace Lewee.Infrastructure.Data;
 public abstract class BaseApplicationDbContext<TContext> : DbContext, IDbContext
     where TContext : DbContext, IDbContext
 {
+    /*
     private readonly DomainEventDispatcher<TContext> domainEventDispatcher;
 
     private bool domainEventsAdded = false;
+    */
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BaseApplicationDbContext{T}"/> class
@@ -24,11 +26,9 @@ public abstract class BaseApplicationDbContext<TContext> : DbContext, IDbContext
     /// <param name="options">
     /// Database context options
     /// </param>
-    /// <param name="domainEventDispatcher">Domain event dispatcher</param>
-    protected BaseApplicationDbContext(DbContextOptions<TContext> options, DomainEventDispatcher<TContext> domainEventDispatcher)
+    protected BaseApplicationDbContext(DbContextOptions<TContext> options)
         : base(options)
     {
-        this.domainEventDispatcher = domainEventDispatcher;
     }
 
     /// <summary>
@@ -45,7 +45,7 @@ public abstract class BaseApplicationDbContext<TContext> : DbContext, IDbContext
     /// Returns a queryable collection for an <see cref="IAggregateRoot"/> entity type
     /// </summary>
     /// <typeparam name="T">Aggregate root type</typeparam>
-    /// <returns>A ueryable collection for an <see cref="IAggregateRoot"/> entity type</returns>
+    /// <returns>A queryable collection for an <see cref="IAggregateRoot"/> entity type</returns>
     public IQueryable<T> AggregateRoot<T>()
         where T : class, IAggregateRoot
     {
@@ -67,10 +67,12 @@ public abstract class BaseApplicationDbContext<TContext> : DbContext, IDbContext
 
         var changes = await base.SaveChangesAsync(cancellationToken);
 
+        /*
         if (this.domainEventsAdded)
         {
             await this.domainEventDispatcher.DispatchEvents(cancellationToken);
         }
+        */
 
         return changes;
     }
@@ -102,15 +104,15 @@ public abstract class BaseApplicationDbContext<TContext> : DbContext, IDbContext
 
     private void OnBeforeSaving()
     {
-        this.domainEventsAdded = false;
+        /* this.domainEventsAdded = false; */
 
         foreach (var entry in this.ChangeTracker.Entries().ToList())
         {
-            this.StoreAndDispatchDomainEvents(entry);
+            this.StoreDomainEvents(entry);
         }
     }
 
-    private void StoreAndDispatchDomainEvents(EntityEntry entry)
+    private void StoreDomainEvents(EntityEntry entry)
     {
         if (entry.Entity is not BaseEntity baseEntity)
         {
@@ -130,7 +132,7 @@ public abstract class BaseApplicationDbContext<TContext> : DbContext, IDbContext
 
             this.DomainEventReferences?.Add(reference);
 
-            this.domainEventsAdded = true;
+            /* this.domainEventsAdded = true; */
         }
     }
 }

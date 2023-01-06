@@ -1,17 +1,17 @@
 ﻿using Lewee.Domain;
 
-namespace Lewee.Infrastructure.Data;
+namespace Lewee.Application.Data;
 
 /// <summary>
 /// Database Context Interface
 /// </summary>
-public interface IDbContext
+public interface IDbContext : IDisposable
 {
     /// <summary>
     /// Returns a queryable collection for an <see cref="IAggregateRoot"/> entity type
     /// </summary>
     /// <typeparam name="T">Aggregate root type</typeparam>
-    /// <returns>A ueryable collection for an <see cref="IAggregateRoot"/> entity type</returns>
+    /// <returns>A queryable collection for an <see cref="IAggregateRoot"/> entity type</returns>
     IQueryable<T> AggregateRoot<T>()
         where T : class, IAggregateRoot;
 

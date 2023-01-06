@@ -1,5 +1,5 @@
-﻿using Lewee.Infrastructure.Events;
-using Microsoft.AspNetCore.Builder;
+﻿using Lewee.Application.Data;
+using Lewee.Infrastructure.Events;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,9 +11,12 @@ namespace Lewee.Infrastructure.Data;
 public static class DatabaseConfiguration
 {
     /// <summary>
-    /// Configures the domain database related to the <typeparamref name="T"/> database context
+    /// Configures the domain database related to the <typeparamref name="TImplementation"/> database context
     /// </summary>
-    /// <typeparam name="T">
+    /// <typeparam name="TService">
+    /// Database context interface
+    /// </typeparam>
+    /// <typeparam name="TImplementation">
     /// Database context type
     /// </typeparam>
     /// <param name="services">
@@ -22,35 +25,17 @@ public static class DatabaseConfiguration
     /// <param name="connectionString">
     /// Database connection string
     /// </param>
-    public static void ConfigureDatabase<T>(this IServiceCollection services, string connectionString)
-        where T : DbContext, IDbContext
+    public static void ConfigureDatabase<TService, TImplementation>(this IServiceCollection services, string connectionString)
+        where TService : class, IDbContext
+        where TImplementation : DbContext, TService
     {
-        services
-            .AddDbContextFactory<T>(options => options.UseSqlServer(connectionString));
+        services.AddDbContextFactory<TImplementation>(
+            options => options.UseSqlServer(
+                connectionString,
+                builder => builder.MigrationsAssembly(typeof(TImplementation).Assembly.FullName)));
 
-        services.AddTransient<DomainEventDispatcher<T>>();
-        services.AddTransient<TransactionScopeFactory<T>>();
-    }
-
-    /// <summary>
-    /// Migrates the databaes related to the DB context of type <typeparamref name="T"/>
-    /// </summary>
-    /// <typeparam name="T">DB context to migrate</typeparam>
-    /// <param name="app">Application buider</param>
-    public static void MigrationDatabase<T>(this IApplicationBuilder app)
-        where T : DbContext
-    {
-        var service = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
-
-        if (service == null)
-        {
-            throw new InvalidOperationException("Could not find IServiceScopeFactory");
-        }
-
-        using (var serviceScope = service.CreateScope())
-        {
-            var dbContext = serviceScope.ServiceProvider.GetRequiredService<T>();
-            dbContext.Database.Migrate();
-        }
+        services.AddTransient<DomainEventDispatcher<TImplementation>>();
+        services.AddTransient<TransactionScopeFactory<TImplementation>>();
+        services.AddScoped<TService>(provider => provider.GetRequiredService<TImplementation>());
     }
 }

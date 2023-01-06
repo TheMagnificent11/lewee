@@ -13,4 +13,8 @@
     <PackageReference Include="SerilogMetrics" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Lewee.Domain\Lewee.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

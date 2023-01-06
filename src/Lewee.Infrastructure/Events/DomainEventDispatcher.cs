@@ -1,4 +1,5 @@
-﻿using Lewee.Domain;
+﻿using Lewee.Application.Data;
+using Lewee.Domain;
 using Lewee.Infrastructure.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
