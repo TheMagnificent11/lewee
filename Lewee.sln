@@ -31,6 +31,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lewee.Domain.Tests.Unit", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Orders.Domain", "sample\Sample.Orders.Domain\Sample.Orders.Domain.csproj", "{32C8622B-DF6A-4A15-B866-8ADC12173710}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Orders.Infrastructure", "sample\Sample.Orders.Infrastructure\Sample.Orders.Infrastructure.csproj", "{83B7D40F-8455-446C-B7CA-EE558C2532AE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,10 @@ Global
 		{32C8622B-DF6A-4A15-B866-8ADC12173710}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32C8622B-DF6A-4A15-B866-8ADC12173710}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32C8622B-DF6A-4A15-B866-8ADC12173710}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83B7D40F-8455-446C-B7CA-EE558C2532AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83B7D40F-8455-446C-B7CA-EE558C2532AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83B7D40F-8455-446C-B7CA-EE558C2532AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83B7D40F-8455-446C-B7CA-EE558C2532AE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
