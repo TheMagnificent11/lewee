@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Text.Json.Serialization;
 
-namespace Saji.Domain.Tests.Unit;
+namespace Lewee.Domain.Tests.Unit;
 
 public partial class DomainEventReferenceTests
 {

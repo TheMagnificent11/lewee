@@ -2,7 +2,7 @@
 using FluentAssertions;
 using Xunit;
 
-namespace Saji.Domain.Tests.Unit;
+namespace Lewee.Domain.Tests.Unit;
 
 public partial class DomainEventReferenceTests
 {

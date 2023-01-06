@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Saji.Domain\Saji.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Lewee.Domain\Lewee.Domain.csproj" />
   </ItemGroup>
 
 </Project>
