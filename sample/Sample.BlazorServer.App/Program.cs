@@ -4,6 +4,7 @@ using Lewee.Infrastructure.Logging;
 using Lewee.Infrastructure.Settings;
 using Microsoft.EntityFrameworkCore;
 using Sample.Orders.Application;
+using Sample.Orders.Application.GetOrders;
 using Sample.Orders.Infrastructure.Data;
 using Sample.Weather.Application;
 
@@ -28,8 +29,11 @@ var seqSettings = builder.Configuration.GetSettings<SeqSettings>("SeqSettings");
 
 builder.Host.ConfigureLogging(appSettings, seqSettings);
 
+builder.Services.AddMapper();
+
 builder.Services
     .AddApplication(typeof(GetWeatherForecastsQuery).Assembly)
+    .AddApplication(typeof(GetOrdersQuery).Assembly)
     .AddPipelineBehaviors();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -37,7 +41,9 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
-builder.Services.AddHealthChecks();
+builder.Services
+    .AddHealthChecks()
+    .AddDbContextCheck<OrdersDbContext>();
 
 var app = builder.Build();
 

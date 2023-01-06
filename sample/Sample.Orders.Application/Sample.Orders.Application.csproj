@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="Mapster" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Lewee.Application\Lewee.Application.csproj" />
+    <ProjectReference Include="..\Sample.Orders.Domain\Sample.Orders.Domain.csproj" />
+  </ItemGroup>
+</Project>

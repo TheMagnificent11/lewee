@@ -1,9 +1,39 @@
 ﻿@page "/"
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Orders</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Orders</h1>
 
-Welcome to your new app.
-
-<SurveyPrompt Title="How is Blazor working for you?" />
+@if (this.orders == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    @if (this.orders.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Table Number</th>
+                    <th>Number Of Items</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in this.orders)
+                {
+                    <tr>
+                        <td>@item.TableNumber</td>
+                        <td>@item.ItemCount</td>
+                        <td>@item.Total</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No pending orders</p>
+    }
+}

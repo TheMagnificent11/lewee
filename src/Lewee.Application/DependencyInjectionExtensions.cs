@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
 using FluentValidation;
 using Lewee.Application.Mediation.Behaviors;
+using Mapster;
+using MapsterMapper;
 using MediatR;
 using MediatR.Pipeline;
 using Microsoft.Extensions.DependencyInjection;
@@ -41,5 +43,20 @@ public static class DependencyInjectionExtensions
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPostProcessorBehavior<,>));
 
         return services;
+    }
+
+    /// <summary>
+    /// Adds type mapper
+    /// </summary>
+    /// <param name="services">Service collection</param>
+    /// <returns>Mapster type addapter config</returns>
+    public static TypeAdapterConfig AddMapper(this IServiceCollection services)
+    {
+        services.AddScoped<IMapper, ServiceMapper>();
+
+        var config = new TypeAdapterConfig();
+        services.AddSingleton(config);
+
+        return config;
     }
 }

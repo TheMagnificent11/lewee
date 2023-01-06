@@ -14,9 +14,8 @@ public class Order : BaseEntity, IAggregateRoot
     }
 
     public int TableNumber { get; protected set;  }
-
     public IReadOnlyCollection<MenuItem> Items { get; protected set; }
-
+    public int ItemCount => this.items.Count;
     public decimal Total => this.items.Sum(x => x.Price);
 
     public void AddItem(MenuItem item)

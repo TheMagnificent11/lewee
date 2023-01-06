@@ -1,17 +1,15 @@
 ﻿using Lewee.Infrastructure.Data;
-using Lewee.Infrastructure.Events;
 using Microsoft.EntityFrameworkCore;
+using Sample.Orders.Application;
 using Sample.Orders.Domain;
 using Sample.Orders.Infrastructure.Data.Configuration;
 
 namespace Sample.Orders.Infrastructure.Data;
 
-public class OrdersDbContext : BaseApplicationDbContext<OrdersDbContext>
+public class OrdersDbContext : BaseApplicationDbContext<OrdersDbContext>, IOrdersDbContext
 {
-    public OrdersDbContext(
-        DbContextOptions<OrdersDbContext> options,
-        DomainEventDispatcher<OrdersDbContext> domainEventDispatcher)
-        : base(options, domainEventDispatcher)
+    public OrdersDbContext(DbContextOptions<OrdersDbContext> options)
+        : base(options)
     {
     }
 

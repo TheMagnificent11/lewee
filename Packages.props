@@ -13,6 +13,8 @@
     <PackageReference Update="FluentAssertions.Analyzers" Version="0.17.2" />
     <PackageReference Update="FluentValidation" Version="$(FLUENTVALIDATOR_VERSION)" />
     <PackageReference Update="FluentValidation.DependencyInjectionExtensions" Version="$(FLUENTVALIDATOR_VERSION)" />
+    <PackageReference Update="Mapster" Version="7.3.0" />
+    <PackageReference Update="Mapster.DependencyInjection" Version="1.0.0" />
     <PackageReference Update="MediatR" Version="$(MEDIATR_VERSION)" />
     <PackageReference Update="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" /><!-- Out-of-sync with property group version -->
     <PackageReference Update="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="$(DOTNET_VERSION)" />
