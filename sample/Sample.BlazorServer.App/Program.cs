@@ -1,7 +1,9 @@
 using Lewee.Application;
+using Lewee.Infrastructure.Data;
 using Lewee.Infrastructure.Logging;
 using Lewee.Infrastructure.Settings;
 using Microsoft.EntityFrameworkCore;
+using Sample.Orders.Infrastructure.Data;
 using Sample.Weather.Application;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +13,14 @@ if (string.IsNullOrWhiteSpace(identityConnectionString))
 {
     throw new ApplicationException("Could not find Identity database connection string");
 }
+
+var connectionString = builder.Configuration.GetConnectionString("database");
+if (string.IsNullOrWhiteSpace(connectionString))
+{
+    throw new ApplicationException("Could not find database connection string");
+}
+
+builder.Services.ConfigureDatabase<OrdersDbContext>(connectionString);
 
 var appSettings = builder.Configuration.GetSettings<ApplicationSettings>("ApplicationSettings");
 var seqSettings = builder.Configuration.GetSettings<SeqSettings>("SeqSettings");
@@ -56,9 +66,11 @@ app.MapControllers();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
-////if (app.Environment.IsDevelopment())
-////{
-////    app.MigrationDatabase<IdentityDbContext>();
-////}
+/*
+if (app.Environment.IsDevelopment())
+{
+    app.MigrationDatabase<OrdersDbContext>();
+}
+*/
 
 app.Run();

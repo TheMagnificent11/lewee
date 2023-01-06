@@ -18,6 +18,8 @@ public class OrdersDbContext : BaseApplicationDbContext<OrdersDbContext>
     public DbSet<MenuItem>? MenuItems { get; set; }
     public DbSet<Order>? Orders { get; set; }
 
+    public override string Schema => "ord";
+
     protected override void ConfigureDatabaseModel(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new MenuItemConfiguration());
