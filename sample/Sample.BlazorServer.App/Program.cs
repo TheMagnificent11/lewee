@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Sample.Orders.Application;
 using Sample.Orders.Application.GetOrders;
 using Sample.Orders.Infrastructure.Data;
-using Sample.Weather.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,7 +31,6 @@ builder.Host.ConfigureLogging(appSettings, seqSettings);
 builder.Services.AddMapper();
 
 builder.Services
-    .AddApplication(typeof(GetWeatherForecastsQuery).Assembly)
     .AddApplication(typeof(GetOrdersQuery).Assembly)
     .AddPipelineBehaviors();
 

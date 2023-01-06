@@ -1,8 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Lewee.Application\Lewee.Application.csproj" />
-    <ProjectReference Include="..\Sample.Weather.Domain\Sample.Weather.Domain.csproj" />
-  </ItemGroup>
-
-</Project>

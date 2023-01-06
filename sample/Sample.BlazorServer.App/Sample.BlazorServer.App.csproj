@@ -13,7 +13,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Lewee.Infrastructure\Lewee.Infrastructure.csproj" />
     <ProjectReference Include="..\Sample.Orders.Infrastructure\Sample.Orders.Infrastructure.csproj" />
-    <ProjectReference Include="..\Sample.Weather.Application\Sample.Weather.Application.csproj" />
   </ItemGroup>
 
 </Project>
