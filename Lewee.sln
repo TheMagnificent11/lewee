@@ -32,6 +32,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Restaurant.Applicati
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Restaurant.Contracts", "sample\Sample.Restaurant.Contracts\Sample.Restaurant.Contracts.csproj", "{8C561EB7-3BFF-4F68-9AF1-00EC42138316}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lewee.Util", "src\Lewee.Util\Lewee.Util.csproj", "{709A3860-049B-45AA-8937-76DEEE864B1E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lewee.Util.Tests.Unit", "tests\Lewee.Util.Tests.Unit\Lewee.Util.Tests.Unit.csproj", "{09F26403-77E3-4290-A15A-84A3DEF23469}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +78,14 @@ Global
 		{8C561EB7-3BFF-4F68-9AF1-00EC42138316}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C561EB7-3BFF-4F68-9AF1-00EC42138316}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C561EB7-3BFF-4F68-9AF1-00EC42138316}.Release|Any CPU.Build.0 = Release|Any CPU
+		{709A3860-049B-45AA-8937-76DEEE864B1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{709A3860-049B-45AA-8937-76DEEE864B1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{709A3860-049B-45AA-8937-76DEEE864B1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{709A3860-049B-45AA-8937-76DEEE864B1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09F26403-77E3-4290-A15A-84A3DEF23469}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09F26403-77E3-4290-A15A-84A3DEF23469}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09F26403-77E3-4290-A15A-84A3DEF23469}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09F26403-77E3-4290-A15A-84A3DEF23469}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
