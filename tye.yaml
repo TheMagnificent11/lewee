@@ -3,8 +3,8 @@ extensions:
 - name: seq
   logPath: ./.logs
 services:
-- name: blazor-app
-  project: sample/Sample.BlazorServer.App/Sample.BlazorServer.App.csproj
+- name: restaurant-app
+  project: sample/Sample.Restaurant.App/Sample.Restaurant.App.csproj
   bindings:
   - name: http
     protocol: http
