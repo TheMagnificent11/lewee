@@ -1,12 +1,12 @@
 using MediatR;
 using Microsoft.AspNetCore.Components;
-using Sample.Restaurant.Application.GetOrders;
+using Sample.Restaurant.Application.Tables;
 
 namespace Sample.Restaurant.App.Pages;
 
 public partial class Index
 {
-    private OrderDto[]? orders;
+    private TableDto[]? tables;
 
     [Inject]
     private IMediator? Mediator { get; set; }
@@ -18,17 +18,12 @@ public partial class Index
     {
         if (this.Mediator == null)
         {
-            this.orders = Array.Empty<OrderDto>();
+            this.tables = Array.Empty<TableDto>();
             return;
         }
 
-        var result = await this.Mediator.Send(new GetOrdersQuery(Guid.NewGuid()));
+        var result = await this.Mediator.Send(new GetTablesQuery(Guid.NewGuid()));
 
-        this.orders = result.ToArray();
-    }
-
-    private void CreateNewOrder()
-    {
-        this.Navigation?.NavigateTo("new-order");
+        this.tables = result.ToArray();
     }
 }

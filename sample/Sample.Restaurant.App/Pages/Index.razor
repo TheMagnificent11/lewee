@@ -1,41 +1,30 @@
 ﻿@page "/"
 
-<PageTitle>Orders</PageTitle>
+<PageTitle>Tables</PageTitle>
 
-<h1>Orders</h1>
+<h1>Tables</h1>
 
-@if (this.orders == null)
+@if (this.tables == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-    @if (this.orders.Any())
-    {
-        <table class="table">
-            <thead>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Table Number</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in this.tables)
+            {
                 <tr>
-                    <th>Table Number</th>
-                    <th>Number Of Items</th>
-                    <th>Total</th>
+                    <td>@item.TableNumber</td>
+                    <td>@item.StatusId.ToString()</td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in this.orders)
-                {
-                    <tr>
-                        <td>@item.TableNumber</td>
-                        <td>@item.ItemCount</td>
-                        <td>@item.Total</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <p>No pending orders</p>
-    }
+            }
+        </tbody>
+    </table>
 }
-
-<button @onclick="@CreateNewOrder">New Order</button>

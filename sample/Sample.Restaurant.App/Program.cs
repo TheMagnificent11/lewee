@@ -4,7 +4,7 @@ using Lewee.Infrastructure.Logging;
 using Lewee.Infrastructure.Settings;
 using Microsoft.EntityFrameworkCore;
 using Sample.Restaurant.Application;
-using Sample.Restaurant.Application.GetOrders;
+using Sample.Restaurant.Application.Tables;
 using Sample.Restaurant.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,7 +21,7 @@ if (string.IsNullOrWhiteSpace(connectionString))
     throw new ApplicationException("Could not find database connection string");
 }
 
-builder.Services.ConfigureDatabase<IOrdersDbContext, OrdersDbContext>(connectionString);
+builder.Services.ConfigureDatabase<IRestaurantDbContext, RestaurantDbContext>(connectionString);
 
 var appSettings = builder.Configuration.GetSettings<ApplicationSettings>("ApplicationSettings");
 var seqSettings = builder.Configuration.GetSettings<SeqSettings>("SeqSettings");
@@ -31,7 +31,7 @@ builder.Host.ConfigureLogging(appSettings, seqSettings);
 builder.Services.AddMapper();
 
 builder.Services
-    .AddApplication(typeof(GetOrdersQuery).Assembly)
+    .AddApplication(typeof(GetTablesQuery).Assembly)
     .AddPipelineBehaviors();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -41,7 +41,7 @@ builder.Services.AddServerSideBlazor();
 
 builder.Services
     .AddHealthChecks()
-    .AddDbContextCheck<OrdersDbContext>();
+    .AddDbContextCheck<RestaurantDbContext>();
 
 var app = builder.Build();
 

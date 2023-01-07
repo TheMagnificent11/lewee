@@ -6,9 +6,9 @@ using Sample.Restaurant.Infrastructure.Data.Configuration;
 
 namespace Sample.Restaurant.Infrastructure.Data;
 
-public class OrdersDbContext : BaseApplicationDbContext<OrdersDbContext>, IOrdersDbContext
+public class RestaurantDbContext : BaseApplicationDbContext<RestaurantDbContext>, IRestaurantDbContext
 {
-    public OrdersDbContext(DbContextOptions<OrdersDbContext> options)
+    public RestaurantDbContext(DbContextOptions<RestaurantDbContext> options)
         : base(options)
     {
     }
@@ -16,7 +16,7 @@ public class OrdersDbContext : BaseApplicationDbContext<OrdersDbContext>, IOrder
     public DbSet<MenuItem>? MenuItems { get; set; }
     public DbSet<Order>? Orders { get; set; }
 
-    public override string Schema => "ord";
+    public override string Schema => "res";
 
     protected override void ConfigureDatabaseModel(ModelBuilder modelBuilder)
     {

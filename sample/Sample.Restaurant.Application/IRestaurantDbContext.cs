@@ -2,6 +2,6 @@
 
 namespace Sample.Restaurant.Application;
 
-public interface IOrdersDbContext : IDbContext
+public interface IRestaurantDbContext : IDbContext
 {
 }
