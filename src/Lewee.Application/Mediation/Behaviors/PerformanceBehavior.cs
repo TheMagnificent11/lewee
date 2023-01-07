@@ -3,16 +3,7 @@ using Serilog;
 
 namespace Lewee.Application.Mediation.Behaviors;
 
-/// <summary>
-/// Performance Behavior
-/// </summary>
-/// <typeparam name="TRequest">
-/// Request type
-/// </typeparam>
-/// <typeparam name="TResponse">
-/// Response type
-/// </typeparam>
-public class PerformanceBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+internal class PerformanceBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
     private readonly ILogger logger;
@@ -25,7 +16,7 @@ public class PerformanceBehavior<TRequest, TResponse> : IPipelineBehavior<TReque
     /// </param>
     public PerformanceBehavior(ILogger logger)
     {
-        this.logger = logger;
+        this.logger = logger.ForContext<PerformanceBehavior<TRequest, TResponse>>();
     }
 
     /// <summary>

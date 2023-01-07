@@ -3,33 +3,9 @@ using Serilog.Context;
 
 namespace Lewee.Application.Mediation.Behaviors;
 
-/// <summary>
-/// Logging Behavior
-/// </summary>
-/// <typeparam name="TRequest">
-/// Request type
-/// </typeparam>
-/// <typeparam name="TResponse">
-/// Response type
-/// </typeparam>
-public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+internal class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>, IApplicationRequest
 {
-    /// <summary>
-    /// Handles request and adds stuctural logging properties
-    /// </summary>
-    /// <param name="request">
-    /// Request to log
-    /// </param>
-    /// <param name="next">
-    /// Next behavior
-    /// </param>
-    /// <param name="cancellationToken">
-    /// Cancellation token
-    /// </param>
-    /// <returns>
-    /// Asynchronous task contain a <typeparamref name="TResponse"/>
-    /// </returns>
     public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         using (LogContext.PushProperty("CorrelationId", request.CorrelationId))
