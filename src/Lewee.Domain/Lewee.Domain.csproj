@@ -4,4 +4,8 @@
     <PackageReference Include="MediatR" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Lewee.Util\Lewee.Util.csproj" />
+  </ItemGroup>
+
 </Project>

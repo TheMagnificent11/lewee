@@ -11,7 +11,7 @@ namespace Lewee.Infrastructure.Data;
 /// Enum type
 /// </typeparam>
 public abstract class BaseEnumEntityConfiguration<TEnum> : IEntityTypeConfiguration<EnumEntity<TEnum>>
-    where TEnum : struct, IConvertible, IComparable
+    where TEnum : struct, Enum
 {
     /// <summary>
     /// Configures enum entity lookup database table

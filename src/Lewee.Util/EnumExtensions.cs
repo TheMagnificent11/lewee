@@ -15,7 +15,6 @@ public static class EnumExtensions
     /// <returns><see cref="DescriptionAttribute"/> description or ToString() of enum value</returns>
     public static string GetDescription(this Enum value)
     {
-        // Get the Description attribute value for the enum value
         var field = value
             .GetType()
             .GetField(value.ToString());

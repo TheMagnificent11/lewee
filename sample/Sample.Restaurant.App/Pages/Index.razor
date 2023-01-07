@@ -22,7 +22,7 @@ else
             {
                 <tr>
                     <td>@item.TableNumber</td>
-                    <td>@item.StatusId.ToString()</td>
+                    <td>@item.IsInUse ? "In Use" : "Available"</td>
                 </tr>
             }
         </tbody>

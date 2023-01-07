@@ -1,4 +1,6 @@
-﻿namespace Lewee.Domain;
+﻿using Lewee.Util;
+
+namespace Lewee.Domain;
 
 /// <summary>
 /// Enum Entity
@@ -7,7 +9,7 @@
 /// Enum entity key type
 /// </typeparam>
 public class EnumEntity<TKey> : IEnumEntity<TKey>
-    where TKey : struct, IConvertible, IComparable
+    where TKey : struct, Enum
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="EnumEntity{TKey}"/> class
@@ -15,13 +17,10 @@ public class EnumEntity<TKey> : IEnumEntity<TKey>
     /// <param name="id">
     /// ID
     /// </param>
-    /// <param name="name">
-    /// Name
-    /// </param>
-    public EnumEntity(TKey id, string name)
+    public EnumEntity(TKey id)
     {
         this.Id = id;
-        this.Name = name;
+        this.Name = id.GetDescription();
     }
 
     // EF Core constructor
