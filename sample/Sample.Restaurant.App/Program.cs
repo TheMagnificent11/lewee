@@ -73,4 +73,9 @@ app.MapControllers();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
+if (app.Environment.IsDevelopment())
+{
+    app.MigrationDatabase<RestaurantDbContext>();
+}
+
 app.Run();
