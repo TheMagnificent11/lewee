@@ -1,4 +1,5 @@
 using Lewee.Application;
+using Lewee.Infrastructure.Auth;
 using Lewee.Infrastructure.Data;
 using Lewee.Infrastructure.Logging;
 using Lewee.Infrastructure.Settings;
@@ -21,8 +22,6 @@ if (string.IsNullOrWhiteSpace(connectionString))
     throw new ApplicationException("Could not find database connection string");
 }
 
-builder.Services.ConfigureDatabase<IRestaurantDbContext, RestaurantDbContext>(connectionString);
-
 var appSettings = builder.Configuration.GetSettings<ApplicationSettings>("ApplicationSettings");
 var seqSettings = builder.Configuration.GetSettings<SeqSettings>("SeqSettings");
 
@@ -31,10 +30,11 @@ builder.Host.ConfigureLogging(appSettings, seqSettings);
 builder.Services.AddMapper();
 
 builder.Services
+    .ConfigureDatabase<IRestaurantDbContext, RestaurantDbContext>(connectionString)
     .AddApplication(typeof(GetTablesQuery).Assembly)
-    .AddPipelineBehaviors();
-
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+    .AddPipelineBehaviors()
+    .ConfigureAuthenticatedUserService()
+    .AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
@@ -57,6 +57,8 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+app.UseHealthChecks("/health");
 
 app.UseHttpsRedirection();
 

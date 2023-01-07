@@ -69,5 +69,26 @@
         /// Gets or sets the domain events collection
         /// </summary>
         public DomainEventsCollection DomainEvents { get; protected set; }
+
+        /// <summary>
+        /// Applies creation tracking data
+        /// </summary>
+        /// <param name="createdBy">Created by user</param>
+        public void ApplyCreationTrackingData(string? createdBy)
+        {
+            this.CreatedBy = createdBy ?? "System";
+            this.CreatedAtUtc = DateTime.UtcNow;
+            this.ApplyModificationTrackingData(createdBy);
+        }
+
+        /// <summary>
+        /// Applies modification tracking data
+        /// </summary>
+        /// <param name="modifiedBy">Modified by user</param>
+        public void ApplyModificationTrackingData(string? modifiedBy)
+        {
+            this.ModifiedBy = modifiedBy ?? "System";
+            this.ModifiedAtUtc = DateTime.UtcNow;
+        }
     }
 }

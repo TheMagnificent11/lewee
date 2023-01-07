@@ -1,7 +1,6 @@
 ﻿using Lewee.Application.Data;
 using Lewee.Domain;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Lewee.Infrastructure.Data;
 
@@ -47,24 +46,6 @@ public abstract class BaseApplicationDbContext<TContext> : DbContext, IDbContext
     }
 
     /// <summary>
-    /// Saves all changes made in this context to the database
-    /// </summary>
-    /// <param name="cancellationToken">
-    /// Cancellation token
-    /// </param>
-    /// <returns>
-    /// An async task that contains the number of changes that were persisted to the database
-    /// </returns>
-    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-    {
-        this.OnBeforeSaving();
-
-        var changes = await base.SaveChangesAsync(cancellationToken);
-
-        return changes;
-    }
-
-    /// <summary>
     /// Configures the database
     /// </summary>
     /// <param name="modelBuilder">
@@ -88,34 +69,4 @@ public abstract class BaseApplicationDbContext<TContext> : DbContext, IDbContext
     /// Database model builder
     /// </param>
     protected abstract void ConfigureDatabaseModel(ModelBuilder modelBuilder);
-
-    private void OnBeforeSaving()
-    {
-        foreach (var entry in this.ChangeTracker.Entries().ToList())
-        {
-            this.StoreDomainEvents(entry);
-        }
-    }
-
-    private void StoreDomainEvents(EntityEntry entry)
-    {
-        if (entry.Entity is not BaseEntity baseEntity)
-        {
-            return;
-        }
-
-        var events = baseEntity.DomainEvents.GetAndClear();
-
-        foreach (var domainEvent in events)
-        {
-            if (domainEvent == null)
-            {
-                continue;
-            }
-
-            var reference = new DomainEventReference(domainEvent);
-
-            this.DomainEventReferences?.Add(reference);
-        }
-    }
 }

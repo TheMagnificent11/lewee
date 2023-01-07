@@ -25,9 +25,12 @@ public static class DatabaseConfiguration
     /// <param name="connectionString">
     /// Database connection string
     /// </param>
-    public static void ConfigureDatabase<TService, TImplementation>(this IServiceCollection services, string connectionString)
+    /// <returns>
+    /// Services collection for chaining
+    /// </returns>
+    public static IServiceCollection ConfigureDatabase<TService, TImplementation>(this IServiceCollection services, string connectionString)
         where TService : class, IDbContext
-        where TImplementation : DbContext, TService
+        where TImplementation : BaseApplicationDbContext<TImplementation>, TService
     {
         services.AddDbContextFactory<TImplementation>(
             options => options.UseSqlServer(
@@ -36,7 +39,12 @@ public static class DatabaseConfiguration
 
         services.AddScoped<TService>(provider => provider.GetRequiredService<TImplementation>());
 
+        services.AddScoped<AuditDetailsSaveChangesInterceptor>();
+        services.AddScoped<DomainEventSaveChangesInterceptor<TImplementation>>();
+
         services.AddSingleton<DomainEventDispatcher<TImplementation>>();
         services.AddHostedService<DomainEventDispatcherService<TImplementation>>();
+
+        return services;
     }
 }
