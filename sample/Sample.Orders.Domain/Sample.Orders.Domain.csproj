@@ -1,5 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
     <ProjectReference Include="..\..\src\Lewee.Domain\Lewee.Domain.csproj" />
+    <ProjectReference Include="..\Sample.Orders.Contracts\Sample.Orders.Contracts.csproj" />
   </ItemGroup>
 </Project>
