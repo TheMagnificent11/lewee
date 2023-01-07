@@ -4,7 +4,8 @@ namespace Sample.Restaurant.Domain;
 
 public class Table : BaseEntity, IAggregateRoot
 {
-    public Table(int tableNumber)
+    public Table(Guid id, int tableNumber)
+        : base(id)
     {
         this.TableNumber = tableNumber;
     }

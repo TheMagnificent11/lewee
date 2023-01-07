@@ -9,14 +9,24 @@
         /// Initializes a new instance of the <see cref="BaseEntity"/> class
         /// </summary>
         protected BaseEntity()
+            : this(Guid.NewGuid())
         {
-            var currentUser = GetCurrentUserName();
+        }
 
-            this.Id = Guid.NewGuid();
-            this.CreatedBy = currentUser;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseEntity"/> class
+        /// </summary>
+        /// <param name="id">ID</param>
+        protected BaseEntity(Guid id)
+        {
+            this.Id = id;
+
+            // Note audit fields should be popualated by EF save changes interceptor
+            this.CreatedBy = "System";
+            this.ModifiedBy = "System";
             this.CreatedAtUtc = DateTime.UtcNow;
-            this.ModifiedBy = currentUser;
             this.ModifiedAtUtc = DateTime.UtcNow;
+
             this.DomainEvents = new DomainEventsCollection();
         }
 
@@ -59,28 +69,5 @@
         /// Gets or sets the domain events collection
         /// </summary>
         public DomainEventsCollection DomainEvents { get; protected set; }
-
-        /// <summary>
-        /// Applies the tracking data
-        /// </summary>
-        public void ApplyTrackingData()
-        {
-            var userName = Thread.CurrentPrincipal?.Identity?.Name ?? "System";
-            var now = DateTime.UtcNow;
-
-            if (string.IsNullOrEmpty(this.CreatedBy))
-            {
-                this.CreatedBy = userName;
-                this.CreatedAtUtc = now;
-            }
-
-            this.ModifiedBy = userName;
-            this.ModifiedAtUtc = now;
-        }
-
-        private static string GetCurrentUserName()
-        {
-            return Environment.UserName ?? "System";
-        }
     }
 }

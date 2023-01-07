@@ -1,7 +1,7 @@
 ﻿using Lewee.Domain;
 
 namespace Sample.Restaurant.Domain;
-public class Order : BaseEntity, IAggregateRoot
+public class Order : BaseEntity
 {
     private readonly List<MenuItem> items;
 

@@ -13,14 +13,12 @@ public class RestaurantDbContext : BaseApplicationDbContext<RestaurantDbContext>
     {
     }
 
-    public DbSet<MenuItem>? MenuItems { get; set; }
-    public DbSet<Order>? Orders { get; set; }
-
     public override string Schema => "res";
+
+    public DbSet<Table>? Tables { get; set; }
 
     protected override void ConfigureDatabaseModel(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfiguration(new MenuItemConfiguration());
-        modelBuilder.ApplyConfiguration(new OrderConfiguration());
+        modelBuilder.ApplyConfiguration(new TableConfiguration());
     }
 }
