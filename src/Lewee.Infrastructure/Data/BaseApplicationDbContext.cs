@@ -14,12 +14,6 @@ namespace Lewee.Infrastructure.Data;
 public abstract class BaseApplicationDbContext<TContext> : DbContext, IDbContext
     where TContext : DbContext, IDbContext
 {
-    /*
-    private readonly DomainEventDispatcher<TContext> domainEventDispatcher;
-
-    private bool domainEventsAdded = false;
-    */
-
     /// <summary>
     /// Initializes a new instance of the <see cref="BaseApplicationDbContext{T}"/> class
     /// </summary>
@@ -67,13 +61,6 @@ public abstract class BaseApplicationDbContext<TContext> : DbContext, IDbContext
 
         var changes = await base.SaveChangesAsync(cancellationToken);
 
-        /*
-        if (this.domainEventsAdded)
-        {
-            await this.domainEventDispatcher.DispatchEvents(cancellationToken);
-        }
-        */
-
         return changes;
     }
 
@@ -104,8 +91,6 @@ public abstract class BaseApplicationDbContext<TContext> : DbContext, IDbContext
 
     private void OnBeforeSaving()
     {
-        /* this.domainEventsAdded = false; */
-
         foreach (var entry in this.ChangeTracker.Entries().ToList())
         {
             this.StoreDomainEvents(entry);
@@ -131,8 +116,6 @@ public abstract class BaseApplicationDbContext<TContext> : DbContext, IDbContext
             var reference = new DomainEventReference(domainEvent);
 
             this.DomainEventReferences?.Add(reference);
-
-            /* this.domainEventsAdded = true; */
         }
     }
 }

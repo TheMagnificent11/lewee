@@ -1,6 +1,5 @@
 ﻿using Lewee.Application.Data;
 using Lewee.Domain;
-using Lewee.Infrastructure.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -18,15 +17,15 @@ public class DomainEventDispatcher<TContext>
 {
     private const int BatchSize = 50;
 
-    private readonly TransactionScopeFactory<TContext> transactionScopeFactory;
+    private readonly IDbContextFactory<TContext> dbContextFactory;
     private readonly IMediator mediator;
     private readonly ILogger logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DomainEventDispatcher{TContext}"/> class
     /// </summary>
-    /// <param name="transactionScopeFactory">
-    /// Transaction scope factory
+    /// <param name="dbContextFactory">
+    /// Database context factory
     /// </param>
     /// <param name="mediator">
     /// Mediator
@@ -35,11 +34,11 @@ public class DomainEventDispatcher<TContext>
     /// Logger
     /// </param>
     public DomainEventDispatcher(
-        TransactionScopeFactory<TContext> transactionScopeFactory,
+        IDbContextFactory<TContext> dbContextFactory,
         IMediator mediator,
         ILogger logger)
     {
-        this.transactionScopeFactory = transactionScopeFactory;
+        this.dbContextFactory = dbContextFactory;
         this.mediator = mediator;
         this.logger = logger.ForContext<DomainEventDispatcher<TContext>>();
     }
@@ -67,7 +66,7 @@ public class DomainEventDispatcher<TContext>
 
     private async Task<bool> ThereAreEventsToDispatch(CancellationToken token)
     {
-        using (var scope = this.transactionScopeFactory.CreateContext())
+        using (var scope = this.dbContextFactory.CreateDbContext())
         {
             var dbSet = scope.Set<DomainEventReference>();
 
@@ -85,7 +84,7 @@ public class DomainEventDispatcher<TContext>
 
     private async Task DispatchBatch(CancellationToken token)
     {
-        using (var scope = this.transactionScopeFactory.CreateContext())
+        using (var scope = this.dbContextFactory.CreateDbContext())
         {
             var dbSet = scope.Set<DomainEventReference>();
             if (dbSet == null)

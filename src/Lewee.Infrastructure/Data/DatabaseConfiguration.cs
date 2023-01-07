@@ -34,8 +34,9 @@ public static class DatabaseConfiguration
                 connectionString,
                 builder => builder.MigrationsAssembly(typeof(TImplementation).Assembly.FullName)));
 
-        services.AddTransient<DomainEventDispatcher<TImplementation>>();
-        services.AddTransient<TransactionScopeFactory<TImplementation>>();
         services.AddScoped<TService>(provider => provider.GetRequiredService<TImplementation>());
+
+        services.AddSingleton<DomainEventDispatcher<TImplementation>>();
+        services.AddHostedService<DomainEventDispatcherService<TImplementation>>();
     }
 }
