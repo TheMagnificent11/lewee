@@ -15,6 +15,7 @@ public static class AuthenticatedUserServiceConfiguration
     /// <returns>Services collection for chaining</returns>
     public static IServiceCollection ConfigureAuthenticatedUserService(this IServiceCollection services)
     {
+        services.AddHttpContextAccessor();
         services.AddSingleton<IAuthenticatedUserService, AuthenticatedUserService>();
 
         return services;
