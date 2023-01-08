@@ -20,7 +20,7 @@ internal class DomainEventDispatcherService<TContext> : BackgroundService
         {
             await this.DomainEventDispatcher.DispatchEvents(stoppingToken);
 
-            await Task.Delay(2000, stoppingToken);
+            await Task.Delay(2500, stoppingToken);
         }
     }
 }
