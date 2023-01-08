@@ -5,10 +5,26 @@ namespace Sample.Restaurant.Domain;
 
 public class Order : BaseEntity
 {
-    internal Order(Guid tableId, int tableNumber)
+    internal Order(Guid tableId, int tableNumber, Guid correlationId)
     {
         this.TableId = tableId;
         this.Table = new Table(tableId, tableNumber);
+        this.OrderStatusId = Contracts.OrderStatus.Ordering;
+        this.OrderStatus = new EnumEntity<OrderStatus>(this.OrderStatusId);
+
+        this.DomainEvents.Raise(new OrderCreatedDomainEvent(
+            correlationId,
+            this.Id,
+            tableId,
+            tableNumber,
+            DateTime.UtcNow));
+    }
+
+    // EF Constructor
+    private Order()
+    {
+        this.TableId = Guid.Empty;
+        this.Table = new Table(this.TableId, 0);
         this.OrderStatusId = Contracts.OrderStatus.Ordering;
         this.OrderStatus = new EnumEntity<OrderStatus>(this.OrderStatusId);
     }

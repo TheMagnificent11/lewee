@@ -15,7 +15,6 @@ internal class OrderConfiguration : BaseEntityConfiguration<Order>
 
         builder.HasOne(x => x.Table)
             .WithMany(x => x.Orders)
-            .HasForeignKey(x => x.TableId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .HasForeignKey(x => x.TableId);
     }
 }
