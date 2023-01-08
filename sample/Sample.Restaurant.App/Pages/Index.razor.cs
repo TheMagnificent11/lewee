@@ -10,7 +10,13 @@ public partial class Index
     {
         var result = await this.Mediator.Send(new GetTablesQuery(Guid.NewGuid()));
 
-        this.tables = result.ToArray();
+        if (!result.IsSuccess || result.Data == null)
+        {
+            // TODO
+            return;
+        }
+
+        this.tables = result.Data.ToArray();
     }
 
     private async Task UseTable(int tableNumber)

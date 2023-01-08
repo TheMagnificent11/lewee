@@ -14,9 +14,7 @@ public abstract class BaseResult : IResult
     /// <param name="errors">
     /// Error messages (keyed by request property)
     /// </param>
-    protected BaseResult(
-        ResultStatus status,
-        Dictionary<string, List<string>>? errors)
+    protected BaseResult(ResultStatus status, Dictionary<string, List<string>>? errors)
     {
         this.Status = status;
         this.Errors = errors ?? new Dictionary<string, List<string>>();

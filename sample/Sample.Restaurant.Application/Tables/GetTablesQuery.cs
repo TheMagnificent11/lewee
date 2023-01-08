@@ -1,4 +1,5 @@
 ﻿using Lewee.Application.Mediation;
+using Lewee.Application.Mediation.Responses;
 using MapsterMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -6,7 +7,7 @@ using Sample.Restaurant.Domain;
 
 namespace Sample.Restaurant.Application.Tables;
 
-public sealed class GetTablesQuery : IQuery<IEnumerable<TableDto>>
+public sealed class GetTablesQuery : IQuery<QueryResult<IEnumerable<TableDto>>>
 {
     public GetTablesQuery(Guid correlationId)
     {
@@ -16,7 +17,7 @@ public sealed class GetTablesQuery : IQuery<IEnumerable<TableDto>>
     public Guid? TenantId { get; }
     public Guid CorrelationId { get; }
 
-    internal class GetTablesQueryHandler : IRequestHandler<GetTablesQuery, IEnumerable<TableDto>>
+    internal class GetTablesQueryHandler : IRequestHandler<GetTablesQuery, QueryResult<IEnumerable<TableDto>>>
     {
         private readonly IRestaurantDbContext dbContext;
         private readonly IMapper mapper;
@@ -27,14 +28,16 @@ public sealed class GetTablesQuery : IQuery<IEnumerable<TableDto>>
             this.mapper = mapper;
         }
 
-        public async Task<IEnumerable<TableDto>> Handle(GetTablesQuery request, CancellationToken cancellationToken)
+        public async Task<QueryResult<IEnumerable<TableDto>>> Handle(GetTablesQuery request, CancellationToken cancellationToken)
         {
             var entites = await this.dbContext
                 .AggregateRoot<Table>()
                 .OrderBy(x => x.TableNumber)
                 .ToListAsync(cancellationToken);
 
-            return this.mapper.Map<IEnumerable<TableDto>>(entites);
+            var dtos = this.mapper.Map<IEnumerable<TableDto>>(entites);
+
+            return QueryResult<IEnumerable<TableDto>>.Success(dtos);
         }
     }
 }
