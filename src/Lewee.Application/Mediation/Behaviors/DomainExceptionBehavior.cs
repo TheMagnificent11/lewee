@@ -5,17 +5,18 @@ using Serilog;
 
 namespace Lewee.Application.Mediation.Behaviors;
 
-internal class DomainExceptionBehavior<TCommand> : IPipelineBehavior<TCommand, CommandResult>
-    where TCommand : ICommand
+internal class DomainExceptionBehavior<TCommand, TResponse> : IPipelineBehavior<TCommand, TResponse>
+    where TCommand : ICommand, IRequest<TResponse>
+    where TResponse : CommandResult
 {
     private readonly ILogger logger;
 
     public DomainExceptionBehavior(ILogger logger)
     {
-        this.logger = logger.ForContext<DomainExceptionBehavior<TCommand>>();
+        this.logger = logger.ForContext<DomainExceptionBehavior<TCommand, TResponse>>();
     }
 
-    public Task<CommandResult> Handle(TCommand request, RequestHandlerDelegate<CommandResult> next, CancellationToken cancellationToken)
+    public Task<TResponse> Handle(TCommand request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         try
         {
@@ -27,7 +28,9 @@ internal class DomainExceptionBehavior<TCommand> : IPipelineBehavior<TCommand, C
             this.logger.Warning(ex, ex.Message);
 #pragma warning restore Serilog004 // Constant MessageTemplate verifier
 
-            return Task.FromResult(CommandResult.Fail(ResultStatus.BadRequest, ex.Message));
+            var result = CommandResult.Fail(ResultStatus.BadRequest, ex.Message);
+
+            return Task.FromResult((TResponse)result);
         }
     }
 }

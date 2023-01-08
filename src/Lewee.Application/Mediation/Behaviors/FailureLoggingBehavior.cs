@@ -4,17 +4,18 @@ using Serilog;
 
 namespace Lewee.Application.Mediation.Behaviors;
 
-internal class CommandFailureLoggingBehavior<TCommand> : IPipelineBehavior<TCommand, CommandResult>
-    where TCommand : ICommand
+internal class FailureLoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    where TRequest : IRequest<TResponse>
+    where TResponse : IResult
 {
     private readonly ILogger logger;
 
-    public CommandFailureLoggingBehavior(ILogger logger)
+    public FailureLoggingBehavior(ILogger logger)
     {
-        this.logger = logger.ForContext<CommandFailureLoggingBehavior<TCommand>>();
+        this.logger = logger.ForContext<FailureLoggingBehavior<TRequest, TResponse>>();
     }
 
-    public async Task<CommandResult> Handle(TCommand request, RequestHandlerDelegate<CommandResult> next, CancellationToken cancellationToken)
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         var result = await next();
 
