@@ -1,4 +1,5 @@
-﻿using Lewee.Application.Data;
+﻿using Lewee.Application.Auth;
+using Lewee.Application.Data;
 using Lewee.Domain;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,15 +14,23 @@ namespace Lewee.Infrastructure.Data;
 public abstract class BaseApplicationDbContext<TContext> : DbContext, IDbContext
     where TContext : DbContext, IDbContext
 {
+    private readonly IAuthenticatedUserService authenticatedUserService;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="BaseApplicationDbContext{T}"/> class
     /// </summary>
     /// <param name="options">
     /// Database context options
     /// </param>
-    protected BaseApplicationDbContext(DbContextOptions<TContext> options)
+    /// <param name="authenticatedUserService">
+    /// Authenticated user service
+    /// </param>
+    protected BaseApplicationDbContext(
+        DbContextOptions<TContext> options,
+        IAuthenticatedUserService authenticatedUserService)
         : base(options)
     {
+        this.authenticatedUserService = authenticatedUserService;
     }
 
     /// <summary>
@@ -29,28 +38,17 @@ public abstract class BaseApplicationDbContext<TContext> : DbContext, IDbContext
     /// </summary>
     public virtual string Schema { get; } = "dbo";
 
-    /// <summary>
-    /// Gets or sets the domain event referecnce database set
-    /// </summary>
+    /// <inheritdoc />
     public DbSet<DomainEventReference>? DomainEventReferences { get; protected set; }
 
-    /// <summary>
-    /// Returns a queryable collection for an <see cref="IAggregateRoot"/> entity type
-    /// </summary>
-    /// <typeparam name="T">Aggregate root type</typeparam>
-    /// <returns>A queryable collection for an <see cref="IAggregateRoot"/> entity type</returns>
+    /// <inheritdoc />
     public IQueryable<T> AggregateRoot<T>()
         where T : class, IAggregateRoot
     {
         return this.Set<T>();
     }
 
-    /// <summary>
-    /// Configures the database
-    /// </summary>
-    /// <param name="modelBuilder">
-    /// Model builder
-    /// </param>
+    /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -60,6 +58,15 @@ public abstract class BaseApplicationDbContext<TContext> : DbContext, IDbContext
         modelBuilder.ApplyConfiguration(new DomainEventReferenceConfiguration());
 
         this.ConfigureDatabaseModel(modelBuilder);
+    }
+
+    /// <inheritdoc />
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        base.OnConfiguring(optionsBuilder);
+
+        optionsBuilder.AddInterceptors(new AuditDetailsSaveChangesInterceptor(this.authenticatedUserService));
+        optionsBuilder.AddInterceptors(new DomainEventSaveChangesInterceptor<TContext>());
     }
 
     /// <summary>

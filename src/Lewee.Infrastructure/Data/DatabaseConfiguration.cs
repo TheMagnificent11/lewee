@@ -38,9 +38,6 @@ public static class DatabaseConfiguration
         services.AddDbContextFactory<TImplementation>(options => options.UseSqlServer(connectionString));
         services.AddScoped<TService>(provider => provider.GetRequiredService<TImplementation>());
 
-        services.AddScoped<AuditDetailsSaveChangesInterceptor>();
-        services.AddScoped<DomainEventSaveChangesInterceptor<TImplementation>>();
-
         services.AddSingleton<DomainEventDispatcher<TImplementation>>();
         services.AddHostedService<DomainEventDispatcherService<TImplementation>>();
 

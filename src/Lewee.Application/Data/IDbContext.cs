@@ -1,4 +1,5 @@
 ﻿using Lewee.Domain;
+using Microsoft.EntityFrameworkCore;
 
 namespace Lewee.Application.Data;
 
@@ -7,6 +8,11 @@ namespace Lewee.Application.Data;
 /// </summary>
 public interface IDbContext : IDisposable
 {
+    /// <summary>
+    /// Gets domain event referecnce database set
+    /// </summary>
+    DbSet<DomainEventReference>? DomainEventReferences { get; }
+
     /// <summary>
     /// Returns a queryable collection for an <see cref="IAggregateRoot"/> entity type
     /// </summary>

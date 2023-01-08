@@ -1,23 +1,14 @@
-﻿using Lewee.Domain;
+﻿using Lewee.Application.Data;
+using Lewee.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Lewee.Infrastructure.Data;
 
-/// <summary>
-/// Domain Event Save Changes Interceptor
-/// </summary>
-/// <typeparam name="TContext">Database context type</typeparam>
-public class DomainEventSaveChangesInterceptor<TContext> : SaveChangesInterceptor
-    where TContext : BaseApplicationDbContext<TContext>
+internal class DomainEventSaveChangesInterceptor<TContext> : SaveChangesInterceptor
+    where TContext : DbContext, IDbContext
 {
-    /// <summary>
-    /// Saves changes interceptor
-    /// </summary>
-    /// <param name="eventData">Event data</param>
-    /// <param name="result">Result</param>
-    /// <returns>Interception result</returns>
     public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
     {
         StoreDomainEvents(eventData.Context);
@@ -25,13 +16,6 @@ public class DomainEventSaveChangesInterceptor<TContext> : SaveChangesIntercepto
         return base.SavingChanges(eventData, result);
     }
 
-    /// <summary>
-    /// Saves changes interceptor
-    /// </summary>
-    /// <param name="eventData">Event data</param>
-    /// <param name="result">Result</param>
-    /// <param name="cancellationToken">Cancellation token</param>
-    /// <returns>Asynchronous task contains an interception result</returns>
     public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
         DbContextEventData eventData,
         InterceptionResult<int> result,

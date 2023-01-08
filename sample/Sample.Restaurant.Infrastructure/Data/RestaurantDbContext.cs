@@ -1,4 +1,5 @@
-﻿using Lewee.Infrastructure.Data;
+﻿using Lewee.Application.Auth;
+using Lewee.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Sample.Restaurant.Application;
 using Sample.Restaurant.Domain;
@@ -8,8 +9,10 @@ namespace Sample.Restaurant.Infrastructure.Data;
 
 public class RestaurantDbContext : BaseApplicationDbContext<RestaurantDbContext>, IRestaurantDbContext
 {
-    public RestaurantDbContext(DbContextOptions<RestaurantDbContext> options)
-        : base(options)
+    public RestaurantDbContext(
+        DbContextOptions<RestaurantDbContext> options,
+        IAuthenticatedUserService authenticatedUserService)
+        : base(options, authenticatedUserService)
     {
     }
 

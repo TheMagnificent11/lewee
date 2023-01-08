@@ -5,31 +5,15 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Lewee.Infrastructure.Data;
 
-/// <summary>
-/// Audit Details Save Changes Interceptor
-/// </summary>
-/// <remarks>
-/// Sets audit properties on <see cref="BaseEntity"/> objects before database context changes are saved
-/// </remarks>
-public class AuditDetailsSaveChangesInterceptor : SaveChangesInterceptor
+internal class AuditDetailsSaveChangesInterceptor : SaveChangesInterceptor
 {
     private readonly IAuthenticatedUserService authenticatedUserService;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AuditDetailsSaveChangesInterceptor"/> class
-    /// </summary>
-    /// <param name="authenticatedUserService">Authenticated user service</param>
     public AuditDetailsSaveChangesInterceptor(IAuthenticatedUserService authenticatedUserService)
     {
         this.authenticatedUserService = authenticatedUserService;
     }
 
-    /// <summary>
-    /// Saves changes interceptor
-    /// </summary>
-    /// <param name="eventData">Event data</param>
-    /// <param name="result">Result</param>
-    /// <returns>Interception result</returns>
     public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
     {
         this.UpdateEntities(eventData.Context);
@@ -37,13 +21,6 @@ public class AuditDetailsSaveChangesInterceptor : SaveChangesInterceptor
         return base.SavingChanges(eventData, result);
     }
 
-    /// <summary>
-    /// Saves changes interceptor
-    /// </summary>
-    /// <param name="eventData">Event data</param>
-    /// <param name="result">Result</param>
-    /// <param name="cancellationToken">Cancellation token</param>
-    /// <returns>Asynchronous task contains an interception result</returns>
     public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
         DbContextEventData eventData,
         InterceptionResult<int> result,
@@ -54,11 +31,7 @@ public class AuditDetailsSaveChangesInterceptor : SaveChangesInterceptor
         return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 
-    /// <summary>
-    /// Update entities
-    /// </summary>
-    /// <param name="context">Database context</param>
-    public void UpdateEntities(DbContext? context)
+    private void UpdateEntities(DbContext? context)
     {
         if (context == null)
         {
