@@ -23,5 +23,7 @@ public class RestaurantDbContext : BaseApplicationDbContext<RestaurantDbContext>
     protected override void ConfigureDatabaseModel(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new TableConfiguration());
+        modelBuilder.ApplyConfiguration(new OrderConfiguration());
+        modelBuilder.ApplyConfiguration(new OrderStatusConfiguration());
     }
 }

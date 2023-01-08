@@ -1,4 +1,5 @@
 ﻿using Lewee.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Sample.Restaurant.Domain;
 
@@ -8,7 +9,13 @@ internal class OrderConfiguration : BaseEntityConfiguration<Order>
 {
     protected override void ConfigureEntity(EntityTypeBuilder<Order> builder)
     {
-        builder.HasMany(x => x.Items)
-            .WithMany(x => x.Orders);
+        builder.ToTable("Orders");
+
+        builder.HasOne(x => x.OrderStatus);
+
+        builder.HasOne(x => x.Table)
+            .WithMany(x => x.Orders)
+            .HasForeignKey(x => x.TableId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

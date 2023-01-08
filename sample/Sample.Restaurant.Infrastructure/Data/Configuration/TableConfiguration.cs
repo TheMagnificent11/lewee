@@ -1,4 +1,5 @@
 ﻿using Lewee.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Sample.Restaurant.Domain;
 
@@ -10,6 +11,11 @@ internal sealed class TableConfiguration : BaseEntityConfiguration<Table>
     {
         builder.HasIndex(x => x.TableNumber)
             .IsUnique();
+
+        builder.HasMany(x => x.Orders)
+            .WithOne(x => x.Table)
+            .HasForeignKey(x => x.TableId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         var tableIds = new List<Guid>
         {

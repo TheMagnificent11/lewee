@@ -14,6 +14,11 @@ public abstract class BaseEnumEntityConfiguration<TEnum> : IEntityTypeConfigurat
     where TEnum : struct, Enum
 {
     /// <summary>
+    /// Gets the table name
+    /// </summary>
+    public abstract string TableName { get; }
+
+    /// <summary>
     /// Configures enum entity lookup database table
     /// </summary>
     /// <param name="builder">
@@ -21,10 +26,7 @@ public abstract class BaseEnumEntityConfiguration<TEnum> : IEntityTypeConfigurat
     /// </param>
     public virtual void Configure(EntityTypeBuilder<EnumEntity<TEnum>> builder)
     {
-        if (builder is null)
-        {
-            throw new ArgumentNullException(nameof(builder));
-        }
+        builder.ToTable(this.TableName);
 
         builder.HasKey(x => x.Id);
 
@@ -33,6 +35,11 @@ public abstract class BaseEnumEntityConfiguration<TEnum> : IEntityTypeConfigurat
 
         builder.Property(x => x.Name)
             .IsRequired()
-            .HasMaxLength(100);
+            .HasMaxLength(50);
+
+        foreach (var item in Enum.GetValues<TEnum>())
+        {
+            builder.HasData(new EnumEntity<TEnum>(item));
+        }
     }
 }

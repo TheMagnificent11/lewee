@@ -14,8 +14,5 @@ internal class MenuItemConfiguration : BaseEntityConfiguration<MenuItem>
 
         builder.Property(x => x.Price)
             .HasPrecision(6, 2);
-
-        builder.HasMany(x => x.Orders)
-            .WithMany(x => x.Items);
     }
 }
