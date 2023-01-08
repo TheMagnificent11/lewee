@@ -21,19 +21,13 @@ public abstract class BaseResult : IResult
         this.IsSuccess = status == ResultStatus.Success;
     }
 
-    /// <summary>
-    /// Gets a value indicating whether request was successfully processed
-    /// </summary>
+    /// <inheritdoc />
     public bool IsSuccess { get; private set; }
 
-    /// <summary>
-    /// Gets the status for the result
-    /// </summary>
+    /// <inheritdoc />
     public ResultStatus Status { get; private set; }
 
-    /// <summary>
-    /// Gets a dictionary of error messages keyed by request property
-    /// </summary>
+    /// <inheritdoc />
     public Dictionary<string, List<string>> Errors { get; private set; }
 
     /// <summary>

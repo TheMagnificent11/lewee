@@ -30,39 +30,25 @@
             this.DomainEvents = new DomainEventsCollection();
         }
 
-        /// <summary>
-        /// Gets or sets the ID of the entity
-        /// </summary>
+        /// <inheritdoc />
         public Guid Id { get; protected set; }
 
-        /// <summary>
-        /// Gets the username of the user that created the entity
-        /// </summary>
+        /// <inheritdoc />
         public string CreatedBy { get; private set; }
 
-        /// <summary>
-        /// Gets the date-time in UTC at which the entity was created
-        /// </summary>
+        /// <inheritdoc />
         public DateTime CreatedAtUtc { get; private set; }
 
-        /// <summary>
-        /// Gets the username of the user that last modified the entity
-        /// </summary>
+        /// <inheritdoc />
         public string ModifiedBy { get; private set; }
 
-        /// <summary>
-        /// Gets the date-time in UTC at which the entity was last updated
-        /// </summary>
+        /// <inheritdoc />
         public DateTime ModifiedAtUtc { get; private set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the entity is deleted
-        /// </summary>
+        /// <inheritdoc />
         public bool IsDeleted { get; protected set; }
 
-        /// <summary>
-        /// Gets or sets the timestamp
-        /// </summary>
+        /// <inheritdoc />
         public byte[] Timestamp { get; protected set; } = default!;
 
         /// <summary>

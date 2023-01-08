@@ -21,20 +21,13 @@ public class Repository<T> : IRepository<T>
         this.context = context;
     }
 
-    /// <summary>
-    /// Gets an <see cref="IQueryable{T}"/> of all entities
-    /// </summary>
-    /// <returns><see cref="IQueryable{T}"/> of all entities</returns>
+    /// <inheritdoc />
     public IQueryable<T> All()
     {
         return this.context.Set<T>();
     }
 
-    /// <summary>
-    /// Retrieves the entity with ID <paramref name="id"/>
-    /// </summary>
-    /// <param name="id">ID of entity to retrieve</param>
-    /// <returns>An async task that contains the entity if it exist, otherwise the task contains null</returns>
+    /// <inheritdoc />
     public Task<T?> RetrieveById(Guid id)
     {
         return this.All()

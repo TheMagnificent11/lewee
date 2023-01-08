@@ -29,13 +29,9 @@ public class EnumEntity<TKey> : IEnumEntity<TKey>
         this.Name = "EF";
     }
 
-    /// <summary>
-    /// Gets or sets the ID of the enum entity
-    /// </summary>
+    /// <inheritdoc />
     public TKey Id { get; protected set; }
 
-    /// <summary>
-    /// Gets or sets the name of the enum entity
-    /// </summary>
+    /// <inheritdoc />
     public string Name { get; protected set; }
 }
