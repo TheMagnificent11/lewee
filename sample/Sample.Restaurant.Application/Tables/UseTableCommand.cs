@@ -1,6 +1,5 @@
 ﻿using Lewee.Application.Mediation;
 using Lewee.Application.Mediation.Responses;
-using Lewee.Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Sample.Restaurant.Domain;
@@ -50,6 +49,8 @@ public sealed class UseTableCommand : ICommand
                 table.Use(request.CorrelationId);
 
                 this.logger.Information("Table is in use and is no longer available");
+
+                await this.dbContext.SaveChangesAsync(cancellationToken);
 
                 return CommandResult.Success();
             }

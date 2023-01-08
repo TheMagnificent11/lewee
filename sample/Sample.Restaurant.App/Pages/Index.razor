@@ -1,5 +1,10 @@
 ﻿@page "/"
 
+@using MediatR
+
+@inject IMediator Mediator
+@inject NavigationManager NavigationManager
+
 <PageTitle>Tables</PageTitle>
 
 <h1>Tables</h1>
@@ -15,6 +20,7 @@ else
             <tr>
                 <th>Table Number</th>
                 <th>Status</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -23,6 +29,16 @@ else
                 <tr>
                     <td>@item.TableNumber</td>
                     <td>@item.Status</td>
+                    <td>
+                        @if (item.IsInUse)
+                        {
+                            <button @onclick="@(x => this.ViewTable(item.TableNumber))">View</button>
+                        }
+                        else
+                        {
+                            <button @onclick="@(async () => await UseTable(item.TableNumber))">Use</button>
+                        }
+                    </td>
                 </tr>
             }
         </tbody>
