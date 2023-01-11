@@ -60,96 +60,6 @@ namespace Sample.Restaurant.Infrastructure.Migrations
                     b.ToTable("DomainEventReferences", "res");
                 });
 
-            modelBuilder.Entity("Lewee.Domain.EnumEntity<Sample.Restaurant.Contracts.OrderStatus>", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("OrderStatuses", "res");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 0,
-                            Name = "Ordering"
-                        },
-                        new
-                        {
-                            Id = 1,
-                            Name = "Order Placed"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Updated"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Paid"
-                        });
-                });
-
-            modelBuilder.Entity("Sample.Restaurant.Domain.Order", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("ModifiedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedBy")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int>("OrderStatusId")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("TableId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("TableId1")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<byte[]>("Timestamp")
-                        .IsConcurrencyToken()
-                        .IsRequired()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderStatusId");
-
-                    b.HasIndex("TableId");
-
-                    b.HasIndex("TableId1")
-                        .IsUnique()
-                        .HasFilter("[TableId1] IS NOT NULL");
-
-                    b.ToTable("Orders", "res");
-                });
-
             modelBuilder.Entity("Sample.Restaurant.Domain.Table", b =>
                 {
                     b.Property<Guid>("Id")
@@ -198,143 +108,113 @@ namespace Sample.Restaurant.Infrastructure.Migrations
                         new
                         {
                             Id = new Guid("dab4cd90-e6ca-48ec-b7a0-fcbe4e6e5805"),
-                            CreatedAtUtc = new DateTime(2023, 1, 8, 23, 0, 16, 106, DateTimeKind.Utc).AddTicks(5469),
+                            CreatedAtUtc = new DateTime(2023, 1, 7, 19, 31, 47, 226, DateTimeKind.Utc).AddTicks(7832),
                             CreatedBy = "System",
                             IsDeleted = false,
                             IsInUse = false,
-                            ModifiedAtUtc = new DateTime(2023, 1, 8, 23, 0, 16, 106, DateTimeKind.Utc).AddTicks(5474),
+                            ModifiedAtUtc = new DateTime(2023, 1, 7, 19, 31, 47, 226, DateTimeKind.Utc).AddTicks(7835),
                             ModifiedBy = "System",
                             TableNumber = 1
                         },
                         new
                         {
                             Id = new Guid("7c181a4b-43a9-4d3c-acdc-dc00a1f8a423"),
-                            CreatedAtUtc = new DateTime(2023, 1, 8, 23, 0, 16, 106, DateTimeKind.Utc).AddTicks(5510),
+                            CreatedAtUtc = new DateTime(2023, 1, 7, 19, 31, 47, 226, DateTimeKind.Utc).AddTicks(7856),
                             CreatedBy = "System",
                             IsDeleted = false,
                             IsInUse = false,
-                            ModifiedAtUtc = new DateTime(2023, 1, 8, 23, 0, 16, 106, DateTimeKind.Utc).AddTicks(5510),
+                            ModifiedAtUtc = new DateTime(2023, 1, 7, 19, 31, 47, 226, DateTimeKind.Utc).AddTicks(7856),
                             ModifiedBy = "System",
                             TableNumber = 2
                         },
                         new
                         {
                             Id = new Guid("ec0fad21-c060-4315-a39f-6947deccd8fa"),
-                            CreatedAtUtc = new DateTime(2023, 1, 8, 23, 0, 16, 106, DateTimeKind.Utc).AddTicks(5513),
+                            CreatedAtUtc = new DateTime(2023, 1, 7, 19, 31, 47, 226, DateTimeKind.Utc).AddTicks(7859),
                             CreatedBy = "System",
                             IsDeleted = false,
                             IsInUse = false,
-                            ModifiedAtUtc = new DateTime(2023, 1, 8, 23, 0, 16, 106, DateTimeKind.Utc).AddTicks(5514),
+                            ModifiedAtUtc = new DateTime(2023, 1, 7, 19, 31, 47, 226, DateTimeKind.Utc).AddTicks(7859),
                             ModifiedBy = "System",
                             TableNumber = 3
                         },
                         new
                         {
                             Id = new Guid("735e6fee-be38-4b02-a1e9-659e727c072e"),
-                            CreatedAtUtc = new DateTime(2023, 1, 8, 23, 0, 16, 106, DateTimeKind.Utc).AddTicks(5516),
+                            CreatedAtUtc = new DateTime(2023, 1, 7, 19, 31, 47, 226, DateTimeKind.Utc).AddTicks(7861),
                             CreatedBy = "System",
                             IsDeleted = false,
                             IsInUse = false,
-                            ModifiedAtUtc = new DateTime(2023, 1, 8, 23, 0, 16, 106, DateTimeKind.Utc).AddTicks(5516),
+                            ModifiedAtUtc = new DateTime(2023, 1, 7, 19, 31, 47, 226, DateTimeKind.Utc).AddTicks(7861),
                             ModifiedBy = "System",
                             TableNumber = 4
                         },
                         new
                         {
                             Id = new Guid("45694a13-30c1-4ff9-b7d2-8079657a6e29"),
-                            CreatedAtUtc = new DateTime(2023, 1, 8, 23, 0, 16, 106, DateTimeKind.Utc).AddTicks(5518),
+                            CreatedAtUtc = new DateTime(2023, 1, 7, 19, 31, 47, 226, DateTimeKind.Utc).AddTicks(7863),
                             CreatedBy = "System",
                             IsDeleted = false,
                             IsInUse = false,
-                            ModifiedAtUtc = new DateTime(2023, 1, 8, 23, 0, 16, 106, DateTimeKind.Utc).AddTicks(5519),
+                            ModifiedAtUtc = new DateTime(2023, 1, 7, 19, 31, 47, 226, DateTimeKind.Utc).AddTicks(7864),
                             ModifiedBy = "System",
                             TableNumber = 5
                         },
                         new
                         {
                             Id = new Guid("87cbce7d-0daa-4ed5-9473-a1a473ca0cb5"),
-                            CreatedAtUtc = new DateTime(2023, 1, 8, 23, 0, 16, 106, DateTimeKind.Utc).AddTicks(5523),
+                            CreatedAtUtc = new DateTime(2023, 1, 7, 19, 31, 47, 226, DateTimeKind.Utc).AddTicks(7867),
                             CreatedBy = "System",
                             IsDeleted = false,
                             IsInUse = false,
-                            ModifiedAtUtc = new DateTime(2023, 1, 8, 23, 0, 16, 106, DateTimeKind.Utc).AddTicks(5524),
+                            ModifiedAtUtc = new DateTime(2023, 1, 7, 19, 31, 47, 226, DateTimeKind.Utc).AddTicks(7868),
                             ModifiedBy = "System",
                             TableNumber = 6
                         },
                         new
                         {
                             Id = new Guid("2a150b61-8f9a-497f-a77a-2c701158b5a5"),
-                            CreatedAtUtc = new DateTime(2023, 1, 8, 23, 0, 16, 106, DateTimeKind.Utc).AddTicks(5526),
+                            CreatedAtUtc = new DateTime(2023, 1, 7, 19, 31, 47, 226, DateTimeKind.Utc).AddTicks(7869),
                             CreatedBy = "System",
                             IsDeleted = false,
                             IsInUse = false,
-                            ModifiedAtUtc = new DateTime(2023, 1, 8, 23, 0, 16, 106, DateTimeKind.Utc).AddTicks(5526),
+                            ModifiedAtUtc = new DateTime(2023, 1, 7, 19, 31, 47, 226, DateTimeKind.Utc).AddTicks(7870),
                             ModifiedBy = "System",
                             TableNumber = 7
                         },
                         new
                         {
                             Id = new Guid("830f9c25-7cbd-44b7-84b1-bd55973deca9"),
-                            CreatedAtUtc = new DateTime(2023, 1, 8, 23, 0, 16, 106, DateTimeKind.Utc).AddTicks(5528),
+                            CreatedAtUtc = new DateTime(2023, 1, 7, 19, 31, 47, 226, DateTimeKind.Utc).AddTicks(7872),
                             CreatedBy = "System",
                             IsDeleted = false,
                             IsInUse = false,
-                            ModifiedAtUtc = new DateTime(2023, 1, 8, 23, 0, 16, 106, DateTimeKind.Utc).AddTicks(5529),
+                            ModifiedAtUtc = new DateTime(2023, 1, 7, 19, 31, 47, 226, DateTimeKind.Utc).AddTicks(7872),
                             ModifiedBy = "System",
                             TableNumber = 8
                         },
                         new
                         {
                             Id = new Guid("3cd0f023-94e8-4114-b139-21d4955e1bab"),
-                            CreatedAtUtc = new DateTime(2023, 1, 8, 23, 0, 16, 106, DateTimeKind.Utc).AddTicks(5531),
+                            CreatedAtUtc = new DateTime(2023, 1, 7, 19, 31, 47, 226, DateTimeKind.Utc).AddTicks(7874),
                             CreatedBy = "System",
                             IsDeleted = false,
                             IsInUse = false,
-                            ModifiedAtUtc = new DateTime(2023, 1, 8, 23, 0, 16, 106, DateTimeKind.Utc).AddTicks(5531),
+                            ModifiedAtUtc = new DateTime(2023, 1, 7, 19, 31, 47, 226, DateTimeKind.Utc).AddTicks(7874),
                             ModifiedBy = "System",
                             TableNumber = 9
                         },
                         new
                         {
                             Id = new Guid("a6ce6962-20ec-4def-be6d-d568a12a022c"),
-                            CreatedAtUtc = new DateTime(2023, 1, 8, 23, 0, 16, 106, DateTimeKind.Utc).AddTicks(5534),
+                            CreatedAtUtc = new DateTime(2023, 1, 7, 19, 31, 47, 226, DateTimeKind.Utc).AddTicks(7877),
                             CreatedBy = "System",
                             IsDeleted = false,
                             IsInUse = false,
-                            ModifiedAtUtc = new DateTime(2023, 1, 8, 23, 0, 16, 106, DateTimeKind.Utc).AddTicks(5534),
+                            ModifiedAtUtc = new DateTime(2023, 1, 7, 19, 31, 47, 226, DateTimeKind.Utc).AddTicks(7877),
                             ModifiedBy = "System",
                             TableNumber = 10
                         });
-                });
-
-            modelBuilder.Entity("Sample.Restaurant.Domain.Order", b =>
-                {
-                    b.HasOne("Lewee.Domain.EnumEntity<Sample.Restaurant.Contracts.OrderStatus>", "OrderStatus")
-                        .WithMany()
-                        .HasForeignKey("OrderStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Sample.Restaurant.Domain.Table", "Table")
-                        .WithMany("Orders")
-                        .HasForeignKey("TableId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Sample.Restaurant.Domain.Table", null)
-                        .WithOne("CurrentOrder")
-                        .HasForeignKey("Sample.Restaurant.Domain.Order", "TableId1");
-
-                    b.Navigation("OrderStatus");
-
-                    b.Navigation("Table");
-                });
-
-            modelBuilder.Entity("Sample.Restaurant.Domain.Table", b =>
-                {
-                    b.Navigation("CurrentOrder");
-
-                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }
