@@ -5,18 +5,18 @@ namespace Sample.Restaurant.Domain;
 
 public class Order : BaseEntity
 {
-    internal Order(Guid tableId, int tableNumber, Guid correlationId)
+    internal Order(Table table, Guid correlationId)
     {
-        this.TableId = tableId;
-        this.Table = new Table(tableId, tableNumber);
+        this.TableId = table.Id;
+        this.Table = table;
         this.OrderStatusId = Contracts.OrderStatus.Ordering;
         this.OrderStatus = new EnumEntity<OrderStatus>(this.OrderStatusId);
 
         this.DomainEvents.Raise(new OrderCreatedDomainEvent(
             correlationId,
             this.Id,
-            tableId,
-            tableNumber,
+            table.Id,
+            table.TableNumber,
             DateTime.UtcNow));
     }
 

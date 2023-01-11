@@ -29,7 +29,7 @@ public class Table : BaseEntity, IAggregateRoot
 
         this.IsInUse = true;
 
-        this.CurrentOrder = new Order(this.Id, this.TableNumber, correlationId);
+        this.CurrentOrder = new Order(this, correlationId);
         this.orders.Add(this.CurrentOrder);
 
         this.DomainEvents.Raise(new TableInUseDomainEvent(correlationId, this.Id, this.TableNumber));
