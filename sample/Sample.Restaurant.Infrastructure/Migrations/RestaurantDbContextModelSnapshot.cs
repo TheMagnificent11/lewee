@@ -191,110 +191,110 @@ namespace Sample.Restaurant.Infrastructure.Migrations
                         new
                         {
                             Id = new Guid("dab4cd90-e6ca-48ec-b7a0-fcbe4e6e5805"),
-                            CreatedAtUtc = new DateTime(2023, 1, 11, 19, 57, 41, 169, DateTimeKind.Utc).AddTicks(5702),
+                            CreatedAtUtc = new DateTime(2023, 1, 11, 20, 30, 41, 44, DateTimeKind.Utc).AddTicks(5308),
                             CreatedBy = "System",
                             IsDeleted = false,
                             IsInUse = false,
-                            ModifiedAtUtc = new DateTime(2023, 1, 11, 19, 57, 41, 169, DateTimeKind.Utc).AddTicks(5705),
+                            ModifiedAtUtc = new DateTime(2023, 1, 11, 20, 30, 41, 44, DateTimeKind.Utc).AddTicks(5311),
                             ModifiedBy = "System",
                             TableNumber = 1
                         },
                         new
                         {
                             Id = new Guid("7c181a4b-43a9-4d3c-acdc-dc00a1f8a423"),
-                            CreatedAtUtc = new DateTime(2023, 1, 11, 19, 57, 41, 169, DateTimeKind.Utc).AddTicks(5727),
+                            CreatedAtUtc = new DateTime(2023, 1, 11, 20, 30, 41, 44, DateTimeKind.Utc).AddTicks(5331),
                             CreatedBy = "System",
                             IsDeleted = false,
                             IsInUse = false,
-                            ModifiedAtUtc = new DateTime(2023, 1, 11, 19, 57, 41, 169, DateTimeKind.Utc).AddTicks(5727),
+                            ModifiedAtUtc = new DateTime(2023, 1, 11, 20, 30, 41, 44, DateTimeKind.Utc).AddTicks(5331),
                             ModifiedBy = "System",
                             TableNumber = 2
                         },
                         new
                         {
                             Id = new Guid("ec0fad21-c060-4315-a39f-6947deccd8fa"),
-                            CreatedAtUtc = new DateTime(2023, 1, 11, 19, 57, 41, 169, DateTimeKind.Utc).AddTicks(5730),
+                            CreatedAtUtc = new DateTime(2023, 1, 11, 20, 30, 41, 44, DateTimeKind.Utc).AddTicks(5334),
                             CreatedBy = "System",
                             IsDeleted = false,
                             IsInUse = false,
-                            ModifiedAtUtc = new DateTime(2023, 1, 11, 19, 57, 41, 169, DateTimeKind.Utc).AddTicks(5730),
+                            ModifiedAtUtc = new DateTime(2023, 1, 11, 20, 30, 41, 44, DateTimeKind.Utc).AddTicks(5335),
                             ModifiedBy = "System",
                             TableNumber = 3
                         },
                         new
                         {
                             Id = new Guid("735e6fee-be38-4b02-a1e9-659e727c072e"),
-                            CreatedAtUtc = new DateTime(2023, 1, 11, 19, 57, 41, 169, DateTimeKind.Utc).AddTicks(5732),
+                            CreatedAtUtc = new DateTime(2023, 1, 11, 20, 30, 41, 44, DateTimeKind.Utc).AddTicks(5337),
                             CreatedBy = "System",
                             IsDeleted = false,
                             IsInUse = false,
-                            ModifiedAtUtc = new DateTime(2023, 1, 11, 19, 57, 41, 169, DateTimeKind.Utc).AddTicks(5733),
+                            ModifiedAtUtc = new DateTime(2023, 1, 11, 20, 30, 41, 44, DateTimeKind.Utc).AddTicks(5337),
                             ModifiedBy = "System",
                             TableNumber = 4
                         },
                         new
                         {
                             Id = new Guid("45694a13-30c1-4ff9-b7d2-8079657a6e29"),
-                            CreatedAtUtc = new DateTime(2023, 1, 11, 19, 57, 41, 169, DateTimeKind.Utc).AddTicks(5735),
+                            CreatedAtUtc = new DateTime(2023, 1, 11, 20, 30, 41, 44, DateTimeKind.Utc).AddTicks(5339),
                             CreatedBy = "System",
                             IsDeleted = false,
                             IsInUse = false,
-                            ModifiedAtUtc = new DateTime(2023, 1, 11, 19, 57, 41, 169, DateTimeKind.Utc).AddTicks(5735),
+                            ModifiedAtUtc = new DateTime(2023, 1, 11, 20, 30, 41, 44, DateTimeKind.Utc).AddTicks(5339),
                             ModifiedBy = "System",
                             TableNumber = 5
                         },
                         new
                         {
                             Id = new Guid("87cbce7d-0daa-4ed5-9473-a1a473ca0cb5"),
-                            CreatedAtUtc = new DateTime(2023, 1, 11, 19, 57, 41, 169, DateTimeKind.Utc).AddTicks(5739),
+                            CreatedAtUtc = new DateTime(2023, 1, 11, 20, 30, 41, 44, DateTimeKind.Utc).AddTicks(5344),
                             CreatedBy = "System",
                             IsDeleted = false,
                             IsInUse = false,
-                            ModifiedAtUtc = new DateTime(2023, 1, 11, 19, 57, 41, 169, DateTimeKind.Utc).AddTicks(5739),
+                            ModifiedAtUtc = new DateTime(2023, 1, 11, 20, 30, 41, 44, DateTimeKind.Utc).AddTicks(5344),
                             ModifiedBy = "System",
                             TableNumber = 6
                         },
                         new
                         {
                             Id = new Guid("2a150b61-8f9a-497f-a77a-2c701158b5a5"),
-                            CreatedAtUtc = new DateTime(2023, 1, 11, 19, 57, 41, 169, DateTimeKind.Utc).AddTicks(5741),
+                            CreatedAtUtc = new DateTime(2023, 1, 11, 20, 30, 41, 44, DateTimeKind.Utc).AddTicks(5346),
                             CreatedBy = "System",
                             IsDeleted = false,
                             IsInUse = false,
-                            ModifiedAtUtc = new DateTime(2023, 1, 11, 19, 57, 41, 169, DateTimeKind.Utc).AddTicks(5742),
+                            ModifiedAtUtc = new DateTime(2023, 1, 11, 20, 30, 41, 44, DateTimeKind.Utc).AddTicks(5346),
                             ModifiedBy = "System",
                             TableNumber = 7
                         },
                         new
                         {
                             Id = new Guid("830f9c25-7cbd-44b7-84b1-bd55973deca9"),
-                            CreatedAtUtc = new DateTime(2023, 1, 11, 19, 57, 41, 169, DateTimeKind.Utc).AddTicks(5744),
+                            CreatedAtUtc = new DateTime(2023, 1, 11, 20, 30, 41, 44, DateTimeKind.Utc).AddTicks(5420),
                             CreatedBy = "System",
                             IsDeleted = false,
                             IsInUse = false,
-                            ModifiedAtUtc = new DateTime(2023, 1, 11, 19, 57, 41, 169, DateTimeKind.Utc).AddTicks(5744),
+                            ModifiedAtUtc = new DateTime(2023, 1, 11, 20, 30, 41, 44, DateTimeKind.Utc).AddTicks(5420),
                             ModifiedBy = "System",
                             TableNumber = 8
                         },
                         new
                         {
                             Id = new Guid("3cd0f023-94e8-4114-b139-21d4955e1bab"),
-                            CreatedAtUtc = new DateTime(2023, 1, 11, 19, 57, 41, 169, DateTimeKind.Utc).AddTicks(5746),
+                            CreatedAtUtc = new DateTime(2023, 1, 11, 20, 30, 41, 44, DateTimeKind.Utc).AddTicks(5422),
                             CreatedBy = "System",
                             IsDeleted = false,
                             IsInUse = false,
-                            ModifiedAtUtc = new DateTime(2023, 1, 11, 19, 57, 41, 169, DateTimeKind.Utc).AddTicks(5746),
+                            ModifiedAtUtc = new DateTime(2023, 1, 11, 20, 30, 41, 44, DateTimeKind.Utc).AddTicks(5422),
                             ModifiedBy = "System",
                             TableNumber = 9
                         },
                         new
                         {
                             Id = new Guid("a6ce6962-20ec-4def-be6d-d568a12a022c"),
-                            CreatedAtUtc = new DateTime(2023, 1, 11, 19, 57, 41, 169, DateTimeKind.Utc).AddTicks(5749),
+                            CreatedAtUtc = new DateTime(2023, 1, 11, 20, 30, 41, 44, DateTimeKind.Utc).AddTicks(5426),
                             CreatedBy = "System",
                             IsDeleted = false,
                             IsInUse = false,
-                            ModifiedAtUtc = new DateTime(2023, 1, 11, 19, 57, 41, 169, DateTimeKind.Utc).AddTicks(5749),
+                            ModifiedAtUtc = new DateTime(2023, 1, 11, 20, 30, 41, 44, DateTimeKind.Utc).AddTicks(5426),
                             ModifiedBy = "System",
                             TableNumber = 10
                         });

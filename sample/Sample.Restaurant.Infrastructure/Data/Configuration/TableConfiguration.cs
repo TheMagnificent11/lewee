@@ -1,4 +1,5 @@
 ﻿using Lewee.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Sample.Restaurant.Domain;
 
@@ -29,5 +30,8 @@ internal sealed class TableConfiguration : BaseEntityConfiguration<Table>
 
         var tableNumber = 1;
         tableIds.ForEach(x => builder.HasData(new Table(x, tableNumber++)));
+
+        var navigation = builder.Metadata.FindNavigation(nameof(Table.Orders));
+        navigation?.SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 }
