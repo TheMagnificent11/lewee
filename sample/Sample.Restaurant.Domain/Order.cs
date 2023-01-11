@@ -10,7 +10,6 @@ public class Order : BaseEntity
         this.TableId = table.Id;
         this.Table = table;
         this.OrderStatusId = Contracts.OrderStatus.Ordering;
-        this.OrderStatus = new EnumEntity<OrderStatus>(this.OrderStatusId);
 
         this.DomainEvents.Raise(new OrderCreatedDomainEvent(
             correlationId,
@@ -25,12 +24,10 @@ public class Order : BaseEntity
     {
         this.TableId = Guid.Empty;
         this.Table = new Table(this.TableId, 0);
-        this.OrderStatusId = Contracts.OrderStatus.Ordering;
-        this.OrderStatus = new EnumEntity<OrderStatus>(this.OrderStatusId);
     }
 
     public Guid TableId { get; protected set; }
     public Table Table { get; protected set; }
     public OrderStatus OrderStatusId { get; protected set; }
-    public EnumEntity<OrderStatus> OrderStatus { get; protected set; }
+    public EnumEntity<OrderStatus>? OrderStatus { get; protected set; } // Not really nullable, but this is difficult to set for EF
 }

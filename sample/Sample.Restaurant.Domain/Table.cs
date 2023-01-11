@@ -15,10 +15,15 @@ public class Table : BaseEntity, IAggregateRoot
         this.TableNumber = tableNumber;
     }
 
+    public Order? CurrentOrder => this.orders
+        .Where(x => x.OrderStatusId != Contracts.OrderStatus.Paid)
+        .Where(x => !x.IsDeleted)
+        .OrderByDescending(x => x.CreatedAtUtc)
+        .FirstOrDefault();
+
     public int TableNumber { get; protected set; }
     public bool IsInUse { get; protected set; }
     public IReadOnlyCollection<Order> Orders { get; protected set; }
-    public Order? CurrentOrder { get; private set; }
 
     public void Use(Guid correlationId)
     {
@@ -29,8 +34,7 @@ public class Table : BaseEntity, IAggregateRoot
 
         this.IsInUse = true;
 
-        this.CurrentOrder = new Order(this, correlationId);
-        this.orders.Add(this.CurrentOrder);
+        this.orders.Add(new Order(this, correlationId));
 
         this.DomainEvents.Raise(new TableInUseDomainEvent(correlationId, this.Id, this.TableNumber));
     }

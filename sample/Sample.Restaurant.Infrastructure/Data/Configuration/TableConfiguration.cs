@@ -11,8 +11,7 @@ internal sealed class TableConfiguration : BaseEntityConfiguration<Table>
         builder.HasIndex(x => x.TableNumber)
             .IsUnique();
 
-        builder.HasMany(x => x.Orders)
-            .WithOne(x => x.Table);
+        builder.Ignore(x => x.CurrentOrder);
 
         var tableIds = new List<Guid>
         {

@@ -48,9 +48,9 @@ public sealed class UseTableCommand : ICommand
 
                 table.Use(request.CorrelationId);
 
-                this.logger.Information("Table is in use and is no longer available");
-
                 await this.dbContext.SaveChangesAsync(cancellationToken);
+
+                this.logger.Information("Table is in use and is no longer available");
 
                 return CommandResult.Success();
             }
