@@ -1,6 +1,7 @@
 using Lewee.Application;
 using Lewee.Infrastructure.Auth;
 using Lewee.Infrastructure.Data;
+using Lewee.Infrastructure.Events;
 using Lewee.Infrastructure.Logging;
 using Lewee.Infrastructure.Settings;
 using Microsoft.EntityFrameworkCore;
@@ -10,20 +11,15 @@ using Sample.Restaurant.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var identityConnectionString = builder.Configuration.GetConnectionString("database");
-if (string.IsNullOrWhiteSpace(identityConnectionString))
-{
-    throw new ApplicationException("Could not find Identity database connection string");
-}
-
 var connectionString = builder.Configuration.GetConnectionString("database");
 if (string.IsNullOrWhiteSpace(connectionString))
 {
     throw new ApplicationException("Could not find database connection string");
 }
 
-var appSettings = builder.Configuration.GetSettings<ApplicationSettings>("ApplicationSettings");
-var seqSettings = builder.Configuration.GetSettings<SeqSettings>("SeqSettings");
+var appSettings = builder.Configuration.GetSettings<ApplicationSettings>(nameof(ApplicationSettings));
+var seqSettings = builder.Configuration.GetSettings<SeqSettings>(nameof(SeqSettings));
+var serviceBusSettings = builder.Configuration.GetSettings<ServiceBusSettings>(nameof(ServiceBusSettings));
 
 builder.Host.ConfigureLogging(appSettings, seqSettings);
 
@@ -34,6 +30,7 @@ builder.Services
     .AddApplication(typeof(GetTablesQuery).Assembly)
     .AddPipelineBehaviors()
     .ConfigureAuthenticatedUserService()
+    .ConfigureServiceBusPublisher(serviceBusSettings)
     .AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddRazorPages();

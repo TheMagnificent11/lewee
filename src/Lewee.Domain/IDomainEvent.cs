@@ -11,4 +11,8 @@ public interface IDomainEvent : INotification
     /// Gets the correlation ID of the event
     /// </summary>
     Guid CorrelationId { get; }
+
+    /*
+     * TODO: add entity type and then add column to DomainEventReference
+     */
 }
