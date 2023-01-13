@@ -4,7 +4,6 @@ using Lewee.Infrastructure.Data;
 using Lewee.Infrastructure.Events;
 using Lewee.Infrastructure.Logging;
 using Lewee.Infrastructure.Settings;
-using Microsoft.EntityFrameworkCore;
 using Sample.Restaurant.Application;
 using Sample.Restaurant.Application.Tables;
 using Sample.Restaurant.Infrastructure.Data;

@@ -1,4 +1,5 @@
-﻿using MassTransit;
+﻿using System.Reflection;
+using MassTransit;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -22,12 +23,7 @@ public static class ServiceBusConfiguration
             switch (settings.BusType)
             {
                 case ServiceBusType.RabbitMQ:
-                    options.UsingRabbitMq((context, config) =>
-                    {
-                        config.Host(settings.ConnectionStringOrHost, "/");
-                        config.ConfigureEndpoints(context);
-                    });
-
+                    ConfigureRabbitMq(settings, options);
                     break;
 
                 default:
@@ -38,5 +34,46 @@ public static class ServiceBusConfiguration
         services.AddMediatR(typeof(ServiceBusSettings).Assembly); // adds ServiceBusEventHandler to publish events to bus
 
         return services;
+    }
+
+    /// <summary>
+    /// Configures service bus consumers
+    /// </summary>
+    /// <param name="services">Services collection</param>
+    /// <param name="settings">Service bus settings</param>
+    /// <param name="consumerAssemblies">Assemblies containing service bus consumers</param>
+    /// <returns>Services collection for chaining</returns>
+    public static IServiceCollection ConfigureServiceBusConsumers(
+        this IServiceCollection services,
+        ServiceBusSettings settings,
+        Assembly[] consumerAssemblies)
+    {
+        consumerAssemblies = consumerAssemblies.Distinct().ToArray();
+
+        services.AddMassTransit(options =>
+        {
+            options.AddConsumers(consumerAssemblies);
+
+            switch (settings.BusType)
+            {
+                case ServiceBusType.RabbitMQ:
+                    ConfigureRabbitMq(settings, options);
+                    break;
+
+                default:
+                    throw new InvalidOperationException("Invalid service bus type");
+            }
+        });
+
+        return services;
+    }
+
+    private static void ConfigureRabbitMq(ServiceBusSettings settings, IBusRegistrationConfigurator options)
+    {
+        options.UsingRabbitMq((context, config) =>
+        {
+            config.Host(settings.ConnectionStringOrHost, "/");
+            config.ConfigureEndpoints(context);
+        });
     }
 }
