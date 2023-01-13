@@ -31,7 +31,8 @@ internal sealed class TableConfiguration : BaseEntityConfiguration<Table>
         var tableNumber = 1;
         tableIds.ForEach(x => builder.HasData(new Table(x, tableNumber++)));
 
-        var navigation = builder.Metadata.FindNavigation(nameof(Table.Orders));
-        navigation?.SetPropertyAccessMode(PropertyAccessMode.Field);
+        builder.Metadata
+            .FindNavigation(nameof(Table.Orders))
+            ?.SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 }
