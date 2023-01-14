@@ -36,6 +36,8 @@ public abstract class BaseEntityConfiguration<TEntity> : IEntityTypeConfiguratio
 
         builder.Ignore(x => x.DomainEvents);
 
+        builder.HasQueryFilter(x => !x.IsDeleted);
+
         this.ConfigureEntity(builder);
     }
 
