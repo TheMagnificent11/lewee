@@ -23,4 +23,16 @@ public static class EnumExtensions
 
         return attribute?.Description ?? value.ToString();
     }
+
+    /// <summary>
+    /// Determines whether the enum value is equvialent to zero
+    /// </summary>
+    /// <typeparam name="TEnum">Enum type</typeparam>
+    /// <param name="value">Enum value</param>
+    /// <returns>True if equivalent to zero, otherwise false</returns>
+    public static bool IsEquivalentToZero<TEnum>(this TEnum value)
+        where TEnum : struct, Enum
+    {
+        return Enum.IsDefined(typeof(TEnum), 0) && Enum.ToObject(typeof(TEnum), 0).Equals(value);
+    }
 }

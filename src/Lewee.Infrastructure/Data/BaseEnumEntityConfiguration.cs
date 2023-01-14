@@ -1,4 +1,5 @@
 ﻿using Lewee.Domain;
+using Lewee.Util;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -17,6 +18,11 @@ public abstract class BaseEnumEntityConfiguration<TEnum> : IEntityTypeConfigurat
     /// Gets the table name
     /// </summary>
     public abstract string TableName { get; }
+
+    /// <summary>
+    /// Gets a value indicating whether to seed a data record with 0 for the primary key
+    /// </summary>
+    public abstract bool IncludeZeroRecord { get; }
 
     /// <summary>
     /// Configures enum entity lookup database table
@@ -39,6 +45,11 @@ public abstract class BaseEnumEntityConfiguration<TEnum> : IEntityTypeConfigurat
 
         foreach (var item in Enum.GetValues<TEnum>())
         {
+            if (!this.IncludeZeroRecord && item.IsEquivalentToZero())
+            {
+                continue;
+            }
+
             builder.HasData(new EnumEntity<TEnum>(item));
         }
     }

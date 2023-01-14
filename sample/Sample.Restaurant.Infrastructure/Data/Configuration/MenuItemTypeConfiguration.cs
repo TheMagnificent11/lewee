@@ -3,9 +3,9 @@ using Sample.Restaurant.Contracts;
 
 namespace Sample.Restaurant.Infrastructure.Data.Configuration;
 
-internal class OrderStatusConfiguration : BaseEnumEntityConfiguration<OrderStatus>
+internal class MenuItemTypeConfiguration : BaseEnumEntityConfiguration<MenuItemType>
 {
-    public override string TableName => "OrderStatuses";
+    public override string TableName => "MenuItemTypes";
 
     public override bool IncludeZeroRecord => true;
 }
