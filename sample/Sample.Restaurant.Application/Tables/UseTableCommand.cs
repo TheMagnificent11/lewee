@@ -3,7 +3,6 @@ using Lewee.Application.Mediation.Responses;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Sample.Restaurant.Domain;
-using Sample.Restaurant.Domain.Queries;
 using Serilog;
 using Serilog.Context;
 
@@ -38,7 +37,8 @@ public sealed class UseTableCommand : ICommand
             {
                 var table = await this.dbContext
                     .AggregateRoot<Table>()
-                    .FindByNumber(request.TableNumber)
+                    .Where(x => x.TableNumber == request.TableNumber)
+                    .Include(x => x.Orders)
                     .FirstOrDefaultAsync(cancellationToken);
 
                 if (table == null)

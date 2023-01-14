@@ -1,11 +1,9 @@
 using Lewee.Application;
 using Lewee.Infrastructure.Auth;
 using Lewee.Infrastructure.Data;
-using Lewee.Infrastructure.Events;
 using Lewee.Infrastructure.Logging;
 using Lewee.Infrastructure.Settings;
 using Sample.Restaurant.Application;
-using Sample.Restaurant.Application.Tables;
 using Sample.Restaurant.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,7 +16,7 @@ if (string.IsNullOrWhiteSpace(connectionString))
 
 var appSettings = builder.Configuration.GetSettings<ApplicationSettings>(nameof(ApplicationSettings));
 var seqSettings = builder.Configuration.GetSettings<SeqSettings>(nameof(SeqSettings));
-var serviceBusSettings = builder.Configuration.GetSettings<ServiceBusSettings>(nameof(ServiceBusSettings));
+/* var serviceBusSettings = builder.Configuration.GetSettings<ServiceBusSettings>(nameof(ServiceBusSettings)); */
 
 builder.Host.ConfigureLogging(appSettings, seqSettings);
 
@@ -26,10 +24,10 @@ builder.Services.AddMapper();
 
 builder.Services
     .ConfigureDatabase<IRestaurantDbContext, RestaurantDbContext>(connectionString)
-    .AddApplication(typeof(GetTablesQuery).Assembly)
+    .AddApplication(typeof(IRestaurantDbContext).Assembly)
     .AddPipelineBehaviors()
     .ConfigureAuthenticatedUserService()
-    .ConfigureServiceBusPublisher(serviceBusSettings)
+    /* .ConfigureServiceBusPublisher(serviceBusSettings) */
     .AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddRazorPages();

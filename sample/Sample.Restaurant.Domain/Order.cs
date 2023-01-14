@@ -6,6 +6,7 @@ namespace Sample.Restaurant.Domain;
 public class Order : BaseEntity
 {
     internal Order(Table table, Guid correlationId)
+        : base(Guid.Empty)
     {
         this.TableId = table.Id;
         this.Table = table;
