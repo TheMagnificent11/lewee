@@ -1,3 +1,32 @@
 ﻿@page "/tables/{TableNumber:int}"
 
+@using MediatR
+
+@inject IMediator Mediator
+
 <h1>Table @this.TableNumber</h1>
+
+@if(this.menuItems == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Item Name</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var item in this.menuItems)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.PriceLabel</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

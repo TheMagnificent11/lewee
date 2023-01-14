@@ -33,7 +33,7 @@ public sealed class GetTablesQuery : IQuery<QueryResult<IEnumerable<TableDto>>>
             var entites = await this.dbContext
                 .AggregateRoot<Table>()
                 .OrderBy(x => x.TableNumber)
-                .ToListAsync(cancellationToken);
+                .ToArrayAsync(cancellationToken);
 
             var dtos = this.mapper.Map<IEnumerable<TableDto>>(entites);
 
