@@ -14,7 +14,6 @@ public sealed class GetMenuItemsQuery : IQuery<QueryResult<IEnumerable<MenuItemD
         this.CorrelationId = correlationId;
     }
 
-    public Guid? TenantId { get; }
     public Guid CorrelationId { get; }
 
     internal class GetMenuItemsQueryHandler : IRequestHandler<GetMenuItemsQuery, QueryResult<IEnumerable<MenuItemDto>>>
@@ -33,7 +32,7 @@ public sealed class GetMenuItemsQuery : IQuery<QueryResult<IEnumerable<MenuItemD
             var entities = await this.dbContext
                 .AggregateRoot<MenuItem>()
                 .OrderBy(x => x.ItemTypeId)
-                .OrderBy(x => x.Name)
+                .ThenBy(x => x.Name)
                 .ToArrayAsync(cancellationToken);
 
             var dtos = this.mapper.Map<IEnumerable<MenuItemDto>>(entities);

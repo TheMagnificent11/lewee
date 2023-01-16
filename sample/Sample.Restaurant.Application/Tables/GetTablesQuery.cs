@@ -14,7 +14,6 @@ public sealed class GetTablesQuery : IQuery<QueryResult<IEnumerable<TableDto>>>
         this.CorrelationId = correlationId;
     }
 
-    public Guid? TenantId { get; }
     public Guid CorrelationId { get; }
 
     internal class GetTablesQueryHandler : IRequestHandler<GetTablesQuery, QueryResult<IEnumerable<TableDto>>>

@@ -9,9 +9,4 @@ public interface IApplicationRequest
     /// Gets the correlation
     /// </summary>
     Guid CorrelationId { get; }
-
-    /// <summary>
-    /// Gets the tenant ID
-    /// </summary>
-    Guid? TenantId { get; }
 }
