@@ -1,4 +1,6 @@
-﻿using Lewee.Domain;
+﻿using Lewee.Application.Mediation.Responses;
+using Lewee.Domain;
+using MediatR;
 
 namespace Lewee.Application.Mediation.Requests;
 
@@ -7,7 +9,8 @@ namespace Lewee.Application.Mediation.Requests;
 /// </summary>
 /// <typeparam name="TAggregate">Aggregate root type</typeparam>
 /// <typeparam name="TDto">DTO result type</typeparam>
-public class AggregateRootQuery<TAggregate, TDto> : IAggregateRootQuery<TAggregate, TDto>
+public class AggregateRootQuery<TAggregate, TDto>
+    : IRequest<QueryResult<IEnumerable<TDto>>>, IQuery<IEnumerable<TDto>>
     where TAggregate : class, IAggregateRoot
     where TDto : class
 {
