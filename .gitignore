@@ -33,5 +33,6 @@ Obj/
 # Coverage Report
 /coverage-Report
 
-# SQL Server Docker Volume
+# Docker Volumes
 /data
+/seq

@@ -17,7 +17,9 @@ services:
     image: datalust/seq
     ports:
       - 5341:80
-    networks:
-      - lewee-network
     environment:
       - ACCEPT_EULA=Y
+    volumes:
+      - ./seq:/data
+    networks:
+      - lewee-network
