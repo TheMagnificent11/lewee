@@ -8,4 +8,17 @@ services:
       - "80"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+  database:
+    container_name: lewee_sql
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports:
+      - 5434:1433
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_PID=Express
+      - SA_PASSWORD=<YourStrong@Passw0rd!>
+    volumes:
+      - ./data:/var/opt/mssql/data
+    networks:
+      - lewee-network
  
