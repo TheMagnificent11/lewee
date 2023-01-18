@@ -39,6 +39,15 @@ docker compose up
 
 Check the "Containers" section of Docker Desktop to determine the localhost port being used to host the sample application.
 
+### VS Code
+
+You can use the [CLI](#cli) steps to run the sample application.
+
+Don't use the `Docker: Compose Up` command from the Command Palette because it does not include the overrides.
+
+Unfortunately, there is now easy way to debug a Docker Compose application using VS Code.
+
+[This Gist](https://gist.github.com/kendrahavens/cd3ba570e2e59fb4b0cbfe7e3529f0b5) that explains how it can be done, but it hasn't been tested for this solution/workspace.
 
 ## Contributing
 
