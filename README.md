@@ -5,25 +5,19 @@ Lewee is an opinionated set of packages to assist with setting up a domain-drive
 ## Dependencies
 
 - [.Net 7](https://dotnet.microsoft.com/en-us/download/dotnet/7.0)
-- [Serilog](https://serilog.net/)
+- [Serilog](https://serilog.net)
 - [Seq](https://datalust.co/seq)
-- [Entity Framework 7](https://learn.microsoft.com/en-us/ef/)
-- [SQL Server](https://www.microsoft.com/en-us/sql-server)
+- [Entity Framework 7](https://learn.microsoft.com/en-us/ef) (using SQL Server)
 - [Mediatr](https://github.com/jbogard/MediatR)
-- [FluentValidation](https://docs.fluentvalidation.net/en/latest/)
+- [FluentValidation](https://docs.fluentvalidation.net/en/latest)
 - [Mapster](https://github.com/MapsterMapper/Mapster)
 
 ## Running the sample application
 
-### Tye
+### Prerequisites
 
-[Tye](https://github.com/dotnet/tye) is only is alpha so you cannot debug when using Tye.
-
-TODO
-
-### Docker Compose
-
-TODO
+- .Net CLI
+- [Docker Desktop](https://www.docker.com/products/docker-desktop)
 
 ## Contributing
 

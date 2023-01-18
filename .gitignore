@@ -32,3 +32,6 @@ Obj/
 
 # Coverage Report
 /coverage-Report
+
+# SQL Server Docker Volume
+/data

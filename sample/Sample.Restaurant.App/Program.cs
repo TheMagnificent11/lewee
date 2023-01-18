@@ -8,7 +8,7 @@ using Sample.Restaurant.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("database");
+var connectionString = builder.Configuration.GetConnectionString("Sample.Restaurant");
 if (string.IsNullOrWhiteSpace(connectionString))
 {
     throw new ApplicationException("Could not find database connection string");
