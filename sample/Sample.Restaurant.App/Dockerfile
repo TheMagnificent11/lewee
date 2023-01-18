@@ -7,6 +7,9 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
+COPY "Directory.Build.props" .
+COPY "Directory.Build.targets" .
+COPY "Packages.props" .
 COPY ["sample/Sample.Restaurant.App/Sample.Restaurant.App.csproj", "sample/Sample.Restaurant.App/"]
 COPY ["src/Lewee.Infrastructure/Lewee.Infrastructure.csproj", "src/Lewee.Infrastructure/"]
 COPY ["src/Lewee.Application/Lewee.Application.csproj", "src/Lewee.Application/"]
