@@ -14,7 +14,7 @@ internal class MenuItemConfiguration : BaseEntityConfiguration<MenuItem>
             .HasMaxLength(50);
 
         builder.Property(x => x.Price)
-            .HasPrecision(6, 2);
+            .HasPrecision(PricePrecision.Precision, PricePrecision.Scale);
 
         builder.HasOne(x => x.ItemType);
 

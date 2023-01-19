@@ -28,5 +28,6 @@ public class RestaurantDbContext : BaseApplicationDbContext<RestaurantDbContext>
         modelBuilder.ApplyConfiguration(new OrderStatusConfiguration());
         modelBuilder.ApplyConfiguration(new MenuItemConfiguration());
         modelBuilder.ApplyConfiguration(new MenuItemTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new OrderItemConfiguration());
     }
 }
