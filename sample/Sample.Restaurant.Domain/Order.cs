@@ -5,19 +5,14 @@ namespace Sample.Restaurant.Domain;
 
 public class Order : BaseEntity
 {
-    internal Order(Table table, Guid correlationId)
+    private readonly List<OrderItem> items = new();
+
+    private Order(Table table)
         : base(Guid.Empty)
     {
         this.TableId = table.Id;
         this.Table = table;
         this.OrderStatusId = Contracts.OrderStatus.Ordering;
-
-        this.DomainEvents.Raise(new OrderCreatedDomainEvent(
-            correlationId,
-            this.Id,
-            table.Id,
-            table.TableNumber,
-            DateTime.UtcNow));
     }
 
     // EF Constructor
@@ -31,4 +26,27 @@ public class Order : BaseEntity
     public Table Table { get; protected set; }
     public OrderStatus OrderStatusId { get; protected set; }
     public EnumEntity<OrderStatus>? OrderStatus { get; protected set; } // Not really nullable, but this is difficult to set for EF
+    public IReadOnlyCollection<OrderItem> Items => this.items;
+    public decimal Total => this.items.Sum(x => x.ItemTotal);
+
+    internal static Order EmptyOrder => new(Table.EmptyTable);
+
+    public static Order StartNewOrder(Table table, Guid correlationId)
+    {
+        var order = new Order(table);
+
+        order.DomainEvents.Raise(new OrderCreatedDomainEvent(
+            correlationId,
+            order.Id,
+            table.Id,
+            table.TableNumber,
+            DateTime.UtcNow));
+
+        return order;
+    }
+
+    public void AddItem(MenuItem menuItem, int quantity, Guid correlationId)
+    {
+        this.items.Add(OrderItem.AddToOrder(this, menuItem, quantity, correlationId));
+    }
 }

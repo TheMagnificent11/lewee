@@ -4,14 +4,11 @@ namespace Sample.Restaurant.Domain;
 
 public class Table : BaseEntity, IAggregateRoot
 {
-    private readonly List<Order> orders;
+    private readonly List<Order> orders = new();
 
     public Table(Guid id, int tableNumber)
         : base(id)
     {
-        this.orders = new List<Order>();
-        this.Orders = this.orders;
-
         this.TableNumber = tableNumber;
     }
 
@@ -23,7 +20,9 @@ public class Table : BaseEntity, IAggregateRoot
 
     public int TableNumber { get; protected set; }
     public bool IsInUse { get; protected set; }
-    public IReadOnlyCollection<Order> Orders { get; protected set; }
+    public IReadOnlyCollection<Order> Orders => this.orders;
+
+    internal static Table EmptyTable => new(Guid.Empty, 0);
 
     public void Use(Guid correlationId)
     {
@@ -34,7 +33,7 @@ public class Table : BaseEntity, IAggregateRoot
 
         this.IsInUse = true;
 
-        this.orders.Add(new Order(this, correlationId));
+        this.orders.Add(Order.StartNewOrder(this, correlationId));
 
         this.DomainEvents.Raise(new TableInUseDomainEvent(correlationId, this.Id, this.TableNumber));
     }

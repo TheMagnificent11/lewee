@@ -25,4 +25,6 @@ public class MenuItem : BaseEntity, IAggregateRoot
 
     public string Name { get; protected set; }
     public decimal Price { get; protected set; }
+
+    internal static MenuItem EmptyMenuItem => new();
 }
