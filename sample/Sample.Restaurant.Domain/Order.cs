@@ -45,8 +45,35 @@ public class Order : BaseEntity
         return order;
     }
 
-    public void AddItem(MenuItem menuItem, int quantity, Guid correlationId)
+    internal void AddItem(MenuItem menuItem, Guid correlationId)
     {
-        this.items.Add(OrderItem.AddToOrder(this, menuItem, quantity, correlationId));
+        var existingMenuItem = this.items.FirstOrDefault(x => x.Id == menuItem.Id);
+
+        if (existingMenuItem == null)
+        {
+            this.items.Add(OrderItem.AddToOrder(this, menuItem, correlationId));
+            return;
+        }
+
+        existingMenuItem.IncreaseQuantity(correlationId);
+    }
+
+    internal void RemoveItem(MenuItem menuItem, Guid correlationId)
+    {
+        var existingMenuItem = this.items.FirstOrDefault(x => x.Id == menuItem.Id);
+
+        if (existingMenuItem == null)
+        {
+            return;
+        }
+
+        existingMenuItem.ReduceQuantity(correlationId);
+
+        if (existingMenuItem.Quantity > 0)
+        {
+            return;
+        }
+
+        existingMenuItem.Delete();
     }
 }
