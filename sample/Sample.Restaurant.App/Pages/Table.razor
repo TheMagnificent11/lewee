@@ -17,6 +17,7 @@ else
             <tr>
                 <th>Item Name</th>
                 <th>Price</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -25,6 +26,9 @@ else
                 <tr>
                     <td>@item.Name</td>
                     <td>@item.PriceLabel</td>
+                    <td>
+                        <button @onclick="@(async () => await AddToOrder(item.Id))">Add</button>
+                    </td>
                 </tr>
             }
         </tbody>

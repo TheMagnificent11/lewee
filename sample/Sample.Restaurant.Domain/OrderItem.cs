@@ -5,6 +5,7 @@ namespace Sample.Restaurant.Domain;
 public class OrderItem : BaseEntity
 {
     private OrderItem(Order order, MenuItem menuItem)
+        : base(Guid.Empty)
     {
         this.OrderId = order.Id;
         this.Order = order;

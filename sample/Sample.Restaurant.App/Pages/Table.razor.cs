@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Sample.Restaurant.Application.Menu;
+using Sample.Restaurant.Application.Tables;
 
 namespace Sample.Restaurant.App.Pages;
 public partial class Table
@@ -20,5 +21,10 @@ public partial class Table
         }
 
         this.menuItems = result.Data.ToArray();
+    }
+
+    private async Task AddToOrder(Guid menuItemId)
+    {
+        var result = await this.Mediator.Send(new AddMenuItemCommand(Guid.NewGuid(), this.TableNumber, menuItemId));
     }
 }
