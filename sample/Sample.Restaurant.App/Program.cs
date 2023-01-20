@@ -16,6 +16,7 @@ if (string.IsNullOrWhiteSpace(connectionString))
 
 var appSettings = builder.Configuration.GetSettings<ApplicationSettings>(nameof(ApplicationSettings));
 var seqSettings = builder.Configuration.GetSettings<SeqSettings>(nameof(SeqSettings));
+var migrateDatabases = builder.Configuration.GetValue<bool>("MigrateDatabases");
 /* var serviceBusSettings = builder.Configuration.GetSettings<ServiceBusSettings>(nameof(ServiceBusSettings)); */
 
 builder.Host.ConfigureLogging(appSettings, seqSettings);
@@ -67,7 +68,7 @@ app.MapControllers();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
-if (app.Environment.IsDevelopment())
+if (migrateDatabases)
 {
     app.MigrationDatabase<RestaurantDbContext>();
 }
