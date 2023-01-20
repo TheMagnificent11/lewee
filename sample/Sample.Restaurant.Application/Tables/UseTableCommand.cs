@@ -4,11 +4,10 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Sample.Restaurant.Domain;
 using Serilog;
-using Serilog.Context;
 
 namespace Sample.Restaurant.Application.Tables;
 
-public sealed class UseTableCommand : ICommand
+public sealed class UseTableCommand : ICommand, ITableRequest
 {
     public UseTableCommand(Guid correlationId, int tableNumber)
     {
@@ -33,27 +32,24 @@ public sealed class UseTableCommand : ICommand
 
         public async Task<CommandResult> Handle(UseTableCommand request, CancellationToken cancellationToken)
         {
-            using (LogContext.PushProperty(nameof(request.TableNumber), request.TableNumber))
+            var table = await this.dbContext
+                .AggregateRoot<Table>()
+                .Where(x => x.TableNumber == request.TableNumber)
+                .Include(x => x.Orders)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (table == null)
             {
-                var table = await this.dbContext
-                    .AggregateRoot<Table>()
-                    .Where(x => x.TableNumber == request.TableNumber)
-                    .Include(x => x.Orders)
-                    .FirstOrDefaultAsync(cancellationToken);
-
-                if (table == null)
-                {
-                    return CommandResult.Fail(ResultStatus.NotFound, "Could not find table");
-                }
-
-                table.Use(request.CorrelationId);
-
-                await this.dbContext.SaveChangesAsync(cancellationToken);
-
-                this.logger.Information("Table is in use and is no longer available");
-
-                return CommandResult.Success();
+                return CommandResult.Fail(ResultStatus.NotFound, "Table not found");
             }
+
+            table.Use(request.CorrelationId);
+
+            await this.dbContext.SaveChangesAsync(cancellationToken);
+
+            this.logger.Information("Table is in use and is no longer available");
+
+            return CommandResult.Success();
         }
     }
 }

@@ -32,14 +32,24 @@ public static class DependencyInjectionExtensions
     /// Adds pipeline behaviors
     /// </summary>
     /// <param name="services">Service collection</param>
+    /// <param name="additionalBehaviors">Additional behaviors</param>
     /// <returns>Service collection (for chaining)</returns>
-    public static IServiceCollection AddPipelineBehaviors(this IServiceCollection services)
+    public static IServiceCollection AddPipelineBehaviors(this IServiceCollection services, params Type[] additionalBehaviors)
     {
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehavior<,>));
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CorrelationIdLoggingBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TenantLoggingBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+        if (additionalBehaviors != null && additionalBehaviors.Any())
+        {
+            foreach (var item in additionalBehaviors)
+            {
+                services.AddTransient(typeof(IPipelineBehavior<,>), item);
+            }
+        }
+
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(DomainExceptionBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(FailureLoggingBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));

@@ -25,9 +25,8 @@ builder.Services.AddMapper();
 
 builder.Services
     .ConfigureDatabase<IRestaurantDbContext, RestaurantDbContext>(connectionString)
-    .AddApplication(typeof(IRestaurantDbContext).Assembly)
-    .AddPipelineBehaviors()
     .ConfigureAuthenticatedUserService()
+    .AddRestaurantApplication()
     /* .ConfigureServiceBusPublisher(serviceBusSettings) */
     .AddDatabaseDeveloperPageExceptionFilter();
 
