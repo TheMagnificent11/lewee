@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Serilog.Context;
 
-namespace Sample.Restaurant.Application.Tables;
+namespace Sample.Restaurant.Application;
 
 internal class TableLoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : class, ITableRequest, IRequest<TResponse>

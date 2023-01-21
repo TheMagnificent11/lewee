@@ -1,4 +1,4 @@
-using Sample.Restaurant.Application.Tables;
+using Sample.Restaurant.Application;
 
 namespace Sample.Restaurant.App.Pages;
 
@@ -12,7 +12,7 @@ public partial class Index
 
         if (!result.IsSuccess || result.Data == null)
         {
-            // TODO
+            // TODO: error handling
             return;
         }
 
@@ -25,7 +25,7 @@ public partial class Index
 
         if (!result.IsSuccess)
         {
-            // TODO
+            // TODO: error handling
         }
 
         this.ViewTable(tableNumber);

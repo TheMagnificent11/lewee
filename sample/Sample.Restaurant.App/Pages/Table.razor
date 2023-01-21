@@ -6,7 +6,7 @@
 
 <h1>Table @this.TableNumber</h1>
 
-@if(this.menuItems == null)
+@if(this.table == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -17,17 +17,19 @@ else
             <tr>
                 <th>Item Name</th>
                 <th>Price</th>
+                <th>Quantity</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            @foreach(var item in this.menuItems)
+            @foreach(var item in this.table.Items)
             {
                 <tr>
-                    <td>@item.Name</td>
-                    <td>@item.PriceLabel</td>
+                    <td>@item.MenuItem.Name</td>
+                    <td>@item.MenuItem.PriceLabel</td>
+                    <td>@item.Quantity</td>
                     <td>
-                        <button @onclick="@(async () => await AddToOrder(item.Id))">Add</button>
+                        <button @onclick="@(async () => await AddToOrder(item.MenuItem.Id))">Add</button>
                     </td>
                 </tr>
             }

@@ -1,4 +1,4 @@
-﻿namespace Sample.Restaurant.Application.Tables;
+﻿namespace Sample.Restaurant.Application;
 
 public class TableDto
 {

@@ -1,6 +1,5 @@
 ﻿using Lewee.Application;
 using Microsoft.Extensions.DependencyInjection;
-using Sample.Restaurant.Application.Tables;
 
 namespace Sample.Restaurant.Application;
 

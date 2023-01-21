@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Sample.Restaurant.Domain;
 using Serilog;
 
-namespace Sample.Restaurant.Application.Tables;
+namespace Sample.Restaurant.Application;
 
 public class AddMenuItemCommand : ICommand, ITableRequest
 {

@@ -5,7 +5,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Sample.Restaurant.Domain;
 
-namespace Sample.Restaurant.Application.Tables;
+namespace Sample.Restaurant.Application;
 
 public sealed class GetTablesQuery : IQuery<QueryResult<IEnumerable<TableDto>>>
 {
