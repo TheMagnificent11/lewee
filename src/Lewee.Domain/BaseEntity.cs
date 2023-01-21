@@ -57,6 +57,63 @@ public abstract class BaseEntity : IEntity, ISoftDeleteEntity
     public DomainEventsCollection DomainEvents { get; protected set; }
 
     /// <summary>
+    /// Equality operator
+    /// </summary>
+    /// <param name="left">Left entity</param>
+    /// <param name="right">Right entity</param>
+    /// <returns>True if the entities are equal, otherwise false</returns>
+    public static bool operator ==(BaseEntity left, BaseEntity right)
+    {
+        if (left is null && right is null)
+        {
+            return true;
+        }
+
+        if (left is null || right is null)
+        {
+            return false;
+        }
+
+        return left.Equals(right);
+    }
+
+    /// <summary>
+    /// Inequality operator
+    /// </summary>
+    /// <param name="left">Left entity</param>
+    /// <param name="right">Right entity</param>
+    /// <returns>True if the entities are inequal, otherwise true</returns>
+    public static bool operator !=(BaseEntity left, BaseEntity right) => !(left == right);
+
+    /// <inheritdoc />
+    public override bool Equals(object? obj)
+    {
+        if (obj is not BaseEntity other)
+        {
+            return false;
+        }
+
+        if (this.GetType() != other.GetType())
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return this.Id == other.Id;
+    }
+
+    /// <inheritdoc />
+    public override int GetHashCode()
+    {
+        return (this.GetType().ToString() + this.Id.ToString())
+            .GetHashCode();
+    }
+
+    /// <summary>
     /// Applies creation tracking data
     /// </summary>
     /// <param name="createdBy">Created by user</param>
