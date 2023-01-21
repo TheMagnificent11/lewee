@@ -133,4 +133,30 @@ public abstract class BaseEntity : IEntity, ISoftDeleteEntity
         this.ModifiedBy = modifiedBy ?? "System";
         this.ModifiedAtUtc = DateTime.UtcNow;
     }
+
+    /// <summary>
+    /// Marks entity as soft-deleted
+    /// </summary>
+    public void Delete()
+    {
+        if (this.IsDeleted)
+        {
+            return;
+        }
+
+        this.IsDeleted = true;
+    }
+
+    /// <summary>
+    /// Marks entity as not soft-deleted
+    /// </summary>
+    public void Undelete()
+    {
+        if (!this.IsDeleted)
+        {
+            return;
+        }
+
+        this.IsDeleted = false;
+    }
 }

@@ -1,4 +1,5 @@
-﻿using Lewee.Domain;
+﻿using System.Net.Http.Headers;
+using Lewee.Domain;
 
 namespace Sample.Restaurant.Domain;
 
@@ -36,5 +37,25 @@ public class Table : BaseEntity, IAggregateRoot
         this.orders.Add(Order.StartNewOrder(this, correlationId));
 
         this.DomainEvents.Raise(new TableInUseDomainEvent(correlationId, this.Id, this.TableNumber));
+    }
+
+    public void OrderMenuItem(MenuItem menuItem, Guid correlationId)
+    {
+        if (!this.IsInUse || this.CurrentOrder == null)
+        {
+            throw new DomainException("Cannot order items if table is not in use");
+        }
+
+        this.CurrentOrder.AddItem(menuItem, correlationId);
+    }
+
+    public void RemovedMenuItem(MenuItem menuItem, Guid correlationId)
+    {
+        if (!this.IsInUse || this.CurrentOrder == null)
+        {
+            throw new DomainException("Cannot order items if table is not in use");
+        }
+
+        this.CurrentOrder.RemoveItem(menuItem, correlationId);
     }
 }
