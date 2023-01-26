@@ -1,5 +1,4 @@
-﻿using System.Net.Http.Headers;
-using Lewee.Domain;
+﻿using Lewee.Domain;
 
 namespace Sample.Restaurant.Domain;
 
@@ -29,7 +28,7 @@ public class Table : BaseEntity, IAggregateRoot
     {
         if (this.IsInUse)
         {
-            throw new DomainException("Table is already being used");
+            throw new DomainException(ErrorMessages.TableInUse);
         }
 
         this.IsInUse = true;
@@ -43,7 +42,7 @@ public class Table : BaseEntity, IAggregateRoot
     {
         if (!this.IsInUse || this.CurrentOrder == null)
         {
-            throw new DomainException("Cannot order items if table is not in use");
+            throw new DomainException(ErrorMessages.CannotOrderIfTableNotInUse);
         }
 
         this.CurrentOrder.AddItem(menuItem, correlationId);
@@ -53,9 +52,15 @@ public class Table : BaseEntity, IAggregateRoot
     {
         if (!this.IsInUse || this.CurrentOrder == null)
         {
-            throw new DomainException("Cannot order items if table is not in use");
+            throw new DomainException(ErrorMessages.CannotOrderIfTableNotInUse);
         }
 
         this.CurrentOrder.RemoveItem(menuItem, correlationId);
+    }
+
+    public static class ErrorMessages
+    {
+        public const string TableInUse = "Table is already being used";
+        public const string CannotOrderIfTableNotInUse = "Cannot order items if table is not in use";
     }
 }
