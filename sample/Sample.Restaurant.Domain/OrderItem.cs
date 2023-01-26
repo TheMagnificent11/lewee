@@ -9,6 +9,7 @@ public class OrderItem : BaseEntity
     {
         this.OrderId = order.Id;
         this.Order = order;
+        this.MenuItemId = menuItem.Id;
         this.MenuItem = menuItem;
         this.Quantity = 1;
         this.Price = menuItem.Price;
