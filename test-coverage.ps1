@@ -1,9 +1,9 @@
 if (Test-Path -Path .\coverage) {
-  Remove-Item .\coverage -Force
+  Remove-Item .\coverage -Recurse -Force
 }
 
 if (Test-Path -Path .\coverage-report) {
-  Remove-Item .\coverage-report -Force
+  Remove-Item .\coverage-report -Recurse -Force
 }
 
 dotnet test .\Lewee-CI.sln  --collect "XPlat Code Coverage" --results-directory ./coverage
