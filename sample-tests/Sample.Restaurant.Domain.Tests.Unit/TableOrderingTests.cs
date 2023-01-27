@@ -58,7 +58,6 @@ public class TableOrderingTests
         var orderItemAddedEvent = orderItemEvent as OrderItemAddedDomainEvent;
         orderItemAddedEvent.Should().NotBeNull();
         orderItemAddedEvent.CorrelationId.Should().Be(correlationId);
-        orderItemAddedEvent.OrderItemId.Should().Be(orderedItem.Id);
         orderItemAddedEvent.MenuItemId.Should().Be(pizza.Id);
         orderItemAddedEvent.Price.Should().Be(pizza.Price);
         orderItemAddedEvent.OrderId.Should().Be(this.target.CurrentOrder.Id);
@@ -132,7 +131,6 @@ public class TableOrderingTests
         var itemRemovedEvent = garlicBreakDomainEvents[2] as OrderItemRemovedDomainEvent;
         itemRemovedEvent.Should().NotBeNull();
         itemRemovedEvent.CorrelationId.Should().Be(correlationId);
-        itemRemovedEvent.OrderItemId.Should().Be(garlicBreadOrderItem.Id);
         itemRemovedEvent.MenuItemId.Should().Be(garlicBread.Id);
         itemRemovedEvent.Price.Should().Be(garlicBread.Price);
         itemRemovedEvent.OrderId.Should().Be(this.target.CurrentOrder.Id);

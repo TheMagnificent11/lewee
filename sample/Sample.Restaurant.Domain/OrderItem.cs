@@ -36,11 +36,10 @@ public class OrderItem : BaseEntity
 
         orderItem.DomainEvents.Raise(new OrderItemAddedDomainEvent(
             correlationId,
-            orderItem.Id,
-            menuItem.Id,
-            menuItem.Price,
+            order.TableId,
             order.Id,
-            order.TableId));
+            menuItem.Id,
+            menuItem.Price));
 
         return orderItem;
     }
@@ -51,11 +50,10 @@ public class OrderItem : BaseEntity
 
         this.DomainEvents.Raise(new OrderItemAddedDomainEvent(
             correlationId,
-            this.Id,
-            this.MenuItemId,
-            this.MenuItem.Price,
+            this.Order.TableId,
             this.OrderId,
-            this.Order.TableId));
+            this.MenuItemId,
+            this.MenuItem.Price));
     }
 
     public void ReduceQuantity(Guid correlationId)
@@ -69,10 +67,9 @@ public class OrderItem : BaseEntity
 
         this.DomainEvents.Raise(new OrderItemRemovedDomainEvent(
             correlationId,
-            this.Id,
-            this.MenuItemId,
-            this.MenuItem.Price,
+            this.Order.TableId,
             this.OrderId,
-            this.Order.TableId));
+            this.MenuItemId,
+            this.MenuItem.Price));
     }
 }
