@@ -47,7 +47,7 @@ public class Order : BaseEntity
 
     internal void AddItem(MenuItem menuItem, Guid correlationId)
     {
-        var existingMenuItem = this.items.FirstOrDefault(x => x.Id == menuItem.Id);
+        var existingMenuItem = this.items.FirstOrDefault(x => x.MenuItemId == menuItem.Id);
 
         if (existingMenuItem == null)
         {
@@ -60,7 +60,7 @@ public class Order : BaseEntity
 
     internal void RemoveItem(MenuItem menuItem, Guid correlationId)
     {
-        var existingMenuItem = this.items.FirstOrDefault(x => x.Id == menuItem.Id);
+        var existingMenuItem = this.items.FirstOrDefault(x => x.MenuItemId == menuItem.Id);
 
         if (existingMenuItem == null)
         {
