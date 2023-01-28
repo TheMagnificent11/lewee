@@ -1,22 +1,13 @@
+using Sample.Restaurant.App.States.Tables.Actions;
 using Sample.Restaurant.Application;
 
 namespace Sample.Restaurant.App.Pages;
 
 public partial class Index
 {
-    private TableDto[]? tables;
-
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        var result = await this.Mediator.Send(new GetTablesQuery(Guid.NewGuid()));
-
-        if (!result.IsSuccess || result.Data == null)
-        {
-            // TODO: error handling
-            return;
-        }
-
-        this.tables = result.Data.ToArray();
+        this.Dispatcher.Dispatch(new GetTables(Guid.NewGuid()));
     }
 
     private async Task UseTable(int tableNumber)

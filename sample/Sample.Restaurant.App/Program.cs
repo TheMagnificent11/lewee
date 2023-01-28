@@ -1,3 +1,4 @@
+using Fluxor;
 using Lewee.Application;
 using Lewee.Infrastructure.Auth;
 using Lewee.Infrastructure.Data;
@@ -53,19 +54,20 @@ else
 }
 
 app.UseHealthChecks("/health");
-
 app.UseHttpsRedirection();
-
 app.UseStaticFiles();
-
-app.UseRouting();
-
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.MapControllers();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
+
+builder.Services.AddFluxor(options =>
+{
+    options.ScanAssemblies(typeof(Program).Assembly);
+
+    if (app.Environment.IsDevelopment())
+    {
+        options.UseReduxDevTools();
+    }
+});
 
 if (migrateDatabases)
 {

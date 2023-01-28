@@ -8,7 +8,7 @@ internal class CorrelationIdLoggingBehavior<TRequest, TResponse> : IPipelineBeha
 {
     public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
-        using (LogContext.PushProperty("CorrelationId", request.CorrelationId))
+        using (LogContext.PushProperty(LoggingConsts.CorrelationId, request.CorrelationId))
         {
             return next();
         }

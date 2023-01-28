@@ -9,7 +9,7 @@ internal class TenantLoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TR
 {
     public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
-        using (LogContext.PushProperty("TenantId", request.TenantId))
+        using (LogContext.PushProperty(LoggingConsts.TenantId, request.TenantId))
         {
             return next();
         }

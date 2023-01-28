@@ -1,7 +1,10 @@
 ﻿@page "/"
 
 @using MediatR
+@using Sample.Restaurant.App.States.Tables
 
+@inject IState<TablesState> State
+@inject IDispatcher Dispatcher
 @inject IMediator Mediator
 @inject NavigationManager NavigationManager
 
@@ -9,7 +12,7 @@
 
 <h1>Tables</h1>
 
-@if (this.tables == null)
+@if (this.State.Value.IsLoading)
 {
     <p><em>Loading...</em></p>
 }
@@ -24,7 +27,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in this.tables)
+            @foreach (var item in this.State.Value.Tables)
             {
                 <tr>
                     <td>@item.TableNumber</td>

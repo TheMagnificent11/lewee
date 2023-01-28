@@ -1,4 +1,6 @@
-﻿namespace Lewee.Application.Mediation.Responses;
+﻿using System.Text;
+
+namespace Lewee.Application.Mediation.Responses;
 
 /// <summary>
 /// Base Result
@@ -29,6 +31,36 @@ public abstract class BaseResult : IResult
 
     /// <inheritdoc />
     public Dictionary<string, List<string>> Errors { get; private set; }
+
+    /// <summary>
+    /// Generates an error message from the <see cref="Errors"/> dictionary.
+    /// </summary>
+    /// <returns>Error message</returns>
+    /// <remarks>Each string in the dictionay is separated by a new-line character</remarks>
+    public string GenerateErrorMessage()
+    {
+        if (!this.Errors.Any())
+        {
+            return string.Empty;
+        }
+
+        var errorMessage = new StringBuilder();
+
+        foreach (var error in this.Errors)
+        {
+            errorMessage.Append($"{error.Key}:");
+
+            foreach (var subError in error.Value)
+            {
+                errorMessage.Append($" {subError},");
+            }
+
+            errorMessage.Remove(errorMessage.Length - 1, 1);
+            errorMessage.AppendLine();
+        }
+
+        return errorMessage.ToString();
+    }
 
     /// <summary>
     /// Checks if the status provided is a failure status
