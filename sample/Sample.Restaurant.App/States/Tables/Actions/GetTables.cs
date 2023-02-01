@@ -1,6 +1,8 @@
+using Lewee.Fluxor.Actions;
+
 namespace Sample.Restaurant.App.States.Tables.Actions;
 
-public record GetTables
+public record GetTables : IRequestAction
 {
     public GetTables(Guid correlationId)
     {

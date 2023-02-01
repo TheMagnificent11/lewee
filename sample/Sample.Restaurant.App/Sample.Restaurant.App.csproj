@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Lewee.Fluxor\Lewee.Fluxor.csproj" />
     <ProjectReference Include="..\..\src\Lewee.Infrastructure\Lewee.Infrastructure.csproj" />
     <ProjectReference Include="..\Sample.Restaurant.Infrastructure\Sample.Restaurant.Infrastructure.csproj" />
   </ItemGroup>

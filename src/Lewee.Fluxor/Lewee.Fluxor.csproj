@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <Compile Update="Actions\IRequestAction.cs">
+      <CopyToOutputDirectory>DReqo not copy</CopyToOutputDirectory>
+    </Compile>
+  </ItemGroup>
+</Project>

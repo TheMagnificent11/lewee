@@ -14,7 +14,7 @@
 
 <h1>Tables</h1>
 
-@if (this.State.Value.IsLoading)
+@if (this.State.Value.Data == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -29,7 +29,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in this.State.Value.Tables)
+            @foreach (var item in this.State.Value.Data)
             {
                 <tr>
                     <td>@item.TableNumber</td>
