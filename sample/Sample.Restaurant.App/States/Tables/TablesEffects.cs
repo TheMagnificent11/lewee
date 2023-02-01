@@ -9,7 +9,7 @@ namespace Sample.Restaurant.App.States.Tables;
 
 public sealed class TablesEffects
 {
-    private const string GetTablesRequestType = "GetTables";
+    private const string RequestType = "RequestType";
 
     private readonly IState<TablesState> state;
     private readonly IMediator mediator;
@@ -26,7 +26,7 @@ public sealed class TablesEffects
     public async Task GetTables(GetTables action, IDispatcher dispatcher)
     {
         using (LogContext.PushProperty(LoggingConsts.CorrelationId, action.CorrelationId))
-        using (LogContext.PushProperty(GetTablesRequestType, this.state.Value.RequestType))
+        using (LogContext.PushProperty(RequestType, this.state.Value.RequestType))
         {
             this.logger.Debug("Dispatching request...");
 
@@ -48,7 +48,7 @@ public sealed class TablesEffects
 #pragma warning restore IDE0060 // Remove unused parameter
     {
         using (LogContext.PushProperty(LoggingConsts.CorrelationId, this.state.Value.CorrelationId))
-        using (LogContext.PushProperty(GetTablesRequestType, this.state.Value.RequestType))
+        using (LogContext.PushProperty(RequestType, this.state.Value.RequestType))
         {
             this.logger.Debug("Dispatching request...success");
             return Task.FromResult(true);
@@ -61,7 +61,7 @@ public sealed class TablesEffects
 #pragma warning restore IDE0060 // Remove unused parameter
     {
         using (LogContext.PushProperty(LoggingConsts.CorrelationId, this.state.Value.CorrelationId))
-        using (LogContext.PushProperty(GetTablesRequestType, this.state.Value.RequestType))
+        using (LogContext.PushProperty(RequestType, this.state.Value.RequestType))
         {
             this.logger.Error("Dispatching request...error (Error Message: {ErrorMessage})", action.ErrorMessage);
             return Task.FromResult(false);
