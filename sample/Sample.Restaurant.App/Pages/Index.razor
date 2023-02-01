@@ -3,6 +3,8 @@
 @using MediatR
 @using Sample.Restaurant.App.States.Tables
 
+@inherits FluxorComponent
+
 @inject IState<TablesState> State
 @inject IDispatcher Dispatcher
 @inject IMediator Mediator

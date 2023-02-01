@@ -7,6 +7,7 @@ public partial class Index
 {
     protected override void OnInitialized()
     {
+        base.OnInitialized();
         this.Dispatcher.Dispatch(new GetTables(Guid.NewGuid()));
     }
 
