@@ -38,6 +38,15 @@ builder.Services
     .AddHealthChecks()
     .AddDbContextCheck<RestaurantDbContext>();
 
+builder.Services.AddFluxor(options =>
+{
+    options.ScanAssemblies(typeof(Program).Assembly);
+
+#if DEBUG
+    options.UseReduxDevTools();
+#endif
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -58,16 +67,6 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
-
-builder.Services.AddFluxor(options =>
-{
-    options.ScanAssemblies(typeof(Program).Assembly);
-
-    if (app.Environment.IsDevelopment())
-    {
-        options.UseReduxDevTools();
-    }
-});
 
 if (migrateDatabases)
 {
