@@ -1,5 +1,5 @@
 ﻿using Lewee.Domain;
-using Lewee.Util;
+using Lewee.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

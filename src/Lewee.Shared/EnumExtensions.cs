@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Reflection;
 
-namespace Lewee.Util;
+namespace Lewee.Shared;
 
 /// <summary>
 /// Enum Extension Methods

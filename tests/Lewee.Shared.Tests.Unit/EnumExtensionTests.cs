@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel;
 using FluentAssertions;
+using Lewee.Shared;
 using Xunit;
 
-namespace Lewee.Util.Tests.Unit;
+namespace Lewee.Util.Shared.Unit;
 
 public static class EnumExtensionTests
 {

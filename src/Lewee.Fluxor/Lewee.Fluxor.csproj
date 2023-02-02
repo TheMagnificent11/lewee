@@ -1,7 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <ItemGroup>
-    <Compile Update="Actions\IRequestAction.cs">
-      <CopyToOutputDirectory>DReqo not copy</CopyToOutputDirectory>
-    </Compile>
+    <PackageReference Include="Fluxor.Blazor.Web" />
+    <PackageReference Include="MediatR" />
+    <PackageReference Include="Serilog" />
   </ItemGroup>
+  
 </Project>
