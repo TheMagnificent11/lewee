@@ -1,13 +1,11 @@
 ﻿@page "/"
 
-@using MediatR
 @using Sample.Restaurant.App.States.Tables
 
 @inherits FluxorComponent
 
 @inject IState<TablesState> State
 @inject IDispatcher Dispatcher
-@inject IMediator Mediator
 @inject NavigationManager NavigationManager
 
 <PageTitle>Tables</PageTitle>
@@ -41,7 +39,7 @@ else
                         }
                         else
                         {
-                            <button @onclick="@(async () => await UseTable(item.TableNumber))">Use</button>
+                            <button @onclick="@(() => UseTable(item.TableNumber))">Use</button>
                         }
                     </td>
                 </tr>

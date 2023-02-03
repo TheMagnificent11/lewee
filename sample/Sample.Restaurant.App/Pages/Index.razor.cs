@@ -1,5 +1,5 @@
+using Sample.Restaurant.App.States.TableDetails.Actions;
 using Sample.Restaurant.App.States.Tables.Actions;
-using Sample.Restaurant.Application;
 
 namespace Sample.Restaurant.App.Pages;
 
@@ -11,16 +11,9 @@ public partial class Index
         this.Dispatcher.Dispatch(new GetTables(Guid.NewGuid()));
     }
 
-    private async Task UseTable(int tableNumber)
+    private void UseTable(int tableNumber)
     {
-        var result = await this.Mediator.Send(new UseTableCommand(Guid.NewGuid(), tableNumber));
-
-        if (!result.IsSuccess)
-        {
-            // TODO: error handling
-        }
-
-        this.ViewTable(tableNumber);
+        this.Dispatcher.Dispatch(new GetTableDetails(Guid.NewGuid(), tableNumber));
     }
 
     private void ViewTable(int tableNumber)

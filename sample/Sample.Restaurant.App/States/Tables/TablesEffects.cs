@@ -6,7 +6,8 @@ using Sample.Restaurant.Application;
 
 namespace Sample.Restaurant.App.States.Tables;
 
-public sealed class TablesEffects : BaseQueryEffects<TablesEffects, TablesState, TableDto[], GetTables, GetTablesSuccess, GetTablesError>
+public sealed class TablesEffects
+    : BaseQueryEffects<TablesEffects, TablesState, TableDto[], GetTables, GetTablesSuccess, GetTablesError>
 {
     private readonly IMediator mediator;
 
@@ -20,9 +21,9 @@ public sealed class TablesEffects : BaseQueryEffects<TablesEffects, TablesState,
     {
         var result = await this.mediator.Send(new GetTablesQuery(action.CorrelationId));
 
-        if (result.IsSuccess)
+        if (result.IsSuccess && result.Data != null)
         {
-            dispatcher.Dispatch(new GetTablesSuccess(result.Data?.ToArray() ?? Array.Empty<TableDto>()));
+            dispatcher.Dispatch(new GetTablesSuccess(result.Data.ToArray()));
             return;
         }
 
