@@ -33,7 +33,7 @@ public class Table : BaseEntity, IAggregateRoot
 
         this.IsInUse = true;
 
-        this.orders.Add(Order.StartNewOrder(this, correlationId));
+        this.orders.Add(Order.StartNewOrder(this));
 
         this.DomainEvents.Raise(new TableInUseDomainEvent(correlationId, this.Id, this.TableNumber));
     }

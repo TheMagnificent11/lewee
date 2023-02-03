@@ -17,15 +17,12 @@ public sealed class UseTableTests
     public void CanUseWhenNotInUse()
     {
         var correlationId = Guid.NewGuid();
-        var testStartTime = DateTime.UtcNow;
 
         this.target.Use(correlationId);
         var domainEventsRaised = this.target.DomainEvents.GetAndClear();
 
         this.target.IsInUse.Should().BeTrue();
         this.target.CurrentOrder.Should().NotBeNull();
-
-        var orderDomainEvents = this.target.CurrentOrder.DomainEvents.GetAndClear();
 
         domainEventsRaised.Should().NotBeNullOrEmpty();
         domainEventsRaised.Should().HaveCount(1);
@@ -38,20 +35,6 @@ public sealed class UseTableTests
         tableInUseEvent.CorrelationId.Should().Be(correlationId);
         tableInUseEvent.TableId.Should().Be(this.target.Id);
         tableInUseEvent.TableNumber.Should().Be(this.target.TableNumber);
-
-        orderDomainEvents.Should().NotBeNullOrEmpty();
-        orderDomainEvents.Should().HaveCount(1);
-
-        var orderDomainEvent = orderDomainEvents.First();
-        orderDomainEvent.Should().BeOfType<OrderCreatedDomainEvent>();
-
-        var orderCreatedEvent = orderDomainEvent as OrderCreatedDomainEvent;
-        orderCreatedEvent.Should().NotBeNull();
-        orderCreatedEvent.CorrelationId.Should().Be(correlationId);
-        orderCreatedEvent.OrderId.Should().Be(this.target.CurrentOrder.Id);
-        orderCreatedEvent.TableId.Should().Be(this.target.Id);
-        orderCreatedEvent.TableNumber.Should().Be(this.target.TableNumber);
-        orderCreatedEvent.CreatedDateTimeUtc.Should().BeAfter(testStartTime);
     }
 
     [Fact]

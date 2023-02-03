@@ -31,18 +31,9 @@ public class Order : BaseEntity
 
     internal static Order EmptyOrder => new(Table.EmptyTable);
 
-    public static Order StartNewOrder(Table table, Guid correlationId)
+    public static Order StartNewOrder(Table table)
     {
-        var order = new Order(table);
-
-        order.DomainEvents.Raise(new OrderCreatedDomainEvent(
-            correlationId,
-            order.Id,
-            table.Id,
-            table.TableNumber,
-            DateTime.UtcNow));
-
-        return order;
+        return new Order(table);
     }
 
     internal void AddItem(MenuItem menuItem, Guid correlationId)
