@@ -3,7 +3,6 @@
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
 EXPOSE 80
-EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
@@ -11,10 +10,11 @@ COPY "Directory.Build.props" .
 COPY "Directory.Build.targets" .
 COPY "Packages.props" .
 COPY ["sample/Sample.Restaurant.App/Sample.Restaurant.App.csproj", "sample/Sample.Restaurant.App/"]
+COPY ["src/Lewee.Fluxor/Lewee.Fluxor.csproj", "src/Lewee.Fluxor/"]
+COPY ["src/Lewee.Shared/Lewee.Shared.csproj", "src/Lewee.Shared/"]
 COPY ["src/Lewee.Infrastructure/Lewee.Infrastructure.csproj", "src/Lewee.Infrastructure/"]
 COPY ["src/Lewee.Application/Lewee.Application.csproj", "src/Lewee.Application/"]
 COPY ["src/Lewee.Domain/Lewee.Domain.csproj", "src/Lewee.Domain/"]
-COPY ["src/Lewee.Shared/Lewee.Shared.csproj", "src/Lewee.Shared/"]
 COPY ["sample/Sample.Restaurant.Infrastructure/Sample.Restaurant.Infrastructure.csproj", "sample/Sample.Restaurant.Infrastructure/"]
 COPY ["sample/Sample.Restaurant.Application/Sample.Restaurant.Application.csproj", "sample/Sample.Restaurant.Application/"]
 COPY ["sample/Sample.Restaurant.Contracts/Sample.Restaurant.Contracts.csproj", "sample/Sample.Restaurant.Contracts/"]
