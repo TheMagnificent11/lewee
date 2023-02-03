@@ -1,6 +1,6 @@
 ﻿using Fluxor;
 using Lewee.Fluxor.Actions;
-using MediatR;
+using Lewee.Shared;
 using Serilog;
 using Serilog.Context;
 
@@ -27,12 +27,10 @@ public abstract class BaseQueryEffects<TEffects, TState, TData, TQueryAction, TQ
     /// Initializes a new instance of the <see cref="BaseQueryEffects{TEffects, TState, TData, TQueryAction, TQuerySuccessAction, TQueryErrorAction}"/> class
     /// </summary>
     /// <param name="state">State</param>
-    /// <param name="mediator">Mediator</param>
     /// <param name="logger">Logger</param>
-    protected BaseQueryEffects(IState<TState> state, IMediator mediator, ILogger logger)
+    protected BaseQueryEffects(IState<TState> state, ILogger logger)
     {
         this.State = state;
-        this.Mediator = mediator;
         this.Logger = logger.ForContext<TEffects>();
     }
 
@@ -42,58 +40,67 @@ public abstract class BaseQueryEffects<TEffects, TState, TData, TQueryAction, TQ
     protected IState<TState> State { get; }
 
     /// <summary>
-    /// Gets the mediator
-    /// </summary>
-    protected IMediator Mediator { get; }
-
-    /// <summary>
     /// Gets the logger
     /// </summary>
     protected ILogger Logger { get; }
 
+    /// <summary>
+    /// Query effect
+    /// </summary>
+    /// <param name="action">Action</param>
+    /// <param name="dispatcher">Dispatcher</param>
+    /// <returns>Asynchronous task</returns>
     [EffectMethod]
-    public async Task Query(TQueryAction action, IDispatcher dispatcher)
+    public virtual async Task Query(TQueryAction action, IDispatcher dispatcher)
     {
         using (LogContext.PushProperty(LoggingConsts.CorrelationId, action.CorrelationId))
-        using (LogContext.PushProperty(RequestType, this.State.Value.RequestType))
+        using (LogContext.PushProperty(LoggingConsts.RequestType, this.State.Value.RequestType))
         {
-            this.logger.Debug("Dispatching request...");
+            this.Logger.Debug("Dispatching request...");
 
-            var result = await this.mediator.Send(new GetTablesQuery(action.CorrelationId));
-
-            if (result.IsSuccess)
-            {
-                dispatcher.Dispatch(new GetTablesSuccess(result.Data?.ToArray() ?? Array.Empty<TableDto>()));
-                return;
-            }
-
-            dispatcher.Dispatch(new GetTablesError(result.GenerateErrorMessage()));
+            await this.ExecuteQuery(action, dispatcher);
         }
     }
 
+    /// <summary>
+    /// Query success effect
+    /// </summary>
+    /// <param name="action">Action</param>
+    /// <param name="dispatcher">Dispatcher</param>
+    /// <returns>Asynchronous task</returns>
     [EffectMethod]
-#pragma warning disable IDE0060 // Remove unused parameter (required by Fluxor)
-    public Task QuerySucces(TQuerySuccessAction action, IDispatcher dispatcher)
-#pragma warning restore IDE0060 // Remove unused parameter
+    public virtual Task QuerySucces(TQuerySuccessAction action, IDispatcher dispatcher)
     {
         using (LogContext.PushProperty(LoggingConsts.CorrelationId, this.State.Value.CorrelationId))
-        using (LogContext.PushProperty(RequestType, this.State.Value.RequestType))
+        using (LogContext.PushProperty(LoggingConsts.RequestType, this.State.Value.RequestType))
         {
-            this.logger.Debug("Dispatching request...success");
+            this.Logger.Debug("Dispatching request...success");
             return Task.FromResult(true);
         }
     }
 
+    /// <summary>
+    /// Query error effect
+    /// </summary>
+    /// <param name="action">Action</param>
+    /// <param name="dispatcher">Dispatcher</param>
+    /// <returns>Asynchronous task</returns>
     [EffectMethod]
-#pragma warning disable IDE0060 // Remove unused parameter (required by Fluxor)
-    public Task QueryError(TQueryErrorAction action, IDispatcher dispatcher)
-#pragma warning restore IDE0060 // Remove unused parameter
+    public virtual Task QueryError(TQueryErrorAction action, IDispatcher dispatcher)
     {
         using (LogContext.PushProperty(LoggingConsts.CorrelationId, this.State.Value.CorrelationId))
-        using (LogContext.PushProperty(RequestType, this.State.Value.RequestType))
+        using (LogContext.PushProperty(LoggingConsts.RequestType, this.State.Value.RequestType))
         {
-            this.logger.Error("Dispatching request...error (Error Message: {ErrorMessage})", action.ErrorMessage);
+            this.Logger.Error("Dispatching request...error (Error Message: {ErrorMessage})", action.ErrorMessage);
             return Task.FromResult(false);
         }
     }
+
+    /// <summary>
+    /// Executes the query
+    /// </summary>
+    /// <param name="action">Query action</param>
+    /// <param name="dispatcher">Dispatcher</param>
+    /// <returns>Asynchronous task</returns>
+    protected abstract Task ExecuteQuery(TQueryAction action, IDispatcher dispatcher);
 }

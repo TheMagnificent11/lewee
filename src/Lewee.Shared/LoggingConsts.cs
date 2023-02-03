@@ -1,4 +1,4 @@
-﻿namespace Lewee.Application.Mediation;
+﻿namespace Lewee.Shared;
 
 /// <summary>
 /// Logging Constants
@@ -14,4 +14,9 @@ public static class LoggingConsts
     /// Tenant ID
     /// </summary>
     public const string TenantId = "TenantId";
+
+    /// <summary>
+    /// Request Type
+    /// </summary>
+    public const string RequestType = "RequestType";
 }

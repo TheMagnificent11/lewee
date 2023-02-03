@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Lewee.Shared;
+using MediatR;
 using Serilog.Context;
 
 namespace Lewee.Application.Mediation.Behaviors;

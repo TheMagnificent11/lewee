@@ -2,8 +2,11 @@
 
   <ItemGroup>
     <PackageReference Include="Fluxor.Blazor.Web" />
-    <PackageReference Include="MediatR" />
     <PackageReference Include="Serilog" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Lewee.Shared\Lewee.Shared.csproj" />
   </ItemGroup>
   
 </Project>
