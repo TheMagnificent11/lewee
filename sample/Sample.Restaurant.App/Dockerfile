@@ -14,7 +14,7 @@ COPY ["sample/Sample.Restaurant.App/Sample.Restaurant.App.csproj", "sample/Sampl
 COPY ["src/Lewee.Infrastructure/Lewee.Infrastructure.csproj", "src/Lewee.Infrastructure/"]
 COPY ["src/Lewee.Application/Lewee.Application.csproj", "src/Lewee.Application/"]
 COPY ["src/Lewee.Domain/Lewee.Domain.csproj", "src/Lewee.Domain/"]
-COPY ["src/Lewee.Util/Lewee.Util.csproj", "src/Lewee.Util/"]
+COPY ["src/Lewee.Shared/Lewee.Shared.csproj", "src/Lewee.Shared/"]
 COPY ["sample/Sample.Restaurant.Infrastructure/Sample.Restaurant.Infrastructure.csproj", "sample/Sample.Restaurant.Infrastructure/"]
 COPY ["sample/Sample.Restaurant.Application/Sample.Restaurant.Application.csproj", "sample/Sample.Restaurant.Application/"]
 COPY ["sample/Sample.Restaurant.Contracts/Sample.Restaurant.Contracts.csproj", "sample/Sample.Restaurant.Contracts/"]
