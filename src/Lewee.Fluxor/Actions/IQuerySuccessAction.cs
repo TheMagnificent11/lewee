@@ -4,7 +4,7 @@
 /// Query Success Action Interface
 /// </summary>
 /// <typeparam name="T">Query data type</typeparam>
-public interface IQuerySuccessAction<T>
+public interface IQuerySuccessAction<T> : IRequestSuccessAction
     where T : class
 {
     /// <summary>

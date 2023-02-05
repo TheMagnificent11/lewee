@@ -17,5 +17,5 @@ internal static class TableDetailsReducer
 
     [ReducerMethod]
     public static TableDetailsState OnGetTableDetailsError(TableDetailsState state, GetTableDetailsError action)
-        => state.OnQueryError<TableDetailsState, TableDetailsDto, GetTableDetailsError>(action);
+        => state.OnRequestError(action);
 }

@@ -17,5 +17,5 @@ public static class TablesReducer
 
     [ReducerMethod]
     public static TablesState OnGetTablesError(TablesState state, GetTablesError action)
-        => state.OnQueryError<TablesState, TableDto[], GetTablesError>(action);
+        => state.OnRequestError(action);
 }
