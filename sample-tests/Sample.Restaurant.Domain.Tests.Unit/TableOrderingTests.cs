@@ -32,6 +32,8 @@ public class TableOrderingTests
         var pizza = new MenuItem(Guid.NewGuid(), "Pizza", 20, MenuItemType.Food);
 
         this.target.Use(Guid.NewGuid());
+        this.target.DomainEvents.GetAndClear(); // reset domain events before perfoming action under test
+
         this.target.OrderMenuItem(pizza, correlationId);
 
         this.target.CurrentOrder.Should().NotBeNull();
@@ -47,7 +49,7 @@ public class TableOrderingTests
         orderedItem.Quantity.Should().Be(1);
         orderedItem.Price.Should().Be(pizza.Price);
 
-        var domainEvents = orderedItem.DomainEvents.GetAndClear();
+        var domainEvents = this.target.DomainEvents.GetAndClear();
         domainEvents.Should().NotBeNullOrEmpty();
         domainEvents.Should().HaveCount(1);
 
@@ -114,6 +116,8 @@ public class TableOrderingTests
         this.target.OrderMenuItem(pizza, Guid.NewGuid());
         this.target.OrderMenuItem(icecream, Guid.NewGuid());
 
+        this.target.DomainEvents.GetAndClear(); // reset domain events before perfoming action under test
+
         this.target.RemovedMenuItem(garlicBread, correlationId);
 
         this.target.CurrentOrder.Items.Should().HaveCount(6);
@@ -122,13 +126,11 @@ public class TableOrderingTests
         garlicBreadOrderItem.Should().NotBeNull();
         garlicBreadOrderItem.Quantity.Should().Be(1);
 
-        var garlicBreakDomainEvents = garlicBreadOrderItem.DomainEvents.GetAndClear();
-        garlicBreakDomainEvents.Should().HaveCount(3);
-        garlicBreakDomainEvents[0].Should().BeOfType<OrderItemAddedDomainEvent>();
-        garlicBreakDomainEvents[1].Should().BeOfType<OrderItemAddedDomainEvent>();
-        garlicBreakDomainEvents[2].Should().BeOfType<OrderItemRemovedDomainEvent>();
+        var domainEvents = this.target.DomainEvents.GetAndClear();
+        domainEvents.Should().HaveCount(1);
+        domainEvents[0].Should().BeOfType<OrderItemRemovedDomainEvent>();
 
-        var itemRemovedEvent = garlicBreakDomainEvents[2] as OrderItemRemovedDomainEvent;
+        var itemRemovedEvent = domainEvents[0] as OrderItemRemovedDomainEvent;
         itemRemovedEvent.Should().NotBeNull();
         itemRemovedEvent.CorrelationId.Should().Be(correlationId);
         itemRemovedEvent.MenuItemId.Should().Be(garlicBread.Id);

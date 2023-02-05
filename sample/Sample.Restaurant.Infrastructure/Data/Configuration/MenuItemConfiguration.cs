@@ -5,7 +5,7 @@ using Sample.Restaurant.Domain;
 
 namespace Sample.Restaurant.Infrastructure.Data.Configuration;
 
-internal class MenuItemConfiguration : BaseEntityConfiguration<MenuItem>
+internal class MenuItemConfiguration : BaseAggregateRootConfiguration<MenuItem>
 {
     protected override void ConfigureEntity(EntityTypeBuilder<MenuItem> builder)
     {

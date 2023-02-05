@@ -2,7 +2,7 @@
 
 namespace Sample.Restaurant.Domain;
 
-public class Table : BaseEntity, IAggregateRoot
+public class Table : BaseAggregateRoot
 {
     private readonly List<Order> orders = new();
 
@@ -45,7 +45,14 @@ public class Table : BaseEntity, IAggregateRoot
             throw new DomainException(ErrorMessages.CannotOrderIfTableNotInUse);
         }
 
-        this.CurrentOrder.AddItem(menuItem, correlationId);
+        this.CurrentOrder.AddItem(menuItem);
+
+        this.DomainEvents.Raise(new OrderItemAddedDomainEvent(
+            correlationId,
+            this.Id,
+            this.CurrentOrder.Id,
+            menuItem.Id,
+            menuItem.Price));
     }
 
     public void RemovedMenuItem(MenuItem menuItem, Guid correlationId)
@@ -55,7 +62,14 @@ public class Table : BaseEntity, IAggregateRoot
             throw new DomainException(ErrorMessages.CannotOrderIfTableNotInUse);
         }
 
-        this.CurrentOrder.RemoveItem(menuItem, correlationId);
+        this.CurrentOrder.RemoveItem(menuItem);
+
+        this.DomainEvents.Raise(new OrderItemRemovedDomainEvent(
+            correlationId,
+            this.Id,
+            this.CurrentOrder.Id,
+            menuItem.Id,
+            menuItem.Price));
     }
 
     public static class ErrorMessages

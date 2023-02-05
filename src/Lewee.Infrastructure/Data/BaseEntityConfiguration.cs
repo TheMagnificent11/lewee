@@ -13,12 +13,7 @@ namespace Lewee.Infrastructure.Data;
 public abstract class BaseEntityConfiguration<TEntity> : IEntityTypeConfiguration<TEntity>
     where TEntity : BaseEntity
 {
-    /// <summary>
-    /// Configures the database table for the entity type
-    /// </summary>
-    /// <param name="builder">
-    /// The builder to be used to configure the entity type
-    /// </param>
+    /// <inheritdoc/>
     public virtual void Configure(EntityTypeBuilder<TEntity> builder)
     {
         builder.HasKey(x => x.Id);
@@ -33,8 +28,6 @@ public abstract class BaseEntityConfiguration<TEntity> : IEntityTypeConfiguratio
 
         builder.Property(x => x.Timestamp)
             .IsRowVersion();
-
-        builder.Ignore(x => x.DomainEvents);
 
         builder.HasQueryFilter(x => !x.IsDeleted);
 

@@ -36,20 +36,20 @@ public class Order : BaseEntity
         return new Order(table);
     }
 
-    internal void AddItem(MenuItem menuItem, Guid correlationId)
+    internal void AddItem(MenuItem menuItem)
     {
         var existingMenuItem = this.items.FirstOrDefault(x => x.MenuItemId == menuItem.Id);
 
         if (existingMenuItem == null)
         {
-            this.items.Add(OrderItem.AddToOrder(this, menuItem, correlationId));
+            this.items.Add(OrderItem.AddToOrder(this, menuItem));
             return;
         }
 
-        existingMenuItem.IncreaseQuantity(correlationId);
+        existingMenuItem.IncreaseQuantity();
     }
 
-    internal void RemoveItem(MenuItem menuItem, Guid correlationId)
+    internal void RemoveItem(MenuItem menuItem)
     {
         var existingMenuItem = this.items.FirstOrDefault(x => x.MenuItemId == menuItem.Id);
 
@@ -58,7 +58,7 @@ public class Order : BaseEntity
             return;
         }
 
-        existingMenuItem.ReduceQuantity(correlationId);
+        existingMenuItem.ReduceQuantity();
 
         if (existingMenuItem.Quantity > 0)
         {

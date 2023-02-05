@@ -3,7 +3,7 @@ using Sample.Restaurant.Contracts;
 
 namespace Sample.Restaurant.Domain;
 
-public class MenuItem : BaseEntity, IAggregateRoot
+public class MenuItem : BaseAggregateRoot
 {
     public MenuItem(Guid id, string name, decimal price, MenuItemType itemType)
         : base(id)

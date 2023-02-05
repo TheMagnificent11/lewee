@@ -41,12 +41,12 @@ internal class DomainEventSaveChangesInterceptor<TContext> : SaveChangesIntercep
 
     private static void StoreDomainEventsForEntry(TContext context, EntityEntry entry)
     {
-        if (entry.Entity is not BaseEntity baseEntity)
+        if (entry.Entity is not BaseAggregateRoot aggregateRootEntity)
         {
             return;
         }
 
-        var events = baseEntity.DomainEvents.GetAndClear();
+        var events = aggregateRootEntity.DomainEvents.GetAndClear();
 
         foreach (var domainEvent in events)
         {

@@ -26,8 +26,6 @@ public abstract class BaseEntity : IEntity, ISoftDeleteEntity
         this.ModifiedBy = "System";
         this.CreatedAtUtc = DateTime.UtcNow;
         this.ModifiedAtUtc = DateTime.UtcNow;
-
-        this.DomainEvents = new DomainEventsCollection();
     }
 
     /// <inheritdoc />
@@ -50,11 +48,6 @@ public abstract class BaseEntity : IEntity, ISoftDeleteEntity
 
     /// <inheritdoc />
     public byte[] Timestamp { get; protected set; } = default!;
-
-    /// <summary>
-    /// Gets or sets the domain events collection
-    /// </summary>
-    public DomainEventsCollection DomainEvents { get; protected set; }
 
     /// <inheritdoc />
     public override bool Equals(object? obj)

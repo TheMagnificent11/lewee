@@ -30,33 +30,17 @@ public class OrderItem : BaseEntity
     public decimal Price { get; protected set; }
     public decimal ItemTotal => this.Quantity * this.Price;
 
-    public static OrderItem AddToOrder(Order order, MenuItem menuItem, Guid correlationId)
+    internal static OrderItem AddToOrder(Order order, MenuItem menuItem)
     {
-        var orderItem = new OrderItem(order, menuItem);
-
-        orderItem.DomainEvents.Raise(new OrderItemAddedDomainEvent(
-            correlationId,
-            order.TableId,
-            order.Id,
-            menuItem.Id,
-            menuItem.Price));
-
-        return orderItem;
+        return new OrderItem(order, menuItem);
     }
 
-    public void IncreaseQuantity(Guid correlationId)
+    internal void IncreaseQuantity()
     {
         this.Quantity++;
-
-        this.DomainEvents.Raise(new OrderItemAddedDomainEvent(
-            correlationId,
-            this.Order.TableId,
-            this.OrderId,
-            this.MenuItemId,
-            this.MenuItem.Price));
     }
 
-    public void ReduceQuantity(Guid correlationId)
+    internal void ReduceQuantity()
     {
         if (this.Quantity == 0)
         {
@@ -64,12 +48,5 @@ public class OrderItem : BaseEntity
         }
 
         this.Quantity--;
-
-        this.DomainEvents.Raise(new OrderItemRemovedDomainEvent(
-            correlationId,
-            this.Order.TableId,
-            this.OrderId,
-            this.MenuItemId,
-            this.MenuItem.Price));
     }
 }
