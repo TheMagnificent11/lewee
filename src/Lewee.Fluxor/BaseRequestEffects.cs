@@ -7,31 +7,29 @@ using Serilog.Context;
 namespace Lewee.Fluxor;
 
 /// <summary>
-/// Base Query Effects
+/// Base Request Effects
 /// </summary>
 /// <typeparam name="TEffects">Type that inherits this base class</typeparam>
 /// <typeparam name="TState">State type</typeparam>
-/// <typeparam name="TData">Query data type</typeparam>
-/// <typeparam name="TQueryAction">Query action</typeparam>
-/// <typeparam name="TQuerySuccessAction">Query success action</typeparam>
-/// <typeparam name="TQueryErrorAction">Query error action</typeparam>
-public abstract class BaseQueryEffects<TEffects, TState, TData, TQueryAction, TQuerySuccessAction, TQueryErrorAction>
+/// <typeparam name="TRequestAction">Request action type</typeparam>
+/// <typeparam name="TRequestSuccessAction">Request success action</typeparam>
+/// <typeparam name="TRequestErrorAction">Request error action</typeparam>
+public abstract class BaseRequestEffects<TEffects, TState, TRequestAction, TRequestSuccessAction, TRequestErrorAction>
     where TEffects : class
-    where TState : BaseQueryState<TData>
-    where TData : class
-    where TQueryAction : IRequestAction
-    where TQuerySuccessAction : IQuerySuccessAction<TData>
-    where TQueryErrorAction : IRequestErrorAction
+    where TState : BaseRequestState
+    where TRequestAction : IRequestAction
+    where TRequestSuccessAction : IRequestSuccessAction
+    where TRequestErrorAction : IRequestErrorAction
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="BaseQueryEffects{TEffects, TState, TData, TQueryAction, TQuerySuccessAction, TQueryErrorAction}"/> class
+    /// Initializes a new instance of the <see cref="BaseRequestEffects{TEffects, TState, TRequestAction, TRequestSuccessAction, TRequestErrorAction}"/> class
     /// </summary>
     /// <param name="state">State</param>
     /// <param name="logger">Logger</param>
-    protected BaseQueryEffects(IState<TState> state, ILogger logger)
+    public BaseRequestEffects(IState<TState> state, ILogger logger)
     {
         this.State = state;
-        this.Logger = logger.ForContext<TEffects>();
+        this.Logger = logger;
     }
 
     /// <summary>
@@ -45,31 +43,31 @@ public abstract class BaseQueryEffects<TEffects, TState, TData, TQueryAction, TQ
     protected ILogger Logger { get; }
 
     /// <summary>
-    /// Query effect
+    /// Request effect
     /// </summary>
     /// <param name="action">Action</param>
     /// <param name="dispatcher">Dispatcher</param>
     /// <returns>Asynchronous task</returns>
     [EffectMethod]
-    public virtual async Task Query(TQueryAction action, IDispatcher dispatcher)
+    public virtual async Task Query(TRequestAction action, IDispatcher dispatcher)
     {
         using (LogContext.PushProperty(LoggingConsts.CorrelationId, action.CorrelationId))
         using (LogContext.PushProperty(LoggingConsts.RequestType, this.State.Value.RequestType))
         {
             this.Logger.Debug("Dispatching request...");
 
-            await this.ExecuteQuery(action, dispatcher);
+            await this.ExecuteRequest(action, dispatcher);
         }
     }
 
     /// <summary>
-    /// Query success effect
+    /// Request success effect
     /// </summary>
     /// <param name="action">Action</param>
     /// <param name="dispatcher">Dispatcher</param>
     /// <returns>Asynchronous task</returns>
     [EffectMethod]
-    public virtual Task QuerySucces(TQuerySuccessAction action, IDispatcher dispatcher)
+    public virtual Task QuerySucces(TRequestSuccessAction action, IDispatcher dispatcher)
     {
         using (LogContext.PushProperty(LoggingConsts.CorrelationId, this.State.Value.CorrelationId))
         using (LogContext.PushProperty(LoggingConsts.RequestType, this.State.Value.RequestType))
@@ -80,13 +78,13 @@ public abstract class BaseQueryEffects<TEffects, TState, TData, TQueryAction, TQ
     }
 
     /// <summary>
-    /// Query error effect
+    /// Request error effect
     /// </summary>
     /// <param name="action">Action</param>
     /// <param name="dispatcher">Dispatcher</param>
     /// <returns>Asynchronous task</returns>
     [EffectMethod]
-    public virtual Task QueryError(TQueryErrorAction action, IDispatcher dispatcher)
+    public virtual Task QueryError(TRequestErrorAction action, IDispatcher dispatcher)
     {
         using (LogContext.PushProperty(LoggingConsts.CorrelationId, this.State.Value.CorrelationId))
         using (LogContext.PushProperty(LoggingConsts.RequestType, this.State.Value.RequestType))
@@ -97,10 +95,10 @@ public abstract class BaseQueryEffects<TEffects, TState, TData, TQueryAction, TQ
     }
 
     /// <summary>
-    /// Executes the query
+    /// Executes the request
     /// </summary>
-    /// <param name="action">Query action</param>
+    /// <param name="action">Request action</param>
     /// <param name="dispatcher">Dispatcher</param>
     /// <returns>Asynchronous task</returns>
-    protected abstract Task ExecuteQuery(TQueryAction action, IDispatcher dispatcher);
+    protected abstract Task ExecuteRequest(TRequestAction action, IDispatcher dispatcher);
 }

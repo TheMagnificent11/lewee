@@ -8,14 +8,14 @@ namespace Sample.Restaurant.App.States.TableDetails;
 internal static class TableDetailsReducer
 {
     [ReducerMethod]
-    public static TableDetailsState OnGetTableDetails(TableDetailsState state, GetTableDetails action)
-        => state.OnQuery<TableDetailsState, TableDetailsDto, GetTableDetails>(action);
+    public static TableDetailsState OnGetTableDetails(TableDetailsState state, GetTableDetailsAction action)
+        => state.OnQuery<TableDetailsState, TableDetailsDto, GetTableDetailsAction>(action);
 
     [ReducerMethod]
-    public static TableDetailsState OnGetTableDetailsSuccess(TableDetailsState state, GetTableDetailsSuccess action)
-        => state.OnQuerySuccess<TableDetailsState, TableDetailsDto, GetTableDetailsSuccess>(action);
+    public static TableDetailsState OnGetTableDetailsSuccess(TableDetailsState state, GetTableDetailsSuccessAction action)
+        => state.OnQuerySuccess<TableDetailsState, TableDetailsDto, GetTableDetailsSuccessAction>(action);
 
     [ReducerMethod]
-    public static TableDetailsState OnGetTableDetailsError(TableDetailsState state, GetTableDetailsError action)
+    public static TableDetailsState OnGetTableDetailsError(TableDetailsState state, GetTableDetailsErrorAction action)
         => state.OnRequestError(action);
 }

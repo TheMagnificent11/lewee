@@ -2,9 +2,9 @@ using Lewee.Fluxor.Actions;
 
 namespace Sample.Restaurant.App.States.Tables.Actions;
 
-public record GetTablesError : IRequestErrorAction
+public record GetTablesErrorAction : IRequestErrorAction
 {
-    public GetTablesError(string errorMessage)
+    public GetTablesErrorAction(string errorMessage)
     {
         this.ErrorMessage = errorMessage;
     }

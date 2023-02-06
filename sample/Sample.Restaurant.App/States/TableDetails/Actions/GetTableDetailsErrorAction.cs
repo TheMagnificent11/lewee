@@ -2,9 +2,9 @@
 
 namespace Sample.Restaurant.App.States.TableDetails.Actions;
 
-public record GetTableDetailsError : IRequestErrorAction
+public record GetTableDetailsErrorAction : IRequestErrorAction
 {
-    public GetTableDetailsError(string errorMessage)
+    public GetTableDetailsErrorAction(string errorMessage)
     {
         this.ErrorMessage = errorMessage;
     }

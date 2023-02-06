@@ -2,9 +2,9 @@
 
 namespace Sample.Restaurant.App.States.TableDetails.Actions;
 
-public record GetTableDetails : IRequestAction
+public record GetTableDetailsAction : IRequestAction
 {
-    public GetTableDetails(Guid correlationId, int tableNumber)
+    public GetTableDetailsAction(Guid correlationId, int tableNumber)
     {
         this.CorrelationId = correlationId;
         this.TableNumber = tableNumber;

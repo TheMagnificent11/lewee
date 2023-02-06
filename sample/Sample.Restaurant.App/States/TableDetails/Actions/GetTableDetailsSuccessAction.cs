@@ -3,9 +3,9 @@ using Sample.Restaurant.Application;
 
 namespace Sample.Restaurant.App.States.TableDetails.Actions;
 
-public record GetTableDetailsSuccess : IQuerySuccessAction<TableDetailsDto>
+public record GetTableDetailsSuccessAction : IQuerySuccessAction<TableDetailsDto>
 {
-    public GetTableDetailsSuccess(TableDetailsDto data)
+    public GetTableDetailsSuccessAction(TableDetailsDto data)
     {
         this.Data = data;
     }

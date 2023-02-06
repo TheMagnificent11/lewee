@@ -2,9 +2,9 @@ using Lewee.Fluxor.Actions;
 
 namespace Sample.Restaurant.App.States.Tables.Actions;
 
-public record GetTables : IRequestAction
+public record GetTablesAction : IRequestAction
 {
-    public GetTables(Guid correlationId)
+    public GetTablesAction(Guid correlationId)
     {
         this.CorrelationId = correlationId;
     }
