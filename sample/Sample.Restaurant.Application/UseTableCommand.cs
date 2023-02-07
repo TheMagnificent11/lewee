@@ -1,5 +1,6 @@
 ﻿using Lewee.Application.Mediation;
 using Lewee.Application.Mediation.Responses;
+using Lewee.Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Sample.Restaurant.Domain;
@@ -21,19 +22,19 @@ public sealed class UseTableCommand : ICommand, ITableRequest
 
     internal class UseTableCommandHandler : IRequestHandler<UseTableCommand, CommandResult>
     {
-        private readonly IRestaurantDbContext dbContext;
+        private readonly IRepository<Table> repository;
         private readonly ILogger logger;
 
-        public UseTableCommandHandler(IRestaurantDbContext dbContext, ILogger logger)
+        public UseTableCommandHandler(IRepository<Table> repository, ILogger logger)
         {
-            this.dbContext = dbContext;
+            this.repository = repository;
             this.logger = logger.ForContext<UseTableCommandHandler>();
         }
 
         public async Task<CommandResult> Handle(UseTableCommand request, CancellationToken cancellationToken)
         {
-            var table = await this.dbContext
-                .AggregateRoot<Table>()
+            var table = await this.repository
+                .All()
                 .Where(x => x.TableNumber == request.TableNumber)
                 .Include(x => x.Orders)
                 .FirstOrDefaultAsync(cancellationToken);
@@ -45,7 +46,7 @@ public sealed class UseTableCommand : ICommand, ITableRequest
 
             table.Use(request.CorrelationId);
 
-            await this.dbContext.SaveChangesAsync(cancellationToken);
+            await this.repository.SaveChanges(cancellationToken);
 
             this.logger.Information("Table is in use and is no longer available");
 

@@ -1,5 +1,6 @@
 ﻿using Lewee.Application.Mediation;
 using Lewee.Application.Mediation.Responses;
+using Lewee.Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Sample.Restaurant.Domain;
@@ -22,19 +23,21 @@ public class AddMenuItemCommand : ICommand, ITableRequest
 
     internal class AddMenuItemCommandHandler : IRequestHandler<AddMenuItemCommand, CommandResult>
     {
-        private readonly IRestaurantDbContext dbContext;
+        private readonly IRepository<Table> tableRepository;
+        private readonly IRepository<MenuItem> menuItemRepository;
         private readonly ILogger logger;
 
-        public AddMenuItemCommandHandler(IRestaurantDbContext dbContext, ILogger logger)
+        public AddMenuItemCommandHandler(IRepository<Table> tableRepository, IRepository<MenuItem> menuItemRepository, ILogger logger)
         {
-            this.dbContext = dbContext;
+            this.tableRepository = tableRepository;
+            this.menuItemRepository = menuItemRepository;
             this.logger = logger.ForContext<AddMenuItemCommandHandler>();
         }
 
         public async Task<CommandResult> Handle(AddMenuItemCommand request, CancellationToken cancellationToken)
         {
-            var table = await this.dbContext
-                .AggregateRoot<Table>()
+            var table = await this.tableRepository
+                .All()
                 .Where(x => x.TableNumber == request.TableNumber)
                 .Include(x => x.Orders)
                 .ThenInclude(x => x.Items)
@@ -45,8 +48,8 @@ public class AddMenuItemCommand : ICommand, ITableRequest
                 return CommandResult.Fail(ResultStatus.NotFound, "Table not found");
             }
 
-            var menuItem = await this.dbContext
-                .AggregateRoot<MenuItem>()
+            var menuItem = await this.menuItemRepository
+                .All()
                 .FirstOrDefaultAsync(x => x.Id == request.MenuItemId, cancellationToken);
 
             if (menuItem == null)
@@ -56,7 +59,7 @@ public class AddMenuItemCommand : ICommand, ITableRequest
 
             table.OrderMenuItem(menuItem, request.CorrelationId);
 
-            await this.dbContext.SaveChangesAsync(cancellationToken);
+            await this.tableRepository.SaveChanges(cancellationToken);
 
             this.logger.Information("Menu Item {@MenuItem} added to table order", menuItem);
 

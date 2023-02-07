@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 namespace Lewee.Infrastructure.Data;
 
 internal class DomainEventSaveChangesInterceptor<TContext> : SaveChangesInterceptor
-    where TContext : DbContext, IDbContext
+    where TContext : DbContext, IApplicationDbContext
 {
     public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
     {

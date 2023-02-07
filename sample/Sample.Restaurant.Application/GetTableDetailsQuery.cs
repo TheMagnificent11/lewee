@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Lewee.Application.Mediation;
+﻿using Lewee.Application.Mediation;
 using Lewee.Application.Mediation.Responses;
+using Lewee.Domain;
 using MapsterMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -26,21 +22,27 @@ public sealed class GetTableDetailsQuery : IQuery<QueryResult<TableDetailsDto>>
 
     internal class GetTableDetailsQueryHandler : IRequestHandler<GetTableDetailsQuery, QueryResult<TableDetailsDto>>
     {
-        private readonly IRestaurantDbContext dbContext;
+        private readonly IRepository<Table> tableRepository;
+        private readonly IRepository<MenuItem> menuItemRepository;
         private readonly IMapper mapper;
         private readonly ILogger logger;
 
-        public GetTableDetailsQueryHandler(IRestaurantDbContext dbContext, IMapper mapper, ILogger logger)
+        public GetTableDetailsQueryHandler(
+            IRepository<Table> tableRepository,
+            IRepository<MenuItem> menuItemRepository,
+            IMapper mapper,
+            ILogger logger)
         {
-            this.dbContext = dbContext;
+            this.tableRepository = tableRepository;
+            this.menuItemRepository = menuItemRepository;
             this.mapper = mapper;
             this.logger = logger.ForContext<GetTableDetailsQueryHandler>();
         }
 
         public async Task<QueryResult<TableDetailsDto>> Handle(GetTableDetailsQuery request, CancellationToken cancellationToken)
         {
-            var table = await this.dbContext
-                .AggregateRoot<Table>()
+            var table = await this.tableRepository
+                .All()
                 .Include(x => x.Orders)
                 .ThenInclude(x => x.Items)
                 .FirstOrDefaultAsync(x => x.TableNumber == request.TableNumber, cancellationToken);
@@ -53,8 +55,8 @@ public sealed class GetTableDetailsQuery : IQuery<QueryResult<TableDetailsDto>>
 
             var tableDto = this.mapper.Map<TableDto>(table);
 
-            var menuItems = await this.dbContext
-                .AggregateRoot<MenuItem>()
+            var menuItems = await this.menuItemRepository
+                .All()
                 .OrderBy(x => x.ItemTypeId)
                 .ThenBy(x => x.Name)
                 .ToListAsync(cancellationToken);

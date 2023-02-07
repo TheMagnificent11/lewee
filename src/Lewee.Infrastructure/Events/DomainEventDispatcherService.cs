@@ -5,7 +5,7 @@ using Microsoft.Extensions.Hosting;
 namespace Lewee.Infrastructure.Events;
 
 internal class DomainEventDispatcherService<TContext> : BackgroundService
-    where TContext : DbContext, IDbContext
+    where TContext : DbContext, IApplicationDbContext
 {
     public DomainEventDispatcherService(DomainEventDispatcher<TContext> domainEventDispatcher)
     {

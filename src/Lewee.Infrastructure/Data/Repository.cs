@@ -6,31 +6,39 @@ namespace Lewee.Infrastructure.Data;
 /// <summary>
 /// Base Repository
 /// </summary>
-/// <typeparam name="T">Entity type</typeparam>
-public class Repository<T> : IRepository<T>
-    where T : class, IEntity
+/// <typeparam name="TAggregate">Aggregate root type</typeparam>
+/// <typeparam name="TContext">Databae context type</typeparam>
+public class Repository<TAggregate, TContext> : IRepository<TAggregate>
+    where TAggregate : class, IAggregateRoot
+    where TContext : DbContext
 {
     private readonly DbContext context;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="Repository{T}"/> class
+    /// Initializes a new instance of the <see cref="Repository{TAggregate, TContext}"/> class
     /// </summary>
     /// <param name="context">Database context</param>
-    public Repository(DbContext context)
+    public Repository(TContext context)
     {
         this.context = context;
     }
 
     /// <inheritdoc />
-    public IQueryable<T> All()
+    public IQueryable<TAggregate> All()
     {
-        return this.context.Set<T>();
+        return this.context.Set<TAggregate>();
     }
 
     /// <inheritdoc />
-    public Task<T?> RetrieveById(Guid id)
+    public Task<TAggregate?> RetrieveById(Guid id)
     {
         return this.All()
             .SingleOrDefaultAsync(x => x.Id == id);
+    }
+
+    /// <inheritdoc/>
+    public Task<int> SaveChanges(CancellationToken cancellationToken = default)
+    {
+        return this.context.SaveChangesAsync(cancellationToken);
     }
 }

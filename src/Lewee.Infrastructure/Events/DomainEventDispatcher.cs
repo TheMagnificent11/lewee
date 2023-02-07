@@ -7,7 +7,7 @@ using Serilog;
 namespace Lewee.Infrastructure.Events;
 
 internal class DomainEventDispatcher<TContext>
-    where TContext : DbContext, IDbContext
+    where TContext : DbContext, IApplicationDbContext
 {
     private const int BatchSize = 50;
 

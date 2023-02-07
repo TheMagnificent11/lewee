@@ -11,8 +11,8 @@ namespace Lewee.Infrastructure.Data;
 /// <typeparam name="TContext">
 /// The type of this database context
 /// </typeparam>
-public abstract class BaseApplicationDbContext<TContext> : DbContext, IDbContext
-    where TContext : DbContext, IDbContext
+public abstract class BaseApplicationDbContext<TContext> : DbContext, IApplicationDbContext
+    where TContext : DbContext, IApplicationDbContext
 {
     private readonly IAuthenticatedUserService authenticatedUserService;
 
@@ -38,15 +38,8 @@ public abstract class BaseApplicationDbContext<TContext> : DbContext, IDbContext
     /// </summary>
     public virtual string Schema { get; } = "dbo";
 
-    /// <inheritdoc />
-    public DbSet<DomainEventReference>? DomainEventReferences { get; protected set; }
-
-    /// <inheritdoc />
-    public IQueryable<T> AggregateRoot<T>()
-        where T : class, IAggregateRoot
-    {
-        return this.Set<T>();
-    }
+    /// <inheritdoc/>
+    public DbSet<DomainEventReference>? DomainEventReferences { get; internal set; }
 
     /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder modelBuilder)

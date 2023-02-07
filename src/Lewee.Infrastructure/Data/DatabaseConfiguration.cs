@@ -1,5 +1,4 @@
-﻿using Lewee.Application.Data;
-using Lewee.Infrastructure.Events;
+﻿using Lewee.Infrastructure.Events;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,12 +11,9 @@ namespace Lewee.Infrastructure.Data;
 public static class DatabaseConfiguration
 {
     /// <summary>
-    /// Configures the domain database related to the <typeparamref name="TImplementation"/> database context
+    /// Configures the domain database related to the <typeparamref name="T"/> database context
     /// </summary>
-    /// <typeparam name="TService">
-    /// Database context interface
-    /// </typeparam>
-    /// <typeparam name="TImplementation">
+    /// <typeparam name="T">
     /// Database context type
     /// </typeparam>
     /// <param name="services">
@@ -29,17 +25,19 @@ public static class DatabaseConfiguration
     /// <returns>
     /// Services collection for chaining
     /// </returns>
-    public static IServiceCollection ConfigureDatabase<TService, TImplementation>(
+    public static IServiceCollection ConfigureDatabase<T>(
         this IServiceCollection services,
         string connectionString)
-        where TService : class, IDbContext
-        where TImplementation : BaseApplicationDbContext<TImplementation>, TService
+        where T : BaseApplicationDbContext<T>
     {
-        services.AddDbContextFactory<TImplementation>(options => options.UseSqlServer(connectionString));
-        services.AddScoped<TService>(provider => provider.GetRequiredService<TImplementation>());
+        services.AddDbContextFactory<T>(options => options.UseSqlServer(connectionString));
+        services.AddScoped<T>();
 
-        services.AddSingleton<DomainEventDispatcher<TImplementation>>();
-        services.AddHostedService<DomainEventDispatcherService<TImplementation>>();
+        // TODO: figure out how to register each IRepository<TAggregateRoot> with an implementation of Repository<Repository<, T, T>
+        ////services.AddTransient(typeof(IRepository<>), typeof(Repository<, T>));
+
+        services.AddSingleton<DomainEventDispatcher<T>>();
+        services.AddHostedService<DomainEventDispatcherService<T>>();
 
         return services;
     }

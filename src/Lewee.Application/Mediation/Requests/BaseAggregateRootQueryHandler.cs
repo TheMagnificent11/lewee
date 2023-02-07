@@ -1,5 +1,4 @@
-﻿using Lewee.Application.Data;
-using Lewee.Application.Mediation.Responses;
+﻿using Lewee.Application.Mediation.Responses;
 using Lewee.Domain;
 using MapsterMapper;
 using MediatR;
@@ -20,20 +19,20 @@ public abstract class BaseAggregateRootQueryHandler<TAggregate, TDto> : IRequest
     /// <summary>
     /// Initializes a new instance of the <see cref="BaseAggregateRootQueryHandler{TAggregate, TDto}"/> class
     /// </summary>
-    /// <param name="dbContext">Database context</param>
+    /// <param name="repository">Repository</param>
     /// <param name="mapper">Mapper</param>
     /// <param name="logger">Logger</param>
-    protected BaseAggregateRootQueryHandler(IDbContext dbContext, IMapper mapper, ILogger logger)
+    protected BaseAggregateRootQueryHandler(IRepository<TAggregate> repository, IMapper mapper, ILogger logger)
     {
-        this.DbContext = dbContext;
+        this.Repository = repository;
         this.Mapper = mapper;
         this.Logger = logger;
     }
 
     /// <summary>
-    /// Gets the database context
+    /// Gets the repository
     /// </summary>
-    protected IDbContext DbContext { get; }
+    protected IRepository<TAggregate> Repository { get; }
 
     /// <summary>
     /// Gets the mapper
@@ -48,7 +47,7 @@ public abstract class BaseAggregateRootQueryHandler<TAggregate, TDto> : IRequest
     /// <inheritdoc />
     public async Task<QueryResult<IEnumerable<TDto>>> Handle(AggregateRootQuery<TAggregate, TDto> request, CancellationToken cancellationToken)
     {
-        var entities = await this.ApplyFilter(this.DbContext.AggregateRoot<TAggregate>())
+        var entities = await this.ApplyFilter(this.Repository.All())
             .ToArrayAsync(cancellationToken);
 
         var dtos = this.MapToDataTransferObjects(entities);

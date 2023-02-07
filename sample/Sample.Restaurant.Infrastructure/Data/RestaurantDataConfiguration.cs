@@ -1,0 +1,17 @@
+﻿using Lewee.Domain;
+using Lewee.Infrastructure.Data;
+using Microsoft.Extensions.DependencyInjection;
+using Sample.Restaurant.Domain;
+
+namespace Sample.Restaurant.Infrastructure.Data;
+
+public static class RestaurantDataConfiguration
+{
+    public static IServiceCollection ConfigureRestaurantData(this IServiceCollection services)
+    {
+        services.AddTransient<IRepository<Table>, Repository<Table, RestaurantDbContext>>();
+        services.AddTransient<IRepository<MenuItem>, Repository<MenuItem, RestaurantDbContext>>();
+
+        return services;
+    }
+}

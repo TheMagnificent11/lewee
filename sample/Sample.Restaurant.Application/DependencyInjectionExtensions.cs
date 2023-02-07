@@ -7,7 +7,7 @@ public static class DependencyInjectionExtensions
 {
     public static IServiceCollection AddRestaurantApplication(this IServiceCollection services)
     {
-        services.AddApplication(typeof(IRestaurantDbContext).Assembly);
+        services.AddApplication(typeof(TableDto).Assembly);
         services.AddPipelineBehaviors(typeof(TableLoggingBehavior<,>));
 
         return services;

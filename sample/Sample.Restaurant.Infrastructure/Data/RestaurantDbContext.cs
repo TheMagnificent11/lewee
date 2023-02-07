@@ -1,13 +1,12 @@
 ﻿using Lewee.Application.Auth;
 using Lewee.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using Sample.Restaurant.Application;
 using Sample.Restaurant.Domain;
 using Sample.Restaurant.Infrastructure.Data.Configuration;
 
 namespace Sample.Restaurant.Infrastructure.Data;
 
-public class RestaurantDbContext : BaseApplicationDbContext<RestaurantDbContext>, IRestaurantDbContext
+public class RestaurantDbContext : BaseApplicationDbContext<RestaurantDbContext>
 {
     public RestaurantDbContext(
         DbContextOptions<RestaurantDbContext> options,

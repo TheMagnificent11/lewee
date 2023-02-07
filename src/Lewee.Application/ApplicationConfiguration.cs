@@ -10,9 +10,9 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Lewee.Application;
 
 /// <summary>
-/// Dependency Injection Extensions
+/// Application Configuration
 /// </summary>
-public static class DependencyInjectionExtensions
+public static class ApplicationConfiguration
 {
     /// <summary>
     /// Adds application dependencies

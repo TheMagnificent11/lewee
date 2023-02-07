@@ -1,5 +1,6 @@
 ﻿using Lewee.Application.Mediation;
 using Lewee.Application.Mediation.Responses;
+using Lewee.Domain;
 using MapsterMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -18,19 +19,19 @@ public sealed class GetTablesQuery : IQuery<QueryResult<IEnumerable<TableDto>>>
 
     internal class GetTablesQueryHandler : IRequestHandler<GetTablesQuery, QueryResult<IEnumerable<TableDto>>>
     {
-        private readonly IRestaurantDbContext dbContext;
+        private readonly IRepository<Table> repository;
         private readonly IMapper mapper;
 
-        public GetTablesQueryHandler(IRestaurantDbContext dbContext, IMapper mapper)
+        public GetTablesQueryHandler(IRepository<Table> dbContext, IMapper mapper)
         {
-            this.dbContext = dbContext;
+            this.repository = dbContext;
             this.mapper = mapper;
         }
 
         public async Task<QueryResult<IEnumerable<TableDto>>> Handle(GetTablesQuery request, CancellationToken cancellationToken)
         {
-            var entites = await this.dbContext
-                .AggregateRoot<Table>()
+            var entites = await this.repository
+                .All()
                 .OrderBy(x => x.TableNumber)
                 .ToArrayAsync(cancellationToken);
 

@@ -25,7 +25,8 @@ builder.Host.ConfigureLogging(appSettings, seqSettings);
 builder.Services.AddMapper();
 
 builder.Services
-    .ConfigureDatabase<IRestaurantDbContext, RestaurantDbContext>(connectionString)
+    .ConfigureDatabase<RestaurantDbContext>(connectionString)
+    .ConfigureRestaurantData() // TODO: ideally this would not be needed if IRepository would be registered globally
     .ConfigureAuthenticatedUserService()
     .AddRestaurantApplication()
     /* .ConfigureServiceBusPublisher(serviceBusSettings) */
