@@ -2,6 +2,6 @@
 
 public class OrderItemDto
 {
-    public MenuItemDto MenuItem { get; set; } = new MenuItemDto();
+    public MenuItemDto MenuItem { get; set; } = new();
     public int Quantity { get; set; }
 }
