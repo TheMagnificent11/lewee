@@ -11,8 +11,9 @@ public interface IRepository<T>
     /// Retrieves the entity with ID <paramref name="id"/>
     /// </summary>
     /// <param name="id">ID of entity to retrieve</param>
+    /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>An async task that contains the entity if it exist, otherwise the task contains null</returns>
-    Task<T?> RetrieveById(Guid id);
+    Task<T?> RetrieveById(Guid id, CancellationToken cancellationToken);
 
     /// <summary>
     /// Gets an <see cref="IQueryable{T}"/> of all entities

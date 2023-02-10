@@ -26,8 +26,8 @@ builder.Services.AddMapper();
 
 builder.Services
     .ConfigureDatabase<RestaurantDbContext>(connectionString)
-    .ConfigureRestaurantData() // TODO: ideally this would not be needed if IRepository would be registered globally
     .ConfigureAuthenticatedUserService()
+    .ConfigureRestaurantData() // TODO: ideally this would not be needed if IRepository would be registered globally
     .AddRestaurantApplication()
     /* .ConfigureServiceBusPublisher(serviceBusSettings) */
     .AddDatabaseDeveloperPageExceptionFilter();

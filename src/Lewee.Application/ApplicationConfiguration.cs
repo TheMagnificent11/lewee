@@ -19,10 +19,11 @@ public static class ApplicationConfiguration
     /// </summary>
     /// <param name="services">Service collection</param>
     /// <param name="applicationAssembly">Application assembly</param>
+    /// <param name="domainAssembly">Domain assembly</param>
     /// <returns>Service collection (for chaining)</returns>
-    public static IServiceCollection AddApplication(this IServiceCollection services, Assembly applicationAssembly)
+    public static IServiceCollection AddApplication(this IServiceCollection services, Assembly applicationAssembly, Assembly domainAssembly)
     {
-        services.AddMediatR(applicationAssembly);
+        services.AddMediatR(applicationAssembly, domainAssembly);
         services.AddValidatorsFromAssembly(applicationAssembly, includeInternalTypes: true);
 
         return services;
@@ -65,7 +66,7 @@ public static class ApplicationConfiguration
     /// <returns>Mapster type addapter config</returns>
     public static TypeAdapterConfig AddMapper(this IServiceCollection services)
     {
-        services.AddScoped<IMapper, ServiceMapper>();
+        services.AddTransient<IMapper, ServiceMapper>();
 
         var config = new TypeAdapterConfig();
         services.AddSingleton(config);

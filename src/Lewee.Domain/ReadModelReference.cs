@@ -32,7 +32,7 @@ public class ReadModelReference : ISoftDeleteEntity
         this.ReadModelAssemblyName = string.Empty;
         this.ReadModelClassName = string.Empty;
         this.Key = string.Empty;
-        this.ReadModelJson = string.Empty;
+        this.ReadModelJson = "{}";
     }
 
     /// <summary>

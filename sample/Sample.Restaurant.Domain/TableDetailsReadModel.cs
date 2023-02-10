@@ -1,9 +1,12 @@
-﻿namespace Sample.Restaurant.Domain;
+﻿using Lewee.Domain;
 
-public class TableDetailsReadModel
+namespace Sample.Restaurant.Domain;
+
+public class TableDetailsReadModel : IReadModel
 {
+    public Guid CorrelationId { get; set; }
     public Guid Id { get; set; }
     public int TableNumber { get; set; }
     public bool IsInUse { get; set; }
-    public OrderItemReadModel[] Items { get; set; } = Array.Empty<OrderItemReadModel>();
+    public List<OrderItemReadModel> Items { get; set; } = new();
 }
