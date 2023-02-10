@@ -1,4 +1,5 @@
-﻿using Lewee.Infrastructure.Events;
+﻿using Lewee.Domain;
+using Lewee.Infrastructure.Events;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,6 +39,8 @@ public static class DatabaseConfiguration
 
         services.AddSingleton<DomainEventDispatcher<T>>();
         services.AddHostedService<DomainEventDispatcherService<T>>();
+
+        services.AddTransient<IReadModelService, ReadModelService<T>>();
 
         return services;
     }

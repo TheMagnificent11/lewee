@@ -12,4 +12,9 @@ public interface IApplicationDbContext
     /// Gets the domain event references database set
     /// </summary>
     DbSet<DomainEventReference>? DomainEventReferences { get; }
+
+    /// <summary>
+    /// Gets the read model references database set
+    /// </summary>
+    DbSet<ReadModelReference>? ReadModelReferences { get; }
 }

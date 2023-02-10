@@ -4,17 +4,8 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Lewee.Infrastructure.Data;
 
-/// <summary>
-/// Domain Event Reference Configuration
-/// </summary>
-public class DomainEventReferenceConfiguration : IEntityTypeConfiguration<DomainEventReference>
+internal class DomainEventReferenceConfiguration : IEntityTypeConfiguration<DomainEventReference>
 {
-    /// <summary>
-    /// Configures the DomainEventReferences database table
-    /// </summary>
-    /// <param name="builder">
-    /// Configuration builder
-    /// </param>
     public void Configure(EntityTypeBuilder<DomainEventReference> builder)
     {
         builder.HasKey(x => x.Id);

@@ -41,6 +41,9 @@ public abstract class BaseApplicationDbContext<TContext> : DbContext, IApplicati
     /// <inheritdoc/>
     public DbSet<DomainEventReference>? DomainEventReferences { get; internal set; }
 
+    /// <inheritdoc/>
+    public DbSet<ReadModelReference>? ReadModelReferences { get; internal set; }
+
     /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -49,6 +52,7 @@ public abstract class BaseApplicationDbContext<TContext> : DbContext, IApplicati
         modelBuilder.HasDefaultSchema(this.Schema);
 
         modelBuilder.ApplyConfiguration(new DomainEventReferenceConfiguration());
+        modelBuilder.ApplyConfiguration(new ReadModelReferenceConfiguration());
 
         this.ConfigureDatabaseModel(modelBuilder);
     }

@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using System.Text.Json;
+using Lewee.Shared;
 
 namespace Lewee.Domain;
 
@@ -19,7 +20,7 @@ public class DomainEventReference
     /// </exception>
     public DomainEventReference(IDomainEvent domainEvent)
     {
-        var (assemblyName, fullClassName, domainEventType) = domainEvent.GetAssemblyInfo("Invalid domain event type");
+        var (assemblyName, fullClassName, domainEventType) = domainEvent.GetBasicTypeInfo("Invalid domain event type");
 
         this.Id = Guid.NewGuid();
         this.DomainEventAssemblyName = assemblyName;
@@ -32,7 +33,6 @@ public class DomainEventReference
     // EF constructor
     private DomainEventReference()
     {
-        this.Id = Guid.NewGuid();
         this.DomainEventAssemblyName = string.Empty;
         this.DomainEventClassName = string.Empty;
         this.DomainEventJson = "{}";
