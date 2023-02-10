@@ -1,4 +1,6 @@
-﻿namespace Lewee.Domain;
+﻿using System.Text.Json;
+
+namespace Lewee.Domain;
 
 /// <summary>
 /// Read Model Reference
@@ -8,28 +10,38 @@ public class ReadModelReference : ISoftDeleteEntity
     /// <summary>
     /// Initializes a new instance of the <see cref="ReadModelReference"/> class
     /// </summary>
-    /// <param name="type">Read model type</param>
+    /// <param name="readModel">Read model</param>
     /// <param name="key">Read model key</param>
-    /// <param name="readModelJson">The JSON representation of the read model</param>
-    public ReadModelReference(string type, string key, string readModelJson)
+    public ReadModelReference(IReadModel readModel, string key)
     {
-        this.Type = type;
+        var (assemblyName, fullCalssName, readModelType) = readModel.GetAssemblyInfo("Invalid read model type");
+
         this.Key = key;
-        this.ReadModelJson = readModelJson;
+        this.ReadModelAssemblyName = assemblyName;
+        this.ReadModelClassName = fullCalssName;
+        this.ReadModelJson = JsonSerializer.Serialize(readModel, readModelType);
+        this.CreatedAtUtc = DateTime.UtcNow;
+        this.ModifiedAtUtc = this.CreatedAtUtc;
     }
 
     // EF constructor
     private ReadModelReference()
     {
-        this.Type = string.Empty;
+        this.ReadModelAssemblyName = string.Empty;
+        this.ReadModelClassName = string.Empty;
         this.Key = string.Empty;
         this.ReadModelJson = string.Empty;
     }
 
     /// <summary>
-    /// Gets the read model type
+    /// Gets the read model assembly name
     /// </summary>
-    public string Type { get; }
+    public string ReadModelAssemblyName { get; }
+
+    /// <summary>
+    /// Gets the read model class name
+    /// </summary>
+    public string ReadModelClassName { get; }
 
     /// <summary>
     /// Gets the read model key

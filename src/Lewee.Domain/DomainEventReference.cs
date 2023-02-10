@@ -19,25 +19,11 @@ public class DomainEventReference
     /// </exception>
     public DomainEventReference(IDomainEvent domainEvent)
     {
-        var domainEventType = domainEvent.GetType();
-
-        if (domainEventType == null
-            || domainEventType.Assembly == null
-            || domainEventType.FullName == null)
-        {
-            throw new InvalidOperationException("Invalid domain event type");
-        }
-
-        var assemblyName = domainEventType.Assembly.GetName();
-
-        if (assemblyName == null || assemblyName.Name == null)
-        {
-            throw new InvalidOperationException("Invalid domain event type");
-        }
+        var (assemblyName, fullClassName, domainEventType) = domainEvent.GetAssemblyInfo("Invalid domain event type");
 
         this.Id = Guid.NewGuid();
-        this.DomainEventAssemblyName = assemblyName.Name;
-        this.DomainEventClassName = domainEventType.FullName;
+        this.DomainEventAssemblyName = assemblyName;
+        this.DomainEventClassName = fullClassName;
         this.DomainEventJson = JsonSerializer.Serialize(domainEvent, domainEventType);
         this.PersistedAt = DateTime.UtcNow;
         this.Dispatched = false;

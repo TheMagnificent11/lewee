@@ -1,11 +1,9 @@
-﻿using MediatR;
-
-namespace Lewee.Domain;
+﻿namespace Lewee.Domain;
 
 /// <summary>
-/// Domain Event Interface
+/// Read Model Interface
 /// </summary>
-public interface IDomainEvent : INotification
+public interface IReadModel
 {
     /// <summary>
     /// Gets the correlation ID of the event
