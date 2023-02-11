@@ -20,12 +20,6 @@ internal class ReadModelService<TContext> : IReadModelService
         using (var context = this.dbContextFactory.CreateDbContext())
         {
             var exisiting = await Retrieve<T>(key, context, cancellationToken);
-
-            if (exisiting != null)
-            {
-                return null;
-            }
-
             if (exisiting == null)
             {
                 return null;
@@ -72,13 +66,13 @@ internal class ReadModelService<TContext> : IReadModelService
             throw new InvalidOperationException("Invalid DB context");
         }
 
-        var assemblyName = type.Assembly.GetName();
+        var assemblyName = type.Assembly.GetName().Name;
         var className = type.FullName;
 
         return await context.ReadModelReferences
-            .Where(x => x.ReadModelAssemblyName.Equals(assemblyName))
-            .Where(x => x.ReadModelClassName.Equals(className))
-            .Where(x => x.Key.Equals(key))
+            .Where(x => x.ReadModelAssemblyName == assemblyName)
+            .Where(x => x.ReadModelClassName == className)
+            .Where(x => x.Key == key)
             .FirstOrDefaultAsync(cancellationToken);
     }
 }
