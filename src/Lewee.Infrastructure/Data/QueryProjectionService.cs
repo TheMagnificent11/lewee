@@ -4,18 +4,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Lewee.Infrastructure.Data;
 
-internal class ReadModelService<TContext> : IReadModelService
+internal class QueryProjectionService<TContext> : IQueryProjectionService
     where TContext : DbContext, IApplicationDbContext
 {
     private readonly IDbContextFactory<TContext> dbContextFactory;
 
-    public ReadModelService(IDbContextFactory<TContext> dbContextFactory)
+    public QueryProjectionService(IDbContextFactory<TContext> dbContextFactory)
     {
         this.dbContextFactory = dbContextFactory;
     }
 
     public async Task<T?> RetrieveByKey<T>(string key, CancellationToken cancellationToken)
-        where T : class, IReadModel
+        where T : class, IQueryProjection
     {
         using (var context = this.dbContextFactory.CreateDbContext())
         {
@@ -25,12 +25,12 @@ internal class ReadModelService<TContext> : IReadModelService
                 return null;
             }
 
-            return exisiting.ToReadModel() as T;
+            return exisiting.ToQueryProjection() as T;
         }
     }
 
     public async Task AddOrUpdate<T>(T readModel, string key, CancellationToken cancellationToken)
-        where T : class, IReadModel
+        where T : class, IQueryProjection
     {
         using (var context = this.dbContextFactory.CreateDbContext())
         {
@@ -38,8 +38,8 @@ internal class ReadModelService<TContext> : IReadModelService
 
             if (existing == null)
             {
-                var newReference = new ReadModelReference(readModel, key);
-                context.ReadModelReferences?.Add(newReference);
+                var newReference = new QueryProjectionReference(readModel, key);
+                context.QueryProjectionReferences?.Add(newReference);
 
                 await context.SaveChangesAsync(cancellationToken);
 
@@ -52,8 +52,8 @@ internal class ReadModelService<TContext> : IReadModelService
         }
     }
 
-    private static async Task<ReadModelReference?> Retrieve<T>(string key, TContext context, CancellationToken cancellationToken)
-        where T : class, IReadModel
+    private static async Task<QueryProjectionReference?> Retrieve<T>(string key, TContext context, CancellationToken cancellationToken)
+        where T : class, IQueryProjection
     {
         var type = typeof(T);
         if (type == null)
@@ -61,7 +61,7 @@ internal class ReadModelService<TContext> : IReadModelService
             throw new InvalidOperationException("Invalid read model type");
         }
 
-        if (context == null || context.ReadModelReferences == null)
+        if (context == null || context.QueryProjectionReferences == null)
         {
             throw new InvalidOperationException("Invalid DB context");
         }
@@ -69,9 +69,9 @@ internal class ReadModelService<TContext> : IReadModelService
         var assemblyName = type.Assembly.GetName().Name;
         var className = type.FullName;
 
-        return await context.ReadModelReferences
-            .Where(x => x.ReadModelAssemblyName == assemblyName)
-            .Where(x => x.ReadModelClassName == className)
+        return await context.QueryProjectionReferences
+            .Where(x => x.QueryProjectionAssemblyName == assemblyName)
+            .Where(x => x.QueryProjectionClassName == className)
             .Where(x => x.Key == key)
             .FirstOrDefaultAsync(cancellationToken);
     }

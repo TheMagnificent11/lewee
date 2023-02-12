@@ -40,7 +40,7 @@ public static class DatabaseConfiguration
         services.AddSingleton<DomainEventDispatcher<T>>();
         services.AddHostedService<DomainEventDispatcherService<T>>();
 
-        services.AddTransient<IReadModelService, ReadModelService<T>>();
+        services.AddTransient<IQueryProjectionService, QueryProjectionService<T>>();
 
         return services;
     }

@@ -14,7 +14,7 @@ public interface IApplicationDbContext
     DbSet<DomainEventReference>? DomainEventReferences { get; }
 
     /// <summary>
-    /// Gets the read model references database set
+    /// Gets the query projection references database set
     /// </summary>
-    DbSet<ReadModelReference>? ReadModelReferences { get; }
+    DbSet<QueryProjectionReference>? QueryProjectionReferences { get; }
 }

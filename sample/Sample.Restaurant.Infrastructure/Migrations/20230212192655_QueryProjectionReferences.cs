@@ -1,25 +1,26 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Sample.Restaurant.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class ReadModelReferences : Migration
+    public partial class QueryProjectionReferences : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "ReadModelReferences",
+                name: "QueryProjectionReferences",
                 schema: "res",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ReadModelAssemblyName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    ReadModelClassName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    QueryProjectionAssemblyName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    QueryProjectionClassName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Key = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    ReadModelJson = table.Column<string>(type: "nvarchar(max)", maxLength: 8000, nullable: false),
+                    QueryProjectionJson = table.Column<string>(type: "nvarchar(max)", maxLength: 8000, nullable: false),
                     CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
@@ -27,14 +28,14 @@ namespace Sample.Restaurant.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ReadModelReferences", x => x.Id);
+                    table.PrimaryKey("PK_QueryProjectionReferences", x => x.Id);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ReadModelReferences_ReadModelAssemblyName_ReadModelClassName_Key",
+                name: "IX_QueryProjectionReferences_QueryProjectionAssemblyName_QueryProjectionClassName_Key",
                 schema: "res",
-                table: "ReadModelReferences",
-                columns: new[] { "ReadModelAssemblyName", "ReadModelClassName", "Key" },
+                table: "QueryProjectionReferences",
+                columns: new[] { "QueryProjectionAssemblyName", "QueryProjectionClassName", "Key" },
                 unique: true);
         }
 
@@ -42,7 +43,7 @@ namespace Sample.Restaurant.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ReadModelReferences",
+                name: "QueryProjectionReferences",
                 schema: "res");
         }
     }

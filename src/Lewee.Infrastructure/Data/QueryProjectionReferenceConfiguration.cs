@@ -4,17 +4,17 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Lewee.Infrastructure.Data;
 
-internal class ReadModelReferenceConfiguration : IEntityTypeConfiguration<ReadModelReference>
+internal class QueryProjectionReferenceConfiguration : IEntityTypeConfiguration<QueryProjectionReference>
 {
-    public void Configure(EntityTypeBuilder<ReadModelReference> builder)
+    public void Configure(EntityTypeBuilder<QueryProjectionReference> builder)
     {
         builder.HasKey(x => x.Id);
 
-        builder.Property(x => x.ReadModelAssemblyName)
+        builder.Property(x => x.QueryProjectionAssemblyName)
             .HasMaxLength(255)
             .IsRequired();
 
-        builder.Property(x => x.ReadModelClassName)
+        builder.Property(x => x.QueryProjectionClassName)
             .HasMaxLength(255)
             .IsRequired();
 
@@ -22,7 +22,7 @@ internal class ReadModelReferenceConfiguration : IEntityTypeConfiguration<ReadMo
             .HasMaxLength(255)
             .IsRequired();
 
-        builder.Property(x => x.ReadModelJson)
+        builder.Property(x => x.QueryProjectionJson)
             .HasMaxLength(8000)
             .IsRequired();
 
@@ -38,7 +38,7 @@ internal class ReadModelReferenceConfiguration : IEntityTypeConfiguration<ReadMo
         builder.Property(x => x.Timestamp)
             .IsRowVersion();
 
-        builder.HasIndex(x => new { x.ReadModelAssemblyName, x.ReadModelClassName, x.Key })
+        builder.HasIndex(x => new { x.QueryProjectionAssemblyName, x.QueryProjectionClassName, x.Key })
             .IsUnique();
 
         builder.HasQueryFilter(x => !x.IsDeleted);
