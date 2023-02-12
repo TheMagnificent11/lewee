@@ -50,6 +50,7 @@ public class Table : BaseAggregateRoot
         this.DomainEvents.Raise(new OrderItemAddedDomainEvent(
             correlationId,
             this.Id,
+            this.TableNumber,
             this.CurrentOrder.Id,
             menuItem.Id,
             menuItem.Price));
@@ -67,6 +68,7 @@ public class Table : BaseAggregateRoot
         this.DomainEvents.Raise(new OrderItemRemovedDomainEvent(
             correlationId,
             this.Id,
+            this.TableNumber,
             this.CurrentOrder.Id,
             menuItem.Id,
             menuItem.Price));
