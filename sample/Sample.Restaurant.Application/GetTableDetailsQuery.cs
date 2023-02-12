@@ -21,32 +21,32 @@ public sealed class GetTableDetailsQuery : IQuery<QueryResult<TableDetailsDto>>
 
     internal class GetTableDetailsQueryHandler : IRequestHandler<GetTableDetailsQuery, QueryResult<TableDetailsDto>>
     {
-        private readonly IReadModelService readModelService;
+        private readonly IQueryProjectionService queryProjectionService;
         private readonly IMapper mapper;
         private readonly ILogger logger;
 
         public GetTableDetailsQueryHandler(
-            IReadModelService readModelService,
+            IQueryProjectionService queryProjectionService,
             IMapper mapper,
             ILogger logger)
         {
-            this.readModelService = readModelService;
+            this.queryProjectionService = queryProjectionService;
             this.mapper = mapper;
             this.logger = logger.ForContext<GetTableDetailsQueryHandler>();
         }
 
         public async Task<QueryResult<TableDetailsDto>> Handle(GetTableDetailsQuery request, CancellationToken cancellationToken)
         {
-            var readModel = await this.readModelService.RetrieveByKey<TableDetailsReadModel>(
+            var projection = await this.queryProjectionService.RetrieveByKey<TableDetails>(
                 request.TableNumber.ToString(),
                 cancellationToken);
-            if (readModel == null)
+            if (projection == null)
             {
-                this.logger.Warning("Table read model does not exist");
+                this.logger.Error("Table read model does not exist");
                 return QueryResult<TableDetailsDto>.Fail(ResultStatus.NotFound, "Could not find details for the table");
             }
 
-            var dto = this.mapper.Map<TableDetailsDto>(readModel);
+            var dto = this.mapper.Map<TableDetailsDto>(projection);
 
             return QueryResult<TableDetailsDto>.Success(dto);
         }

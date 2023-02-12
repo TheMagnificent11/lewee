@@ -13,7 +13,7 @@ public class ReadModelReference : ISoftDeleteEntity
     /// </summary>
     /// <param name="readModel">Read model</param>
     /// <param name="key">Read model key</param>
-    public ReadModelReference(IReadModel readModel, string key)
+    public ReadModelReference(IQueryProjection readModel, string key)
     {
         var (assemblyName, fullCalssName, readModelType) = readModel.GetBasicTypeInfo("Invalid read model type");
 
@@ -79,10 +79,10 @@ public class ReadModelReference : ISoftDeleteEntity
     public byte[] Timestamp { get; protected set; } = default!;
 
     /// <summary>
-    /// Converts this <see cref="ReadModelReference"/> to a <see cref="IReadModel"/>
+    /// Converts this <see cref="ReadModelReference"/> to a <see cref="IQueryProjection"/>
     /// </summary>
-    /// <returns>A <see cref="IReadModel"/></returns>
-    public IReadModel? ToReadModel()
+    /// <returns>A <see cref="IQueryProjection"/></returns>
+    public IQueryProjection? ToReadModel()
     {
         if (string.IsNullOrWhiteSpace(this.ReadModelJson))
         {
@@ -99,14 +99,14 @@ public class ReadModelReference : ISoftDeleteEntity
 
         var readModel = JsonSerializer.Deserialize(this.ReadModelJson, targetType);
 
-        return readModel as IReadModel;
+        return readModel as IQueryProjection;
     }
 
     /// <summary>
     /// Updates the JSON
     /// </summary>
     /// <param name="readModel">New version of the read model</param>
-    public void UpdateJson(IReadModel readModel)
+    public void UpdateJson(IQueryProjection readModel)
     {
         this.ReadModelJson = JsonSerializer.Serialize(readModel, readModel.GetType());
         this.ModifiedAtUtc = DateTime.UtcNow;

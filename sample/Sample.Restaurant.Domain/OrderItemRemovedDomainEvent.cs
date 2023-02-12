@@ -7,12 +7,14 @@ public class OrderItemRemovedDomainEvent : IDomainEvent
     public OrderItemRemovedDomainEvent(
         Guid correlationId,
         Guid tableId,
+        int tableNumber,
         Guid orderId,
         Guid menuItemId,
         decimal price)
     {
         this.CorrelationId = correlationId;
         this.TableId = tableId;
+        this.TableNumber = tableNumber;
         this.OrderId = orderId;
         this.MenuItemId = menuItemId;
         this.Price = price;
@@ -20,6 +22,7 @@ public class OrderItemRemovedDomainEvent : IDomainEvent
 
     public Guid CorrelationId { get; }
     public Guid TableId { get; }
+    public int TableNumber { get; }
     public Guid OrderId { get; }
     public Guid MenuItemId { get; }
     public decimal Price { get; }
