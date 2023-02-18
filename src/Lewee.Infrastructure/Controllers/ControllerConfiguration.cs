@@ -15,14 +15,17 @@ public static class ControllerConfiguration
     /// <returns>Updated services collection</returns>
     public static IServiceCollection ConfigureControllers(this IServiceCollection services)
     {
-        services.AddControllers(options =>
-        {
-            options.Conventions.Add(new KebabCaseControllerModelConvention());
-        })
-        .AddJsonOptions(options =>
-        {
-            options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-        });
+        services
+            .AddControllers(options =>
+            {
+                options.Conventions.Add(new KebabCaseControllerModelConvention());
+            })
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            });
+
+        services.AddProblemDetails();
 
         return services;
     }

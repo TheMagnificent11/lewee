@@ -15,6 +15,7 @@ public static class ProblemDetailsConfiguration
     /// <param name="services">Services collection</param>
     public static void ConfigureProblemDetails(this IServiceCollection services)
     {
+        // TODO: this might not be needed
         services.Configure<ApiBehaviorOptions>(options =>
         {
             options.InvalidModelStateResponseFactory = context =>

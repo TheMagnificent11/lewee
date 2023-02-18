@@ -11,6 +11,11 @@ namespace Lewee.Infrastructure.Controllers;
 public abstract class BaseApiController : ControllerBase
 {
     /// <summary>
+    /// Application/JSON
+    /// </summary>
+    protected const string ApplicationJson = "application/json";
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="BaseApiController"/> class
     /// </summary>
     /// <param name="mediator">Mediator</param>

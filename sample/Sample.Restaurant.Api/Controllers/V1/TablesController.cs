@@ -6,6 +6,7 @@ using Sample.Restaurant.Application;
 namespace Sample.Restaurant.Api.Controllers.V1;
 
 [Route("api/v1/[controller]")]
+[Produces(ApplicationJson)]
 public sealed class TablesController : BaseApiController
 {
     public TablesController(IMediator mediator)
@@ -13,8 +14,8 @@ public sealed class TablesController : BaseApiController
     {
     }
 
-    [HttpGet]
-    [ProducesResponseType(200, Type = typeof(IEnumerable<TableDto>))]
+    [HttpGet(Name = "GetAll")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TableDto>))]
     public async Task<IActionResult> GetAll(CancellationToken cancellationToken = default)
     {
         var query = new GetTablesQuery(this.CorrelationId);
@@ -23,8 +24,8 @@ public sealed class TablesController : BaseApiController
         return result.ToActionResult();
     }
 
-    [HttpGet("{tableNumber}")]
-    [ProducesResponseType(200, Type = typeof(TableDetailsDto))]
+    [HttpGet("{tableNumber}", Name = "GetDetails")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TableDetailsDto))]
     public async Task<IActionResult> GetOne([FromRoute] int tableNumber, CancellationToken cancellationToken = default)
     {
         var query = new GetTableDetailsQuery(this.CorrelationId, tableNumber);
@@ -33,9 +34,9 @@ public sealed class TablesController : BaseApiController
         return result.ToActionResult();
     }
 
-    [HttpPut("{tableNumber}")]
-    [ProducesResponseType(200)]
-    [ProducesResponseType(404)]
+    [HttpPut("{tableNumber}", Name = "Use")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Use([FromRoute] int tableNumber, CancellationToken cancellationToken = default)
     {
         var command = new UseTableCommand(this.CorrelationId, tableNumber);
@@ -44,10 +45,10 @@ public sealed class TablesController : BaseApiController
         return result.ToActionResult();
     }
 
-    [HttpPut("{tableNumber}/menu-items/{menuItemId}")]
-    [ProducesResponseType(200)]
-    [ProducesResponseType(400, Type = typeof(ValidationProblemDetails))]
-    [ProducesResponseType(404)]
+    [HttpPut("{tableNumber}/menu-items/{menuItemId}", Name = "OrderMenuItem")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> AddToOrder(
         [FromRoute] int tableNumber,
         [FromRoute] Guid menuItemId,
