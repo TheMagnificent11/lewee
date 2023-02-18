@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using MassTransit;
-using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Lewee.Infrastructure.Events;
@@ -16,7 +15,9 @@ public static class ServiceBusConfiguration
     /// <param name="services">Services collection</param>
     /// <param name="settings">Service bus settings</param>
     /// <returns>Services collection for chaining</returns>
-    public static IServiceCollection ConfigureServiceBusPublisher(this IServiceCollection services, ServiceBusSettings settings)
+    public static IServiceCollection ConfigureServiceBusPublisher(
+        this IServiceCollection services,
+        ServiceBusSettings settings)
     {
         services.AddMassTransit(options =>
         {
@@ -31,7 +32,8 @@ public static class ServiceBusConfiguration
             }
         });
 
-        services.AddMediatR(typeof(ServiceBusSettings).Assembly); // adds ServiceBusEventHandler to publish events to bus
+        // adds ServiceBusEventHandler to publish events to bus
+        services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(ServiceBusSettings).Assembly));
 
         return services;
     }

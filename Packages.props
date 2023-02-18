@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <DOTNET_VERSION>7.0.1</DOTNET_VERSION>
-    <FLUENTVALIDATOR_VERSION>11.4.0</FLUENTVALIDATOR_VERSION>
-    <MEDIATR_VERSION>11.1.0</MEDIATR_VERSION>
+    <DOTNET_VERSION>7.0.3</DOTNET_VERSION>
+    <FLUENTVALIDATOR_VERSION>11.5.0</FLUENTVALIDATOR_VERSION>
     <COVERLET_VERSION>3.2.0</COVERLET_VERSION>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Update="coverlet.collector" Version="1.2.0" />
+    <PackageReference Update="coverlet.collector" Version="$(COVERLET_VERSION)" />
     <PackageReference Update="coverlet.msbuild" Version="$(COVERLET_VERSION)" />
-    <PackageReference Update="FluentAssertions" Version="6.8.0" />
+    <PackageReference Update="FluentAssertions" Version="6.10.0" />
     <PackageReference Update="FluentAssertions.Analyzers" Version="0.17.2" />
     <PackageReference Update="FluentValidation" Version="$(FLUENTVALIDATOR_VERSION)" />
     <PackageReference Update="FluentValidation.DependencyInjectionExtensions" Version="$(FLUENTVALIDATOR_VERSION)" />
@@ -17,9 +16,8 @@
     <PackageReference Update="Fluxor.Blazor.Web.ReduxDevTools" Version="5.7.0" />
     <PackageReference Update="Mapster" Version="7.3.0" />
     <PackageReference Update="Mapster.DependencyInjection" Version="1.0.0" />
-    <PackageReference Update="MassTransit.RabbitMQ" Version="8.0.10" />
-    <PackageReference Update="MediatR" Version="$(MEDIATR_VERSION)" />
-    <PackageReference Update="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" /><!-- Out-of-sync with property group version -->
+    <PackageReference Update="MassTransit.RabbitMQ" Version="8.0.12" />
+    <PackageReference Update="MediatR" Version="12.0.0" />
     <PackageReference Update="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="$(DOTNET_VERSION)" />
     <PackageReference Update="Microsoft.AspNetCore.OpenApi" Version="$(DOTNET_VERSION)" />
     <PackageReference Update="Microsoft.CodeAnalysis.NetAnalyzers" Version="7.0.0" /><!-- Out-of-sync with property group version -->
@@ -45,7 +43,7 @@
     <PackageReference Update="SerilogAnalyzer" Version="0.15.0" />
     <PackageReference Update="SerilogMetrics" Version="2.1.0" />
     <PackageReference Update="StyleCop.Analyzers" Version="1.1.118" />
-    <PackageReference Update="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <PackageReference Update="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Update="xunit" Version="2.4.2" />
     <PackageReference Update="xunit.analyzers" Version="1.1.0" />
     <PackageReference Update="xunit.runner.visualstudio" Version="2.4.5" />

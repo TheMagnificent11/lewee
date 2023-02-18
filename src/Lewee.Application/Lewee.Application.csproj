@@ -6,7 +6,6 @@
     <PackageReference Include="Mapster" />
     <PackageReference Include="Mapster.DependencyInjection" />
     <PackageReference Include="MediatR" />
-    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
     <PackageReference Include="Serilog" />
     <PackageReference Include="SerilogAnalyzer">

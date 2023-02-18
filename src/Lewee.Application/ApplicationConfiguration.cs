@@ -23,7 +23,7 @@ public static class ApplicationConfiguration
     /// <returns>Service collection (for chaining)</returns>
     public static IServiceCollection AddApplication(this IServiceCollection services, Assembly applicationAssembly, Assembly domainAssembly)
     {
-        services.AddMediatR(applicationAssembly, domainAssembly);
+        services.AddMediatR(config => config.RegisterServicesFromAssemblies(applicationAssembly, domainAssembly));
         services.AddValidatorsFromAssembly(applicationAssembly, includeInternalTypes: true);
 
         return services;
