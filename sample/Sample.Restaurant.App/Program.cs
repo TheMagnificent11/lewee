@@ -17,8 +17,6 @@ if (string.IsNullOrWhiteSpace(connectionString))
 
 var appSettings = builder.Configuration.GetSettings<ApplicationSettings>(nameof(ApplicationSettings));
 var seqSettings = builder.Configuration.GetSettings<SeqSettings>(nameof(SeqSettings));
-var migrateDatabases = builder.Configuration.GetValue<bool>("MigrateDatabases");
-/* var serviceBusSettings = builder.Configuration.GetSettings<ServiceBusSettings>(nameof(ServiceBusSettings)); */
 
 builder.Host.ConfigureLogging(appSettings, seqSettings);
 
@@ -29,7 +27,6 @@ builder.Services
     .ConfigureAuthenticatedUserService()
     .ConfigureRestaurantData() // TODO: ideally this would not be needed if IRepository would be registered globally
     .AddRestaurantApplication()
-    /* .ConfigureServiceBusPublisher(serviceBusSettings) */
     .AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddRazorPages();
@@ -68,10 +65,5 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
-
-if (migrateDatabases)
-{
-    app.MigrationDatabase<RestaurantDbContext>();
-}
 
 app.Run();
