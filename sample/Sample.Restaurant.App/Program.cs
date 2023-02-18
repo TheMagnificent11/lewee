@@ -1,40 +1,20 @@
 using Fluxor;
-using Lewee.Application;
-using Lewee.Infrastructure.Auth;
-using Lewee.Infrastructure.Data;
-using Lewee.Infrastructure.Logging;
-using Lewee.Infrastructure.Settings;
-using Sample.Restaurant.Application;
-using Sample.Restaurant.Infrastructure.Data;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Sample.Restaurant.App;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
-var connectionString = builder.Configuration.GetConnectionString("Sample.Restaurant");
-if (string.IsNullOrWhiteSpace(connectionString))
-{
-    throw new ApplicationException("Could not find database connection string");
-}
-
+/*
+ * TODO: https://github.com/nblumhardt/serilog-sinks-browserhttp
 var appSettings = builder.Configuration.GetSettings<ApplicationSettings>(nameof(ApplicationSettings));
 var seqSettings = builder.Configuration.GetSettings<SeqSettings>(nameof(SeqSettings));
 
 builder.Host.ConfigureLogging(appSettings, seqSettings);
+*/
 
-builder.Services.AddMapper();
-
-builder.Services
-    .ConfigureDatabase<RestaurantDbContext>(connectionString)
-    .ConfigureAuthenticatedUserService()
-    .ConfigureRestaurantData() // TODO: ideally this would not be needed if IRepository would be registered globally
-    .AddRestaurantApplication()
-    .AddDatabaseDeveloperPageExceptionFilter();
-
-builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
-
-builder.Services
-    .AddHealthChecks()
-    .AddDbContextCheck<RestaurantDbContext>();
+builder.RootComponents.Add<App>("#app");
+builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddFluxor(options =>
 {
@@ -45,25 +25,4 @@ builder.Services.AddFluxor(options =>
 #endif
 });
 
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseMigrationsEndPoint();
-}
-else
-{
-    app.UseExceptionHandler("/Error");
-
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
-
-app.UseHealthChecks("/health");
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-app.MapBlazorHub();
-app.MapFallbackToPage("/_Host");
-
-app.Run();
+await builder.Build().RunAsync();

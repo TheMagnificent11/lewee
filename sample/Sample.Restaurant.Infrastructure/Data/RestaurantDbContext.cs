@@ -1,4 +1,4 @@
-﻿using Lewee.Application.Auth;
+﻿using Lewee.Domain;
 using Lewee.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Sample.Restaurant.Domain;

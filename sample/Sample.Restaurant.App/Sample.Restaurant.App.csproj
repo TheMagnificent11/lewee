@@ -9,16 +9,12 @@
 
   <ItemGroup>
     <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" />
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" />
-    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Lewee.Fluxor\Lewee.Fluxor.csproj" />
-    <ProjectReference Include="..\..\src\Lewee.Infrastructure\Lewee.Infrastructure.csproj" />
-    <ProjectReference Include="..\Sample.Restaurant.Infrastructure\Sample.Restaurant.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Lewee.Infrastructure.AspNet\Lewee.Infrastructure.AspNet.csproj" />
   </ItemGroup>
 
 </Project>

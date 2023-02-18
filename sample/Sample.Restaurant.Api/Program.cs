@@ -1,9 +1,9 @@
 using Lewee.Application;
-using Lewee.Infrastructure.Auth;
-using Lewee.Infrastructure.Controllers;
+using Lewee.Infrastructure.AspNet.Auth;
+using Lewee.Infrastructure.AspNet.Logging;
+using Lewee.Infrastructure.AspNet.Settings;
+using Lewee.Infrastructure.AspNet.WebApi;
 using Lewee.Infrastructure.Data;
-using Lewee.Infrastructure.Logging;
-using Lewee.Infrastructure.Settings;
 using Sample.Restaurant.Application;
 using Sample.Restaurant.Infrastructure.Data;
 
