@@ -1,5 +1,6 @@
 using Lewee.Application;
 using Lewee.Infrastructure.Auth;
+using Lewee.Infrastructure.Controllers;
 using Lewee.Infrastructure.Data;
 using Lewee.Infrastructure.Logging;
 using Lewee.Infrastructure.Settings;
@@ -27,18 +28,16 @@ builder.Services
     .ConfigureDatabase<RestaurantDbContext>(connectionString)
     .ConfigureAuthenticatedUserService()
     .ConfigureRestaurantData() // TODO: ideally this would not be needed if IRepository would be registered globally
+#if DEBUG
+    .AddDatabaseDeveloperPageExceptionFilter()
+#endif
+     /* .ConfigureServiceBusPublisher(serviceBusSettings) */
     .AddRestaurantApplication()
-    /* .ConfigureServiceBusPublisher(serviceBusSettings) */
-    .AddDatabaseDeveloperPageExceptionFilter();
-
-builder.Services.AddControllers();
-
-builder.Services
+    .ConfigureControllers()
+    .AddEndpointsApiExplorer()
+    .AddSwaggerGen()
     .AddHealthChecks()
     .AddDbContextCheck<RestaurantDbContext>();
-
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
