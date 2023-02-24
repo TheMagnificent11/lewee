@@ -11,6 +11,7 @@
     <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
+    <PackageReference Include="Scrutor" />
   </ItemGroup>
 
   <ItemGroup>

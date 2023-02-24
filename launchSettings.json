@@ -4,12 +4,13 @@
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "composeLaunchAction": "LaunchBrowser",
-      "composeLaunchServiceName": "sample.restaurant.api",
-      "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}/swagger",
+      "composeLaunchServiceName": "sample.restaurant.app",
+      "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}",
       "serviceActions": {
         "database": "StartWithoutDebugging",
         "seq": "StartWithoutDebugging",
-        "sample.restaurant.api": "StartDebugging"
+        "sample.restaurant.api": "StartDebugging",
+        "sample.restaurant.app": "StartDebugging"
       }
     }
   }

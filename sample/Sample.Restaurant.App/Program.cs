@@ -13,8 +13,20 @@ var seqSettings = builder.Configuration.GetSettings<SeqSettings>(nameof(SeqSetti
 builder.Host.ConfigureLogging(appSettings, seqSettings);
 */
 
+var apiUrl = builder.Configuration.GetConnectionString("Api");
+if (string.IsNullOrWhiteSpace(apiUrl))
+{
+    throw new ApplicationException("Could not find API URL");
+}
+
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
+
+builder.Services.AddScoped(sp =>
+    new HttpClient
+    {
+        BaseAddress = new Uri(apiUrl)
+    });
 
 builder.Services.AddFluxor(options =>
 {
@@ -24,5 +36,10 @@ builder.Services.AddFluxor(options =>
     options.UseReduxDevTools();
 #endif
 });
+
+builder.Services.Scan(scan => scan
+    .FromAssemblyOf<ITableClient>()
+    .AddClasses().AsImplementedInterfaces()
+    .WithScopedLifetime());
 
 await builder.Build().RunAsync();

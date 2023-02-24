@@ -1,6 +1,6 @@
 using Fluxor;
-using Lewee.Fluxor;
-using Lewee.Fluxor.ErrorHandling;
+using Lewee.Blazor.ErrorHandling;
+using Lewee.Blazor.Fluxor;
 using Sample.Restaurant.App.States.Tables.Actions;
 
 namespace Sample.Restaurant.App.States.Tables;
