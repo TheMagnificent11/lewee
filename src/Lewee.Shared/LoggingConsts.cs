@@ -13,7 +13,7 @@ public static class LoggingConsts
     /// <summary>
     /// Correlation ID Header
     /// </summary>
-    public const string CorrelationIdHeaderKey = "X-Correlation-ID";
+    public const string CorrelationIdHeaderKey = "correlationId";
 
     /// <summary>
     /// Tenant ID

@@ -19,7 +19,7 @@ public sealed class TablesEffects
     {
         try
         {
-            var result = await this.tableClient.GetAllAsync();
+            var result = await this.tableClient.GetAllAsync(action.CorrelationId);
             dispatcher.Dispatch(new GetTablesSuccessAction(result.ToArray()));
         }
         catch (ApiException ex)

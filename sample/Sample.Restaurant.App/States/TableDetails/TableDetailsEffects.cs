@@ -36,7 +36,7 @@ public sealed class TableDetailsEffects
     {
         try
         {
-            var result = await this.tableClient.GetDetailsAsync(action.TableNumber);
+            var result = await this.tableClient.GetDetailsAsync(action.TableNumber, action.CorrelationId);
             dispatcher.Dispatch(new GetTableDetailsSuccessAction(result));
         }
         catch (ApiException ex)

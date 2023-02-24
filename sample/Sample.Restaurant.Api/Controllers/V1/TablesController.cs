@@ -1,5 +1,4 @@
 using Lewee.Infrastructure.AspNet.WebApi;
-using Lewee.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Sample.Restaurant.Application;
@@ -18,10 +17,10 @@ public sealed class TablesController : BaseApiController
     [HttpGet(Name = "GetAll")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TableDto>))]
     public async Task<IActionResult> GetAll(
-        [FromHeader(Name = LoggingConsts.CorrelationIdHeaderKey)] Guid correlationId,
+        [FromHeader] Guid? correlationId,
         CancellationToken cancellationToken = default)
     {
-        var query = new GetTablesQuery(correlationId);
+        var query = new GetTablesQuery(correlationId ?? this.CorrelationId);
         var result = await this.Mediator.Send(query, cancellationToken);
 
         return result.ToActionResult();
@@ -30,11 +29,11 @@ public sealed class TablesController : BaseApiController
     [HttpGet("{tableNumber}", Name = "GetDetails")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TableDetailsDto))]
     public async Task<IActionResult> GetOne(
-        [FromHeader(Name = LoggingConsts.CorrelationIdHeaderKey)] Guid correlationId,
         [FromRoute] int tableNumber,
+        [FromHeader] Guid? correlationId,
         CancellationToken cancellationToken = default)
     {
-        var query = new GetTableDetailsQuery(correlationId, tableNumber);
+        var query = new GetTableDetailsQuery(correlationId ?? this.CorrelationId, tableNumber);
         var result = await this.Mediator.Send(query, cancellationToken);
 
         return result.ToActionResult();
@@ -45,11 +44,11 @@ public sealed class TablesController : BaseApiController
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Use(
-        [FromHeader(Name = LoggingConsts.CorrelationIdHeaderKey)] Guid correlationId,
         [FromRoute] int tableNumber,
+        [FromHeader] Guid? correlationId,
         CancellationToken cancellationToken = default)
     {
-        var command = new UseTableCommand(correlationId, tableNumber);
+        var command = new UseTableCommand(correlationId ?? this.CorrelationId, tableNumber);
         var result = await this.Mediator.Send(command, cancellationToken);
 
         return result.ToActionResult();
@@ -60,12 +59,12 @@ public sealed class TablesController : BaseApiController
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> AddToOrder(
-        [FromHeader(Name = LoggingConsts.CorrelationIdHeaderKey)] Guid correlationId,
         [FromRoute] int tableNumber,
         [FromRoute] Guid menuItemId,
+        [FromHeader] Guid? correlationId,
         CancellationToken cancellationToken = default)
     {
-        var command = new AddMenuItemCommand(correlationId, tableNumber, menuItemId);
+        var command = new AddMenuItemCommand(correlationId ?? this.CorrelationId, tableNumber, menuItemId);
         var result = await this.Mediator.Send(command, cancellationToken);
 
         return result.ToActionResult();
