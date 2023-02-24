@@ -13,20 +13,21 @@ var seqSettings = builder.Configuration.GetSettings<SeqSettings>(nameof(SeqSetti
 builder.Host.ConfigureLogging(appSettings, seqSettings);
 */
 
-var apiUrl = builder.Configuration.GetConnectionString("Api");
-if (string.IsNullOrWhiteSpace(apiUrl))
+// builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+var serverApiUrl = builder.Configuration["ServerApiUrl"];
+if (string.IsNullOrWhiteSpace(serverApiUrl))
 {
     throw new ApplicationException("Could not find API URL");
 }
 
-builder.RootComponents.Add<App>("#app");
-builder.RootComponents.Add<HeadOutlet>("head::after");
-
 builder.Services.AddScoped(sp =>
     new HttpClient
     {
-        BaseAddress = new Uri(apiUrl)
+        BaseAddress = new Uri(serverApiUrl)
     });
+
+builder.RootComponents.Add<App>("#app");
+builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddFluxor(options =>
 {
@@ -37,9 +38,9 @@ builder.Services.AddFluxor(options =>
 #endif
 });
 
-builder.Services.Scan(scan => scan
-    .FromAssemblyOf<ITableClient>()
-    .AddClasses().AsImplementedInterfaces()
-    .WithScopedLifetime());
+builder.Services.AddScoped<ITableClient>(provider =>
+{
+    return new TableClient(serverApiUrl, provider.GetService<HttpClient>());
+});
 
 await builder.Build().RunAsync();
