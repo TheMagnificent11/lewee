@@ -1,4 +1,4 @@
-﻿namespace Lewee.Application.Mediation.Responses;
+﻿namespace Lewee.Shared;
 
 /// <summary>
 /// Result Status

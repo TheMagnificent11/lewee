@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Lewee.Application.Mediation.Responses;
+namespace Lewee.Shared;
 
 /// <summary>
 /// Base Result

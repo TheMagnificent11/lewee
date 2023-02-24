@@ -1,6 +1,6 @@
 ﻿using Lewee.Application.Mediation;
-using Lewee.Application.Mediation.Responses;
 using Lewee.Domain;
+using Lewee.Shared;
 using MapsterMapper;
 using MediatR;
 using Sample.Restaurant.Domain;

@@ -10,7 +10,6 @@ COPY ["sample/Sample.Restaurant.App/Sample.Restaurant.App.csproj", "sample/Sampl
 COPY ["src/Lewee.Blazor/Lewee.Blazor.csproj", "src/Lewee.Blazor/"]
 COPY ["src/Lewee.Shared/Lewee.Shared.csproj", "src/Lewee.Shared/"]
 COPY ["src/Lewee.Infrastructure.AspNet/Lewee.Infrastructure.AspNet.csproj", "src/Lewee.Infrastructure.AspNet/"]
-COPY ["src/Lewee.Application/Lewee.Application.csproj", "src/Lewee.Application/"]
 COPY ["src/Lewee.Domain/Lewee.Domain.csproj", "src/Lewee.Domain/"]
 RUN dotnet restore "sample/Sample.Restaurant.App/Sample.Restaurant.App.csproj"
 COPY . .

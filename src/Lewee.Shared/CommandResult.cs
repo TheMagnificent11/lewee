@@ -1,35 +1,28 @@
-﻿namespace Lewee.Application.Mediation.Responses;
+﻿namespace Lewee.Shared;
 
 /// <summary>
-/// Query Result
+/// Command Result
 /// </summary>
-/// <typeparam name="T">Query response type</typeparam>
-public class QueryResult<T> : BaseResult
-    where T : class
+public class CommandResult : BaseResult
 {
-    private QueryResult(T? data, ResultStatus status, Dictionary<string, List<string>>? errors)
+    private CommandResult(ResultStatus status, Dictionary<string, List<string>>? errors)
         : base(status, errors)
     {
-        this.Data = data;
     }
 
     /// <summary>
-    /// Gets the query result data
+    /// Successful <see cref="CommandResult"/>
     /// </summary>
-    public T? Data { get; }
-
-    /// <summary>
-    /// Successful <see cref="QueryResult{T}"/>
-    /// </summary>
-    /// <param name="data">Result data</param>
-    /// <returns>A query result contain the specified data</returns>
-    public static QueryResult<T> Success(T data)
+    /// <returns>
+    /// <see cref="CommandResult"/>
+    /// </returns>
+    public static CommandResult Success()
     {
-        return new QueryResult<T>(data, ResultStatus.Success, null);
+        return new CommandResult(ResultStatus.Success, null);
     }
 
     /// <summary>
-    /// Failure <see cref="QueryResult{T}"/>
+    /// Failure <see cref="CommandResult"/>
     /// </summary>
     /// <param name="status">
     /// Result status
@@ -38,12 +31,12 @@ public class QueryResult<T> : BaseResult
     /// Error message
     /// </param>
     /// <returns>
-    /// <see cref="QueryResult{T}"/>
+    /// <see cref="CommandResult"/>
     /// </returns>
     /// <exception cref="InvalidOperationException">
     /// Thrown if <see cref="ResultStatus"/> is <see cref="ResultStatus.Success"/> or <see cref="ResultStatus.NotApplicable"/>
     /// </exception>
-    public static QueryResult<T> Fail(ResultStatus status, string errorMessage)
+    public static CommandResult Fail(ResultStatus status, string errorMessage)
     {
         CheckIfFailure(status);
 
@@ -52,11 +45,11 @@ public class QueryResult<T> : BaseResult
             { string.Empty, new List<string> { errorMessage } }
         };
 
-        return new QueryResult<T>(null, status, errors);
+        return new CommandResult(status, errors);
     }
 
     /// <summary>
-    /// Failure <see cref="QueryResult{T}"/>
+    /// Failure <see cref="CommandResult"/>
     /// </summary>
     /// <param name="status">
     /// Result status
@@ -65,15 +58,15 @@ public class QueryResult<T> : BaseResult
     /// Errors keyed by request property name
     /// </param>
     /// <returns>
-    /// <see cref="QueryResult{T}"/>
+    /// <see cref="CommandResult"/>
     /// </returns>
     /// <exception cref="InvalidOperationException">
     /// Thrown if <see cref="ResultStatus"/> is <see cref="ResultStatus.Success"/> or <see cref="ResultStatus.NotApplicable"/>
     /// </exception>
-    public static QueryResult<T> Fail(ResultStatus status, Dictionary<string, List<string>> errors)
+    public static CommandResult Fail(ResultStatus status, Dictionary<string, List<string>> errors)
     {
         CheckIfFailure(status);
 
-        return new QueryResult<T>(null, status, errors);
+        return new CommandResult(status, errors);
     }
 }

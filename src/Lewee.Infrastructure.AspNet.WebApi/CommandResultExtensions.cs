@@ -1,4 +1,4 @@
-﻿using Lewee.Application.Mediation.Responses;
+﻿using Lewee.Shared;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Lewee.Infrastructure.AspNet.WebApi;

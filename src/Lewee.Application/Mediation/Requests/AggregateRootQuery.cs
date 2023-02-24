@@ -1,5 +1,5 @@
-﻿using Lewee.Application.Mediation.Responses;
-using Lewee.Domain;
+﻿using Lewee.Domain;
+using Lewee.Shared;
 using MediatR;
 
 namespace Lewee.Application.Mediation.Requests;
