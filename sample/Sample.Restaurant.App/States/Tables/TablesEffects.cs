@@ -1,5 +1,6 @@
 using Fluxor;
 using Lewee.Fluxor;
+using Lewee.Fluxor.ErrorHandling;
 using Sample.Restaurant.App.States.Tables.Actions;
 
 namespace Sample.Restaurant.App.States.Tables;
@@ -24,7 +25,7 @@ public sealed class TablesEffects
         }
         catch (ApiException ex)
         {
-            // TODO: logging
+            ex.Log(this.Logger);
             dispatcher.Dispatch(new GetTablesErrorAction(ex.Message));
         }
     }

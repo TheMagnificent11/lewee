@@ -1,6 +1,6 @@
 ﻿using Fluxor;
 using Lewee.Fluxor;
-using MediatR;
+using Lewee.Fluxor.ErrorHandling;
 using Microsoft.AspNetCore.Components;
 using Sample.Restaurant.App.States.TableDetails.Actions;
 
@@ -41,7 +41,7 @@ public sealed class TableDetailsEffects
         }
         catch (ApiException ex)
         {
-            // TODO: logging
+            ex.Log(this.Logger);
             dispatcher.Dispatch(new GetTableDetailsErrorAction(ex.Message));
         }
     }

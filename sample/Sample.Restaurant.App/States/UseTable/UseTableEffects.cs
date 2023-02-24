@@ -1,5 +1,6 @@
 ﻿using Fluxor;
 using Lewee.Fluxor;
+using Lewee.Fluxor.ErrorHandling;
 using MediatR;
 using Microsoft.AspNetCore.Components;
 using Sample.Restaurant.App.States.UseTable.Actions;
@@ -40,13 +41,9 @@ public sealed class UseTableEffects
         }
         catch (ApiException ex)
         {
-            // TODO: error handling an appropriate error logging accoriding to status code in extension method for ApiException
-            ////switch (ex.StatusCode)
-            ////{
-
-            ////}
-
+            ex.Log(this.Logger);
             dispatcher.Dispatch(new UseTableErrorAction(ex.Message));
+
             return;
         }
 
