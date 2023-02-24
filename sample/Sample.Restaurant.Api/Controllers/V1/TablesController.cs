@@ -1,4 +1,4 @@
-using Lewee.Infrastructure.Controllers;
+using Lewee.Infrastructure.AspNet.WebApi;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Sample.Restaurant.Application;

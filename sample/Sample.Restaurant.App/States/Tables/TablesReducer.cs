@@ -1,7 +1,6 @@
 using Fluxor;
 using Lewee.Fluxor;
 using Sample.Restaurant.App.States.Tables.Actions;
-using Sample.Restaurant.Application;
 
 namespace Sample.Restaurant.App.States.Tables;
 

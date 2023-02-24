@@ -1,5 +1,4 @@
 ﻿using Lewee.Fluxor;
-using Sample.Restaurant.Application;
 
 namespace Sample.Restaurant.App.States.TableDetails;
 

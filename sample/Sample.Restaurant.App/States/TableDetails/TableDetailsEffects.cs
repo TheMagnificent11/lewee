@@ -3,24 +3,23 @@ using Lewee.Fluxor;
 using MediatR;
 using Microsoft.AspNetCore.Components;
 using Sample.Restaurant.App.States.TableDetails.Actions;
-using Sample.Restaurant.Application;
 
 namespace Sample.Restaurant.App.States.TableDetails;
 
 public sealed class TableDetailsEffects
     : BaseRequestEffects<TableDetailsEffects, TableDetailsState, GetTableDetailsAction, GetTableDetailsSuccessAction, GetTableDetailsErrorAction>
 {
-    private readonly IMediator mediator;
+    private readonly ITableClient tableClient;
     private readonly NavigationManager navigationManager;
 
     public TableDetailsEffects(
         IState<TableDetailsState> state,
-        IMediator mediator,
+        ITableClient tableClient,
         NavigationManager navigationManager,
         Serilog.ILogger logger)
         : base(state, logger)
     {
-        this.mediator = mediator;
+        this.tableClient = tableClient;
         this.navigationManager = navigationManager;
     }
 
@@ -35,14 +34,15 @@ public sealed class TableDetailsEffects
 
     protected override async Task ExecuteRequest(GetTableDetailsAction action, IDispatcher dispatcher)
     {
-        var result = await this.mediator.Send(new GetTableDetailsQuery(action.CorrelationId, action.TableNumber));
-
-        if (result.IsSuccess && result.Data != null)
+        try
         {
-            dispatcher.Dispatch(new GetTableDetailsSuccessAction(result.Data));
-            return;
+            var result = await this.tableClient.GetDetailsAsync(action.TableNumber);
+            dispatcher.Dispatch(new GetTableDetailsSuccessAction(result));
         }
-
-        dispatcher.Dispatch(new GetTableDetailsErrorAction(result.GenerateErrorMessage()));
+        catch (ApiException ex)
+        {
+            // TODO: logging
+            dispatcher.Dispatch(new GetTableDetailsErrorAction(ex.Message));
+        }
     }
 }

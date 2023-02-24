@@ -1,8 +1,6 @@
 ﻿@page "/tables/{TableNumber:int}"
 
-@using MediatR
-
-@inject IMediator Mediator
+@inject IDispatcher Dispatcher
 
 <h1>Table @this.TableNumber</h1>
 
@@ -29,7 +27,7 @@ else
                     <td>@item.MenuItem.PriceLabel</td>
                     <td>@item.Quantity</td>
                     <td>
-                        <button @onclick="@(async () => await AddToOrder(item.MenuItem.Id))">Add</button>
+                        <button @onclick="@(() => AddToOrder(item.MenuItem.Id))">Add</button>
                     </td>
                 </tr>
             }

@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Sample.Restaurant.Application;
+using Sample.Restaurant.App.States.TableDetails.Actions;
 
 namespace Sample.Restaurant.App.Pages;
 public partial class Table
@@ -9,22 +9,13 @@ public partial class Table
     [Parameter]
     public int TableNumber { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        var result = await this.Mediator.Send(new GetTableDetailsQuery(Guid.NewGuid(), this.TableNumber));
-
-        if (!result.IsSuccess || result.Data == null)
-        {
-            // TODO: error handling
-            return;
-        }
-
-        this.table = result.Data;
+        this.Dispatcher.Dispatch(new GetTableDetailsAction(Guid.NewGuid(), this.TableNumber));
     }
 
-    private async Task AddToOrder(Guid menuItemId)
+    private void AddToOrder(Guid menuItemId)
     {
-        // TODO: error handling
-        _ = await this.Mediator.Send(new AddMenuItemCommand(Guid.NewGuid(), this.TableNumber, menuItemId));
+        // this.Dispatcher.Dispatch(new UseTableAction(Guid.NewGuid(), this.TableNumber));
     }
 }

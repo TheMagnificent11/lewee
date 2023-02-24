@@ -3,24 +3,23 @@ using Lewee.Fluxor;
 using MediatR;
 using Microsoft.AspNetCore.Components;
 using Sample.Restaurant.App.States.UseTable.Actions;
-using Sample.Restaurant.Application;
 
 namespace Sample.Restaurant.App.States.UseTable;
 
 public sealed class UseTableEffects
     : BaseRequestEffects<UseTableEffects, UseTableState, UseTableAction, UseTableSuccessAction, UseTableErrorAction>
 {
-    private readonly IMediator mediator;
+    private readonly ITableClient tableClient;
     private readonly NavigationManager navigationManager;
 
     public UseTableEffects(
         IState<UseTableState> state,
-        IMediator mediator,
+        ITableClient tableClient,
         NavigationManager navigationManager,
         Serilog.ILogger logger)
         : base(state, logger)
     {
-        this.mediator = mediator;
+        this.tableClient = tableClient;
         this.navigationManager = navigationManager;
     }
 
@@ -35,14 +34,22 @@ public sealed class UseTableEffects
 
     protected override async Task ExecuteRequest(UseTableAction action, IDispatcher dispatcher)
     {
-        var result = await this.mediator.Send(new UseTableCommand(action.CorrelationId, action.TableNumber));
-
-        if (result.IsSuccess)
+        try
         {
-            dispatcher.Dispatch(new UseTableSuccessAction());
+            await this.tableClient.UseAsync(action.TableNumber);
+        }
+        catch (ApiException ex)
+        {
+            // TODO: error handling an appropriate error logging accoriding to status code in extension method for ApiException
+            ////switch (ex.StatusCode)
+            ////{
+
+            ////}
+
+            dispatcher.Dispatch(new UseTableErrorAction(ex.Message));
             return;
         }
 
-        dispatcher.Dispatch(new UseTableErrorAction(result.GenerateErrorMessage()));
+        dispatcher.Dispatch(new UseTableSuccessAction());
     }
 }
