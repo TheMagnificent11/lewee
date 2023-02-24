@@ -36,3 +36,6 @@ Obj/
 # Docker Volumes
 /data
 /seq
+
+# Project Launch Settings
+**/Properties/launchSettings.json
