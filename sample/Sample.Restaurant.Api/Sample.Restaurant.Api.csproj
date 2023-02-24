@@ -17,11 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\V1\" />
-    <Folder Include="Properties\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\src\Lewee.Infrastructure.AspNet.WebApi\Lewee.Infrastructure.AspNet.WebApi.csproj" />
     <ProjectReference Include="..\Sample.Restaurant.Infrastructure\Sample.Restaurant.Infrastructure.csproj" />
   </ItemGroup>
