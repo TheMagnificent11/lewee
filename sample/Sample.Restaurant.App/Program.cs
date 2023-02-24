@@ -2,8 +2,16 @@ using Fluxor;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Sample.Restaurant.App;
+using Serilog;
+using Serilog.Core;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
+
+var serverApiUrl = builder.Configuration["ServerApiUrl"];
+if (string.IsNullOrWhiteSpace(serverApiUrl))
+{
+    throw new ApplicationException("Could not find API URL");
+}
 
 /*
  * TODO: https://github.com/nblumhardt/serilog-sinks-browserhttp
@@ -13,12 +21,13 @@ var seqSettings = builder.Configuration.GetSettings<SeqSettings>(nameof(SeqSetti
 builder.Host.ConfigureLogging(appSettings, seqSettings);
 */
 
-// builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-var serverApiUrl = builder.Configuration["ServerApiUrl"];
-if (string.IsNullOrWhiteSpace(serverApiUrl))
-{
-    throw new ApplicationException("Could not find API URL");
-}
+var levelSwitch = new LoggingLevelSwitch();
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.ControlledBy(levelSwitch)
+    .WriteTo.BrowserHttp($"{serverApiUrl}/ingest", controlLevelSwitch: levelSwitch)
+    .CreateLogger();
+
+builder.Services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
 
 builder.Services.AddScoped(sp =>
     new HttpClient

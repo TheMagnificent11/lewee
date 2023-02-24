@@ -6,6 +6,7 @@ using Lewee.Infrastructure.AspNet.WebApi;
 using Lewee.Infrastructure.Data;
 using Sample.Restaurant.Application;
 using Sample.Restaurant.Infrastructure.Data;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +41,8 @@ builder.Services
     .AddDbContextCheck<RestaurantDbContext>();
 
 var app = builder.Build();
+
+app.UseSerilogIngestion();
 
 if (app.Environment.IsDevelopment())
 {
