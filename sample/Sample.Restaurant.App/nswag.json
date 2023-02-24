@@ -43,7 +43,7 @@
       "className": "TableClient",
       "operationGenerationMode": "MultipleClientsFromOperationId",
       "additionalNamespaceUsages": [
-        "Lewee.Fluxor.ErrorHandling"
+        "Lewee.Blazor.ErrorHandling"
       ],
       "additionalContractNamespaceUsages": [],
       "generateOptionalParameters": true,

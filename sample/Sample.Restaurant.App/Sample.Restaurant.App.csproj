@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Lewee.Fluxor\Lewee.Fluxor.csproj" />
+    <ProjectReference Include="..\..\src\Lewee.Blazor\Lewee.Blazor.csproj" />
     <ProjectReference Include="..\..\src\Lewee.Infrastructure.AspNet\Lewee.Infrastructure.AspNet.csproj" />
   </ItemGroup>
 

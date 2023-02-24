@@ -1,4 +1,4 @@
-﻿namespace Lewee.Fluxor.ErrorHandling;
+﻿namespace Lewee.Blazor.ErrorHandling;
 
 /// <summary>
 /// Api Exception
@@ -25,7 +25,7 @@ public partial class ApiException : Exception
         : base(
             message + "\n\nStatus: "
                 + statusCode + "\nResponse: \n"
-                + ((response == null) ? "(null)" : response.Substring(0, response.Length >= 512 ? 512 : response.Length)),
+                + (response == null ? "(null)" : response.Substring(0, response.Length >= 512 ? 512 : response.Length)),
             innerException)
     {
         this.StatusCode = statusCode;

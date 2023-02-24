@@ -1,4 +1,4 @@
-﻿namespace Lewee.Fluxor.Actions;
+﻿namespace Lewee.Blazor.Fluxor.Actions;
 
 /// <summary>
 /// Request Success Action Interface

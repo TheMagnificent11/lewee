@@ -1,6 +1,6 @@
-﻿using Lewee.Fluxor.Actions;
+﻿using Lewee.Blazor.Fluxor.Actions;
 
-namespace Lewee.Fluxor;
+namespace Lewee.Blazor.Fluxor;
 
 /// <summary>
 /// Reducer Extension Methods
@@ -36,7 +36,7 @@ public static class ReducerExtensions
         where TStateData : class
         where TAction : IRequestAction
     {
-        return OnRequest(state, action) with { Data = default };
+        return state.OnRequest(action) with { Data = default };
     }
 
     /// <summary>

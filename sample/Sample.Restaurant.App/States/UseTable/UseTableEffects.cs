@@ -1,7 +1,6 @@
 ﻿using Fluxor;
-using Lewee.Fluxor;
-using Lewee.Fluxor.ErrorHandling;
-using MediatR;
+using Lewee.Blazor.ErrorHandling;
+using Lewee.Blazor.Fluxor;
 using Microsoft.AspNetCore.Components;
 using Sample.Restaurant.App.States.UseTable.Actions;
 

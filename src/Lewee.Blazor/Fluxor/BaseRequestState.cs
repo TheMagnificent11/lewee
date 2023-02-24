@@ -1,4 +1,4 @@
-﻿namespace Lewee.Fluxor;
+﻿namespace Lewee.Blazor.Fluxor;
 
 /// <summary>
 /// Base Request State

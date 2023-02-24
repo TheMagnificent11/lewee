@@ -1,4 +1,4 @@
-using Lewee.Fluxor;
+using Lewee.Blazor.Fluxor;
 
 namespace Sample.Restaurant.App.States.Tables;
 

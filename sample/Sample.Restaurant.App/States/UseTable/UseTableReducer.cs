@@ -1,5 +1,5 @@
 ﻿using Fluxor;
-using Lewee.Fluxor;
+using Lewee.Blazor.Fluxor;
 using Sample.Restaurant.App.States.UseTable.Actions;
 
 namespace Sample.Restaurant.App.States.UseTable;

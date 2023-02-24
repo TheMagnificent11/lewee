@@ -1,14 +1,14 @@
-﻿namespace Lewee.Fluxor.Actions;
+﻿namespace Lewee.Blazor.Fluxor;
 
 /// <summary>
-/// Query Success Action Interface
+/// Query State
 /// </summary>
 /// <typeparam name="T">Query data type</typeparam>
-public interface IQuerySuccessAction<T> : IRequestSuccessAction
+public abstract record BaseQueryState<T> : BaseRequestState
     where T : class
 {
     /// <summary>
     /// Gets the queried data
     /// </summary>
-    T Data { get; }
+    public T? Data { get; init; }
 }

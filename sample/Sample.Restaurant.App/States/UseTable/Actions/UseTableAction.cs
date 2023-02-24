@@ -1,4 +1,4 @@
-﻿using Lewee.Fluxor.Actions;
+﻿using Lewee.Blazor.Fluxor.Actions;
 
 namespace Sample.Restaurant.App.States.UseTable.Actions;
 public record UseTableAction : IRequestAction

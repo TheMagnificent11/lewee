@@ -1,10 +1,10 @@
 ﻿using Fluxor;
-using Lewee.Fluxor.Actions;
+using Lewee.Blazor.Fluxor.Actions;
 using Lewee.Shared;
 using Serilog;
 using Serilog.Context;
 
-namespace Lewee.Fluxor;
+namespace Lewee.Blazor.Fluxor;
 
 /// <summary>
 /// Base Request Effects

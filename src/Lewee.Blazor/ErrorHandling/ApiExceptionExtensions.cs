@@ -1,6 +1,6 @@
 ﻿using Serilog;
 
-namespace Lewee.Fluxor.ErrorHandling;
+namespace Lewee.Blazor.ErrorHandling;
 
 /// <summary>
 /// Extension methods for <see cref="ApiException"/>
