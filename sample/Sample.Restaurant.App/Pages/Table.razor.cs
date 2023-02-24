@@ -4,8 +4,6 @@ using Sample.Restaurant.App.States.TableDetails.Actions;
 namespace Sample.Restaurant.App.Pages;
 public partial class Table
 {
-    private TableDetailsDto? table;
-
     [Parameter]
     public int TableNumber { get; set; }
 

@@ -1,13 +1,25 @@
 version: '3.4'
 
 services:
-  sample.restaurant.app:
+  #sample.restaurant.app:
+  #  environment:
+  #    - ASPNETCORE_ENVIRONMENT=Development
+  #  ports:
+  #    - "80"
+  #  volumes:
+  #    - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+ 
+  sample.restaurant.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
     ports:
-      - "80"
+      - 54576:80
+      - 54577:443
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
   database:
     container_name: lewee_sql
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -21,14 +33,3 @@ services:
       - ./data:/var/opt/mssql/data
     networks:
       - lewee-network
- 
-  sample.restaurant.api:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:443;http://+:80
-    ports:
-      - "80"
-      - "443"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro

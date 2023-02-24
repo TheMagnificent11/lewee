@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <Folder Include="Controllers\V1\" />
+    <Folder Include="Properties\" />
   </ItemGroup>
 
   <ItemGroup>

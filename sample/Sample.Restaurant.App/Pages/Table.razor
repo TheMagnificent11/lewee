@@ -1,10 +1,13 @@
 ﻿@page "/tables/{TableNumber:int}"
 
+@using Sample.Restaurant.App.States.TableDetails
+
+@inject IState<TableDetailsState> State
 @inject IDispatcher Dispatcher
 
 <h1>Table @this.TableNumber</h1>
 
-@if(this.table == null)
+@if(this.State.Value.Data == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -20,7 +23,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach(var item in this.table.Items)
+            @foreach (var item in this.State.Value.Data.Items)
             {
                 <tr>
                     <td>@item.MenuItem.Name</td>

@@ -5,13 +5,13 @@ networks:
     name: lewee_network
 
 services:
-  sample.restaurant.app:
-    image: ${DOCKER_REGISTRY-}samplerestaurantapp
-    build:
-      context: .
-      dockerfile: sample/Sample.Restaurant.App/Dockerfile
-    networks:
-      - lewee-network
+  #sample.restaurant.app:
+  #  image: ${DOCKER_REGISTRY-}samplerestaurantapp
+  #  build:
+  #    context: .
+  #    dockerfile: sample/Sample.Restaurant.App/Dockerfile
+  #  networks:
+  #    - lewee-network
 
   sample.restaurant.api:
     image: ${DOCKER_REGISTRY-}samplerestaurantapi

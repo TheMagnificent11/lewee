@@ -8,7 +8,6 @@
       "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}/swagger",
       "serviceActions": {
         "database": "StartWithoutDebugging",
-        "sample.restaurant.app": "StartDebugging",
         "seq": "StartWithoutDebugging",
         "sample.restaurant.api": "StartDebugging"
       }
