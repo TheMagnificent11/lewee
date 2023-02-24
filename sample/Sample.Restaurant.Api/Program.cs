@@ -31,7 +31,7 @@ builder.Services
 #if DEBUG
     .AddDatabaseDeveloperPageExceptionFilter()
 #endif
-     /* .ConfigureServiceBusPublisher(serviceBusSettings) */
+    /* .ConfigureServiceBusPublisher(serviceBusSettings) */
     .AddRestaurantApplication()
     .ConfigureControllers()
     .AddEndpointsApiExplorer()

@@ -20,7 +20,7 @@ internal class DomainExceptionBehavior<TCommand, TResponse> : IPipelineBehavior<
     {
         try
         {
-           return next();
+            return next();
         }
         catch (DomainException ex)
         {
