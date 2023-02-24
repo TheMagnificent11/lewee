@@ -5,14 +5,6 @@ networks:
     name: lewee_network
 
 services:
-  sample.restaurant.app:
-    image: ${DOCKER_REGISTRY-}samplerestaurantapp
-    build:
-      context: .
-      dockerfile: sample/Sample.Restaurant.App/Dockerfile
-    networks:
-      - lewee-network
-
   sample.restaurant.api:
     image: ${DOCKER_REGISTRY-}samplerestaurantapi
     build:
@@ -20,7 +12,6 @@ services:
       dockerfile: sample/Sample.Restaurant.Api/Dockerfile
     networks:
       - lewee-network
-
   seq:
     container_name: lewee_seq
     image: datalust/seq

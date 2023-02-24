@@ -3,14 +3,10 @@
     "Docker Compose": {
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
-      "composeLaunchAction": "LaunchBrowser",
-      "composeLaunchServiceName": "sample.restaurant.app",
-      "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}",
       "serviceActions": {
         "database": "StartWithoutDebugging",
         "seq": "StartWithoutDebugging",
         "sample.restaurant.api": "StartDebugging",
-        "sample.restaurant.app": "StartDebugging"
       }
     }
   }
