@@ -2,7 +2,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <DOTNET_VERSION>7.0.3</DOTNET_VERSION>
-    <FLUENTVALIDATOR_VERSION>11.5.0</FLUENTVALIDATOR_VERSION>
+    <FLUENTVALIDATOR_VERSION>11.5.1</FLUENTVALIDATOR_VERSION>
     <COVERLET_VERSION>3.2.0</COVERLET_VERSION>
   </PropertyGroup>
   <ItemGroup>
@@ -16,8 +16,8 @@
     <PackageReference Update="Fluxor.Blazor.Web.ReduxDevTools" Version="5.7.0" />
     <PackageReference Update="Mapster" Version="7.3.0" />
     <PackageReference Update="Mapster.DependencyInjection" Version="1.0.0" />
-    <PackageReference Update="MassTransit.RabbitMQ" Version="8.0.12" />
-    <PackageReference Update="MediatR" Version="12.0.0" />
+    <PackageReference Update="MassTransit.RabbitMQ" Version="8.0.13" />
+    <PackageReference Update="MediatR" Version="12.0.1" />
     <PackageReference Update="Microsoft.AspNetCore.Components.WebAssembly" Version="$(DOTNET_VERSION)" />
     <PackageReference Update="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="$(DOTNET_VERSION)" />
     <PackageReference Update="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" /><!-- Out-of-sync with property group version -->
@@ -31,7 +31,7 @@
     <PackageReference Update="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="$(DOTNET_VERSION)" />
     <PackageReference Update="Microsoft.Extensions.DependencyModel" Version="7.0.0" /><!-- Out-of-sync with property group version -->
     <PackageReference Update="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" /><!-- Out-of-sync with property group version -->
-    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="17.4.1" />
+    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="17.5.0" />
     <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1" />
     <PackageReference Update="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
     <PackageReference Update="Serilog" Version="2.12.0" />

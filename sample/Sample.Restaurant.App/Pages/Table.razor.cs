@@ -16,6 +16,6 @@ public partial class Table
 
     private void AddToOrder(Guid menuItemId)
     {
-        // this.Dispatcher.Dispatch(new UseTableAction(Guid.NewGuid(), this.TableNumber));
+        throw new NotImplementedException();
     }
 }
