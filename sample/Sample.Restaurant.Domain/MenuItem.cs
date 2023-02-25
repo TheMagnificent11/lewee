@@ -1,5 +1,4 @@
 ﻿using Lewee.Domain;
-using Sample.Restaurant.Contracts;
 
 namespace Sample.Restaurant.Domain;
 

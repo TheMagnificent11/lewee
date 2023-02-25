@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using Lewee.Domain;
-using Sample.Restaurant.Contracts;
 using Xunit;
 
 namespace Sample.Restaurant.Domain.Tests.Unit;

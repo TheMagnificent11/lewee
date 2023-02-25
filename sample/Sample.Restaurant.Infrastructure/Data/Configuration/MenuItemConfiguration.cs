@@ -1,6 +1,5 @@
 ﻿using Lewee.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Sample.Restaurant.Contracts;
 using Sample.Restaurant.Domain;
 
 namespace Sample.Restaurant.Infrastructure.Data.Configuration;

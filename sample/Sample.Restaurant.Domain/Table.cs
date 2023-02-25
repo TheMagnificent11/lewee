@@ -13,7 +13,7 @@ public class Table : BaseAggregateRoot
     }
 
     public Order? CurrentOrder => this.orders
-        .Where(x => x.OrderStatusId != Contracts.OrderStatus.Paid)
+        .Where(x => x.OrderStatusId != OrderStatus.Paid)
         .Where(x => !x.IsDeleted)
         .OrderByDescending(x => x.CreatedAtUtc)
         .FirstOrDefault();

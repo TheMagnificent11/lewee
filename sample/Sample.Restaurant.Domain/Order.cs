@@ -1,5 +1,4 @@
 ﻿using Lewee.Domain;
-using Sample.Restaurant.Contracts;
 
 namespace Sample.Restaurant.Domain;
 
@@ -12,7 +11,7 @@ public class Order : BaseEntity
     {
         this.TableId = table.Id;
         this.Table = table;
-        this.OrderStatusId = Contracts.OrderStatus.Ordering;
+        this.OrderStatusId = Domain.OrderStatus.Ordering;
     }
 
     // EF Constructor

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Sample.Restaurant.Contracts;
+namespace Sample.Restaurant.Domain;
 
 public enum OrderStatus
 {

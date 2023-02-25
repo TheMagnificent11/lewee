@@ -1,4 +1,4 @@
-﻿namespace Sample.Restaurant.Contracts;
+﻿namespace Sample.Restaurant.Domain;
 
 public enum MenuItemType
 {
