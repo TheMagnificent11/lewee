@@ -8,14 +8,13 @@ namespace Lewee.Infrastructure.AspNet.WebApi;
 public static class CorsConfiguration
 {
     /// <summary>
-    /// Configures CORS policy
+    /// Configures default CORS policy
     /// </summary>
     /// <param name="services">Services collection</param>
-    /// <param name="policyName">Policy name</param>
     /// <param name="allowedOrigins">Semicolon-separated list of allowed origins</param>
-    public static void ConfigureCorsPolicy(this IServiceCollection services, string policyName, string allowedOrigins)
+    public static void ConfigureCorsDefaultPolicy(this IServiceCollection services, string allowedOrigins)
     {
-        services.AddCors(o => o.AddPolicy(policyName, policyBuilder =>
+        services.AddCors(options => options.AddDefaultPolicy(policyBuilder =>
         {
             var origins = allowedOrigins
                 .Split(';')

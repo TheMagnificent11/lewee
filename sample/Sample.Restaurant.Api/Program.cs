@@ -25,6 +25,8 @@ builder.Host.ConfigureLogging(appSettings, seqSettings);
 
 builder.Services.AddMapper();
 
+builder.Services.ConfigureCorsDefaultPolicy(builder.Configuration["AllowedOrigins"] ?? string.Empty);
+
 builder.Services
     .ConfigureDatabase<RestaurantDbContext>(connectionString)
     .ConfigureAuthenticatedUserService()
@@ -40,25 +42,26 @@ builder.Services
     .AddHealthChecks()
     .AddDbContextCheck<RestaurantDbContext>();
 
-var app = builder.Build();
+var application = builder.Build();
 
-app.UseSerilogIngestion();
+application.UseCors()
+    .UseSerilogIngestion()
+    .UseHealthChecks("/health")
+    .UseHttpsRedirection()
+    .UseAuthorization();
 
-if (app.Environment.IsDevelopment())
+application.MapControllers();
+
+if (application.Environment.IsDevelopment())
 {
-    app.UseMigrationsEndPoint();
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    application.UseMigrationsEndPoint();
+    application.UseSwagger();
+    application.UseSwaggerUI();
 }
-
-app.UseHealthChecks("/health");
-app.UseHttpsRedirection();
-app.UseAuthorization();
-app.MapControllers();
 
 if (migrateDatabases)
 {
-    app.MigrationDatabase<RestaurantDbContext>();
+    application.MigrationDatabase<RestaurantDbContext>();
 }
 
-app.Run();
+application.Run();

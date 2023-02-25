@@ -2,8 +2,6 @@ using Fluxor;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Sample.Restaurant.App;
-using Serilog;
-using Serilog.Core;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
@@ -19,7 +17,6 @@ var appSettings = builder.Configuration.GetSettings<ApplicationSettings>(nameof(
 var seqSettings = builder.Configuration.GetSettings<SeqSettings>(nameof(SeqSettings));
 
 builder.Host.ConfigureLogging(appSettings, seqSettings);
-*/
 
 var levelSwitch = new LoggingLevelSwitch();
 Log.Logger = new LoggerConfiguration()
@@ -28,6 +25,7 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 builder.Services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
+*/
 
 builder.Services.AddScoped(sp =>
     new HttpClient

@@ -7,7 +7,7 @@ using Sample.Restaurant.App.States.UseTable.Actions;
 namespace Sample.Restaurant.App.States.UseTable;
 
 public sealed class UseTableEffects
-    : BaseRequestEffects<UseTableEffects, UseTableState, UseTableAction, UseTableSuccessAction, UseTableErrorAction>
+    : BaseRequestEffects<UseTableState, UseTableAction, UseTableSuccessAction, UseTableErrorAction>
 {
     private readonly ITableClient tableClient;
     private readonly NavigationManager navigationManager;
@@ -16,7 +16,7 @@ public sealed class UseTableEffects
         IState<UseTableState> state,
         ITableClient tableClient,
         NavigationManager navigationManager,
-        Serilog.ILogger logger)
+        ILogger<UseTableEffects> logger)
         : base(state, logger)
     {
         this.tableClient = tableClient;

@@ -7,7 +7,7 @@ using Sample.Restaurant.App.States.TableDetails.Actions;
 namespace Sample.Restaurant.App.States.TableDetails;
 
 public sealed class TableDetailsEffects
-    : BaseRequestEffects<TableDetailsEffects, TableDetailsState, GetTableDetailsAction, GetTableDetailsSuccessAction, GetTableDetailsErrorAction>
+    : BaseRequestEffects<TableDetailsState, GetTableDetailsAction, GetTableDetailsSuccessAction, GetTableDetailsErrorAction>
 {
     private readonly ITableClient tableClient;
     private readonly NavigationManager navigationManager;
@@ -16,7 +16,7 @@ public sealed class TableDetailsEffects
         IState<TableDetailsState> state,
         ITableClient tableClient,
         NavigationManager navigationManager,
-        Serilog.ILogger logger)
+        ILogger<TableDetailsEffects> logger)
         : base(state, logger)
     {
         this.tableClient = tableClient;

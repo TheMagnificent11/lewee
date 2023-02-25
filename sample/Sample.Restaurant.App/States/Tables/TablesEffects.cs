@@ -6,11 +6,11 @@ using Sample.Restaurant.App.States.Tables.Actions;
 namespace Sample.Restaurant.App.States.Tables;
 
 public sealed class TablesEffects
-    : BaseRequestEffects<TablesEffects, TablesState, GetTablesAction, GetTablesSuccessAction, GetTablesErrorAction>
+    : BaseRequestEffects<TablesState, GetTablesAction, GetTablesSuccessAction, GetTablesErrorAction>
 {
     private readonly ITableClient tableClient;
 
-    public TablesEffects(IState<TablesState> state, ITableClient tableClient, Serilog.ILogger logger)
+    public TablesEffects(IState<TablesState> state, ITableClient tableClient, ILogger<TablesEffects> logger)
         : base(state, logger)
     {
         this.tableClient = tableClient;
