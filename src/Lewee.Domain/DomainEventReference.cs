@@ -70,9 +70,14 @@ public class DomainEventReference
     public DateTime PersistedAt { get; protected set; }
 
     /// <summary>
-    /// Gets or sets teh UTC date-time at which the domain event was dispatched
+    /// Gets or sets the UTC date-time at which the domain event was dispatched
     /// </summary>
     public DateTime? DispatchedAt { get; protected set; }
+
+    /// <summary>
+    /// Gets or sets the SignalR client ID
+    /// </summary>
+    public string? ClientId { get; protected set; }
 
     /// <summary>
     /// Coverts this <see cref="DomainEventReference"/> to a <see cref="IDomainEvent"/>
