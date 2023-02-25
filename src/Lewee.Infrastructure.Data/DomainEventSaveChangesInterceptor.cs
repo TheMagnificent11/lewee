@@ -9,9 +9,16 @@ namespace Lewee.Infrastructure.Data;
 internal class DomainEventSaveChangesInterceptor<TContext> : SaveChangesInterceptor
     where TContext : DbContext, IApplicationDbContext
 {
+    private readonly IClientService clientService;
+
+    public DomainEventSaveChangesInterceptor(IClientService clientService)
+    {
+        this.clientService = clientService;
+    }
+
     public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
     {
-        StoreDomainEvents(eventData.Context);
+        this.StoreDomainEvents(eventData.Context);
 
         return base.SavingChanges(eventData, result);
     }
@@ -21,12 +28,12 @@ internal class DomainEventSaveChangesInterceptor<TContext> : SaveChangesIntercep
         InterceptionResult<int> result,
         CancellationToken cancellationToken = default)
     {
-        StoreDomainEvents(eventData.Context);
+        this.StoreDomainEvents(eventData.Context);
 
         return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 
-    private static void StoreDomainEvents(DbContext? context)
+    private void StoreDomainEvents(DbContext? context)
     {
         if (context == null || context is not TContext)
         {
@@ -35,11 +42,11 @@ internal class DomainEventSaveChangesInterceptor<TContext> : SaveChangesIntercep
 
         foreach (var entry in context.ChangeTracker.Entries().ToList())
         {
-            StoreDomainEventsForEntry((TContext)context, entry);
+            this.StoreDomainEventsForEntry((TContext)context, entry);
         }
     }
 
-    private static void StoreDomainEventsForEntry(TContext context, EntityEntry entry)
+    private void StoreDomainEventsForEntry(TContext context, EntityEntry entry)
     {
         if (entry.Entity is not BaseAggregateRoot aggregateRootEntity)
         {
@@ -55,7 +62,7 @@ internal class DomainEventSaveChangesInterceptor<TContext> : SaveChangesIntercep
                 continue;
             }
 
-            var reference = new DomainEventReference(domainEvent);
+            var reference = new DomainEventReference(domainEvent, this.clientService.ClientId);
 
             context.DomainEventReferences?.Add(reference);
         }

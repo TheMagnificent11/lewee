@@ -14,6 +14,7 @@ public abstract class BaseApplicationDbContext<TContext> : DbContext, IApplicati
     where TContext : DbContext, IApplicationDbContext
 {
     private readonly IAuthenticatedUserService authenticatedUserService;
+    private readonly IClientService clientService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BaseApplicationDbContext{T}"/> class
@@ -24,12 +25,17 @@ public abstract class BaseApplicationDbContext<TContext> : DbContext, IApplicati
     /// <param name="authenticatedUserService">
     /// Authenticated user service
     /// </param>
+    /// <param name="clientService">
+    /// Client Service
+    /// </param>
     protected BaseApplicationDbContext(
         DbContextOptions<TContext> options,
-        IAuthenticatedUserService authenticatedUserService)
+        IAuthenticatedUserService authenticatedUserService,
+        IClientService clientService)
         : base(options)
     {
         this.authenticatedUserService = authenticatedUserService;
+        this.clientService = clientService;
     }
 
     /// <summary>
@@ -62,7 +68,7 @@ public abstract class BaseApplicationDbContext<TContext> : DbContext, IApplicati
         base.OnConfiguring(optionsBuilder);
 
         optionsBuilder.AddInterceptors(new AuditDetailsSaveChangesInterceptor(this.authenticatedUserService));
-        optionsBuilder.AddInterceptors(new DomainEventSaveChangesInterceptor<TContext>());
+        optionsBuilder.AddInterceptors(new DomainEventSaveChangesInterceptor<TContext>(this.clientService));
     }
 
     /// <summary>

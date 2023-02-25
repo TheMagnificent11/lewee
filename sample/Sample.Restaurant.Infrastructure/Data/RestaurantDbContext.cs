@@ -10,8 +10,9 @@ public class RestaurantDbContext : BaseApplicationDbContext<RestaurantDbContext>
 {
     public RestaurantDbContext(
         DbContextOptions<RestaurantDbContext> options,
-        IAuthenticatedUserService authenticatedUserService)
-        : base(options, authenticatedUserService)
+        IAuthenticatedUserService authenticatedUserService,
+        IClientService clientService)
+        : base(options, authenticatedUserService, clientService)
     {
     }
 

@@ -2,6 +2,7 @@ using Lewee.Application;
 using Lewee.Infrastructure.AspNet.Auth;
 using Lewee.Infrastructure.AspNet.Logging;
 using Lewee.Infrastructure.AspNet.Settings;
+using Lewee.Infrastructure.AspNet.SignalR;
 using Lewee.Infrastructure.AspNet.WebApi;
 using Lewee.Infrastructure.Data;
 using Sample.Restaurant.Application;
@@ -39,6 +40,7 @@ builder.Services
     .ConfigureControllers()
     .AddEndpointsApiExplorer()
     .AddSwaggerGen()
+    .ConfigureSignalR()
     .AddHealthChecks()
     .AddDbContextCheck<RestaurantDbContext>();
 
@@ -48,9 +50,11 @@ application.UseCors()
     .UseSerilogIngestion()
     .UseHealthChecks("/health")
     .UseHttpsRedirection()
-    .UseAuthorization();
+    .UseAuthorization()
+    .UseMiddleware<SignalRClientIdMiddleware>();
 
 application.MapControllers();
+application.MapHub<ClientEventHub>("/events");
 
 if (application.Environment.IsDevelopment())
 {
