@@ -12,6 +12,8 @@ public class SignalRClientIdMiddleware
     /// </summary>
     public const string ClientIdHttpContextId = "SignalR-Client-Id";
 
+    private const string SignalRClientIdHeder = "X-Client-Id";
+
     private readonly RequestDelegate next;
 
     /// <summary>
@@ -30,14 +32,12 @@ public class SignalRClientIdMiddleware
     /// <returns>An asynchronous task</returns>
     public async Task InvokeAsync(HttpContext context)
     {
-        var clientId = context.Request?.Headers["X-Client-Id"];
-
-        if (string.IsNullOrWhiteSpace(clientId))
+        if (context.Request.Headers.TryGetValue(SignalRClientIdHeder, out var clientId)
+            && !string.IsNullOrEmpty(clientId)
+            && Guid.TryParse(clientId, out _))
         {
-            await this.next(context);
+            context.Items[SignalRClientIdHeder] = clientId;
         }
-
-        context.Items[ClientIdHttpContextId] = clientId;
 
         await this.next(context);
     }
