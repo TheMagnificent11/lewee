@@ -21,7 +21,10 @@ public static class ApplicationConfiguration
     /// <param name="applicationAssembly">Application assembly</param>
     /// <param name="domainAssembly">Domain assembly</param>
     /// <returns>Service collection (for chaining)</returns>
-    public static IServiceCollection AddApplication(this IServiceCollection services, Assembly applicationAssembly, Assembly domainAssembly)
+    public static IServiceCollection AddApplication(
+        this IServiceCollection services,
+        Assembly applicationAssembly,
+        Assembly domainAssembly)
     {
         services.AddMediatR(config => config.RegisterServicesFromAssemblies(applicationAssembly, domainAssembly));
         services.AddValidatorsFromAssembly(applicationAssembly, includeInternalTypes: true);
@@ -35,7 +38,9 @@ public static class ApplicationConfiguration
     /// <param name="services">Service collection</param>
     /// <param name="additionalBehaviors">Additional behaviors</param>
     /// <returns>Service collection (for chaining)</returns>
-    public static IServiceCollection AddPipelineBehaviors(this IServiceCollection services, params Type[] additionalBehaviors)
+    public static IServiceCollection AddPipelineBehaviors(
+        this IServiceCollection services,
+        params Type[] additionalBehaviors)
     {
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CorrelationIdLoggingBehavior<,>));
