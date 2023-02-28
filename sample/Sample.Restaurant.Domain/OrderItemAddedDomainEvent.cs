@@ -26,4 +26,5 @@ public class OrderItemAddedDomainEvent : IDomainEvent
     public Guid OrderId { get; }
     public Guid MenuItemId { get; }
     public decimal Price { get; }
+    public string? ClientId { get; set; }
 }

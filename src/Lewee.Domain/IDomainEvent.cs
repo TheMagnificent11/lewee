@@ -11,4 +11,9 @@ public interface IDomainEvent : INotification
     /// Gets the correlation ID of the event
     /// </summary>
     Guid CorrelationId { get; }
+
+    /// <summary>
+    /// Gets or sets the client ID
+    /// </summary>
+    string? ClientId { get; set; }
 }

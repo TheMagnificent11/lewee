@@ -15,15 +15,18 @@ internal class TableDomainEventHandler :
 {
     private readonly IRepository<MenuItem> menuItemRepository;
     private readonly IQueryProjectionService queryProjectionService;
+    private readonly IMediator mediator;
     private readonly ILogger logger;
 
     public TableDomainEventHandler(
         IRepository<MenuItem> menuItemRepository,
         IQueryProjectionService queryProjectionService,
+        IMediator mediator,
         ILogger logger)
     {
         this.menuItemRepository = menuItemRepository;
         this.queryProjectionService = queryProjectionService;
+        this.mediator = mediator;
         this.logger = logger.ForContext<TableDomainEventHandler>();
     }
 
@@ -46,6 +49,21 @@ internal class TableDomainEventHandler :
                 cancellationToken);
 
             this.logger.Debug("TableDetails query projection created");
+
+            if (notification.ClientId == null)
+            {
+                return;
+            }
+
+            /* TODO publishing (need new Lewee.Contracts assembly that has ClientMessage and IClientMessageContract
+            var clientMessage = new TableUsedMessage {  }
+
+            await this.mediator.Publish(
+                new ClientEvent(notification.CorrelationId, notification.ClientId, new TableU,
+                cancellationToken);
+
+            this.logger.Debug("Table Used client event published");
+            */
         }
     }
 

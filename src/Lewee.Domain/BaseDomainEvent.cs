@@ -13,8 +13,9 @@ public abstract class BaseDomainEvent : IDomainEvent
         this.CorrelationId = Guid.NewGuid();
     }
 
-    /// <summary>
-    /// Gets or sets the correlation ID of the event
-    /// </summary>
+    /// <inheritdoc />
     public Guid CorrelationId { get; protected set; }
+
+    /// <inheritdoc />
+    public string? ClientId { get; set; }
 }

@@ -14,4 +14,5 @@ public class TableInUseDomainEvent : IDomainEvent
     public Guid CorrelationId { get; }
     public Guid TableId { get; }
     public int TableNumber { get; }
+    public string? ClientId { get; set; }
 }

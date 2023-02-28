@@ -104,9 +104,15 @@ public class DomainEventReference
             return null;
         }
 
-        var domainEvent = JsonSerializer.Deserialize(this.DomainEventJson, targetType);
+        var objDomainEvent = JsonSerializer.Deserialize(this.DomainEventJson, targetType);
+        if (objDomainEvent is not IDomainEvent domainEvent)
+        {
+            return null;
+        }
 
-        return domainEvent as IDomainEvent;
+        domainEvent.ClientId = this.ClientId;
+
+        return domainEvent;
     }
 
     /// <summary>
