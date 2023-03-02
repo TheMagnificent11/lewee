@@ -1,5 +1,5 @@
-﻿using Lewee.Domain;
-using Lewee.Shared;
+﻿using Lewee.Application.Mediation.Requests;
+using Lewee.Domain;
 using MediatR;
 using Serilog;
 

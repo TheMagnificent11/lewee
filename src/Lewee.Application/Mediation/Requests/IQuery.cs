@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace Lewee.Application.Mediation;
+namespace Lewee.Application.Mediation.Requests;
 
 /// <summary>
 /// Query Interface

@@ -1,6 +1,5 @@
-﻿using Lewee.Application.Mediation;
+﻿using Lewee.Application.Mediation.Requests;
 using Lewee.Domain;
-using Lewee.Shared;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Sample.Restaurant.Domain;

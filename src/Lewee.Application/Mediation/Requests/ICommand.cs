@@ -1,7 +1,6 @@
-﻿using Lewee.Shared;
-using MediatR;
+﻿using MediatR;
 
-namespace Lewee.Application.Mediation;
+namespace Lewee.Application.Mediation.Requests;
 
 /// <summary>
 /// Command Interface

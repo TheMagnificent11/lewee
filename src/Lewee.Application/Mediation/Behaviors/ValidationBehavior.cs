@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
-using Lewee.Shared;
+using Lewee.Application.Mediation.Requests;
 using MediatR;
 
 namespace Lewee.Application.Mediation.Behaviors;

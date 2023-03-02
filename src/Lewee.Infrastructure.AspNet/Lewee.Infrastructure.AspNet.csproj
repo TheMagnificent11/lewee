@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Lewee.Domain\Lewee.Domain.csproj" />
+    <ProjectReference Include="..\Lewee.Application\Lewee.Application.csproj" />
   </ItemGroup>
   
 </Project>

@@ -1,4 +1,4 @@
-﻿using Lewee.Application.Mediation;
+﻿using Lewee.Application.Mediation.Requests;
 
 namespace Sample.Restaurant.Application;
 
