@@ -1,4 +1,4 @@
-﻿namespace Lewee.Shared;
+﻿namespace Lewee.Contracts;
 
 /// <summary>
 /// Client Message

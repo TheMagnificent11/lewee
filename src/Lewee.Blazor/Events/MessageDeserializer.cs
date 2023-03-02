@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using System.Text.Json;
-using Lewee.Shared;
+using Lewee.Contracts;
 using Microsoft.Extensions.Logging;
 
 namespace Lewee.Blazor.Events;
