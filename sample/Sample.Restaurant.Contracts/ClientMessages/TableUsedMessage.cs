@@ -1,6 +1,8 @@
-﻿namespace Sample.Restaurant.Contracts.ClientMessages;
+﻿using Lewee.Contracts;
 
-public class TableUsedMessage
+namespace Sample.Restaurant.Contracts.ClientMessages;
+
+public class TableUsedMessage : IClientMessageContract
 {
     public Guid CorrelationId { get; set; }
     public int TableNumber { get; set; }

@@ -2,6 +2,7 @@
 using Lewee.Shared;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Sample.Restaurant.Contracts.ClientMessages;
 using Sample.Restaurant.Domain;
 using Serilog;
 using Serilog.Context;
@@ -55,15 +56,18 @@ internal class TableDomainEventHandler :
                 return;
             }
 
-            /* TODO publishing (need new Lewee.Contracts assembly that has ClientMessage and IClientMessageContract
-            var clientMessage = new TableUsedMessage {  }
+            var clientMessage = new TableUsedMessage
+            {
+                CorrelationId = notification.CorrelationId,
+                TableNumber = notification.TableNumber
+            };
 
-            await this.mediator.Publish(
-                new ClientEvent(notification.CorrelationId, notification.ClientId, new TableU,
-                cancellationToken);
+            // TODO
+            //await this.mediator.Publish(
+            //    new ClientEvent(notification.CorrelationId, notification.ClientId, new TableU,
+            //    cancellationToken);
 
             this.logger.Debug("Table Used client event published");
-            */
         }
     }
 
