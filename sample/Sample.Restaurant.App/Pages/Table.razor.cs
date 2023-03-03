@@ -2,6 +2,7 @@
 using Sample.Restaurant.App.States.TableDetails.Actions;
 
 namespace Sample.Restaurant.App.Pages;
+
 public partial class Table
 {
     [Parameter]

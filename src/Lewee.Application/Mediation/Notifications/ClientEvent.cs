@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using System.Text.Json;
+using Lewee.Contracts;
+using MediatR;
 
 namespace Lewee.Application.Mediation.Notifications;
 
@@ -7,7 +9,7 @@ namespace Lewee.Application.Mediation.Notifications;
 /// </summary>
 /// <typeparam name="T">Message type</typeparam>
 public class ClientEvent<T> : INotification
-    where T : class
+    where T : IClientMessageContract
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ClientEvent{T}"/> class
@@ -36,4 +38,21 @@ public class ClientEvent<T> : INotification
     /// Gets the message
     /// </summary>
     public T Message { get; }
+
+    /// <summary>
+    /// Converts to a client message
+    /// </summary>
+    /// <returns>A client message</returns>
+    public ClientMessge ToClientMessage()
+    {
+        var messageType = this.Message.GetType();
+
+        return new ClientMessge
+        {
+            CorrelationId = this.CorrelationId,
+            ContractAssemblyName = messageType.Assembly.FullName ?? string.Empty,
+            ContractFullClassName = messageType.FullName ?? string.Empty,
+            MessageJson = JsonSerializer.Serialize<T>(this.Message)
+        };
+    }
 }

@@ -1,4 +1,5 @@
-﻿using Lewee.Domain;
+﻿using Lewee.Application.Mediation.Notifications;
+using Lewee.Domain;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Lewee.Infrastructure.AspNet.SignalR;
@@ -18,6 +19,9 @@ public static class SignalRConfiguration
         services.AddSignalR();
         services.AddHttpContextAccessor();
         services.AddSingleton<IClientService, SignalRClientService>();
+        services.AddMediatR(config => config.RegisterServicesFromAssemblies(
+            typeof(ClientEvent<>).Assembly,
+            typeof(ClientEventHandler<>).Assembly));
 
         return services;
     }

@@ -1,4 +1,3 @@
-using Sample.Restaurant.App.States.TableDetails.Actions;
 using Sample.Restaurant.App.States.Tables.Actions;
 using Sample.Restaurant.App.States.UseTable.Actions;
 
