@@ -17,6 +17,7 @@ internal class MenuItemConfiguration : BaseAggregateRootConfiguration<MenuItem>
 
         builder.HasOne(x => x.ItemType);
 
+        /*
         var menuItemIds = new Guid[]
         {
             new Guid("7fabe425-1d65-48d3-9ae4-caf5f27bbde8"),
@@ -35,5 +36,6 @@ internal class MenuItemConfiguration : BaseAggregateRootConfiguration<MenuItem>
         builder.HasData(new MenuItem(menuItemIds[4], "Beer", 7.50M, MenuItemType.Drink));
         builder.HasData(new MenuItem(menuItemIds[5], "Wine", 10, MenuItemType.Drink));
         builder.HasData(new MenuItem(menuItemIds[6], "Soft Drink", 3.50M, MenuItemType.Drink));
+        */
     }
 }

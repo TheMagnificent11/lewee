@@ -1,5 +1,4 @@
 ﻿using Lewee.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Sample.Restaurant.Domain;
 
@@ -14,6 +13,7 @@ internal sealed class TableConfiguration : BaseAggregateRootConfiguration<Table>
 
         builder.Ignore(x => x.CurrentOrder);
 
+        /*
         var tableIds = new List<Guid>
         {
             new Guid("dab4cd90-e6ca-48ec-b7a0-fcbe4e6e5805"),
@@ -34,5 +34,6 @@ internal sealed class TableConfiguration : BaseAggregateRootConfiguration<Table>
         builder.Metadata
             .FindNavigation(nameof(Table.Orders))
             ?.SetPropertyAccessMode(PropertyAccessMode.Field);
+        */
     }
 }
