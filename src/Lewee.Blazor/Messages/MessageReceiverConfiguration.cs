@@ -19,10 +19,10 @@ public static class MessageReceiverConfiguration
         string serverApiUrl)
         where TMapper : class, IMessageToActionMapper
     {
-        services.AddSingleton<IMessageToActionMapper, TMapper>();
+        services.AddTransient<IMessageToActionMapper, TMapper>();
         services.AddTransient<MessageDeserializer>();
         services.AddTransient(_ => new MessageReceiver($"{serverApiUrl}/events"));
-        services.AddSingleton<MessageReceiverService>();
+        services.AddScoped<MessageReceiverService>();
 
         return services;
     }

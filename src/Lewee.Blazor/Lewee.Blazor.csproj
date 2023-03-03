@@ -3,7 +3,6 @@
   <ItemGroup>
     <PackageReference Include="Fluxor.Blazor.Web" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" />
   </ItemGroup>
 
   <ItemGroup>

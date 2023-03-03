@@ -1,4 +1,7 @@
-﻿<Fluxor.Blazor.Web.StoreInitializer />
+﻿@using Lewee.Blazor.Messages;
+
+<Fluxor.Blazor.Web.StoreInitializer />
+<MessageReceiverServiceInitializer />
 
 <Router AppAssembly="@typeof(App).Assembly">
     <Found Context="routeData">

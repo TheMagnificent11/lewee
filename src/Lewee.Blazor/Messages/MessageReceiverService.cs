@@ -1,12 +1,11 @@
 ﻿using Fluxor;
 using Lewee.Contracts;
 using Microsoft.AspNetCore.SignalR.Client;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace Lewee.Blazor.Messages;
 
-internal class MessageReceiverService : IHostedService
+internal class MessageReceiverService
 {
     private readonly MessageReceiver messageReceiver;
     private readonly MessageDeserializer messageDeserializer;
@@ -28,7 +27,7 @@ internal class MessageReceiverService : IHostedService
         this.logger = logger;
     }
 
-    public async Task StartAsync(CancellationToken cancellationToken)
+    public async Task StartAsync()
     {
         await this.messageReceiver.StartAsync();
 
@@ -55,10 +54,5 @@ internal class MessageReceiverService : IHostedService
                 action.GetType().Name,
                 messageBody);
         });
-    }
-
-    public async Task StopAsync(CancellationToken cancellationToken)
-    {
-        await this.messageReceiver.StopAsync();
     }
 }
