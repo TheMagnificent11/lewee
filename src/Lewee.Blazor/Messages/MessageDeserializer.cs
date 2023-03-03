@@ -3,7 +3,7 @@ using System.Text.Json;
 using Lewee.Contracts;
 using Microsoft.Extensions.Logging;
 
-namespace Lewee.Blazor.Events;
+namespace Lewee.Blazor.Messages;
 
 internal class MessageDeserializer
 {
@@ -18,15 +18,15 @@ internal class MessageDeserializer
         this.logger = logger;
     }
 
-    public object? Deserialize(string message)
+    public (object? messageBody, Guid? correlationId) Deserialize(string message)
     {
         try
         {
-            var clientMessage = JsonSerializer.Deserialize<ClientMessge>(message);
+            var clientMessage = JsonSerializer.Deserialize<ClientMessage>(message);
             if (clientMessage == null)
             {
                 this.logger.LogError(CouldNotDeserializeError, message);
-                return null;
+                return (null, null);
             }
 
             var assembly = Assembly.Load(clientMessage.ContractAssemblyName);
@@ -39,7 +39,7 @@ internal class MessageDeserializer
                     clientMessage.ContractAssemblyName,
                     clientMessage.ContractFullClassName);
 
-                return null;
+                return (null, null);
             }
 
             var obj = JsonSerializer.Deserialize(clientMessage.MessageJson, targetType);
@@ -52,12 +52,12 @@ internal class MessageDeserializer
                     clientMessage.ContractFullClassName);
             }
 
-            return obj;
+            return (obj, clientMessage.CorrelationId);
         }
         catch (Exception ex)
         {
             this.logger.LogError(ex, CouldNotDeserializeError, message);
-            return null;
+            return (null, null);
         }
     }
 }

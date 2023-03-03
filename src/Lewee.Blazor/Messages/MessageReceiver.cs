@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
 
-namespace Lewee.Blazor.Events;
+namespace Lewee.Blazor.Messages;
 internal class MessageReceiver
 {
     private readonly HubConnection hubConnection;

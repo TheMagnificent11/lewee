@@ -43,11 +43,11 @@ public class ClientEvent<T> : INotification
     /// Converts to a client message
     /// </summary>
     /// <returns>A client message</returns>
-    public ClientMessge ToClientMessage()
+    public ClientMessage ToClientMessage()
     {
         var messageType = this.Message.GetType();
 
-        return new ClientMessge
+        return new ClientMessage
         {
             CorrelationId = this.CorrelationId,
             ContractAssemblyName = messageType.Assembly.FullName ?? string.Empty,

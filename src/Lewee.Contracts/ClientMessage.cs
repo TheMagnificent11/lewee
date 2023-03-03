@@ -3,7 +3,7 @@
 /// <summary>
 /// Client Message
 /// </summary>
-public class ClientMessge
+public class ClientMessage
 {
     /// <summary>
     /// Gets or sets the correlation ID

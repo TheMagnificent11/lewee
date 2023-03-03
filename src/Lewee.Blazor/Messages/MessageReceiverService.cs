@@ -1,9 +1,10 @@
 ﻿using Fluxor;
+using Lewee.Contracts;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Lewee.Blazor.Events;
+namespace Lewee.Blazor.Messages;
 
 internal class MessageReceiverService : IHostedService
 {
@@ -33,15 +34,15 @@ internal class MessageReceiverService : IHostedService
 
         var connection = this.messageReceiver.GetHubConnection();
 
-        connection.On<string>("ReceiveMessage", message =>
+        connection.On<string>(nameof(ClientMessage), message =>
         {
-            var messageBody = this.messageDeserializer.Deserialize(message);
+            var (messageBody, correlationId) = this.messageDeserializer.Deserialize(message);
             if (messageBody == null)
             {
                 return;
             }
 
-            var action = this.messageToActionMapper.Map(messageBody);
+            var action = this.messageToActionMapper.Map(messageBody, correlationId ?? Guid.Empty);
             if (action == null)
             {
                 this.logger.LogInformation("No action mapped to {@MessageBody}", messageBody);

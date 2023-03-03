@@ -1,7 +1,9 @@
 using Fluxor;
+using Lewee.Blazor.Messages;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Sample.Restaurant.App;
+using Sample.Restaurant.App.States;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
@@ -44,6 +46,8 @@ builder.Services.AddFluxor(options =>
     options.UseReduxDevTools();
 #endif
 });
+
+builder.Services.ConfigureMessageReceiver<MessageToActionMapper>(serverApiUrl);
 
 builder.Services.AddScoped<ITableClient>(provider =>
 {

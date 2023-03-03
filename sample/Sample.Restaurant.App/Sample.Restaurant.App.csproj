@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Lewee.Blazor\Lewee.Blazor.csproj" />
+    <ProjectReference Include="..\Sample.Restaurant.Contracts\Sample.Restaurant.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

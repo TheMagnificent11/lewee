@@ -15,10 +15,10 @@ public class ClientEventHub : Hub
     /// <param name="clientMessage">Client message</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Asynchronous task</returns>
-    public async Task Publish(string clientId, ClientMessge clientMessage, CancellationToken cancellationToken)
+    public async Task Publish(string clientId, ClientMessage clientMessage, CancellationToken cancellationToken)
     {
         await this.Clients.Clients(clientId).SendAsync(
-            nameof(ClientMessge),
+            nameof(ClientMessage),
             clientMessage,
             cancellationToken);
     }
