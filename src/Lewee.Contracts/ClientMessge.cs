@@ -11,6 +11,11 @@ public class ClientMessge
     public Guid CorrelationId { get; set; }
 
     /// <summary>
+    /// Gets or sets the client ID
+    /// </summary>
+    public string ClientId { get; set; }
+
+    /// <summary>
     /// Gets or sets the assembly name of the JSON contract class
     /// </summary>
     public string ContractAssemblyName { get; set; }

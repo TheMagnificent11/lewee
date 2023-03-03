@@ -1,4 +1,5 @@
-﻿using Lewee.Domain;
+﻿using Lewee.Application.Mediation.Notifications;
+using Lewee.Domain;
 using Lewee.Shared;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -56,16 +57,17 @@ internal class TableDomainEventHandler :
                 return;
             }
 
-            var clientMessage = new TableUsedMessage
+            var message = new TableUsedMessage
             {
-                CorrelationId = notification.CorrelationId,
                 TableNumber = notification.TableNumber
             };
 
-            // TODO
-            //await this.mediator.Publish(
-            //    new ClientEvent(notification.CorrelationId, notification.ClientId, new TableU,
-            //    cancellationToken);
+            var clientEvent = new ClientEvent<TableUsedMessage>(
+                notification.CorrelationId,
+                notification.ClientId,
+                message);
+
+            await this.mediator.Publish(clientEvent, cancellationToken);
 
             this.logger.Debug("Table Used client event published");
         }
