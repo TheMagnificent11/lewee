@@ -7,6 +7,7 @@ using Lewee.Infrastructure.AspNet.WebApi;
 using Lewee.Infrastructure.Data;
 using Sample.Restaurant.Application;
 using Sample.Restaurant.Infrastructure.Data;
+using Sample.Restaurant.Infrastructure.Data.Seeding;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,7 +30,7 @@ builder.Services.AddMapper();
 builder.Services.ConfigureCorsDefaultPolicy(builder.Configuration["AllowedOrigins"] ?? string.Empty);
 
 builder.Services
-    .ConfigureDatabase<RestaurantDbContext>(connectionString)
+    .ConfigureDatabaseWithSeeder<RestaurantDbContext, RestaurantDbSeeder>(connectionString)
     .ConfigureAuthenticatedUserService()
     .ConfigureRestaurantData() // TODO: ideally this would not be needed if IRepository would be registered globally
 #if DEBUG
@@ -65,7 +66,7 @@ if (application.Environment.IsDevelopment())
 
 if (migrateDatabases)
 {
-    application.MigrationDatabase<RestaurantDbContext>();
+    await application.MigrationDatabase<RestaurantDbContext>(seedData: true);
 }
 
 application.Run();
