@@ -7,21 +7,24 @@ namespace Lewee.Application.Mediation.Notifications;
 /// <summary>
 /// Client Event
 /// </summary>
-/// <typeparam name="T">Message type</typeparam>
-public class ClientEvent<T> : INotification
-    where T : IClientMessageContract
+public class ClientEvent : INotification
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="ClientEvent{T}"/> class
+    /// Initializes a new instance of the <see cref="ClientEvent"/> class
     /// </summary>
     /// <param name="correlationId">Correlation ID</param>
     /// <param name="clientId">SignalR Client ID</param>
     /// <param name="message">Message</param>
-    public ClientEvent(Guid correlationId, string clientId, T message)
+    public ClientEvent(Guid correlationId, string clientId, object message)
     {
         this.CorrelationId = correlationId;
         this.ClientId = clientId;
-        this.Message = message;
+
+        var messageType = message.GetType();
+
+        this.ContractAssemblyName = messageType.Assembly.FullName ?? string.Empty;
+        this.ContractFullClassName = messageType.FullName ?? string.Empty;
+        this.MessageJson = JsonSerializer.Serialize(message, messageType);
     }
 
     /// <summary>
@@ -35,9 +38,19 @@ public class ClientEvent<T> : INotification
     public string ClientId { get; }
 
     /// <summary>
-    /// Gets the message
+    /// Gets the assembly name of the JSON contract class
     /// </summary>
-    public T Message { get; }
+    public string ContractAssemblyName { get; }
+
+    /// <summary>
+    /// Gets the full class name of the JSON contract class
+    /// </summary>
+    public string ContractFullClassName { get; }
+
+    /// <summary>
+    /// Gets the message JSON
+    /// </summary>
+    public string MessageJson { get; }
 
     /// <summary>
     /// Converts to a client message
@@ -45,14 +58,12 @@ public class ClientEvent<T> : INotification
     /// <returns>A client message</returns>
     public ClientMessage ToClientMessage()
     {
-        var messageType = this.Message.GetType();
-
         return new ClientMessage
         {
             CorrelationId = this.CorrelationId,
-            ContractAssemblyName = messageType.Assembly.FullName ?? string.Empty,
-            ContractFullClassName = messageType.FullName ?? string.Empty,
-            MessageJson = JsonSerializer.Serialize<T>(this.Message)
+            ContractAssemblyName = this.ContractAssemblyName,
+            ContractFullClassName = this.ContractFullClassName,
+            MessageJson = this.MessageJson
         };
     }
 }

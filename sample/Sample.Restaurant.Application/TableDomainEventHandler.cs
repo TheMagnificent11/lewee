@@ -62,11 +62,7 @@ internal class TableDomainEventHandler :
                 TableNumber = notification.TableNumber
             };
 
-            var clientEvent = new ClientEvent<TableUsedMessage>(
-                notification.CorrelationId,
-                notification.ClientId,
-                message);
-
+            var clientEvent = new ClientEvent(notification.CorrelationId, notification.ClientId, message);
             await this.mediator.Publish(clientEvent, cancellationToken);
 
             this.logger.Debug("Table Used client event published");
