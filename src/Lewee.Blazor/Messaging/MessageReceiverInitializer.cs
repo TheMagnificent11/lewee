@@ -32,7 +32,7 @@ public class MessageReceiverInitializer : ComponentBase
         await base.OnInitializedAsync();
         await this.HubConnection.StartAsync();
 
-        this.HubConnection.On<string>(nameof(ClientMessage), message =>
+        this.HubConnection.On<ClientMessage>("ReceiveMessage", message =>
         {
             var (messageBody, correlationId) = this.MessageDeserializer.Deserialize(message);
             if (messageBody == null)

@@ -9,7 +9,7 @@ internal class MessageDeserializer
 {
     private const string CouldNotDeserializeError = "Could not deserialize message '{Message}'";
     private const string CouldNotFindContractError =
-        "Could not find JSON contract type for message (Message: {Message}, Contract Assembly: {ContractAssembly}, Contract Class: {ContractClass})";
+        "Could not find JSON contract type for message (Contract Assembly: {ContractAssembly}, Contract Class: {ContractClass})";
 
     private readonly ILogger<MessageDeserializer> logger;
 
@@ -18,24 +18,16 @@ internal class MessageDeserializer
         this.logger = logger;
     }
 
-    public (object? messageBody, Guid? correlationId) Deserialize(string message)
+    public (object? messageBody, Guid? correlationId) Deserialize(ClientMessage clientMessage)
     {
         try
         {
-            var clientMessage = JsonSerializer.Deserialize<ClientMessage>(message);
-            if (clientMessage == null)
-            {
-                this.logger.LogError(CouldNotDeserializeError, message);
-                return (null, null);
-            }
-
             var assembly = Assembly.Load(clientMessage.ContractAssemblyName);
             var targetType = assembly.GetType(clientMessage.ContractFullClassName);
             if (targetType == null)
             {
                 this.logger.LogError(
                     CouldNotFindContractError,
-                    message,
                     clientMessage.ContractAssemblyName,
                     clientMessage.ContractFullClassName);
 
@@ -47,7 +39,6 @@ internal class MessageDeserializer
             {
                 this.logger.LogError(
                     CouldNotFindContractError,
-                    message,
                     clientMessage.ContractAssemblyName,
                     clientMessage.ContractFullClassName);
             }
@@ -56,7 +47,7 @@ internal class MessageDeserializer
         }
         catch (Exception ex)
         {
-            this.logger.LogError(ex, CouldNotDeserializeError, message);
+            this.logger.LogError(ex, CouldNotDeserializeError, clientMessage);
             return (null, null);
         }
     }

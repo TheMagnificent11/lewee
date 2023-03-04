@@ -19,7 +19,6 @@ public static class SignalRConfiguration
         services.AddSignalR();
         services.AddHttpContextAccessor();
         services.AddSingleton<IClientService, SignalRClientService>();
-        services.AddTransient<ClientEventHub>();
         services.AddMediatR(config => config.RegisterServicesFromAssemblies(
             typeof(ClientEvent).Assembly,
             typeof(ClientEventHandler).Assembly));
