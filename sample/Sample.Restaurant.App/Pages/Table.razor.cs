@@ -10,6 +10,7 @@ public partial class Table
 
     protected override void OnInitialized()
     {
+        base.OnInitialized();
         this.Dispatcher.Dispatch(new GetTableDetailsAction(Guid.NewGuid(), this.TableNumber));
     }
 
