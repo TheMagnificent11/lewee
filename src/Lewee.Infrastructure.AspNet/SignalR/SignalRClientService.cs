@@ -1,4 +1,5 @@
 ﻿using Lewee.Domain;
+using Lewee.Shared;
 using Microsoft.AspNetCore.Http;
 
 namespace Lewee.Infrastructure.AspNet.SignalR;
@@ -14,6 +15,6 @@ internal class SignalRClientService : IClientService
 
     public string? ClientId => this.httpContextAccessor
         ?.HttpContext
-        ?.Items?[SignalRClientIdMiddleware.ClientIdHttpContextId]
+        ?.Items?[HttpContextConsts.ClientId]
         ?.ToString();
 }

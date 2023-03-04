@@ -47,6 +47,7 @@ public static class ApplicationConfiguration
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TenantLoggingBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CommandBehavior<,>));
 
         if (additionalBehaviors != null && additionalBehaviors.Any())
         {

@@ -51,8 +51,7 @@ application.UseCors()
     .UseSerilogIngestion()
     .UseHealthChecks("/health")
     .UseHttpsRedirection()
-    .UseAuthorization()
-    .UseMiddleware<SignalRClientIdMiddleware>();
+    .UseAuthorization();
 
 application.MapControllers();
 application.MapHub<ClientEventHub>("/events");

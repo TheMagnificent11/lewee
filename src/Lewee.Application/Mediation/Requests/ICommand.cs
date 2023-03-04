@@ -7,4 +7,8 @@ namespace Lewee.Application.Mediation.Requests;
 /// </summary>
 public interface ICommand : IApplicationRequest, IRequest<CommandResult>
 {
+    /// <summary>
+    /// Gets the SignalR client ID
+    /// </summary>
+    string? ClientId { get; }
 }

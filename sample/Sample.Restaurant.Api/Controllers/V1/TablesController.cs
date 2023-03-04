@@ -48,7 +48,7 @@ public sealed class TablesController : BaseApiController
         [FromHeader] Guid? correlationId,
         CancellationToken cancellationToken = default)
     {
-        var command = new UseTableCommand(correlationId ?? this.CorrelationId, tableNumber);
+        var command = new UseTableCommand(correlationId ?? this.CorrelationId, this.ClientId, tableNumber);
         var result = await this.Mediator.Send(command, cancellationToken);
 
         return result.ToActionResult();
@@ -64,7 +64,11 @@ public sealed class TablesController : BaseApiController
         [FromHeader] Guid? correlationId,
         CancellationToken cancellationToken = default)
     {
-        var command = new AddMenuItemCommand(correlationId ?? this.CorrelationId, tableNumber, menuItemId);
+        var command = new AddMenuItemCommand(
+            correlationId ?? this.CorrelationId,
+            this.ClientId,
+            tableNumber,
+            menuItemId);
         var result = await this.Mediator.Send(command, cancellationToken);
 
         return result.ToActionResult();
