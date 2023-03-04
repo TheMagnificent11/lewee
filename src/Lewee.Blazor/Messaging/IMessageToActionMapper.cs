@@ -1,6 +1,6 @@
 ﻿using Lewee.Blazor.Fluxor.Actions;
 
-namespace Lewee.Blazor.Messages;
+namespace Lewee.Blazor.Messaging;
 
 /// <summary>
 /// Message To Action Mapper Interface

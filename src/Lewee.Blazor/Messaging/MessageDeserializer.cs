@@ -3,7 +3,7 @@ using System.Text.Json;
 using Lewee.Contracts;
 using Microsoft.Extensions.Logging;
 
-namespace Lewee.Blazor.Messages;
+namespace Lewee.Blazor.Messaging;
 
 internal class MessageDeserializer
 {

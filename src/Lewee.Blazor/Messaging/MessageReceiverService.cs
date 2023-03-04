@@ -3,7 +3,7 @@ using Lewee.Contracts;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
 
-namespace Lewee.Blazor.Messages;
+namespace Lewee.Blazor.Messaging;
 
 internal class MessageReceiverService
 {

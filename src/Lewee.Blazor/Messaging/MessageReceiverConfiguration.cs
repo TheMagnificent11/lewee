@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace Lewee.Blazor.Messages;
+namespace Lewee.Blazor.Messaging;
 
 /// <summary>
 /// Event Re

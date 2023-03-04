@@ -1,5 +1,5 @@
 ﻿using Lewee.Blazor.Fluxor.Actions;
-using Lewee.Blazor.Messages;
+using Lewee.Blazor.Messaging;
 using Sample.Restaurant.App.States.UseTable.Actions;
 using Sample.Restaurant.Contracts.ClientMessages;
 

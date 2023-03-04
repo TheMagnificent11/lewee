@@ -1,5 +1,5 @@
 using Fluxor;
-using Lewee.Blazor.Messages;
+using Lewee.Blazor.Messaging;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Sample.Restaurant.App;

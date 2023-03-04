@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 
-namespace Lewee.Blazor.Messages;
+namespace Lewee.Blazor.Messaging;
 
 /// <summary>
 /// Message Receiver Service Initializer
