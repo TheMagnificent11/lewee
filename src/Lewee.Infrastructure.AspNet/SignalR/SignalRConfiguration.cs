@@ -1,5 +1,7 @@
 ﻿using Lewee.Application.Mediation.Notifications;
 using Lewee.Domain;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Lewee.Infrastructure.AspNet.SignalR;
@@ -17,6 +19,11 @@ public static class SignalRConfiguration
     public static IServiceCollection ConfigureSignalR(this IServiceCollection services)
     {
         services.AddSignalR();
+        services.AddResponseCompression(opts =>
+        {
+            opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+                new[] { "application/octet-stream" });
+        });
         services.AddHttpContextAccessor();
         services.AddSingleton<IClientService, SignalRClientService>();
         services.AddMediatR(config => config.RegisterServicesFromAssemblies(

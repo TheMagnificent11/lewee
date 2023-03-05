@@ -1,4 +1,5 @@
 ﻿using Lewee.Application.Mediation.Notifications;
+using Lewee.Contracts;
 using Lewee.Shared;
 using MediatR;
 using Microsoft.AspNetCore.SignalR;
@@ -30,7 +31,7 @@ internal class ClientEventHandler : INotificationHandler<ClientEvent>
                 return;
             }
 
-            await client.SendAsync("SendMessage", clientMessage, cancellationToken);
+            await client.SendAsync(nameof(ClientMessage), clientMessage, cancellationToken);
             this.logger.Information("Published message to client");
         }
     }

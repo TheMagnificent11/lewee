@@ -32,8 +32,7 @@ public class MessageReceiverInitializer : ComponentBase
         await base.OnInitializedAsync();
         await this.HubConnection.StartAsync();
 
-        // TODO: this is wrong (see here: https://learn.microsoft.com/en-us/aspnet/core/blazor/tutorials/signalr-blazor?view=aspnetcore-7.0&tabs=visual-studio&pivots=webassembly)
-        this.HubConnection.On<ClientMessage>("ReceiveMessage", message =>
+        this.HubConnection.On<ClientMessage>(nameof(ClientMessage), message =>
         {
             var (messageBody, correlationId) = this.MessageDeserializer.Deserialize(message);
             if (messageBody == null)

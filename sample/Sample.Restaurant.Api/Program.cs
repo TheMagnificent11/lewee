@@ -45,27 +45,28 @@ builder.Services
     .AddHealthChecks()
     .AddDbContextCheck<RestaurantDbContext>();
 
-var application = builder.Build();
+var app = builder.Build();
 
-application.UseCors()
+app.UseCors()
     .UseSerilogIngestion()
     .UseHealthChecks("/health")
     .UseHttpsRedirection()
     .UseAuthorization();
 
-application.MapControllers();
-application.MapHub<ClientEventHub>("/events");
+app.UseResponseCompression();
+app.MapControllers();
+app.MapHub<ClientEventHub>("/events");
 
-if (application.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
 {
-    application.UseMigrationsEndPoint();
-    application.UseSwagger();
-    application.UseSwaggerUI();
+    app.UseMigrationsEndPoint();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 if (migrateDatabases)
 {
-    await application.MigrationDatabase<RestaurantDbContext>(seedData: true);
+    await app.MigrationDatabase<RestaurantDbContext>(seedData: true);
 }
 
-application.Run();
+app.Run();
