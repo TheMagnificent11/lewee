@@ -2,6 +2,7 @@ using Fluxor;
 using Lewee.Blazor.Messaging;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using MudBlazor.Services;
 using Sample.Restaurant.App;
 using Sample.Restaurant.App.States;
 
@@ -53,5 +54,7 @@ builder.Services.AddScoped<ITableClient>(provider =>
 {
     return new TableClient(serverApiUrl, provider.GetService<HttpClient>());
 });
+
+builder.Services.AddMudServices();
 
 await builder.Build().RunAsync();
