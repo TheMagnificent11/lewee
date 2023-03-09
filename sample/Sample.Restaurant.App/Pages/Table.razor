@@ -7,7 +7,7 @@
 @inject IState<TableDetailsState> State
 @inject IDispatcher Dispatcher
 
-<h1>Table @this.TableNumber</h1>
+<PageTitle>Table @this.TableNumber</PageTitle>
 
 @if(this.State.Value.Data == null)
 {
@@ -15,7 +15,7 @@
 }
 else
 {
-    <table class="table">
+    <MudSimpleTable Hover="true" FixedHeader="true">
         <thead>
             <tr>
                 <th>Item Name</th>
@@ -37,5 +37,5 @@ else
                 </tr>
             }
         </tbody>
-    </table>
+    </MudSimpleTable>
 }
