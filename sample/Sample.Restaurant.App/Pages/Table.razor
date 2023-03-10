@@ -32,7 +32,12 @@ else
                     <td>@item.MenuItem.PriceLabel</td>
                     <td>@item.Quantity</td>
                     <td>
-                        <button @onclick="@(() => AddToOrder(item.MenuItem.Id))">Add</button>
+                        <MudButton
+                            Variant="Variant.Filled"
+                            Color="Color.Primary"
+                            @onclick="@(() => AddToOrder(item.MenuItem.Id))">
+                            Add
+                        </MudButton>
                     </td>
                 </tr>
             }

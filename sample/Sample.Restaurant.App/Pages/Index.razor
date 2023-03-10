@@ -33,11 +33,22 @@ else
                     <td>
                         @if (item.IsInUse)
                         {
-                            <button @onclick="@(x => this.ViewTable(item.TableNumber))">View</button>
+                            <MudButton
+                                Variant="Variant.Filled"
+                                Color="Color.Primary" @onclick="@(x => this.ViewTable(item.TableNumber))"
+                            >
+                                View
+                            </MudButton>
                         }
                         else
                         {
-                            <button @onclick="@(() => UseTable(item.TableNumber))">Use</button>
+                            <MudButton
+                                Variant="Variant.Filled"
+                                Color="Color.Primary"
+                                @onclick="@(() => UseTable(item.TableNumber))"
+                            >
+                                Use
+                            </MudButton>
                         }
                     </td>
                 </tr>
