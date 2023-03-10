@@ -3,6 +3,7 @@
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
 EXPOSE 80
+EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
@@ -10,6 +11,7 @@ COPY ["sample/Sample.Restaurant.Api/Sample.Restaurant.Api.csproj", "sample/Sampl
 COPY ["src/Lewee.Infrastructure.AspNet.WebApi/Lewee.Infrastructure.AspNet.WebApi.csproj", "src/Lewee.Infrastructure.AspNet.WebApi/"]
 COPY ["src/Lewee.Infrastructure.AspNet/Lewee.Infrastructure.AspNet.csproj", "src/Lewee.Infrastructure.AspNet/"]
 COPY ["src/Lewee.Application/Lewee.Application.csproj", "src/Lewee.Application/"]
+COPY ["src/Lewee.Contracts/Lewee.Contracts.csproj", "src/Lewee.Contracts/"]
 COPY ["src/Lewee.Domain/Lewee.Domain.csproj", "src/Lewee.Domain/"]
 COPY ["src/Lewee.Shared/Lewee.Shared.csproj", "src/Lewee.Shared/"]
 COPY ["sample/Sample.Restaurant.Infrastructure/Sample.Restaurant.Infrastructure.csproj", "sample/Sample.Restaurant.Infrastructure/"]
