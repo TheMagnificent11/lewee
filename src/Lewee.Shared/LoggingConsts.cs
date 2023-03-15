@@ -21,6 +21,11 @@ public static class LoggingConsts
     public const string TenantId = "TenantId";
 
     /// <summary>
+    /// Client ID
+    /// </summary>
+    public const string ClientId = "ClientId";
+
+    /// <summary>
     /// Request Type
     /// </summary>
     public const string RequestType = "RequestType";

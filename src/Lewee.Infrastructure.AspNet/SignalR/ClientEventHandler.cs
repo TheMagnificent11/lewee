@@ -22,17 +22,24 @@ internal class ClientEventHandler : INotificationHandler<ClientEvent>
     public async Task Handle(ClientEvent notification, CancellationToken cancellationToken)
     {
         using (LogContext.PushProperty(LoggingConsts.CorrelationId, notification.CorrelationId))
+        using (LogContext.PushProperty(LoggingConsts.ClientId, notification.ClientId))
         {
             var clientMessage = notification.ToClientMessage();
-            var client = this.hubContext.Clients.Client(notification.ClientId);
-            if (client == null)
-            {
-                this.logger.Information("Could not find SignalR client {ClientId}", notification.ClientId);
-                return;
-            }
 
-            await client.SendAsync(nameof(ClientMessage), clientMessage, cancellationToken);
-            this.logger.Information("Published message to client");
+            // TODO: fix issue where client ID does not match SignalR connection ID
+            // The issue appears to be how the controller gets the SignalR connection ID and passes it down.
+            //var client = this.hubContext.Clients.Client(notification.ClientId);
+            //if (client == null)
+            //{
+            //    this.logger.Information("Could not find SignalR client");
+            //    return;
+            //}
+
+            //await client.SendAsync(nameof(ClientMessage), clientMessage, cancellationToken);
+            //this.logger.Information("Published message to client");
+
+            await this.hubContext.Clients.All.SendAsync(nameof(ClientMessage), clientMessage, cancellationToken);
+            this.logger.Information("Published message to all clients");
         }
     }
 }
