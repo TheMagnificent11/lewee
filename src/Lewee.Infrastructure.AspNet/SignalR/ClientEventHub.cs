@@ -35,7 +35,8 @@ public class ClientEventHub : Hub
     /// <inheritdoc />
     public override async Task OnConnectedAsync()
     {
-        using (LogContext.PushProperty("SignalRConnectionId", this.Context.ConnectionId))
+        // TODO: fix using this: https://consultwithgriff.com/signalr-connection-ids/
+		using (LogContext.PushProperty("SignalRConnectionId", this.Context.ConnectionId))
         {
             this.logger.Debug("Client connected");
 
