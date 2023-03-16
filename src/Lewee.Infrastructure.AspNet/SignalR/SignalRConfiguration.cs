@@ -26,6 +26,7 @@ public static class SignalRConfiguration
         });
         services.AddHttpContextAccessor();
         services.AddSingleton<IClientService, SignalRClientService>();
+        services.AddSingleton<ClientConnectionMapper>();
         services.AddMediatR(config => config.RegisterServicesFromAssemblies(
             typeof(ClientEvent).Assembly,
             typeof(ClientEventHandler).Assembly));
