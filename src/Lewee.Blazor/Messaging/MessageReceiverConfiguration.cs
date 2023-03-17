@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Lewee.Blazor.Messaging;
 
 /// <summary>
-/// Event Re
+/// Message Receiver Configuration
 /// </summary>
 public static class MessageReceiverConfiguration
 {
