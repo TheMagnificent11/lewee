@@ -9,11 +9,11 @@ namespace Lewee.Infrastructure.Data;
 internal class DomainEventSaveChangesInterceptor<TContext> : SaveChangesInterceptor
     where TContext : DbContext, IApplicationDbContext
 {
-    private readonly IClientService clientService;
+    private readonly IAuthenticatedUserService authenticatedUserService;
 
-    public DomainEventSaveChangesInterceptor(IClientService clientService)
+    public DomainEventSaveChangesInterceptor(IAuthenticatedUserService authenticatedUserService)
     {
-        this.clientService = clientService;
+        this.authenticatedUserService = authenticatedUserService;
     }
 
     public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
@@ -62,7 +62,7 @@ internal class DomainEventSaveChangesInterceptor<TContext> : SaveChangesIntercep
                 continue;
             }
 
-            var reference = new DomainEventReference(domainEvent, this.clientService.ClientId);
+            var reference = new DomainEventReference(domainEvent, this.authenticatedUserService.UserId);
 
             context.DomainEventReferences?.Add(reference);
         }

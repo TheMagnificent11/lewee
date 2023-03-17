@@ -13,12 +13,12 @@ public class ClientEvent : INotification
     /// Initializes a new instance of the <see cref="ClientEvent"/> class
     /// </summary>
     /// <param name="correlationId">Correlation ID</param>
-    /// <param name="clientId">SignalR Client ID</param>
+    /// <param name="userId">User ID</param>
     /// <param name="message">Message</param>
-    public ClientEvent(Guid correlationId, string clientId, object message)
+    public ClientEvent(Guid correlationId, string? userId, object message)
     {
         this.CorrelationId = correlationId;
-        this.ClientId = clientId;
+        this.UserId = userId;
 
         var messageType = message.GetType();
 
@@ -33,9 +33,9 @@ public class ClientEvent : INotification
     public Guid CorrelationId { get; }
 
     /// <summary>
-    /// Gets the ID of the client to which the SignalR message will be sent
+    /// Gets the ID of the user ID
     /// </summary>
-    public string ClientId { get; }
+    public string? UserId { get; }
 
     /// <summary>
     /// Gets the assembly name of the JSON contract class

@@ -21,16 +21,6 @@ public static class LoggingConsts
     public const string TenantId = "TenantId";
 
     /// <summary>
-    /// Client ID
-    /// </summary>
-    public const string ClientId = "ClientId";
-
-    /// <summary>
-    /// SignalR Connection ID
-    /// </summary>
-    public const string SignalRConnectionId = "SignalRConnectionId";
-
-    /// <summary>
     /// Request Type
     /// </summary>
     public const string RequestType = "RequestType";

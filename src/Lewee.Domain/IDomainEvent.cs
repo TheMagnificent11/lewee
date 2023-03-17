@@ -13,7 +13,7 @@ public interface IDomainEvent : INotification
     Guid CorrelationId { get; }
 
     /// <summary>
-    /// Gets or sets the client ID
+    /// Gets or sets the user ID
     /// </summary>
-    string? ClientId { get; set; }
+    string? UserId { get; set; }
 }

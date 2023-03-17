@@ -31,7 +31,7 @@ internal class DomainEventReferenceConfiguration : IEntityTypeConfiguration<Doma
         builder.Property(x => x.DispatchedAt)
             .IsRequired(false);
 
-        builder.Property(x => x.ClientId)
+        builder.Property(x => x.UserId)
             .HasMaxLength(50);
 
         builder.HasIndex(

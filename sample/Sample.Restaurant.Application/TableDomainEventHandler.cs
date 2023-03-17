@@ -52,17 +52,12 @@ internal class TableDomainEventHandler :
 
             this.logger.Debug("TableDetails query projection created");
 
-            if (notification.ClientId == null)
-            {
-                return;
-            }
-
             var message = new TableUsedMessage
             {
                 TableNumber = notification.TableNumber
             };
 
-            var clientEvent = new ClientEvent(notification.CorrelationId, notification.ClientId, message);
+            var clientEvent = new ClientEvent(notification.CorrelationId, notification.UserId, message);
             await this.mediator.Publish(clientEvent, cancellationToken);
 
             this.logger.Debug("Table Used client event published");

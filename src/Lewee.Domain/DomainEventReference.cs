@@ -14,13 +14,13 @@ public class DomainEventReference
     /// <param name="domainEvent">
     /// Underlying domain event
     /// </param>
-    /// <param name="clientId">
-    /// Client ID
+    /// <param name="userId">
+    /// User ID
     /// </param>
     /// <exception cref="InvalidOperationException">
     /// Thrown if type of the domain event cannot be determined
     /// </exception>
-    public DomainEventReference(IDomainEvent domainEvent, string? clientId = null)
+    public DomainEventReference(IDomainEvent domainEvent, string? userId = null)
     {
         var (assemblyName, fullClassName, domainEventType) = domainEvent.GetBasicTypeInfo("Invalid domain event type");
 
@@ -30,7 +30,7 @@ public class DomainEventReference
         this.DomainEventJson = JsonSerializer.Serialize(domainEvent, domainEventType);
         this.PersistedAt = DateTime.UtcNow;
         this.Dispatched = false;
-        this.ClientId = clientId;
+        this.UserId = userId;
     }
 
     // EF constructor
@@ -79,9 +79,9 @@ public class DomainEventReference
     public DateTime? DispatchedAt { get; protected set; }
 
     /// <summary>
-    /// Gets or sets the SignalR client ID
+    /// Gets or sets the user ID
     /// </summary>
-    public string? ClientId { get; protected set; }
+    public string? UserId { get; protected set; }
 
     /// <summary>
     /// Coverts this <see cref="DomainEventReference"/> to a <see cref="IDomainEvent"/>
@@ -110,7 +110,7 @@ public class DomainEventReference
             return null;
         }
 
-        domainEvent.ClientId = this.ClientId;
+        domainEvent.UserId = this.UserId;
 
         return domainEvent;
     }

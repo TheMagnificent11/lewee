@@ -1,6 +1,5 @@
 ﻿using Lewee.Shared;
 using MediatR;
-using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Lewee.Infrastructure.AspNet.WebApi;
@@ -51,18 +50,6 @@ public abstract class BaseApiController : ControllerBase
             }
 
             return Guid.NewGuid();
-        }
-    }
-
-    /// <summary>
-    /// Gets the SignalR client ID
-    /// </summary>
-    protected string? ClientId
-    {
-        get
-        {
-            var connectionIdFeature = this.HttpContext.Features.Get<IConnectionIdFeature>();
-            return connectionIdFeature?.ConnectionId;
         }
     }
 }

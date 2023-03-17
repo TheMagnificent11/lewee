@@ -2,7 +2,7 @@
 
 namespace Sample.Restaurant.Domain;
 
-public class OrderItemRemovedDomainEvent : IDomainEvent
+public class OrderItemRemovedDomainEvent : BaseDomainEvent
 {
     public OrderItemRemovedDomainEvent(
         Guid correlationId,
@@ -20,11 +20,9 @@ public class OrderItemRemovedDomainEvent : IDomainEvent
         this.Price = price;
     }
 
-    public Guid CorrelationId { get; }
     public Guid TableId { get; }
     public int TableNumber { get; }
     public Guid OrderId { get; }
     public Guid MenuItemId { get; }
     public decimal Price { get; }
-    public string? ClientId { get; set; }
 }

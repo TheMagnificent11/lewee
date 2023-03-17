@@ -17,5 +17,5 @@ public abstract class BaseDomainEvent : IDomainEvent
     public Guid CorrelationId { get; protected set; }
 
     /// <inheritdoc />
-    public string? ClientId { get; set; }
+    public string? UserId { get; set; }
 }

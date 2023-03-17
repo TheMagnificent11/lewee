@@ -2,7 +2,7 @@
 
 namespace Sample.Restaurant.Domain;
 
-public class TableInUseDomainEvent : IDomainEvent
+public class TableInUseDomainEvent : BaseDomainEvent
 {
     public TableInUseDomainEvent(Guid correlationId, Guid tableId, int tableNumber)
     {
@@ -11,8 +11,6 @@ public class TableInUseDomainEvent : IDomainEvent
         this.TableNumber = tableNumber;
     }
 
-    public Guid CorrelationId { get; }
     public Guid TableId { get; }
     public int TableNumber { get; }
-    public string? ClientId { get; set; }
 }
