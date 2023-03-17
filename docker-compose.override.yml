@@ -1,7 +1,7 @@
 version: '3.4'
 
 services:
-  sample.restaurant.api:
+  sample.restaurant.server:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
@@ -11,13 +11,6 @@ services:
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
-  #sample.restaurant.app:
-  #  environment:
-  #    - ASPNETCORE_ENVIRONMENT=Development
-  #    - ASPNETCORE_URLS=https://+:443;http://+:80
-  #  ports:
-  #    - 60230:80
-  #    - 60228:443
   database:
     container_name: lewee_sql
     image: mcr.microsoft.com/mssql/server:2022-latest

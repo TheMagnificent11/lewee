@@ -20,6 +20,7 @@
     <PackageReference Update="MediatR" Version="12.0.1" />
     <PackageReference Update="Microsoft.AspNetCore.Components.WebAssembly" Version="$(DOTNET_VERSION)" />
     <PackageReference Update="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="$(DOTNET_VERSION)" />
+    <PackageReference Update="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="$(DOTNET_VERSION)" />
     <PackageReference Update="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="$(DOTNET_VERSION)" />
     <PackageReference Update="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" /><!-- Out-of-sync with property group version -->
     <PackageReference Update="Microsoft.AspNetCore.OpenApi" Version="$(DOTNET_VERSION)" />
