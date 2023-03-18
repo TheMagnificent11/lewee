@@ -46,7 +46,7 @@ jobs:
         recreate: true
         path: code-coverage-results.md
     - name: Pack
-      run: dotnet pack --configuration Release --no-restore /p:PackageVersion=${{ steps.version.outputs.version }} --output ./output
+      run: dotnet pack ./Lewee-CI.sln --configuration Release --no-restore /p:PackageVersion=${{ steps.version.outputs.version }} --output ./output
     - name: Install NuGet
       uses: NuGet/setup-nuget@v1.0.5
       if: ${{ github.ref == 'refs/heads/master' }}
