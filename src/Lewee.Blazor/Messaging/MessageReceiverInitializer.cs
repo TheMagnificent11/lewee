@@ -1,4 +1,5 @@
 ﻿using Fluxor;
+using Lewee.Blazor.Messaging.Health.Actions;
 using Lewee.Contracts;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -30,7 +31,7 @@ public class MessageReceiverInitializer : ComponentBase
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        await this.HubConnection.StartAsync();
+        this.Dispatcher.Dispatch(new HealthCheckAction());
 
         this.HubConnection.On<ClientMessage>(nameof(ClientMessage), message =>
         {

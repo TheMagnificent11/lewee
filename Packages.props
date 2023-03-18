@@ -12,7 +12,6 @@
     <PackageReference Update="FluentAssertions.Analyzers" Version="0.17.2" />
     <PackageReference Update="FluentValidation" Version="$(FLUENTVALIDATOR_VERSION)" />
     <PackageReference Update="FluentValidation.DependencyInjectionExtensions" Version="$(FLUENTVALIDATOR_VERSION)" />
-    <PackageReference Update="Fluxor.Blazor.Web" Version="5.7.0" />
     <PackageReference Update="Fluxor.Blazor.Web.ReduxDevTools" Version="5.7.0" />
     <PackageReference Update="Mapster" Version="7.3.0" />
     <PackageReference Update="Mapster.DependencyInjection" Version="1.0.0" />

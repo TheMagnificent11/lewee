@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR.Client;
+﻿using Lewee.Blazor.Messaging.Health;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Lewee.Blazor.Messaging;
@@ -20,13 +21,16 @@ public static class MessageReceiverConfiguration
         string serverApiUrl)
         where TMapper : class, IMessageToActionMapper
     {
-        services.AddSingleton(new HubConnectionBuilder()
+        var hubConnection = new HubConnectionBuilder()
             .WithUrl($"{serverApiUrl}/events")
             .WithAutomaticReconnect()
-            .Build());
+            .Build();
 
-        services.AddTransient<IMessageToActionMapper, TMapper>();
-        services.AddTransient<MessageDeserializer>();
+        services
+            .AddSingleton(hubConnection)
+            .AddTransient<IMessageToActionMapper, TMapper>()
+            .AddTransient<MessageDeserializer>()
+            .AddTransient<HealthCheckService>();
 
         return services;
     }

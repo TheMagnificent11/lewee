@@ -169,5 +169,11 @@ dotnet_diagnostic.CA2254.severity = warning
 dotnet_diagnostic.CS8019.severity = warning
 dotnet_diagnostic.CS8618.severity = none
 
+# IDE0060: Remove unused parameter
+dotnet_diagnostic.IDE0060.severity = warning
+
 # IDE0063: Use simple 'using' statement
 dotnet_diagnostic.IDE0063.severity = none
+
+# IDE0090: Use 'new(...)'
+dotnet_diagnostic.IDE0090.severity = warning
