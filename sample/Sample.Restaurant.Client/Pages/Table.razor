@@ -9,9 +9,13 @@
 
 <PageTitle>Table @this.TableNumber</PageTitle>
 
-@if(this.State.Value.Data == null)
+@if (this.State.Value.Data == null)
 {
     <p><em>Loading...</em></p>
+}
+else if (this.State.Value.IsSaving)
+{
+    <p><em>Updating Order...</em></p>
 }
 else
 {

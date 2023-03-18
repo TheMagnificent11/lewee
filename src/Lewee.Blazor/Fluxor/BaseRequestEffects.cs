@@ -55,7 +55,7 @@ public abstract class BaseRequestEffects<TState, TRequestAction, TRequestSuccess
             { LoggingConsts.RequestType, this.State.Value.RequestType }
         }))
         {
-            this.Logger.LogDebug("Dispatching request...");
+            this.Logger.LogDebug("Executing query request...");
 
             await this.ExecuteRequest(action, dispatcher);
         }
@@ -76,7 +76,7 @@ public abstract class BaseRequestEffects<TState, TRequestAction, TRequestSuccess
             { LoggingConsts.RequestType, this.State.Value.RequestType }
         }))
         {
-            this.Logger.LogDebug("Dispatching request...success");
+            this.Logger.LogDebug("Executing query request...success");
             return Task.FromResult(true);
         }
     }
@@ -96,7 +96,7 @@ public abstract class BaseRequestEffects<TState, TRequestAction, TRequestSuccess
             { LoggingConsts.RequestType, this.State.Value.RequestType }
         }))
         {
-            this.Logger.LogError("Dispatching request...error (Error Message: {ErrorMessage})", action.ErrorMessage);
+            this.Logger.LogError("Executing query request...error (Error Message: {ErrorMessage})", action.ErrorMessage);
             return Task.FromResult(false);
         }
     }

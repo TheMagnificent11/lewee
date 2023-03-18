@@ -1,6 +1,7 @@
 ﻿using Fluxor;
 using Lewee.Blazor.ErrorHandling;
 using Lewee.Blazor.Fluxor;
+using Lewee.Shared;
 using Microsoft.AspNetCore.Components;
 using Sample.Restaurant.Client.States.TableDetails.Actions;
 
@@ -23,13 +24,82 @@ public sealed class TableDetailsEffects
         this.navigationManager = navigationManager;
     }
 
-    [EffectMethod]
 #pragma warning disable IDE0060 // Remove unused parameter (required by Fluxor)
+    [EffectMethod]
     public Task NavigateToTableDetails(GetTableDetailsSuccessAction action, IDispatcher dispatcher)
-#pragma warning restore IDE0060 // Remove unused parameter
     {
         this.navigationManager.NavigateTo($"tables/{action.Data.TableNumber}");
         return Task.FromResult(true);
+    }
+#pragma warning restore IDE0060 // Remove unused parameter
+
+    [EffectMethod]
+    public async Task OrderItem(OrderItemAction action, IDispatcher dispatcher)
+    {
+        using (this.Logger.BeginScope(new Dictionary<string, string>
+        {
+            { LoggingConsts.CorrelationId, action.CorrelationId.ToString() },
+            { LoggingConsts.RequestType, this.State.Value.RequestType }
+        }))
+        {
+            this.Logger.LogDebug("Ordering menu item...");
+
+            try
+            {
+                await this.tableClient.OrderMenuItemAsync(action.TableNumber, action.MenuItemId, action.CorrelationId);
+                dispatcher.Dispatch(new OrderItemSuccessAction());
+            }
+            catch (ApiException ex)
+            {
+                ex.Log(this.Logger);
+                dispatcher.Dispatch(new OrderItemErrorAction(ex.Message));
+            }
+        }
+    }
+
+#pragma warning disable IDE0060 // Remove unused parameter
+    [EffectMethod]
+    public Task OrderItemSuccess(OrderItemSuccessAction action, IDispatcher dispatcher)
+    {
+        using (this.Logger.BeginScope(new Dictionary<string, string>
+        {
+            { LoggingConsts.CorrelationId, this.State.Value.CorrelationId.ToString() }
+        }))
+        {
+            this.Logger.LogDebug("Ordering menu item...success");
+            return Task.CompletedTask;
+        }
+    }
+
+    [EffectMethod]
+    public Task OrderItemError(OrderItemErrorAction action, IDispatcher dispatcher)
+    {
+        using (this.Logger.BeginScope(new Dictionary<string, string>
+        {
+            { LoggingConsts.CorrelationId, this.State.Value.CorrelationId.ToString() }
+        }))
+        {
+            // TODO: show error toast
+            this.Logger.LogDebug("Ordering menu item...error");
+            return Task.CompletedTask;
+        }
+    }
+#pragma warning restore IDE0060 // Remove unused parameter
+
+    [EffectMethod]
+    public Task OrderItemCompleted(OrderItemCompletedAction action, IDispatcher dispatcher)
+    {
+        using (this.Logger.BeginScope(new Dictionary<string, string>
+        {
+            { LoggingConsts.CorrelationId, action.CorrelationId.ToString() }
+        }))
+        {
+            this.Logger.LogDebug("Received message from server");
+
+            dispatcher.Dispatch(new GetTableDetailsAction(action.CorrelationId, action.TableNumber));
+
+            return Task.CompletedTask;
+        }
     }
 
     protected override async Task ExecuteRequest(GetTableDetailsAction action, IDispatcher dispatcher)
