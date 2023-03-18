@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="Mapster" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Lewee.Application\Lewee.Application.csproj" />
+    <ProjectReference Include="..\Sample.Restaurant.Contracts\Sample.Restaurant.Contracts.csproj" />
+    <ProjectReference Include="..\Sample.Restaurant.Domain\Sample.Restaurant.Domain.csproj" />
+  </ItemGroup>
+</Project>

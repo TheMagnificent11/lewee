@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Lewee.Contracts\Lewee.Contracts.csproj" />
+    <ProjectReference Include="..\Lewee.Shared\Lewee.Shared.csproj" />
+  </ItemGroup>
+  
+</Project>
