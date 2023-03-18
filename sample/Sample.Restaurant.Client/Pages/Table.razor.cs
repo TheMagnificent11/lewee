@@ -18,4 +18,9 @@ public partial class Table
     {
         this.Dispatcher.Dispatch(new OrderItemAction(Guid.NewGuid(), this.TableNumber, menuItemId));
     }
+
+    private void RemoveFromOrder(Guid menuItemId)
+    {
+        throw new NotImplementedException();
+    }
 }

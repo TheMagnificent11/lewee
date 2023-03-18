@@ -36,12 +36,23 @@ else
                     <td>@item.MenuItem.PriceLabel</td>
                     <td>@item.Quantity</td>
                     <td>
-                        <MudButton
-                            Variant="Variant.Filled"
-                            Color="Color.Primary"
-                            @onclick="@(() => AddToOrder(item.MenuItem.Id))">
-                            Add
-                        </MudButton>
+                        <MudToolBar>
+                            <MudIconButton
+                                Icon="@Icons.Material.Outlined.Add"
+                                Variant="Variant.Filled"
+                                Color="Color.Primary"
+                                @onclick="@(() => AddToOrder(item.MenuItem.Id))" />
+                            @if (item.Quantity > 0)
+                            {
+                                <MudIconButton
+                                    Icon="@Icons.Material.Outlined.Remove"
+                                    Class="ml-1"
+                                    Variant="Variant.Filled"
+                                    Color="Color.Error"
+                                    @onclick="@(() => RemoveFromOrder(item.MenuItem.Id))" />
+                            }
+                        </MudToolBar>
+
                     </td>
                 </tr>
             }
