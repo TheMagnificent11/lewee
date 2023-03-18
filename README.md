@@ -2,6 +2,9 @@
 
 Lewee is an opinionated set of packages to assist with setting up a domain-driven design architecture within ASP.Net.
 
+## Status
+[![CI Build](https://github.com/TheMagnificent11/Lewee/actions/workflows/ci.yml/badge.svg)](https://github.com/TheMagnificent11/Lewee/actions/workflows/ci.yml)
+
 ## Dependencies
 
 Below is summary of the dependencies used by Lewee. Note that this isn't a list of NuGet packages, just a high-level list of software used and each can have several related NuGet packages.
