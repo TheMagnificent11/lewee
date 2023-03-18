@@ -61,6 +61,8 @@ builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
+app.UseResponseCompression();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -73,15 +75,12 @@ else
     app.UseHsts();
 }
 
-app.UseCors()
-    .UseHealthChecks("/health")
-    .UseHttpsRedirection();
+app.UseHealthChecks("/health")
+    .UseHttpsRedirection()
+    .UseBlazorFrameworkFiles()
+    .UseStaticFiles()
+    .UseRouting();
 
-app.UseResponseCompression();
-app.UseBlazorFrameworkFiles();
-app.UseStaticFiles();
-
-app.UseRouting();
 app.MapRazorPages();
 app.MapControllers();
 app.MapHub<ClientEventHub>("/events");
