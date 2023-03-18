@@ -2,7 +2,7 @@
 
 namespace Sample.Restaurant.Client.States.TableDetails;
 
-public sealed class TableDetailsFeatureState : Feature<TableDetailsState>
+public sealed class TableDetailsStateFeature : Feature<TableDetailsState>
 {
     public override string GetName() => nameof(TableDetailsState);
 
