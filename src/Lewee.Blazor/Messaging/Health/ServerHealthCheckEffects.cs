@@ -50,16 +50,18 @@ internal class ServerHealthCheckEffects
     }
 
     [EffectMethod]
-    public Task HealthFailed(HealthCheckFailedAction action, IDispatcher dispatcher)
+    public async Task HealthFailed(HealthCheckFailedAction action, IDispatcher dispatcher)
     {
         this.logger.LogDebug("Checking server health...failed");
 
-        if (!this.state.Value.Failed)
+        if (this.state.Value.Failed)
         {
-            dispatcher.Dispatch(new HealthCheckAction());
+            return;
         }
 
-        return Task.CompletedTask;
+        await Task.Delay(TimeSpan.FromSeconds(3));
+
+        dispatcher.Dispatch(new HealthCheckAction());
     }
 #pragma warning restore IDE0060 // Remove unused parameter
 }

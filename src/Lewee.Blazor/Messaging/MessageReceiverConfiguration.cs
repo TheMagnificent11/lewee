@@ -21,8 +21,9 @@ public static class MessageReceiverConfiguration
         string serverApiUrl)
         where TMapper : class, IMessageToActionMapper
     {
+        var hubUrl = serverApiUrl.EndsWith('/') ? $"{serverApiUrl}events" : $"{serverApiUrl}/events";
         var hubConnection = new HubConnectionBuilder()
-            .WithUrl($"{serverApiUrl}/events")
+            .WithUrl(hubUrl)
             .WithAutomaticReconnect()
             .Build();
 
