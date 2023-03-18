@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <DOTNET_VERSION>7.0.3</DOTNET_VERSION>
+    <DOTNET_VERSION>7.0.4</DOTNET_VERSION>
     <FLUENTVALIDATOR_VERSION>11.5.1</FLUENTVALIDATOR_VERSION>
     <COVERLET_VERSION>3.2.0</COVERLET_VERSION>
   </PropertyGroup>
@@ -15,7 +15,7 @@
     <PackageReference Update="Fluxor.Blazor.Web.ReduxDevTools" Version="5.7.0" />
     <PackageReference Update="Mapster" Version="7.3.0" />
     <PackageReference Update="Mapster.DependencyInjection" Version="1.0.0" />
-    <PackageReference Update="MassTransit.RabbitMQ" Version="8.0.13" />
+    <PackageReference Update="MassTransit.RabbitMQ" Version="8.0.14" />
     <PackageReference Update="MediatR" Version="12.0.1" />
     <PackageReference Update="Microsoft.AspNetCore.Components.WebAssembly" Version="$(DOTNET_VERSION)" />
     <PackageReference Update="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="$(DOTNET_VERSION)" />
@@ -36,7 +36,7 @@
     <PackageReference Update="Microsoft.NET.Test.Sdk" Version="17.5.0" />
     <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1" />
     <PackageReference Update="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
-    <PackageReference Update="MudBlazor" Version="6.1.9" />
+    <PackageReference Update="MudBlazor" Version="6.2.0" />
     <PackageReference Update="Serilog" Version="2.12.0" />
     <PackageReference Update="Serilog.AspNetCore" Version="6.1.0" />
     <PackageReference Update="Serilog.AspNetCore.Ingestion" Version="1.0.0-dev-00032" />
