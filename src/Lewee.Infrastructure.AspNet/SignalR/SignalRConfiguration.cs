@@ -23,7 +23,6 @@ public static class SignalRConfiguration
             opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
                 new[] { "application/octet-stream" });
         });
-        services.AddHttpContextAccessor();
         services.AddMediatR(config => config.RegisterServicesFromAssemblies(
             typeof(ClientEvent).Assembly,
             typeof(ClientEventHandler).Assembly));
