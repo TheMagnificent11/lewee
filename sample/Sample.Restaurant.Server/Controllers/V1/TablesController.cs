@@ -72,4 +72,23 @@ public sealed class TablesController : BaseApiController
 
         return result.ToActionResult();
     }
+
+    [HttpDelete("{tableNumber}/menu-items/{menuItemId}", Name = "RemoveMenuItem")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> RemoveFromToOrder(
+        [FromRoute] int tableNumber,
+        [FromRoute] Guid menuItemId,
+        [FromHeader] Guid? correlationId,
+        CancellationToken cancellationToken = default)
+    {
+        var command = new RemoveMenuItemCommand(
+            correlationId ?? this.CorrelationId,
+            tableNumber,
+            menuItemId);
+        var result = await this.Mediator.Send(command, cancellationToken);
+
+        return result.ToActionResult();
+    }
 }

@@ -94,7 +94,76 @@ public sealed class TableDetailsEffects
             { LoggingConsts.CorrelationId, action.CorrelationId.ToString() }
         }))
         {
-            this.Logger.LogDebug("Received message from server");
+            this.Logger.LogDebug("Received item added message from server");
+
+            dispatcher.Dispatch(new GetTableDetailsAction(action.CorrelationId, action.TableNumber));
+
+            return Task.CompletedTask;
+        }
+    }
+
+    [EffectMethod]
+    public async Task RemoveItem(RemoveItemAction action, IDispatcher dispatcher)
+    {
+        using (this.Logger.BeginScope(new Dictionary<string, string>
+        {
+            { LoggingConsts.CorrelationId, action.CorrelationId.ToString() },
+            { LoggingConsts.RequestType, this.State.Value.RequestType }
+        }))
+        {
+            this.Logger.LogDebug("Removing menu item...");
+
+            try
+            {
+                await this.tableClient.RemoveMenuItemAsync(action.TableNumber, action.MenuItemId, action.CorrelationId);
+                dispatcher.Dispatch(new RemoveItemSuccessAction());
+            }
+            catch (ApiException ex)
+            {
+                ex.Log(this.Logger);
+                dispatcher.Dispatch(new RemoveItemErrorAction(ex.Message));
+            }
+        }
+    }
+
+#pragma warning disable IDE0060 // Remove unused parameter
+    [EffectMethod]
+    public Task RemoveItemSuccess(RemoveItemSuccessAction action, IDispatcher dispatcher)
+    {
+        using (this.Logger.BeginScope(new Dictionary<string, string>
+        {
+            { LoggingConsts.CorrelationId, this.State.Value.CorrelationId.ToString() }
+        }))
+        {
+            this.Logger.LogDebug("Removing menu item...success");
+            return Task.CompletedTask;
+        }
+    }
+
+    [EffectMethod]
+    public Task RemoveItemError(RemoveItemErrorAction action, IDispatcher dispatcher)
+    {
+        using (this.Logger.BeginScope(new Dictionary<string, string>
+        {
+            { LoggingConsts.CorrelationId, this.State.Value.CorrelationId.ToString() }
+        }))
+        {
+            // TODO: show error toast
+            this.Logger.LogDebug("Removing menu item...error");
+            return Task.CompletedTask;
+        }
+    }
+#pragma warning restore IDE0060 // Remove unused parameter
+
+    [EffectMethod]
+    public Task RemoveItemCompleted(RemoveItemCompletedAction action, IDispatcher dispatcher)
+    {
+        using (this.Logger.BeginScope(new Dictionary<string, string>
+        {
+            { LoggingConsts.CorrelationId, action.CorrelationId.ToString() }
+        }))
+        {
+            this.Logger.LogDebug("Received item removed message from server");
 
             dispatcher.Dispatch(new GetTableDetailsAction(action.CorrelationId, action.TableNumber));
 

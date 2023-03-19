@@ -21,6 +21,6 @@ public partial class Table
 
     private void RemoveFromOrder(Guid menuItemId)
     {
-        throw new NotImplementedException();
+        this.Dispatcher.Dispatch(new RemoveItemAction(Guid.NewGuid(), this.TableNumber, menuItemId));
     }
 }

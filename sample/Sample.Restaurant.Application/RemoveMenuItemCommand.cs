@@ -7,9 +7,9 @@ using Serilog;
 
 namespace Sample.Restaurant.Application;
 
-public sealed class AddMenuItemCommand : ICommand, ITableRequest
+public sealed class RemoveMenuItemCommand : ICommand, ITableRequest
 {
-    public AddMenuItemCommand(Guid correlationId, int tableNumber, Guid menuItemId)
+    public RemoveMenuItemCommand(Guid correlationId, int tableNumber, Guid menuItemId)
     {
         this.CorrelationId = correlationId;
         this.TableNumber = tableNumber;
@@ -20,23 +20,23 @@ public sealed class AddMenuItemCommand : ICommand, ITableRequest
     public int TableNumber { get; }
     public Guid MenuItemId { get; }
 
-    internal class AddMenuItemCommandHandler : IRequestHandler<AddMenuItemCommand, CommandResult>
+    internal class RemoveMenuItemCommandHandler : IRequestHandler<RemoveMenuItemCommand, CommandResult>
     {
         private readonly IRepository<Table> tableRepository;
         private readonly IRepository<MenuItem> menuItemRepository;
         private readonly ILogger logger;
 
-        public AddMenuItemCommandHandler(
+        public RemoveMenuItemCommandHandler(
             IRepository<Table> tableRepository,
             IRepository<MenuItem> menuItemRepository,
             ILogger logger)
         {
             this.tableRepository = tableRepository;
             this.menuItemRepository = menuItemRepository;
-            this.logger = logger.ForContext<AddMenuItemCommandHandler>();
+            this.logger = logger.ForContext<RemoveMenuItemCommandHandler>();
         }
 
-        public async Task<CommandResult> Handle(AddMenuItemCommand request, CancellationToken cancellationToken)
+        public async Task<CommandResult> Handle(RemoveMenuItemCommand request, CancellationToken cancellationToken)
         {
             var table = await this.tableRepository
                 .All()
@@ -59,11 +59,11 @@ public sealed class AddMenuItemCommand : ICommand, ITableRequest
                 return CommandResult.Fail(ResultStatus.NotFound, "Menu item not found");
             }
 
-            table.OrderMenuItem(menuItem, request.CorrelationId);
+            table.RemovedMenuItem(menuItem, request.CorrelationId);
 
             await this.tableRepository.SaveChanges(cancellationToken);
 
-            this.logger.Information("Menu Item {@MenuItem} added to table order", menuItem);
+            this.logger.Information("Menu Item {@MenuItem} removed from table order", menuItem);
 
             return CommandResult.Success();
         }

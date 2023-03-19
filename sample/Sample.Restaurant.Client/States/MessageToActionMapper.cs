@@ -24,6 +24,12 @@ public class MessageToActionMapper : IMessageToActionMapper
             return new OrderItemCompletedAction(correlationId, itemOrderedMessage.TableNumber);
         }
 
+        if (type == typeof(ItemRemovedMessage))
+        {
+            var itemRemovedMessage = (ItemRemovedMessage)message;
+            return new RemoveItemCompletedAction(correlationId, itemRemovedMessage.TableNumber);
+        }
+
         return null;
     }
 }
