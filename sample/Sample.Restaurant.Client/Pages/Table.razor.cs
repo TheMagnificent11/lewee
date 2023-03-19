@@ -16,6 +16,11 @@ public partial class Table
 
     private void AddToOrder(Guid menuItemId)
     {
-        throw new NotImplementedException();
+        this.Dispatcher.Dispatch(new OrderItemAction(Guid.NewGuid(), this.TableNumber, menuItemId));
+    }
+
+    private void RemoveFromOrder(Guid menuItemId)
+    {
+        this.Dispatcher.Dispatch(new RemoveItemAction(Guid.NewGuid(), this.TableNumber, menuItemId));
     }
 }

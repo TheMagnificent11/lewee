@@ -26,7 +26,7 @@ public static class TableDetailsExtensions
 
         var newQuantity = decreaseQuantity
             ? orderItem.Quantity > 1 ? orderItem.Quantity - 1 : 0
-            : orderItem.Quantity++;
+            : orderItem.Quantity + 1;
 
         var updatedOrderItem = new OrderItemDetails
         {

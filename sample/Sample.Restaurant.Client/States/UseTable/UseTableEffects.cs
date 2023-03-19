@@ -33,7 +33,7 @@ public sealed class UseTableEffects
             { LoggingConsts.CorrelationId, action.CorrelationId.ToString() }
         }))
         {
-            this.Logger.LogDebug("Received message from server");
+            this.Logger.LogDebug("Received tabled used message from server");
 
             dispatcher.Dispatch(new GetTableDetailsAction(action.CorrelationId, action.TableNumber));
 

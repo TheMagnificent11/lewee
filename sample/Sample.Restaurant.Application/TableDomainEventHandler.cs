@@ -52,15 +52,8 @@ internal class TableDomainEventHandler :
 
             this.logger.Debug("TableDetails query projection created");
 
-            var message = new TableUsedMessage
-            {
-                TableNumber = notification.TableNumber
-            };
-
-            var clientEvent = new ClientEvent(notification.CorrelationId, notification.UserId, message);
-            await this.mediator.Publish(clientEvent, cancellationToken);
-
-            this.logger.Debug("Table Used client event published");
+            var message = new TableUsedMessage { TableNumber = notification.TableNumber };
+            await this.PublishClientEvent(message, notification.CorrelationId, cancellationToken);
         }
     }
 
@@ -70,8 +63,8 @@ internal class TableDomainEventHandler :
         using (LogContext.PushProperty(nameof(notification.TableNumber), notification.TableNumber))
         {
             var projection = await this.queryProjectionService.RetrieveByKey<TableDetails>(
-            notification.TableNumber.ToString(),
-            cancellationToken);
+                notification.TableNumber.ToString(),
+                cancellationToken);
 
             if (projection == null)
             {
@@ -87,6 +80,9 @@ internal class TableDomainEventHandler :
                 cancellationToken);
 
             this.logger.Debug("TableDetails query projection updated for OrderItemAddedDomainEvent");
+
+            var message = new ItemOrderedMessage { TableNumber = notification.TableNumber };
+            await this.PublishClientEvent(message, notification.CorrelationId, cancellationToken);
         }
     }
 
@@ -113,6 +109,17 @@ internal class TableDomainEventHandler :
                 cancellationToken);
 
             this.logger.Debug("TableDetails query projection updated for OrderItemRemovedDomainEvent");
+
+            var message = new ItemRemovedMessage { TableNumber = notification.TableNumber };
+            await this.PublishClientEvent(message, notification.CorrelationId, cancellationToken);
         }
+    }
+
+    private async Task PublishClientEvent(object message, Guid correlationId, CancellationToken cancellationToken)
+    {
+        var clientEvent = new ClientEvent(correlationId, null, message);
+        await this.mediator.Publish(clientEvent, cancellationToken);
+
+        this.logger.Debug("{ClientEventType} client event published", message.GetType().Name);
     }
 }
