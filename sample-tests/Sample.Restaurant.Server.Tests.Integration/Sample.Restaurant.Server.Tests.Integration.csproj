@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite"  />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\..\sample\Sample.Restaurant.Server\Sample.Restaurant.Server.csproj" />
+  </ItemGroup>
+  
+</Project>

@@ -22,11 +22,13 @@
     <PackageReference Update="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="$(DOTNET_VERSION)" />
     <PackageReference Update="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="$(DOTNET_VERSION)" />
     <PackageReference Update="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" /><!-- Out-of-sync with property group version -->
+    <PackageReference Update="Microsoft.AspNetCore.Mvc.Testing" Version="$(DOTNET_VERSION)" />
     <PackageReference Update="Microsoft.AspNetCore.OpenApi" Version="$(DOTNET_VERSION)" />
     <PackageReference Update="Microsoft.AspNetCore.SignalR.Client" Version="$(DOTNET_VERSION)" />
     <PackageReference Update="Microsoft.CodeAnalysis.NetAnalyzers" Version="7.0.1" /><!-- Out-of-sync with property group version -->
     <PackageReference Update="Microsoft.EntityFrameworkCore" Version="$(DOTNET_VERSION)" />
     <PackageReference Update="Microsoft.EntityFrameworkCore.SqlServer" Version="$(DOTNET_VERSION)" />
+    <PackageReference Update="Microsoft.EntityFrameworkCore.Sqlite" Version="$(DOTNET_VERSION)" />
     <PackageReference Update="Microsoft.EntityFrameworkCore.Tools" Version="$(DOTNET_VERSION)" />
     <PackageReference Update="Microsoft.Extensions.Configuration.Binder" Version="$(DOTNET_VERSION)" />
     <PackageReference Update="Microsoft.Extensions.Diagnostics.HealthChecks" Version="$(DOTNET_VERSION)" />
