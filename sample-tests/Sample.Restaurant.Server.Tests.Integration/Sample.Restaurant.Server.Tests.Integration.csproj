@@ -1,4 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="TestStack.BDDfy.Xunit" />
+  </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\..\sample\Sample.Restaurant.Server\Sample.Restaurant.Server.csproj" />

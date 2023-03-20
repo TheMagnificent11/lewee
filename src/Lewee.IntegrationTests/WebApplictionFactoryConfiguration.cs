@@ -14,10 +14,13 @@ public static class WebApplictionFactoryConfiguration
     /// </summary>
     /// <typeparam name="T">DB context type</typeparam>
     /// <param name="services">Services collection</param>
+    /// <param name="usesDbContextFactory">Whether the appliation uses a DB context factory</param>
     /// <exception cref="InvalidOperationException">
     /// Thrown if service descriptor cannot be found for <typeparamref name="T"/>
     /// </exception>
-    public static void ReplacedSqlServerWithSqlLite<T>(this IServiceCollection services)
+    public static void ReplacedSqlServerWithSqlLite<T>(
+        this IServiceCollection services,
+        bool usesDbContextFactory = true)
         where T : DbContext
     {
         var descriptor = services.SingleOrDefault(
@@ -27,6 +30,14 @@ public static class WebApplictionFactoryConfiguration
 
         services.Remove(descriptor);
 
-        services.AddDbContext<T>(options => options.UseSqlite($"DataSource={typeof(T).Name}-{Guid.NewGuid()}.db"));
+        var connectionString = $"DataSource={typeof(T).Name}-{Guid.NewGuid()}.db";
+
+        if (usesDbContextFactory)
+        {
+            services.AddDbContextFactory<T>(options => options.UseSqlite(connectionString));
+            return;
+        }
+
+        services.AddDbContext<T>(options => options.UseSqlite(connectionString));
     }
 }
