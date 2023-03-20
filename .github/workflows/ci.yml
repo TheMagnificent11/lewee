@@ -3,7 +3,7 @@ name: CI Build
 on:
   workflow_dispatch:
   push:
-    branches: [ master ]
+    branches: [ develop, master ]
   pull_request:
     branches: [ develop, master ]
 

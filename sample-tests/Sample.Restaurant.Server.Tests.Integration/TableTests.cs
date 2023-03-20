@@ -1,27 +1,24 @@
 ﻿using FluentAssertions;
-using Lewee.IntegrationTests;
 using Sample.Restaurant.Application;
-using Sample.Restaurant.Infrastructure.Data;
 using TestStack.BDDfy;
 using TestStack.BDDfy.Xunit;
 
 namespace Sample.Restaurant.Server.Tests.Integration;
 
-public class TableTests : WebApiIntegrationTestsBase<Program, RestaurantWebApplicationFactory>
+public class TableTests : RestaurantTestsBase
 {
     public TableTests(RestaurantWebApplicationFactory factory)
         : base(factory)
     {
     }
 
-    protected override Type[] DbContextTypes => new[] { typeof(RestaurantDbContext) };
-
     private TableDto[] Tables { get; set; }
 
     [BddfyFact]
     public void GetTables_ShouldReturnTheCorrectTables()
     {
-        this.When(x => this.GetTablesRequestIsExecuted())
+        this.Given(x => this.AnEmptyRestaurant())
+            .When(x => this.GetTablesRequestIsExecuted())
             .Then(x => x.TheCorrectTablesAreReturned());
     }
 

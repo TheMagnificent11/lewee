@@ -1,9 +1,11 @@
-﻿using System.Linq.Expressions;
+﻿using System.Data;
+using System.Linq.Expressions;
 using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Respawn;
 using Xunit;
 
 namespace Lewee.IntegrationTests;
@@ -30,30 +32,6 @@ public abstract class WebApiIntegrationTestsBase<TEntryPoint, TFactory> : IClass
         this.factory = factory;
 
         this.HttpClient = factory.CreateClient();
-
-        var scopeFactory = this.GetServiceScopeFactory();
-
-        using (var scope = scopeFactory.CreateScope())
-        {
-            var scopedServices = scope.ServiceProvider;
-
-            foreach (var dbType in this.DbContextTypes)
-            {
-                if (!dbType.IsSubclassOf(typeof(DbContext)))
-                {
-                    throw new InvalidOperationException($"{dbType.FullName} does not inherit from {typeof(DbContext).FullName}");
-                }
-
-                if (scopedServices.GetRequiredService(dbType) is not DbContext db)
-                {
-                    throw new InvalidOperationException($"Could not cast {dbType.FullName} to {typeof(DbContext).FullName}");
-                }
-
-                // Ensure we have a freshly created database for each test
-                db.Database.EnsureDeleted();
-                db.Database.EnsureCreated();
-            }
-        }
     }
 
     /// <summary>
@@ -62,9 +40,23 @@ public abstract class WebApiIntegrationTestsBase<TEntryPoint, TFactory> : IClass
     protected HttpClient HttpClient { get; }
 
     /// <summary>
-    /// Gets an array of the DB context types used by this Web API under test
+    /// Gets the scope factory
     /// </summary>
-    protected abstract Type[] DbContextTypes { get; }
+    protected IServiceScopeFactory ScopeFactory
+    {
+        get
+        {
+            var scopeFactory = this.factory.Services.GetService<IServiceScopeFactory>()
+                ?? throw new InvalidOperationException("Could not get scope factory");
+
+            return scopeFactory;
+        }
+    }
+
+    /// <summary>
+    /// Gets an array of the test database detials
+    /// </summary>
+    protected abstract DatabaseResetConfiguration[] TestDatabases { get; }
 
     /// <inheritdoc />
     public void Dispose()
@@ -108,6 +100,43 @@ public abstract class WebApiIntegrationTestsBase<TEntryPoint, TFactory> : IClass
             // free unmanaged resources (unmanaged objects) and override finalizer
             // set large fields to null
             this.disposedValue = true;
+        }
+    }
+
+    /// <summary>
+    /// Resets the database to the state defined in <see cref="DatabaseResetConfiguration"/>
+    /// </summary>
+    /// <typeparam name="T">Database context type</typeparam>
+    /// <returns>Asynchronous task</returns>
+    protected async Task ResetDatabase<T>()
+        where T : DbContext
+    {
+        var dbDetails = this.TestDatabases.FirstOrDefault(x => x.DbContextType == typeof(T))
+            ?? throw new InvalidOperationException(
+                $"{typeof(T).FullName} not configured in {nameof(this.TestDatabases)}");
+
+        using (var scope = this.ScopeFactory.CreateScope())
+        {
+            var scopedServices = scope.ServiceProvider;
+
+            if (!dbDetails.DbContextType.IsSubclassOf(typeof(DbContext)))
+            {
+                throw new InvalidOperationException(
+                    $"{dbDetails.DbContextType.FullName} does not inherit from {typeof(DbContext).FullName}");
+            }
+
+            if (scopedServices.GetRequiredService(dbDetails.DbContextType) is not DbContext db)
+            {
+                throw new InvalidOperationException(
+                    $"Could not cast {dbDetails.DbContextType.FullName} to {typeof(DbContext).FullName}");
+            }
+
+            var connectionString = db.Database.GetConnectionString()
+                ?? throw new InvalidOperationException(
+                    $"Could not get connection string for {dbDetails.DbContextType.FullName}");
+
+            var respawner = await Respawner.CreateAsync(connectionString, dbDetails.RespawnerOptions);
+            await respawner.ResetAsync(connectionString);
         }
     }
 
@@ -162,9 +191,7 @@ public abstract class WebApiIntegrationTestsBase<TEntryPoint, TFactory> : IClass
         where TData : class
         where TDbContext : DbContext
     {
-        var scopeFactory = this.GetServiceScopeFactory();
-
-        using (var scope = scopeFactory.CreateScope())
+        using (var scope = this.ScopeFactory.CreateScope())
         {
             var scopedServices = scope.ServiceProvider;
 
@@ -179,13 +206,5 @@ public abstract class WebApiIntegrationTestsBase<TEntryPoint, TFactory> : IClass
                 .Where(predicate)
                 .ToListAsync();
         }
-    }
-
-    private IServiceScopeFactory GetServiceScopeFactory()
-    {
-        var scopeFactory = this.factory.Services.GetService<IServiceScopeFactory>()
-            ?? throw new InvalidOperationException("Could not get scope factory");
-
-        return scopeFactory;
     }
 }
