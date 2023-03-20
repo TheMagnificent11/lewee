@@ -24,5 +24,4 @@
     <ProjectReference Include="..\Sample.Restaurant.Infrastructure\Sample.Restaurant.Infrastructure.csproj" />
   </ItemGroup>
 
-
 </Project>
