@@ -5,7 +5,7 @@ using Sample.Restaurant.Infrastructure.Data;
 
 namespace Sample.Restaurant.Server.Tests.Integration;
 
-public class SampleRestaurantWebApplicationFactory : WebApplicationFactory<Program>
+public class RestaurantWebApplicationFactory : WebApplicationFactory<Program>
 {
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
