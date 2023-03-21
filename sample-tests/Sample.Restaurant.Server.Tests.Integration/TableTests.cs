@@ -30,7 +30,8 @@ public class TableTests : RestaurantTestsBase
         var tableNumber = 4;
 
         this.Given(x => this.AnEmptyRestaurant())
-            .When(x => this.TheWaiterSeatsACustomerAtTable(tableNumber));
+            .When(x => this.TheWaiterSeatsACustomerAtTable(tableNumber))
+            .Then(x => this.AnEmptyOrderIsCreatedForTable(tableNumber));
     }
 
     private async Task GetTablesRequestIsExecuted()
@@ -40,13 +41,17 @@ public class TableTests : RestaurantTestsBase
 
     private async Task TheWaiterSeatsACustomerAtTable(int tableNumber)
     {
-        await this.UseTable(4, true);
+        await this.UseTable(tableNumber, true);
         await this.WaitForDomainEventsToBeDispatched();
     }
 
     private async Task AnEmptyOrderIsCreatedForTable(int tableNumber)
     {
+        var tableDetails = await this.HttpGet<TableDetailsDto>($"tables/{tableNumber}");
 
+        // TODO: assert items
+        tableDetails.Should().NotBeNull();
+        tableDetails.TableNumber.Should().Be(tableNumber);
     }
 
     private async Task UseTable(int tableNumber, bool isSuccessExpected)
