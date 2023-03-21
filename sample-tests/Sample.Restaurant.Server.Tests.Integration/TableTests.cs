@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.AspNetCore.Mvc;
 using Sample.Restaurant.Application;
 using TestStack.BDDfy;
 using TestStack.BDDfy.Xunit;
@@ -13,6 +14,7 @@ public class TableTests : RestaurantTestsBase
     }
 
     private TableDto[] Tables { get; set; }
+    private ValidationProblemDetails ProblemDetails { get; set; }
 
     [BddfyFact]
     public void GetTables_ShouldReturnTheCorrectTables()
@@ -22,9 +24,43 @@ public class TableTests : RestaurantTestsBase
             .Then(x => x.TheCorrectTablesAreReturned());
     }
 
+    [BddfyFact]
+    public void UseTable_ShouldSetupStoredQueryWhenTableIsntInUse()
+    {
+        var tableNumber = 4;
+
+        this.Given(x => this.AnEmptyRestaurant())
+            .When(x => this.TheWaiterSeatsACustomerAtTable(tableNumber));
+    }
+
     private async Task GetTablesRequestIsExecuted()
     {
         this.Tables = await this.HttpGet<TableDto[]>("/tables");
+    }
+
+    private async Task TheWaiterSeatsACustomerAtTable(int tableNumber)
+    {
+        await this.UseTable(4, true);
+        await this.WaitForDomainEventsToBeDispatched();
+    }
+
+    private async Task AnEmptyOrderIsCreatedForTable(int tableNumber)
+    {
+
+    }
+
+    private async Task UseTable(int tableNumber, bool isSuccessExpected)
+    {
+        using (var response = await this.HttpRequest(HttpMethod.Post, $"/tables/{tableNumber}"))
+        {
+            if (isSuccessExpected)
+            {
+                response.EnsureSuccessStatusCode();
+                return;
+            }
+
+            this.ProblemDetails = await this.DeserializeResponse<ValidationProblemDetails>(response);
+        }
     }
 
     private void TheCorrectTablesAreReturned()

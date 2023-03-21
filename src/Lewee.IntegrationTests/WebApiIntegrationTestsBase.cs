@@ -148,12 +148,23 @@ public abstract class WebApiIntegrationTestsBase<TEntryPoint, TFactory> : IClass
     /// <returns>The deserialized body from the response to the HTTP GET request</returns>
     protected async Task<T?> HttpGet<T>(string apiPath)
     {
-        using (var request = new HttpRequestMessage(HttpMethod.Get, apiPath))
+        using (var response = await this.HttpRequest(HttpMethod.Get, apiPath))
         {
-            using (var response = await this.HttpClient.SendAsync(request))
-            {
-                return await this.DeserializeResponse<T>(response);
-            }
+            return await this.DeserializeResponse<T>(response);
+        }
+    }
+
+    /// <summary>
+    /// Executes a HTTP request
+    /// </summary>
+    /// <param name="method">HTTP method</param>
+    /// <param name="apiPath">API path</param>
+    /// <returns>The HTTP response</returns>
+    protected async Task<HttpResponseMessage> HttpRequest(HttpMethod method, string apiPath)
+    {
+        using (var request = new HttpRequestMessage(method, apiPath))
+        {
+            return await this.HttpClient.SendAsync(request);
         }
     }
 
@@ -178,6 +189,15 @@ public abstract class WebApiIntegrationTestsBase<TEntryPoint, TFactory> : IClass
         }
 
         return JsonSerializer.Deserialize<T>(json);
+    }
+
+    /// <summary>
+    /// Waits three seconds for domain events to be dispatched
+    /// </summary>
+    /// <returns>Asynchronous task</returns>
+    protected async Task WaitForDomainEventsToBeDispatched()
+    {
+        await Task.Delay(TimeSpan.FromSeconds(3));
     }
 
     /// <summary>
