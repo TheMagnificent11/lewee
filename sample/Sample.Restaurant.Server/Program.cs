@@ -9,7 +9,6 @@ using Lewee.Infrastructure.Data;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using Sample.Restaurant.Application;
 using Sample.Restaurant.Infrastructure.Data;
-using Sample.Restaurant.Infrastructure.Data.Seeding;
 
 namespace Sample.Restaurant.Server;
 

@@ -68,10 +68,31 @@ public class TableTests : RestaurantTestsBase
     {
         var tableDetails = await this.HttpGet<TableDetailsDto>($"tables/{tableNumber}");
 
-        // TODO: assert items
         this.ProblemDetails.Should().BeNull();
+
         tableDetails.Should().NotBeNull();
         tableDetails.TableNumber.Should().Be(tableNumber);
+
+        var expectedMenuItems = MenuItem.DefaultData
+            .OrderBy(x => x.ItemType)
+            .ThenBy(x => x.Name)
+            .ToArray();
+
+        tableDetails.Items.Should().HaveCount(expectedMenuItems.Length);
+
+        for (var i = 0; i < expectedMenuItems.Length; i++)
+        {
+            var expectedItem = expectedMenuItems[i];
+            var actualItem = tableDetails.Items[i];
+
+            actualItem.Should().NotBeNull();
+            actualItem.Quantity.Should().Be(0);
+            actualItem.MenuItem.Should().NotBeNull();
+            actualItem.MenuItem.Id.Should().Be(expectedItem.Id);
+            actualItem.MenuItem.Name.Should().Be(expectedItem.Name);
+            actualItem.MenuItem.Price.Should().Be(expectedItem.Price);
+            actualItem.MenuItem.PriceLabel.Should().Be($"{expectedItem.Price:0.00}");
+        }
     }
 
     private void TheWaiterShouldntBeAbleToUseTheTableAsItIsAlreadyInUse()
