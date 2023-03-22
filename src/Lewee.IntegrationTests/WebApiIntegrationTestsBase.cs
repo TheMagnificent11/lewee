@@ -15,13 +15,11 @@ namespace Lewee.IntegrationTests;
 /// </summary>
 /// <typeparam name="TEntryPoint">ASP.Net app entrypoint class</typeparam>
 /// <typeparam name="TFactory">Web application factory type</typeparam>
-public abstract class WebApiIntegrationTestsBase<TEntryPoint, TFactory> : IClassFixture<TFactory>, IDisposable
+public abstract class WebApiIntegrationTestsBase<TEntryPoint, TFactory> : IClassFixture<TFactory>
     where TEntryPoint : class
     where TFactory : WebApplicationFactory<TEntryPoint>
 {
     private readonly TFactory factory;
-
-    private bool disposedValue;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="WebApiIntegrationTestsBase{TEntryPoint, TFactory}"/> class
@@ -30,14 +28,7 @@ public abstract class WebApiIntegrationTestsBase<TEntryPoint, TFactory> : IClass
     protected WebApiIntegrationTestsBase(TFactory factory)
     {
         this.factory = factory;
-
-        this.HttpClient = factory.CreateClient();
     }
-
-    /// <summary>
-    /// Gets the HTTP client to use to execute tests on the target Web API
-    /// </summary>
-    protected HttpClient HttpClient { get; }
 
     /// <summary>
     /// Gets the scope factory
@@ -58,14 +49,6 @@ public abstract class WebApiIntegrationTestsBase<TEntryPoint, TFactory> : IClass
     /// </summary>
     protected abstract DatabaseResetConfiguration[] TestDatabases { get; }
 
-    /// <inheritdoc />
-    public void Dispose()
-    {
-        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-        this.Dispose(disposing: true);
-        GC.SuppressFinalize(this);
-    }
-
     /// <summary>
     /// Creates a HTTP request message for the specified <paramref name="httpMethod"/> and <paramref name="apiPath"/>
     /// with <paramref name="content"/> has the request body
@@ -82,25 +65,6 @@ public abstract class WebApiIntegrationTestsBase<TEntryPoint, TFactory> : IClass
         };
 
         return request;
-    }
-
-    /// <summary>
-    /// Disposes this class
-    /// </summary>
-    /// <param name="disposing">Whether disposal is currently executing further up the stack</param>
-    protected virtual void Dispose(bool disposing)
-    {
-        if (!this.disposedValue)
-        {
-            if (disposing)
-            {
-                this.HttpClient.Dispose();
-            }
-
-            // free unmanaged resources (unmanaged objects) and override finalizer
-            // set large fields to null
-            this.disposedValue = true;
-        }
     }
 
     /// <summary>
@@ -163,8 +127,9 @@ public abstract class WebApiIntegrationTestsBase<TEntryPoint, TFactory> : IClass
     protected async Task<HttpResponseMessage> HttpRequest(HttpMethod method, string apiPath)
     {
         using (var request = new HttpRequestMessage(method, apiPath))
+        using (var httpClient = this.factory.CreateClient())
         {
-            return await this.HttpClient.SendAsync(request);
+            return await httpClient.SendAsync(request);
         }
     }
 
