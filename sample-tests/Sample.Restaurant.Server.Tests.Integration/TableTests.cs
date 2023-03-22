@@ -1,6 +1,8 @@
-﻿using FluentAssertions;
+﻿using System.Net;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Sample.Restaurant.Application;
+using Sample.Restaurant.Domain;
 using TestStack.BDDfy;
 using TestStack.BDDfy.Xunit;
 
@@ -30,8 +32,19 @@ public class TableTests : RestaurantTestsBase
         var tableNumber = 4;
 
         this.Given(x => this.AnEmptyRestaurant())
-            .When(x => this.TheWaiterSeatsACustomerAtTable(tableNumber))
+            .When(x => this.TheWaiterSeatsACustomerAtTable(tableNumber, true))
             .Then(x => this.AnEmptyOrderIsCreatedForTable(tableNumber));
+    }
+
+    [BddfyFact]
+    public void UseTable_ShouldFailValidationWhenAttemptingToUseATableThatIsAlreadyInUse()
+    {
+        var tableNumber = 7;
+
+        this.Given(x => this.AnEmptyRestaurant())
+            .When(x => this.TheWaiterSeatsACustomerAtTable(tableNumber, true))
+                .And(x => this.TheWaiterSeatsACustomerAtTable(tableNumber, false))
+            .Then(x => this.TheWaiterShouldntBeAbleToUseTheTableAsItIsAlreadyInUse());
     }
 
     private async Task GetTablesRequestIsExecuted()
@@ -39,9 +52,15 @@ public class TableTests : RestaurantTestsBase
         this.Tables = await this.HttpGet<TableDto[]>("/tables");
     }
 
-    private async Task TheWaiterSeatsACustomerAtTable(int tableNumber)
+    private async Task TheWaiterSeatsACustomerAtTable(int tableNumber, bool expectSuccess)
     {
-        await this.UseTable(tableNumber, true);
+        await this.UseTable(tableNumber, expectSuccess);
+
+        if (!expectSuccess)
+        {
+            return;
+        }
+
         await this.WaitForDomainEventsToBeDispatched();
     }
 
@@ -50,8 +69,17 @@ public class TableTests : RestaurantTestsBase
         var tableDetails = await this.HttpGet<TableDetailsDto>($"tables/{tableNumber}");
 
         // TODO: assert items
+        this.ProblemDetails.Should().BeNull();
         tableDetails.Should().NotBeNull();
         tableDetails.TableNumber.Should().Be(tableNumber);
+    }
+
+    private void TheWaiterShouldntBeAbleToUseTheTableAsItIsAlreadyInUse()
+    {
+        this.ProblemDetails.Should().NotBeNull();
+        this.ProblemDetails.Errors.Should().NotBeEmpty();
+        this.ProblemDetails.Errors[string.Empty].Should().HaveCount(1);
+        this.ProblemDetails.Errors[string.Empty][0].Should().Be(Table.ErrorMessages.TableInUse);
     }
 
     private async Task UseTable(int tableNumber, bool isSuccessExpected)
@@ -64,6 +92,7 @@ public class TableTests : RestaurantTestsBase
                 return;
             }
 
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             this.ProblemDetails = await this.DeserializeResponse<ValidationProblemDetails>(response);
         }
     }
