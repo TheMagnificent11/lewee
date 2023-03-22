@@ -28,7 +28,7 @@ jobs:
     - name: Build
       run: dotnet build ./Lewee-CI.sln --configuration Release --no-restore
     - name: Create SQL Server Container
-      run: docker componse -f ./docker-compose.ci.yml up
+      run: docker compose -f ./docker-compose.ci.yml up
     - name: Test
       run: dotnet test ./Lewee-CI.sln --configuration Release --no-build --collect "XPlat Code Coverage" --results-directory ./coverage
     - name: Code Coverage Report
