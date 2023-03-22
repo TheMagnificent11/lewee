@@ -4,6 +4,7 @@
     <DOTNET_VERSION>7.0.4</DOTNET_VERSION>
     <FLUENTVALIDATOR_VERSION>11.5.1</FLUENTVALIDATOR_VERSION>
     <COVERLET_VERSION>3.2.0</COVERLET_VERSION>
+    <XUNIT_VERSION>2.4.2</XUNIT_VERSION>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Update="coverlet.collector" Version="$(COVERLET_VERSION)" />
@@ -56,8 +57,9 @@
     <PackageReference Update="StyleCop.Analyzers" Version="1.1.118" />
     <PackageReference Update="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Update="TestStack.BDDfy.Xunit" Version="1.2.0" />
-    <PackageReference Update="xunit" Version="2.4.2" />
+    <PackageReference Update="xunit" Version="$(XUNIT_VERSION)" />
     <PackageReference Update="xunit.analyzers" Version="1.1.0" />
+    <PackageReference Update="xunit.core" Version="$(XUNIT_VERSION)" />
     <PackageReference Update="xunit.runner.visualstudio" Version="2.4.5" />
   </ItemGroup>
 </Project>
