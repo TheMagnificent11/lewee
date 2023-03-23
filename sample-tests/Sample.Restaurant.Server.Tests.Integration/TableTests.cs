@@ -47,6 +47,22 @@ public class TableTests : RestaurantTestsBase
             .Then(x => this.TheWaiterShouldntBeAbleToUseTheTableAsItIsAlreadyInUse());
     }
 
+    [BddfyFact]
+    public void Ordering_ShouldCorrectlyUpdateTheOrderWhenItemsAreAddedAndRemoved()
+    {
+        var tableNumber = 10;
+
+        this.Given(x => this.AnEmptyRestaurant())
+            .When(x => this.TheWaiterSeatsACustomerAtTable(tableNumber, true))
+                .And(x => this.TheCustomrOrdersAnItemOfTheMenu(tableNumber, Menu.Beer))
+                .And(x => this.TheCustomrOrdersAnItemOfTheMenu(tableNumber, Menu.Wine))
+                .And(x => this.TheCustomrOrdersAnItemOfTheMenu(tableNumber, Menu.GarlicBread))
+                .And(x => this.TheCustomrOrdersAnItemOfTheMenu(tableNumber, Menu.GarlicBread))
+                .And(x => this.TheCustomerRemovesAnItemFromTheirOrder(tableNumber, Menu.GarlicBread, true))
+                .And(x => this.TheCustomrOrdersAnItemOfTheMenu(tableNumber, Menu.Pizza))
+                .And(x => this.TheCustomrOrdersAnItemOfTheMenu(tableNumber, Menu.IceCream));
+    }
+
     private async Task GetTablesRequestIsExecuted()
     {
         this.Tables = await this.HttpGet<TableDto[]>("/tables");
@@ -55,6 +71,24 @@ public class TableTests : RestaurantTestsBase
     private async Task TheWaiterSeatsACustomerAtTable(int tableNumber, bool expectSuccess)
     {
         await this.UseTable(tableNumber, expectSuccess);
+
+        if (!expectSuccess)
+        {
+            return;
+        }
+
+        await this.WaitForDomainEventsToBeDispatched();
+    }
+
+    private async Task TheCustomrOrdersAnItemOfTheMenu(int tableNumber, MenuItem item)
+    {
+        await this.OrderItem(tableNumber, item.Id);
+        await this.WaitForDomainEventsToBeDispatched();
+    }
+
+    private async Task TheCustomerRemovesAnItemFromTheirOrder(int tableNumber, MenuItem item, bool expectSuccess)
+    {
+        await this.RemoveItem(tableNumber, item.Id, expectSuccess);
 
         if (!expectSuccess)
         {
@@ -95,6 +129,12 @@ public class TableTests : RestaurantTestsBase
         }
     }
 
+    private async Task TheOrderForTheTableContainsTheCorretItems(int tableNumber, MenuItem[] items)
+    {
+        var tableDetails = await this.HttpGet<TableDetailsDto>($"tables/{tableNumber}");
+        var orders = items.GroupBy(x => x.Id);
+    }
+
     private void TheWaiterShouldntBeAbleToUseTheTableAsItIsAlreadyInUse()
     {
         this.ProblemDetails.Should().NotBeNull();
@@ -106,6 +146,29 @@ public class TableTests : RestaurantTestsBase
     private async Task UseTable(int tableNumber, bool isSuccessExpected)
     {
         using (var response = await this.HttpRequest(HttpMethod.Post, $"/tables/{tableNumber}"))
+        {
+            if (isSuccessExpected)
+            {
+                response.EnsureSuccessStatusCode();
+                return;
+            }
+
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            this.ProblemDetails = await this.DeserializeResponse<ValidationProblemDetails>(response);
+        }
+    }
+
+    private async Task OrderItem(int tableNumber, Guid itemId)
+    {
+        using (var response = await this.HttpRequest(HttpMethod.Put, $"/tables/{tableNumber}/menu-items/{itemId}"))
+        {
+            response.EnsureSuccessStatusCode();
+        }
+    }
+
+    private async Task RemoveItem(int tableNumber, Guid itemId, bool isSuccessExpected)
+    {
+        using (var response = await this.HttpRequest(HttpMethod.Delete, $"/tables/{tableNumber}/menu-items/{itemId}"))
         {
             if (isSuccessExpected)
             {
