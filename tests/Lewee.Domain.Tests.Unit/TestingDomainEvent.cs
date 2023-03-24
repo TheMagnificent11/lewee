@@ -5,7 +5,7 @@ namespace Lewee.Domain.Tests.Unit;
 
 public partial class DomainEventReferenceTests
 {
-    public class TestingDomainEvent : BaseDomainEvent
+    public class TestingDomainEvent : DomainEvent
     {
         public TestingDomainEvent(
             string name,

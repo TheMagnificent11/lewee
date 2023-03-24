@@ -1,11 +1,11 @@
 ﻿namespace Lewee.Domain;
 
 /// <summary>
-/// Base Value Object
+/// Value Object
 /// </summary>
 /// <typeparam name="T">Value object type</typeparam>
-public abstract class BaseValueObject<T> : IValueObject<T>
-    where T : BaseValueObject<T>
+public abstract class ValueObject<T> : IValueObject<T>
+    where T : ValueObject<T>
 {
     /// <inheritdoc />
     public bool Equals(T? other)

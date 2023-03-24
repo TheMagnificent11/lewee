@@ -1,9 +1,9 @@
 ﻿namespace Lewee.Blazor.Fluxor;
 
 /// <summary>
-/// Base Request State
+/// Request State
 /// </summary>
-public abstract record class BaseRequestState : IRequestState
+public abstract record class RequestState : IRequestState
 {
     /// <inheritdoc/>
     public abstract string RequestType { get; }

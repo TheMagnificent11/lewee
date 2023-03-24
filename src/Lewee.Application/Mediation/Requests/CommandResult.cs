@@ -3,7 +3,7 @@
 /// <summary>
 /// Command Result
 /// </summary>
-public class CommandResult : BaseResult
+public class CommandResult : Result
 {
     private CommandResult(ResultStatus status, Dictionary<string, List<string>>? errors)
         : base(status, errors)

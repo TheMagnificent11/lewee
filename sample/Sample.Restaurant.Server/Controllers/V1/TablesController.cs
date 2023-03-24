@@ -7,7 +7,7 @@ namespace Sample.Restaurant.Server.Controllers.V1;
 
 [Route("api/v1/[controller]")]
 [Produces(ApplicationJson)]
-public sealed class TablesController : BaseApiController
+public sealed class TablesController : ApiControllerBase
 {
     public TablesController(IMediator mediator)
         : base(mediator)

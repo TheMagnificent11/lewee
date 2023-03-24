@@ -5,7 +5,7 @@ using Sample.Restaurant.Domain;
 
 namespace Sample.Restaurant.Infrastructure.Data.Configuration;
 
-internal sealed class TableConfiguration : BaseAggregateRootConfiguration<Table>
+internal sealed class TableConfiguration : AggregateRootConfiguration<Table>
 {
     protected override void ConfigureEntity(EntityTypeBuilder<Table> builder)
     {

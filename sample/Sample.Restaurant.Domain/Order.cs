@@ -2,7 +2,7 @@
 
 namespace Sample.Restaurant.Domain;
 
-public class Order : BaseEntity
+public class Order : Entity
 {
     private readonly List<OrderItem> items = new();
 

@@ -3,12 +3,12 @@
 namespace Lewee.Application.Mediation.Requests;
 
 /// <summary>
-/// Base Result
+/// Result
 /// </summary>
-public abstract class BaseResult : IResult
+public abstract class Result : IResult
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="BaseResult"/> class
+    /// Initializes a new instance of the <see cref="Result"/> class
     /// </summary>
     /// <param name="status">
     /// Result status
@@ -16,7 +16,7 @@ public abstract class BaseResult : IResult
     /// <param name="errors">
     /// Error messages (keyed by request property)
     /// </param>
-    protected BaseResult(ResultStatus status, Dictionary<string, List<string>>? errors)
+    protected Result(ResultStatus status, Dictionary<string, List<string>>? errors)
     {
         this.Status = status;
         this.Errors = errors ?? new Dictionary<string, List<string>>();

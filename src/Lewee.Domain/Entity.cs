@@ -1,27 +1,27 @@
 ﻿namespace Lewee.Domain;
 
 /// <summary>
-/// Base Entity
+/// Entity
 /// </summary>
-public abstract class BaseEntity : IEntity, ISoftDeleteEntity
+public abstract class Entity : IEntity, ISoftDeleteEntity
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="BaseEntity"/> class
+    /// Initializes a new instance of the <see cref="Entity"/> class
     /// </summary>
-    protected BaseEntity()
+    protected Entity()
         : this(Guid.NewGuid())
     {
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="BaseEntity"/> class
+    /// Initializes a new instance of the <see cref="Entity"/> class
     /// </summary>
     /// <param name="id">ID</param>
-    protected BaseEntity(Guid id)
+    protected Entity(Guid id)
     {
         this.Id = id;
 
-        // Note audit fields should be popualated by EF save changes interceptor
+        // Note audit fields should be populated by EF save changes interceptor
         this.CreatedBy = "System";
         this.ModifiedBy = "System";
         this.CreatedAtUtc = DateTime.UtcNow;
@@ -52,7 +52,7 @@ public abstract class BaseEntity : IEntity, ISoftDeleteEntity
     /// <inheritdoc />
     public override bool Equals(object? obj)
     {
-        if (obj is not BaseEntity other)
+        if (obj is not Entity other)
         {
             return false;
         }

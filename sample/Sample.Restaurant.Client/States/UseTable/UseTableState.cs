@@ -2,7 +2,7 @@
 
 namespace Sample.Restaurant.Client.States.UseTable;
 
-public record UseTableState : BaseRequestState
+public record UseTableState : RequestState
 {
     public override string RequestType => "UseTable";
 

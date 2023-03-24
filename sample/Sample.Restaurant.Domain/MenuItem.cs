@@ -2,7 +2,7 @@
 
 namespace Sample.Restaurant.Domain;
 
-public class MenuItem : BaseAggregateRoot
+public class MenuItem : AggregateRoot
 {
     public MenuItem(Guid id, string name, decimal price, MenuItemType itemType)
         : base(id)

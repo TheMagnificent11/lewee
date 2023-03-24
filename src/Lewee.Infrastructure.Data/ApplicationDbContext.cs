@@ -5,18 +5,18 @@ using Microsoft.EntityFrameworkCore;
 namespace Lewee.Infrastructure.Data;
 
 /// <summary>
-/// Base Appliation Database Context
+/// Application Database Context
 /// </summary>
 /// <typeparam name="TContext">
 /// The type of this database context
 /// </typeparam>
-public abstract class BaseApplicationDbContext<TContext> : DbContext, IApplicationDbContext
+public abstract class ApplicationDbContext<TContext> : DbContext, IApplicationDbContext
     where TContext : DbContext, IApplicationDbContext
 {
     private readonly IAuthenticatedUserService authenticatedUserService;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="BaseApplicationDbContext{T}"/> class
+    /// Initializes a new instance of the <see cref="ApplicationDbContext{T}"/> class
     /// </summary>
     /// <param name="options">
     /// Database context options
@@ -24,7 +24,7 @@ public abstract class BaseApplicationDbContext<TContext> : DbContext, IApplicati
     /// <param name="authenticatedUserService">
     /// Authenticated user service
     /// </param>
-    protected BaseApplicationDbContext(
+    protected ApplicationDbContext(
         DbContextOptions<TContext> options,
         IAuthenticatedUserService authenticatedUserService)
         : base(options)

@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 namespace Lewee.Infrastructure.AspNet.WebApi;
 
 /// <summary>
-/// Base API Controller
+/// API Controller Base
 /// </summary>
 [ApiController]
-public abstract class BaseApiController : ControllerBase
+public abstract class ApiControllerBase : ControllerBase
 {
     /// <summary>
     /// Application/JSON
@@ -16,10 +16,10 @@ public abstract class BaseApiController : ControllerBase
     protected const string ApplicationJson = "application/json";
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="BaseApiController"/> class
+    /// Initializes a new instance of the <see cref="ApiControllerBase"/> class
     /// </summary>
     /// <param name="mediator">Mediator</param>
-    protected BaseApiController(IMediator mediator)
+    protected ApiControllerBase(IMediator mediator)
     {
         this.Mediator = mediator;
     }
