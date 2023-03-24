@@ -18,6 +18,8 @@ public class MenuItem : BaseAggregateRoot
         this.Name = string.Empty;
     }
 
+    public static MenuItem[] DefaultData => GenerateDefaultData();
+
     // Not really nullable but made nullable to prevent EF creating new enum table record
     public EnumEntity<MenuItemType>? ItemType { get; protected set; }
     public MenuItemType ItemTypeId { get; protected set; }
@@ -26,4 +28,18 @@ public class MenuItem : BaseAggregateRoot
     public decimal Price { get; protected set; }
 
     internal static MenuItem EmptyMenuItem => new();
+
+    private static MenuItem[] GenerateDefaultData()
+    {
+        return new MenuItem[]
+        {
+            Menu.Pizza,
+            Menu.Pasta,
+            Menu.GarlicBread,
+            Menu.IceCream,
+            Menu.Beer,
+            Menu.Wine,
+            Menu.SoftDrink
+        };
+    }
 }

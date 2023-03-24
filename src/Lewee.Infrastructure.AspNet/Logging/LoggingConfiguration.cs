@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Core;
+using Serilog.Events;
 
 namespace Lewee.Infrastructure.AspNet.Logging;
 
@@ -26,21 +27,16 @@ public static class LoggingConfiguration
     public static void ConfigureLogging(
         this IHostBuilder builder,
         ApplicationSettings applicationSettings,
-        SeqSettings seqSettings)
+        SeqSettings? seqSettings)
     {
         if (applicationSettings is null)
         {
             throw new ArgumentNullException(nameof(applicationSettings));
         }
 
-        if (seqSettings is null)
-        {
-            throw new ArgumentNullException(nameof(seqSettings));
-        }
-
         var serilogLevelSwitch = new LoggingLevelSwitch
         {
-            MinimumLevel = seqSettings.MinimumLogEventLevel
+            MinimumLevel = seqSettings?.MinimumLogEventLevel ?? LogEventLevel.Information
         };
 
         var config = new LoggerConfiguration()
@@ -56,7 +52,7 @@ public static class LoggingConfiguration
             .Enrich.WithThreadId()
             .Enrich.FromLogContext();
 
-        if (seqSettings.IsEnabled)
+        if (seqSettings != null && seqSettings.IsEnabled)
         {
             var seqLevelSwitch = new LoggingLevelSwitch
             {

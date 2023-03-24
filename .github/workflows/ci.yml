@@ -3,7 +3,7 @@ name: CI Build
 on:
   workflow_dispatch:
   push:
-    branches: [ master ]
+    branches: [ develop, master ]
   pull_request:
     branches: [ develop, master ]
 
@@ -27,8 +27,12 @@ jobs:
       run: dotnet restore ./Lewee-CI.sln
     - name: Build
       run: dotnet build ./Lewee-CI.sln --configuration Release --no-restore
+    - name: Create SQL Server Container
+      run: docker compose -f ./docker-compose.ci.yml up
     - name: Test
       run: dotnet test ./Lewee-CI.sln --configuration Release --no-build --collect "XPlat Code Coverage" --results-directory ./coverage
+    - name: Tear Down SQL Server Container
+      run: docker compose -f ./docker-compose.ci.yml down
     - name: Code Coverage Report
       uses: irongut/CodeCoverageSummary@v1.3.0
       with:

@@ -51,6 +51,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Restaurant.Client", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Restaurant.Server", "sample\Sample.Restaurant.Server\Sample.Restaurant.Server.csproj", "{4FA19161-03E8-43C0-A55A-FD248FAC1F8F}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Restaurant.Server.Tests.Integration", "sample-tests\Sample.Restaurant.Server.Tests.Integration\Sample.Restaurant.Server.Tests.Integration.csproj", "{21B9F30A-FFFE-41E7-A721-F6C1CF81C8D9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lewee.IntegrationTests", "src\Lewee.IntegrationTests\Lewee.IntegrationTests.csproj", "{27CE2C4C-ED90-44DA-B3E3-E798459E4B5B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -133,6 +137,14 @@ Global
 		{4FA19161-03E8-43C0-A55A-FD248FAC1F8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4FA19161-03E8-43C0-A55A-FD248FAC1F8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4FA19161-03E8-43C0-A55A-FD248FAC1F8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21B9F30A-FFFE-41E7-A721-F6C1CF81C8D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21B9F30A-FFFE-41E7-A721-F6C1CF81C8D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21B9F30A-FFFE-41E7-A721-F6C1CF81C8D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21B9F30A-FFFE-41E7-A721-F6C1CF81C8D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27CE2C4C-ED90-44DA-B3E3-E798459E4B5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27CE2C4C-ED90-44DA-B3E3-E798459E4B5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27CE2C4C-ED90-44DA-B3E3-E798459E4B5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27CE2C4C-ED90-44DA-B3E3-E798459E4B5B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,8 +1,9 @@
 ﻿using Lewee.Domain;
 using Lewee.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Sample.Restaurant.Domain;
 
-namespace Sample.Restaurant.Infrastructure.Data.Seeding;
+namespace Sample.Restaurant.Infrastructure.Data;
 public class RestaurantDbSeeder : IDatabaseSeeder
 {
     private readonly RestaurantDbContext context;
@@ -14,11 +15,8 @@ public class RestaurantDbSeeder : IDatabaseSeeder
 
     public async Task Run()
     {
-        var tables = TableSeeder.GetDefaultData();
-        var menuItems = MenuItemSeeder.GetDefaultData();
-
-        var hasNewTables = await this.Seed(tables);
-        var hasNewMenuItems = await this.Seed(menuItems);
+        var hasNewTables = await this.Seed(Domain.Table.DefaultData);
+        var hasNewMenuItems = await this.Seed(MenuItem.DefaultData);
 
         if (!hasNewTables && !hasNewMenuItems)
         {

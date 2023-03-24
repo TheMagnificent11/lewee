@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using Lewee.Domain;
+﻿using Lewee.Domain;
 
 namespace Sample.Restaurant.Domain;
 
@@ -11,7 +10,9 @@ public record TableDetails : IQueryProjection
     public bool IsInUse { get; set; }
     public List<OrderItemDetails> Items { get; set; } = new();
 
-    public static TableDetails FromTableInUseDomainEvent(TableInUseDomainEvent domainEvent, IEnumerable<MenuItem> menuItems)
+    public static TableDetails FromTableInUseDomainEvent(
+        TableInUseDomainEvent domainEvent,
+        IEnumerable<MenuItem> menuItems)
     {
         var tableDetails = new TableDetails
         {
@@ -21,7 +22,7 @@ public record TableDetails : IQueryProjection
             IsInUse = true
         };
 
-        foreach (var item in menuItems)
+        foreach (var item in menuItems.OrderBy(x => x.ItemType).ThenBy(x => x.Name))
         {
             tableDetails.Items.Add(OrderItemDetails.FromMenuItem(item));
         }
