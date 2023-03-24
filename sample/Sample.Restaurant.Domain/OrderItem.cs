@@ -2,7 +2,7 @@
 
 namespace Sample.Restaurant.Domain;
 
-public class OrderItem : BaseEntity
+public class OrderItem : Entity
 {
     private OrderItem(Order order, MenuItem menuItem)
         : base(Guid.Empty)

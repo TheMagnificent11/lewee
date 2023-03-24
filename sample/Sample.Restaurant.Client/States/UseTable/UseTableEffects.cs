@@ -9,7 +9,7 @@ using Sample.Restaurant.Client.States.UseTable.Actions;
 namespace Sample.Restaurant.Client.States.UseTable;
 
 public sealed class UseTableEffects
-    : BaseRequestEffects<UseTableState, UseTableAction, UseTableSuccessAction, UseTableErrorAction>
+    : RequestEffects<UseTableState, UseTableAction, UseTableSuccessAction, UseTableErrorAction>
 {
     private readonly ITableClient tableClient;
     private readonly NavigationManager navigationManager;

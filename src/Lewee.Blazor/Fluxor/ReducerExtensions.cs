@@ -16,7 +16,7 @@ public static class ReducerExtensions
     /// <param name="action">Request action</param>
     /// <returns>Updated state</returns>
     public static TState OnRequest<TState, TAction>(this TState state, TAction action)
-        where TState : BaseRequestState
+        where TState : RequestState
         where TAction : IRequestAction
     {
         return state with { CorrelationId = action.CorrelationId, ErrorMessage = null };
@@ -32,7 +32,7 @@ public static class ReducerExtensions
     /// <param name="action">Query action</param>
     /// <returns>Updated state</returns>
     public static TState OnQuery<TState, TStateData, TAction>(this TState state, TAction action)
-        where TState : BaseQueryState<TStateData>
+        where TState : QueryState<TStateData>
         where TStateData : class
         where TAction : IRequestAction
     {
@@ -49,7 +49,7 @@ public static class ReducerExtensions
     /// <param name="action">Query action</param>
     /// <returns>Updated state</returns>
     public static TState OnQuerySuccess<TState, TStateData, TAction>(this TState state, TAction action)
-        where TState : BaseQueryState<TStateData>
+        where TState : QueryState<TStateData>
         where TStateData : class
         where TAction : IQuerySuccessAction<TStateData>
     {
@@ -65,7 +65,7 @@ public static class ReducerExtensions
     /// <param name="action">Query action</param>
     /// <returns>Updated state</returns>
     public static TState OnRequestError<TState, TAction>(this TState state, TAction action)
-        where TState : BaseRequestState
+        where TState : RequestState
         where TAction : IRequestErrorAction
     {
         return state with { ErrorMessage = action.ErrorMessage };

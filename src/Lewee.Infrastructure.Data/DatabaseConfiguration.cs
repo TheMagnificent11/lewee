@@ -28,7 +28,7 @@ public static class DatabaseConfiguration
     public static IServiceCollection ConfigureDatabase<T>(
         this IServiceCollection services,
         string connectionString)
-        where T : BaseApplicationDbContext<T>
+        where T : ApplicationDbContext<T>
     {
         services.AddDbContextFactory<T>(options => options.UseSqlServer(connectionString));
         services.AddScoped<T>();
@@ -65,7 +65,7 @@ public static class DatabaseConfiguration
     public static IServiceCollection ConfigureDatabaseWithSeeder<TContext, TSeeder>(
         this IServiceCollection services,
         string connectionString)
-        where TContext : BaseApplicationDbContext<TContext>
+        where TContext : ApplicationDbContext<TContext>
         where TSeeder : class, IDatabaseSeeder
     {
         var newServices = ConfigureDatabase<TContext>(services, connectionString);

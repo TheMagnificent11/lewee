@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace Lewee.Infrastructure.Data;
 
 /// <summary>
-/// Base Entity Configuration
+/// Entity Configuration
 /// </summary>
 /// <typeparam name="TEntity">
 /// Entity type to be configured
 /// </typeparam>
-public abstract class BaseEntityConfiguration<TEntity> : IEntityTypeConfiguration<TEntity>
-    where TEntity : BaseEntity
+public abstract class EntityConfiguration<TEntity> : IEntityTypeConfiguration<TEntity>
+    where TEntity : Entity
 {
     /// <inheritdoc/>
     public virtual void Configure(EntityTypeBuilder<TEntity> builder)

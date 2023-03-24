@@ -40,7 +40,7 @@ Execute the following in a terminal at the root of this Git repository.
 docker compose up
 ```
 
-Check the "Containers" section of Docker Desktop to determine the localhost port being used to host the sample application.
+Your browser should launch an navigate to [https://localhost:54577](https://localhost:54577).
 
 ### VS Code
 

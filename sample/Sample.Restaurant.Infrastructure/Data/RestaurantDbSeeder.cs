@@ -27,7 +27,7 @@ public class RestaurantDbSeeder : IDatabaseSeeder
     }
 
     public async Task<bool> Seed<T>(T[] data)
-        where T : BaseAggregateRoot
+        where T : AggregateRoot
     {
         var ids = data.Select(x => x.Id)
             .ToList();

@@ -8,7 +8,7 @@ using Sample.Restaurant.Client.States.TableDetails.Actions;
 namespace Sample.Restaurant.Client.States.TableDetails;
 
 public sealed class TableDetailsEffects
-    : BaseRequestEffects<TableDetailsState, GetTableDetailsAction, GetTableDetailsSuccessAction, GetTableDetailsErrorAction>
+    : RequestEffects<TableDetailsState, GetTableDetailsAction, GetTableDetailsSuccessAction, GetTableDetailsErrorAction>
 {
     private readonly ITableClient tableClient;
     private readonly NavigationManager navigationManager;

@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace Lewee.Infrastructure.Data;
 
 /// <summary>
-/// Base Aggregate Root Configuration
+/// Aggregate Root Configuration
 /// </summary>
 /// <typeparam name="T">Aggregate root type</typeparam>
-public abstract class BaseAggregateRootConfiguration<T> : BaseEntityConfiguration<T>
-    where T : BaseAggregateRoot
+public abstract class AggregateRootConfiguration<T> : EntityConfiguration<T>
+    where T : AggregateRoot
 {
     /// <inheritdoc/>
     public override void Configure(EntityTypeBuilder<T> builder)

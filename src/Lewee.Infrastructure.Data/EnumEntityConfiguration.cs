@@ -6,12 +6,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace Lewee.Infrastructure.Data;
 
 /// <summary>
-/// Base Enum Entity Configuration
+/// Enum Entity Configuration
 /// </summary>
 /// <typeparam name="TEnum">
 /// Enum type
 /// </typeparam>
-public abstract class BaseEnumEntityConfiguration<TEnum> : IEntityTypeConfiguration<EnumEntity<TEnum>>
+public abstract class EnumEntityConfiguration<TEnum> : IEntityTypeConfiguration<EnumEntity<TEnum>>
     where TEnum : struct, Enum
 {
     /// <summary>

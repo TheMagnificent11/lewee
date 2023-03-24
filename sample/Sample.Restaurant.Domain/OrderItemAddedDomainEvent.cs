@@ -2,7 +2,7 @@
 
 namespace Sample.Restaurant.Domain;
 
-public class OrderItemAddedDomainEvent : BaseDomainEvent
+public class OrderItemAddedDomainEvent : DomainEvent
 {
     public OrderItemAddedDomainEvent(
         Guid correlationId,

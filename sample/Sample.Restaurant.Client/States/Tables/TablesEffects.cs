@@ -6,7 +6,7 @@ using Sample.Restaurant.Client.States.Tables.Actions;
 namespace Sample.Restaurant.Client.States.Tables;
 
 public sealed class TablesEffects
-    : BaseRequestEffects<TablesState, GetTablesAction, GetTablesSuccessAction, GetTablesErrorAction>
+    : RequestEffects<TablesState, GetTablesAction, GetTablesSuccessAction, GetTablesErrorAction>
 {
     private readonly ITableClient tableClient;
 

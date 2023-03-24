@@ -6,7 +6,7 @@ using Sample.Restaurant.Infrastructure.Data.Configuration;
 
 namespace Sample.Restaurant.Infrastructure.Data;
 
-public class RestaurantDbContext : BaseApplicationDbContext<RestaurantDbContext>
+public class RestaurantDbContext : ApplicationDbContext<RestaurantDbContext>
 {
     public RestaurantDbContext(
         DbContextOptions<RestaurantDbContext> options,

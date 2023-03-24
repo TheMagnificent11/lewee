@@ -3,7 +3,7 @@ using Sample.Restaurant.Domain;
 
 namespace Sample.Restaurant.Infrastructure.Data.Configuration;
 
-internal class MenuItemTypeConfiguration : BaseEnumEntityConfiguration<MenuItemType>
+internal class MenuItemTypeConfiguration : EnumEntityConfiguration<MenuItemType>
 {
     public override string TableName => "MenuItemTypes";
 

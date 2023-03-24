@@ -37,7 +37,7 @@ internal class AuditDetailsSaveChangesInterceptor : SaveChangesInterceptor
             return;
         }
 
-        foreach (var entry in context.ChangeTracker.Entries<BaseEntity>())
+        foreach (var entry in context.ChangeTracker.Entries<Entity>())
         {
             if (entry.State == EntityState.Added)
             {

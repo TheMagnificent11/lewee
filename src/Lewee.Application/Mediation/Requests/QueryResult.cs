@@ -4,7 +4,7 @@
 /// Query Result
 /// </summary>
 /// <typeparam name="T">Query response type</typeparam>
-public class QueryResult<T> : BaseResult
+public class QueryResult<T> : Result
     where T : class
 {
     private QueryResult(T? data, ResultStatus status, Dictionary<string, List<string>>? errors)

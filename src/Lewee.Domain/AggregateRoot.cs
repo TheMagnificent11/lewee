@@ -1,23 +1,23 @@
 ﻿namespace Lewee.Domain;
 
 /// <summary>
-/// Base Aggregate Root
+/// Aggregate Root
 /// </summary>
-public abstract class BaseAggregateRoot : BaseEntity, IAggregateRoot
+public abstract class AggregateRoot : Entity, IAggregateRoot
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="BaseAggregateRoot"/> class
+    /// Initializes a new instance of the <see cref="AggregateRoot"/> class
     /// </summary>
-    protected BaseAggregateRoot()
+    protected AggregateRoot()
         : base(Guid.NewGuid())
     {
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="BaseAggregateRoot"/> class
+    /// Initializes a new instance of the <see cref="AggregateRoot"/> class
     /// </summary>
     /// <param name="id">Entity ID</param>
-    protected BaseAggregateRoot(Guid id)
+    protected AggregateRoot(Guid id)
         : base(id)
     {
     }

@@ -5,7 +5,7 @@ using Sample.Restaurant.Domain;
 
 namespace Sample.Restaurant.Infrastructure.Data.Configuration;
 
-internal class OrderItemConfiguration : BaseEntityConfiguration<OrderItem>
+internal class OrderItemConfiguration : EntityConfiguration<OrderItem>
 {
     protected override void ConfigureEntity(EntityTypeBuilder<OrderItem> builder)
     {

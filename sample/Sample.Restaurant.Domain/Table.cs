@@ -2,7 +2,7 @@
 
 namespace Sample.Restaurant.Domain;
 
-public class Table : BaseAggregateRoot
+public class Table : AggregateRoot
 {
     private readonly List<Order> orders = new();
 

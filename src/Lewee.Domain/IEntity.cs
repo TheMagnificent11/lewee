@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Lewee.Domain
+﻿namespace Lewee.Domain
 {
     /// <summary>
     /// Entity Interface

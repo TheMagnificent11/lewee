@@ -48,7 +48,7 @@ internal class DomainEventSaveChangesInterceptor<TContext> : SaveChangesIntercep
 
     private void StoreDomainEventsForEntry(TContext context, EntityEntry entry)
     {
-        if (entry.Entity is not BaseAggregateRoot aggregateRootEntity)
+        if (entry.Entity is not AggregateRoot aggregateRootEntity)
         {
             return;
         }

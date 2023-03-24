@@ -2,7 +2,7 @@
 
 namespace Sample.Restaurant.Client.States.TableDetails;
 
-public record TableDetailsState : BaseQueryState<TableDetailsDto>
+public record TableDetailsState : QueryState<TableDetailsDto>
 {
     public override string RequestType => "GetTableDetails";
 

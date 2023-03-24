@@ -6,25 +6,25 @@ using Microsoft.Extensions.Logging; // TODO: switch to Serilog
 namespace Lewee.Blazor.Fluxor;
 
 /// <summary>
-/// Base Request Effects
+/// Request Effects
 /// </summary>
 /// <typeparam name="TState">State type</typeparam>
 /// <typeparam name="TRequestAction">Request action type</typeparam>
 /// <typeparam name="TRequestSuccessAction">Request success action</typeparam>
 /// <typeparam name="TRequestErrorAction">Request error action</typeparam>
-public abstract class BaseRequestEffects<TState, TRequestAction, TRequestSuccessAction, TRequestErrorAction>
+public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessAction, TRequestErrorAction>
 
-    where TState : BaseRequestState
+    where TState : RequestState
     where TRequestAction : IRequestAction
     where TRequestSuccessAction : IRequestSuccessAction
     where TRequestErrorAction : IRequestErrorAction
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="BaseRequestEffects{TState, TRequestAction, TRequestSuccessAction, TRequestErrorAction}"/> class
+    /// Initializes a new instance of the <see cref="RequestEffects{TState, TRequestAction, TRequestSuccessAction, TRequestErrorAction}"/> class
     /// </summary>
     /// <param name="state">State</param>
     /// <param name="logger">Logger</param>
-    public BaseRequestEffects(IState<TState> state, ILogger logger)
+    public RequestEffects(IState<TState> state, ILogger logger)
     {
         this.State = state;
         this.Logger = logger;
