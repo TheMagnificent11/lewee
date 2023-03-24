@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Lewee.Contracts\Lewee.Contracts.csproj" />
+  </ItemGroup>
+</Project>

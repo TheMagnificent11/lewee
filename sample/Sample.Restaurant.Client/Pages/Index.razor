@@ -1,0 +1,58 @@
+﻿@page "/"
+
+@using Sample.Restaurant.Client.States.Tables
+
+@inherits FluxorComponent
+
+@inject IState<TablesState> State
+@inject IDispatcher Dispatcher
+@inject NavigationManager NavigationManager
+
+<PageTitle>Tables</PageTitle>
+
+@if (this.State.Value.Data == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <MudSimpleTable Hover="true" FixedHeader="true">
+        <thead>
+            <tr>
+                <th>Table Number</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in this.State.Value.Data)
+            {
+                <tr>
+                    <td>@item.TableNumber</td>
+                    <td>@item.Status</td>
+                    <td>
+                        @if (item.IsInUse)
+                        {
+                            <MudButton
+                                Variant="Variant.Filled"
+                                Color="Color.Primary" @onclick="@(x => this.ViewTable(item.TableNumber))"
+                            >
+                                View
+                            </MudButton>
+                        }
+                        else
+                        {
+                            <MudButton
+                                Variant="Variant.Filled"
+                                Color="Color.Primary"
+                                @onclick="@(() => UseTable(item.TableNumber))"
+                            >
+                                Use
+                            </MudButton>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </MudSimpleTable>
+}

@@ -1,0 +1,25 @@
+version: '3.4'
+
+networks:
+  lewee-network:
+    name: lewee_network
+
+services:
+  sample.restaurant.server:
+    image: ${DOCKER_REGISTRY-}samplerestaurantserver
+    build:
+      context: .
+      dockerfile: sample/Sample.Restaurant.Server/Dockerfile
+    networks:
+      - lewee-network
+  seq:
+    container_name: lewee_seq
+    image: datalust/seq
+    ports:
+      - 5341:80
+    environment:
+      - ACCEPT_EULA=Y
+    volumes:
+      - ./seq:/data
+    networks:
+      - lewee-network

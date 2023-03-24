@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Lewee.Infrastructure.AspNet\Lewee.Infrastructure.AspNet.csproj" />
+  </ItemGroup>
+  
+</Project>
