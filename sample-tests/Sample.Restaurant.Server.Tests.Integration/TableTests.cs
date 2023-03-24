@@ -32,7 +32,7 @@ public class TableTests : RestaurantTestsBase
         var tableNumber = 4;
 
         this.Given(x => this.AnEmptyRestaurant())
-            .When(x => this.TheWaiterSeatsACustomerAtTable(tableNumber, true))
+            .When(x => this.TheWaiterSeatsACustomerAtTable(tableNumber, true, true))
             .Then(x => this.AnEmptyOrderIsCreatedForTable(tableNumber));
     }
 
@@ -42,8 +42,8 @@ public class TableTests : RestaurantTestsBase
         var tableNumber = 7;
 
         this.Given(x => this.AnEmptyRestaurant())
-            .When(x => this.TheWaiterSeatsACustomerAtTable(tableNumber, true))
-                .And(x => this.TheWaiterSeatsACustomerAtTable(tableNumber, false))
+            .When(x => this.TheWaiterSeatsACustomerAtTable(tableNumber, true, true))
+                .And(x => this.TheWaiterSeatsACustomerAtTable(tableNumber, false, false))
             .Then(x => this.TheWaiterShouldntBeAbleToUseTheTableAsItIsAlreadyInUse());
     }
 
@@ -53,14 +53,15 @@ public class TableTests : RestaurantTestsBase
         var tableNumber = 10;
 
         this.Given(x => this.AnEmptyRestaurant())
-            .When(x => this.TheWaiterSeatsACustomerAtTable(tableNumber, true))
+            .When(x => this.TheWaiterSeatsACustomerAtTable(tableNumber, true, false))
                 .And(x => this.TheCustomrOrdersAnItemOfTheMenu(tableNumber, Menu.Beer))
                 .And(x => this.TheCustomrOrdersAnItemOfTheMenu(tableNumber, Menu.Wine))
                 .And(x => this.TheCustomrOrdersAnItemOfTheMenu(tableNumber, Menu.GarlicBread))
                 .And(x => this.TheCustomrOrdersAnItemOfTheMenu(tableNumber, Menu.GarlicBread))
                 .And(x => this.TheCustomerRemovesAnItemFromTheirOrder(tableNumber, Menu.GarlicBread, true))
                 .And(x => this.TheCustomrOrdersAnItemOfTheMenu(tableNumber, Menu.Pizza))
-                .And(x => this.TheCustomrOrdersAnItemOfTheMenu(tableNumber, Menu.IceCream));
+                .And(x => this.TheCustomrOrdersAnItemOfTheMenu(tableNumber, Menu.IceCream))
+                .And(x => this.TheCustomerHasFinishedOrdering());
     }
 
     private async Task GetTablesRequestIsExecuted()
@@ -68,11 +69,11 @@ public class TableTests : RestaurantTestsBase
         this.Tables = await this.HttpGet<TableDto[]>("/tables");
     }
 
-    private async Task TheWaiterSeatsACustomerAtTable(int tableNumber, bool expectSuccess)
+    private async Task TheWaiterSeatsACustomerAtTable(int tableNumber, bool expectSuccess, bool dispatchEvents)
     {
         await this.UseTable(tableNumber, expectSuccess);
 
-        if (!expectSuccess)
+        if (!expectSuccess && !dispatchEvents)
         {
             return;
         }
@@ -83,7 +84,6 @@ public class TableTests : RestaurantTestsBase
     private async Task TheCustomrOrdersAnItemOfTheMenu(int tableNumber, MenuItem item)
     {
         await this.OrderItem(tableNumber, item.Id);
-        await this.WaitForDomainEventsToBeDispatched();
     }
 
     private async Task TheCustomerRemovesAnItemFromTheirOrder(int tableNumber, MenuItem item, bool expectSuccess)
@@ -94,7 +94,10 @@ public class TableTests : RestaurantTestsBase
         {
             return;
         }
+    }
 
+    private async Task TheCustomerHasFinishedOrdering()
+    {
         await this.WaitForDomainEventsToBeDispatched();
     }
 
