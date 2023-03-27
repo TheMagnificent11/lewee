@@ -17,14 +17,9 @@ jobs:
       with:
         fetch-depth: 0
     - name: Install GitVersion
-      uses: gittools/actions/gitversion/setup@v0.9.7
-      with:
-        versionSpec: '5.5.0'
+      run: dotnet tool install --global GitVersion.Tool
     - name: Determine Version
-      uses: gittools/actions/gitversion/execute@v0.9.7
-      with:
-        useConfigFile: true
-        configFilePath: GitVersion.yml
+      run: gitversion /config ./GitVersion.yml /output buildserver
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
@@ -58,7 +53,7 @@ jobs:
     #     recreate: true
     #     path: code-coverage-results.md
     - name: Pack
-      run: dotnet pack ./Lewee-Pack.sln --configuration Release --no-restore --nologo /p:PackageVersion=$GITVERSION_SEMVER --output ./output
+      run: dotnet pack ./Lewee-Pack.sln --configuration Release --no-restore --nologo /p:PackageVersion=${{ env.GitVersion_BuildSemVer }} --output ./output
     - name: Install NuGet
       uses: NuGet/setup-nuget@v1.0.5
       if: ${{ github.ref == 'refs/heads/master' }}
