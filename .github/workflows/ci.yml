@@ -18,6 +18,8 @@ jobs:
         fetch-depth: 0
     - name: Install GitVersion
       run: dotnet tool install --global GitVersion.Tool
+    - name: Add GitVersion to PATH
+      run: export PATH="$PATH:/home/runner/.dotnet/tools"
     - name: Determine Version
       run: gitversion /config ./GitVersion.yml /output buildserver
     - name: Setup .NET
