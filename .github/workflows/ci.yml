@@ -16,7 +16,12 @@ jobs:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
-    - name: Version
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v0
+      with:
+        versionSpec: '5.x'
+        preferLatestVersion: true
+    - name: Determine Version
       id: version
       uses: gittools/actions/gitversion/execute@v0
       with:
