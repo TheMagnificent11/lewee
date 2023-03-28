@@ -62,7 +62,7 @@ jobs:
       run: dotnet pack ./Lewee-Pack.sln --configuration Release --no-restore --nologo /p:PackageVersion=${{ steps.version.outputs.fullSemVer }} --output ./output
     - name: Install NuGet
       uses: NuGet/setup-nuget@v1.0.5
-      if: ${{ github.ref == 'refs/heads/master' }}
+    #  if: ${{ github.ref == 'refs/heads/master' }}
     - name: Publish to NuGet
       run: nuget push ./output/*.nupkg -ApiKey ${{ secrets.NUGET_API_KEY }} -Source https://api.nuget.org/v3/index.json
     #  if: ${{ github.ref == 'refs/heads/master' }}
