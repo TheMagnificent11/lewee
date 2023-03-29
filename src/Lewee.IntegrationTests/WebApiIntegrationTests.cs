@@ -11,11 +11,11 @@ using Xunit;
 namespace Lewee.IntegrationTests;
 
 /// <summary>
-/// Base Integration Tests
+/// Web API Integration Tests
 /// </summary>
 /// <typeparam name="TEntryPoint">ASP.Net app entrypoint class</typeparam>
 /// <typeparam name="TFactory">Web application factory type</typeparam>
-public abstract class WebApiIntegrationTestsBase<TEntryPoint, TFactory> : IClassFixture<TFactory>, IDisposable
+public abstract class WebApiIntegrationTests<TEntryPoint, TFactory> : IClassFixture<TFactory>, IDisposable
     where TEntryPoint : class
     where TFactory : WebApplicationFactory<TEntryPoint>
 {
@@ -23,10 +23,10 @@ public abstract class WebApiIntegrationTestsBase<TEntryPoint, TFactory> : IClass
     private bool disposedValue;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="WebApiIntegrationTestsBase{TEntryPoint, TFactory}"/> class
+    /// Initializes a new instance of the <see cref="WebApiIntegrationTests{TEntryPoint, TFactory}"/> class
     /// </summary>
     /// <param name="factory">Web application factory</param>
-    protected WebApiIntegrationTestsBase(TFactory factory)
+    protected WebApiIntegrationTests(TFactory factory)
     {
         this.factory = factory;
     }
