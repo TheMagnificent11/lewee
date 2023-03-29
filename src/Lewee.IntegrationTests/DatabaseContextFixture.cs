@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Respawn;
 using Xunit;
@@ -48,6 +49,19 @@ public abstract class DatabaseContextFixture<T> : IAsyncLifetime
     /// <inheritdoc />
     public async Task InitializeAsync()
     {
+        try
+        {
+            using (var connection = new SqlConnection(this.connectionString))
+            {
+                await connection.OpenAsync();
+            }
+        }
+        catch (SqlException)
+        {
+            // Database doesn't exist yet, probably because migrations haven't been run to create it
+            return;
+        }
+
         var respawner = await Respawner.CreateAsync(this.connectionString, this.ResetOptions);
         await respawner.ResetAsync(this.connectionString);
     }
