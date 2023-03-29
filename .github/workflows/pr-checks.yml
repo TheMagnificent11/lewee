@@ -1,0 +1,14 @@
+name: PR Checks
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+    types: [opened, reopened, synchronize, ready_for_review]
+
+jobs:
+  buildAndTest:
+    uses: ./.github/workflows/build-and-test.yml
+  #testCoverage:
+  #  uses: ./.github/workflows/test-coverage.yml
+      
