@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Respawn;
 using Xunit;
 
@@ -11,11 +12,22 @@ namespace Lewee.IntegrationTests;
 public abstract class DatabaseContextFixture<T> : IAsyncLifetime
     where T : DbContext
 {
+    private readonly string connectionString;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="DatabaseContextFixture{T}"/> class
     /// </summary>
     protected DatabaseContextFixture()
     {
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile($"appsettings.{this.EnvironmentName}.json")
+            .Build();
+
+        var connectionString = configuration.GetConnectionString(this.ConnectionStringName)
+            ?? throw new InvalidOperationException("Could not find connection string");
+
+        this.connectionString = connectionString;
     }
 
     /// <summary>
@@ -24,15 +36,20 @@ public abstract class DatabaseContextFixture<T> : IAsyncLifetime
     protected abstract RespawnerOptions ResetOptions { get; }
 
     /// <summary>
-    /// Gets or sets the database connection string
+    /// Gets the environment name
     /// </summary>
-    protected string ConnectionString { get; set; }
+    protected abstract string EnvironmentName { get; }
+
+    /// <summary>
+    /// Gets the connection string name used in appsettings.json
+    /// </summary>
+    protected abstract string ConnectionStringName { get; }
 
     /// <inheritdoc />
     public async Task InitializeAsync()
     {
-        var respawner = await Respawner.CreateAsync(this.ConnectionString, this.ResetOptions);
-        await respawner.ResetAsync(this.ConnectionString);
+        var respawner = await Respawner.CreateAsync(this.connectionString, this.ResetOptions);
+        await respawner.ResetAsync(this.connectionString);
     }
 
     /// <inheritdoc />

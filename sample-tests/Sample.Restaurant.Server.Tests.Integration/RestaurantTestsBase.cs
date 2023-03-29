@@ -11,10 +11,8 @@ public abstract class RestaurantTestsBase : WebApiIntegrationTests<Program, Rest
     {
     }
 
-#pragma warning disable CA1822 // Mark members as static
-    protected Task AnEmptyRestaurant()
-#pragma warning restore CA1822 // Mark members as static
+    protected async Task AnEmptyRestaurant()
     {
-        return Task.CompletedTask;
+        await this.HealthCheck("/health");
     }
 }

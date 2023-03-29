@@ -22,4 +22,8 @@ public sealed class RestaurantDbContextFixture : DatabaseContextFixture<Restaura
             new Table(RestuarantDbSchema, "MenuItemTypes")
         }
     };
+
+    protected override string EnvironmentName => "Testing";
+
+    protected override string ConnectionStringName => "Sample.Restaurant";
 }

@@ -83,10 +83,24 @@ public abstract class WebApiIntegrationTests<TEntryPoint, TFactory> : IClassFixt
     /// <returns>The HTTP response</returns>
     protected async Task<HttpResponseMessage> HttpRequest(HttpMethod method, string apiPath)
     {
+        // TODO: add request body parameter
         using (var request = new HttpRequestMessage(method, apiPath))
         using (var httpClient = this.factory.CreateClient())
         {
             return await httpClient.SendAsync(request);
+        }
+    }
+
+    /// <summary>
+    /// Calls the health check endpoint and ensures a success status code
+    /// </summary>
+    /// <param name="healthPath">Health path</param>
+    /// <returns>An asynchronous task</returns>
+    protected async Task HealthCheck(string healthPath)
+    {
+        using (var response = await this.HttpRequest(HttpMethod.Get, healthPath))
+        {
+            response.EnsureSuccessStatusCode();
         }
     }
 
