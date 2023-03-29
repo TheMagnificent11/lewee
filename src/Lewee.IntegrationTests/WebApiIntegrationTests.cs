@@ -5,7 +5,6 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Respawn;
 using Xunit;
 
 namespace Lewee.IntegrationTests;
@@ -45,11 +44,6 @@ public abstract class WebApiIntegrationTests<TEntryPoint, TFactory> : IClassFixt
     }
 
     /// <summary>
-    /// Gets an array of the test database detials
-    /// </summary>
-    protected abstract DatabaseResetConfiguration[] TestDatabases { get; }
-
-    /// <summary>
     /// Creates a HTTP request message for the specified <paramref name="httpMethod"/> and <paramref name="apiPath"/>
     /// with <paramref name="content"/> has the request body
     /// </summary>
@@ -65,43 +59,6 @@ public abstract class WebApiIntegrationTests<TEntryPoint, TFactory> : IClassFixt
         };
 
         return request;
-    }
-
-    /// <summary>
-    /// Resets the database to the state defined in <see cref="DatabaseResetConfiguration"/>
-    /// </summary>
-    /// <typeparam name="T">Database context type</typeparam>
-    /// <returns>Asynchronous task</returns>
-    protected async Task ResetDatabase<T>()
-        where T : DbContext
-    {
-        var dbDetails = this.TestDatabases.FirstOrDefault(x => x.DbContextType == typeof(T))
-            ?? throw new InvalidOperationException(
-                $"{typeof(T).FullName} not configured in {nameof(this.TestDatabases)}");
-
-        using (var scope = this.ScopeFactory.CreateScope())
-        {
-            var scopedServices = scope.ServiceProvider;
-
-            if (!dbDetails.DbContextType.IsSubclassOf(typeof(DbContext)))
-            {
-                throw new InvalidOperationException(
-                    $"{dbDetails.DbContextType.FullName} does not inherit from {typeof(DbContext).FullName}");
-            }
-
-            if (scopedServices.GetRequiredService(dbDetails.DbContextType) is not DbContext db)
-            {
-                throw new InvalidOperationException(
-                    $"Could not cast {dbDetails.DbContextType.FullName} to {typeof(DbContext).FullName}");
-            }
-
-            var connectionString = db.Database.GetConnectionString()
-                ?? throw new InvalidOperationException(
-                    $"Could not get connection string for {dbDetails.DbContextType.FullName}");
-
-            var respawner = await Respawner.CreateAsync(connectionString, dbDetails.RespawnerOptions);
-            await respawner.ResetAsync(connectionString);
-        }
     }
 
     /// <summary>
@@ -126,10 +83,24 @@ public abstract class WebApiIntegrationTests<TEntryPoint, TFactory> : IClassFixt
     /// <returns>The HTTP response</returns>
     protected async Task<HttpResponseMessage> HttpRequest(HttpMethod method, string apiPath)
     {
+        // TODO: add request body parameter
         using (var request = new HttpRequestMessage(method, apiPath))
         using (var httpClient = this.factory.CreateClient())
         {
             return await httpClient.SendAsync(request);
+        }
+    }
+
+    /// <summary>
+    /// Calls the health check endpoint and ensures a success status code
+    /// </summary>
+    /// <param name="healthPath">Health path</param>
+    /// <returns>An asynchronous task</returns>
+    protected async Task HealthCheck(string healthPath)
+    {
+        using (var response = await this.HttpRequest(HttpMethod.Get, healthPath))
+        {
+            response.EnsureSuccessStatusCode();
         }
     }
 
