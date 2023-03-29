@@ -15,12 +15,11 @@ namespace Lewee.IntegrationTests;
 /// </summary>
 /// <typeparam name="TEntryPoint">ASP.Net app entrypoint class</typeparam>
 /// <typeparam name="TFactory">Web application factory type</typeparam>
-public abstract class WebApiIntegrationTests<TEntryPoint, TFactory> : IClassFixture<TFactory>, IDisposable
+public abstract class WebApiIntegrationTests<TEntryPoint, TFactory> : IClassFixture<TFactory>
     where TEntryPoint : class
     where TFactory : WebApplicationFactory<TEntryPoint>
 {
     private readonly TFactory factory;
-    private bool disposedValue;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="WebApiIntegrationTests{TEntryPoint, TFactory}"/> class
@@ -50,14 +49,6 @@ public abstract class WebApiIntegrationTests<TEntryPoint, TFactory> : IClassFixt
     /// </summary>
     protected abstract DatabaseResetConfiguration[] TestDatabases { get; }
 
-    /// <inheritdoc />
-    public void Dispose()
-    {
-        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-        this.Dispose(disposing: true);
-        GC.SuppressFinalize(this);
-    }
-
     /// <summary>
     /// Creates a HTTP request message for the specified <paramref name="httpMethod"/> and <paramref name="apiPath"/>
     /// with <paramref name="content"/> has the request body
@@ -74,23 +65,6 @@ public abstract class WebApiIntegrationTests<TEntryPoint, TFactory> : IClassFixt
         };
 
         return request;
-    }
-
-    /// <summary>
-    /// Disposes managed objects
-    /// </summary>
-    /// <param name="disposing">Whether the parent class is disposing</param>
-    protected virtual void Dispose(bool disposing)
-    {
-        if (!this.disposedValue)
-        {
-            if (disposing)
-            {
-                this.factory.Dispose();
-            }
-
-            this.disposedValue = true;
-        }
     }
 
     /// <summary>
