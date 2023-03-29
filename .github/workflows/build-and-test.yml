@@ -1,5 +1,4 @@
-on:
-  workflow_call:
+on: [ workflow_call ]
   
 jobs:
   buildAndTest:
@@ -11,7 +10,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 7.0.202
+        dotnet-version: 7.0.*
     - name: Install Dependencies
       run: dotnet restore ./Lewee-CI.sln --nologo
     - name: Build
