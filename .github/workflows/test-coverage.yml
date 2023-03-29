@@ -1,4 +1,9 @@
-on: [ workflow_call ]
+on:
+  workflow_call:
+    inputs:
+      is-pr:
+        required: false
+        type: boolean
 
 jobs:
   testCoverage:

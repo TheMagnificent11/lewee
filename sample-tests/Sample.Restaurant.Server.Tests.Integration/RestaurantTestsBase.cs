@@ -5,7 +5,7 @@ using Sample.Restaurant.Infrastructure.Data;
 
 namespace Sample.Restaurant.Server.Tests.Integration;
 
-public abstract class RestaurantTestsBase : WebApiIntegrationTestsBase<Program, RestaurantWebApplicationFactory>
+public abstract class RestaurantTestsBase : WebApiIntegrationTests<Program, RestaurantWebApplicationFactory>
 {
     private const string RestuarantDbSchema = "res";
 

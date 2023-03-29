@@ -6,6 +6,6 @@ on:
 jobs:
   buildAndTest:
     uses: ./.github/workflows/build-and-test.yml
-  #testCoverage:
-  #  uses: ./.github/workflows/test-coverage.yml
+    with:
+      is-pr: true
       
