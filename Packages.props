@@ -32,7 +32,6 @@
     <PackageReference Update="Microsoft.EntityFrameworkCore.Sqlite" Version="$(DOTNET_VERSION)" />
     <PackageReference Update="Microsoft.EntityFrameworkCore.Tools" Version="$(DOTNET_VERSION)" />
     <PackageReference Update="Microsoft.Extensions.Configuration.Binder" Version="$(DOTNET_VERSION)" />
-    <PackageReference Update="Microsoft.Extensions.Diagnostics.HealthChecks" Version="$(DOTNET_VERSION)" />
     <PackageReference Update="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="$(DOTNET_VERSION)" />
     <PackageReference Update="Microsoft.Extensions.DependencyModel" Version="7.0.0" /><!-- Out-of-sync with property group version -->
     <PackageReference Update="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" /><!-- Out-of-sync with property group version -->

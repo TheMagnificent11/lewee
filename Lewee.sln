@@ -9,10 +9,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
+		coverage.runsettings = coverage.runsettings
 		Directory.Build.props = Directory.Build.props
-		Directory.Build.targets = Directory.Build.targets
 		Packages.props = Packages.props
 		README.md = README.md
+		test-coverage.ps1 = test-coverage.ps1
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lewee.Application", "src\Lewee.Application\Lewee.Application.csproj", "{CA68F196-F166-4A8F-A22E-3D74DD811DF5}"
@@ -53,7 +54,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Restaurant.Server", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Restaurant.Server.Tests.Integration", "sample-tests\Sample.Restaurant.Server.Tests.Integration\Sample.Restaurant.Server.Tests.Integration.csproj", "{21B9F30A-FFFE-41E7-A721-F6C1CF81C8D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lewee.IntegrationTests", "src\Lewee.IntegrationTests\Lewee.IntegrationTests.csproj", "{27CE2C4C-ED90-44DA-B3E3-E798459E4B5B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lewee.IntegrationTests", "src\Lewee.IntegrationTests\Lewee.IntegrationTests.csproj", "{27CE2C4C-ED90-44DA-B3E3-E798459E4B5B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
