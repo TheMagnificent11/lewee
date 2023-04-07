@@ -1,7 +1,7 @@
 ﻿using Fluxor;
 using Lewee.Blazor.Fluxor.Actions;
 using Lewee.Shared;
-using Microsoft.Extensions.Logging; // TODO: switch to Serilog
+using Microsoft.Extensions.Logging; // TODO (https://github.com/TheMagnificent11/lewee/issues/15): switch to Serilog
 
 namespace Lewee.Blazor.Fluxor;
 
