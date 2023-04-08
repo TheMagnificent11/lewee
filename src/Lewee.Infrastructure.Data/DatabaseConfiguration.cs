@@ -33,7 +33,8 @@ public static class DatabaseConfiguration
         services.AddDbContextFactory<T>(options => options.UseSqlServer(connectionString));
         services.AddScoped<T>();
 
-        // TODO: figure out how to register each IRepository<TAggregateRoot> with an implementation of Repository<Repository<, T, T>
+        // TODO (https://github.com/TheMagnificent11/lewee/issues/16):
+        // Figure out how to register each IRepository<TAggregateRoot> with an implementation of Repository<Repository<, T, T>
         ////services.AddTransient(typeof(IRepository<>), typeof(Repository<, T>));
 
         services.AddSingleton<DomainEventDispatcher<T>>();

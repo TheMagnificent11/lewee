@@ -83,7 +83,7 @@ public abstract class WebApiIntegrationTests<TEntryPoint, TFactory> : IClassFixt
     /// <returns>The HTTP response</returns>
     protected async Task<HttpResponseMessage> HttpRequest(HttpMethod method, string apiPath)
     {
-        // TODO: add request body parameter
+        // TODO (https://github.com/TheMagnificent11/lewee/issues/14): add request body parameter
         using (var request = new HttpRequestMessage(method, apiPath))
         using (var httpClient = this.factory.CreateClient())
         {

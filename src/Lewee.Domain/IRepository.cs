@@ -5,7 +5,7 @@
 /// </summary>
 /// <typeparam name="T">Data type to access</typeparam>
 public interface IRepository<T>
-    where T : class, IEntity
+    where T : class, IAggregateRoot
 {
     /// <summary>
     /// Retrieves the entity with ID <paramref name="id"/>
