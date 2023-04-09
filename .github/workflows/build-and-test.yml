@@ -23,7 +23,7 @@ jobs:
     - name: Create SQL Server Container
       run: docker compose -f ./docker-compose.ci.yml up
     - name: Test
-      run: dotnet test ./Lewee-CI.sln --configuration Release --no-build --nologo --collect "XPlat Code Coverage" --results-directory ./coverage
+      run: dotnet test ./Lewee-CI.sln --configuration Release --no-build --nologo --settings coverage.runsettings --results-directory ./coverage
     - name: Tear Down SQL Server Container
       run: docker compose -f ./docker-compose.ci.yml down
     - name: Code Coverage Report
