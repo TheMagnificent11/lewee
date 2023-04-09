@@ -77,10 +77,10 @@ public static class DatabaseConfiguration
     }
 
     /// <summary>
-    /// Migrates the databaes related to the DB context of type <typeparamref name="T"/>
+    /// Migrates the database related to the DB context of type <typeparamref name="T"/>
     /// </summary>
     /// <typeparam name="T">DB context to migrate</typeparam>
-    /// <param name="app">Application buider</param>
+    /// <param name="app">Application builder</param>
     /// <param name="seedData">Whether to seed data</param>
     /// <returns>Asynchronous task</returns>
     public static async Task MigrationDatabase<T>(this IApplicationBuilder app, bool seedData = false)
