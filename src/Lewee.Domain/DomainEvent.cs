@@ -1,9 +1,11 @@
-﻿namespace Lewee.Domain;
+﻿using MediatR;
+
+namespace Lewee.Domain;
 
 /// <summary>
 /// Domain Event
 /// </summary>
-public abstract class DomainEvent : IDomainEvent
+public abstract class DomainEvent : INotification
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="DomainEvent"/> class
@@ -13,9 +15,13 @@ public abstract class DomainEvent : IDomainEvent
         this.CorrelationId = Guid.NewGuid();
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Gets or sets the correlation ID of the event
+    /// </summary>
     public Guid CorrelationId { get; protected set; }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Gets or sets the user ID
+    /// </summary>
     public string? UserId { get; set; }
 }
