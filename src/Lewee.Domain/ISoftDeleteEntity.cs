@@ -1,13 +1,12 @@
-﻿namespace Lewee.Domain
+﻿namespace Lewee.Domain;
+
+/// <summary>
+/// Soft Delete Entity Interface
+/// </summary>
+public interface ISoftDeleteEntity
 {
     /// <summary>
-    /// Soft Delete Entity Interface
+    /// Gets a value indicating whether the entity is deleted
     /// </summary>
-    public interface ISoftDeleteEntity
-    {
-        /// <summary>
-        /// Gets a value indicating whether the entity is deleted
-        /// </summary>
-        bool IsDeleted { get; }
-    }
+    bool IsDeleted { get; }
 }
