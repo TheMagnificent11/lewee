@@ -58,6 +58,7 @@ public static class ApplicationConfiguration
                 services.AddTransient(typeof(IPipelineBehavior<,>), item);
             }
         }
+
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPostProcessorBehavior<,>));
 
         return services;
