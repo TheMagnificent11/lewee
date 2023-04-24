@@ -31,11 +31,16 @@
     </AllowedOutputExtensionsInPackageBuildOutputFolder>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="$(MSBuildProjectName.Contains('.Tests.'))">
     <IsPackable>false</IsPackable>
   </PropertyGroup>
+
+  <ItemGroup Condition="!$(MSBuildProjectName.Contains('.Tests.')) AND !$(MSBuildProjectName.StartsWith('Sample.'))">
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
   <ItemGroup Condition="!$(MSBuildProjectName.Contains('.Tests.'))">
     <PackageReference Include="Microsoft.SourceLink.GitHub">

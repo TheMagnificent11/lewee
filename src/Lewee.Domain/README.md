@@ -26,3 +26,11 @@ It overrides the `Equals` method.  This returns `true` if the `Id` properties ar
 It also overrides the `GetHashCode` method to return the string hash code after the string concatenation of the type and `Id`.
 
 There are also some methods to allow marking and un-marking the entity as deleted, and for setting the audit fields.
+
+## AggregateRoot, DomainEventsCollection & DomainEvent
+
+The [AggregateRoot](./AggregateRoot.cs) class inherits of the `Entity` class and contains a [DomainEventsCollection](./DomainEventsCollection.cs).
+
+The `DomainEventsCollection` has a `Raise` method that allows you to raise a [DomainEvent](./DomainEvent.cs).
+
+The `Lewee.Infrastructure.Data` package contains a [DomainEventDispatcherService](../Lewee.Infrastructure.Data/DomainEventDispatcherService.cs) that dispatches the domain events stored in the database every 2500 ms; it's an [outbox pattern](https://learn.microsoft.com/en-us/azure/architecture/best-practices/transactional-outbox-cosmos).
