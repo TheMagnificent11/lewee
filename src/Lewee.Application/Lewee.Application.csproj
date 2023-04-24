@@ -7,7 +7,6 @@
     <PackageReference Include="Mapster.DependencyInjection" />
     <PackageReference Include="MediatR" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" />
     <PackageReference Include="Serilog" />
     <PackageReference Include="SerilogAnalyzer">
       <ExcludeAssets>all</ExcludeAssets>

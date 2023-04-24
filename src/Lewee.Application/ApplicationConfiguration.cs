@@ -43,10 +43,12 @@ public static class ApplicationConfiguration
         params Type[] additionalBehaviors)
     {
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CorrelationIdLoggingBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TenantLoggingBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehavior<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(FailureLoggingBehavior<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehavior<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(DomainExceptionBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
         if (additionalBehaviors != null && additionalBehaviors.Any())
@@ -56,9 +58,6 @@ public static class ApplicationConfiguration
                 services.AddTransient(typeof(IPipelineBehavior<,>), item);
             }
         }
-
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(DomainExceptionBehavior<,>));
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(FailureLoggingBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPostProcessorBehavior<,>));
 
         return services;

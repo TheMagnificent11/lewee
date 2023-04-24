@@ -24,9 +24,7 @@ internal class DomainExceptionBehavior<TCommand, TResponse> : IPipelineBehavior<
         }
         catch (DomainException ex)
         {
-#pragma warning disable Serilog004 // Constant MessageTemplate verifier
-            this.logger.Warning(ex, ex.Message);
-#pragma warning restore Serilog004 // Constant MessageTemplate verifier
+            this.logger.Information(ex, "Domain exception caught");
 
             var result = CommandResult.Fail(ResultStatus.BadRequest, ex.Message);
 

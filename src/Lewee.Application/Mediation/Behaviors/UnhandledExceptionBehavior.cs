@@ -25,6 +25,7 @@ internal class UnhandledExceptionBehavior<TRequest, TResponse> : IPipelineBehavi
 
             this.logger.Error(ex, "Request: Unhandled Exception for Request {Name} {@Request}", requestName, request);
 
+            // TODO: instead of re-throwing, return `Result`
             throw;
         }
     }

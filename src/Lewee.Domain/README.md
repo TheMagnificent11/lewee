@@ -1,6 +1,6 @@
 # Lewee.Domain
 
-This package assist with implementing the domain logic of an application.
+This package assist with implementing the domain logic of an application (architected using domain-driven design principles).
 
 ## Entity
 
@@ -33,4 +33,10 @@ The [AggregateRoot](./AggregateRoot.cs) class inherits of the `Entity` class and
 
 The `DomainEventsCollection` has a `Raise` method that allows you to raise a [DomainEvent](./DomainEvent.cs).
 
-The `Lewee.Infrastructure.Data` package contains a [DomainEventDispatcherService](../Lewee.Infrastructure.Data/DomainEventDispatcherService.cs) that dispatches the domain events stored in the database every 2500 ms; it's an [outbox pattern](https://learn.microsoft.com/en-us/azure/architecture/best-practices/transactional-outbox-cosmos).
+The [Lewee.Infrastructure.Data](../Lewee.Infrastructure.Data/README.md) package contains a [DomainEventDispatcherService](../Lewee.Infrastructure.Data/DomainEventDispatcherService.cs) that dispatches the domain events stored in the database every 2500 ms; it's an [outbox pattern](https://learn.microsoft.com/en-us/azure/architecture/best-practices/transactional-outbox-cosmos).
+
+## DomainException
+
+The [DomainException](./DomainException.cs`) class can be used to raise errors when domain rules are violated.
+
+The [Lewee.Application](../Lewee.Application/README.md) package contains has a [DomainExceptionBehavior](../Lewee.Application/Mediation/Behaviors/DomainExceptionBehavior.cs) that catches these exceptions, logs them as an informational log entry and returns a failure result.
