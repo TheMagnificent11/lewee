@@ -1,11 +1,11 @@
-﻿using Lewee.Infrastructure.AspNet.Settings;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;
 
-namespace Lewee.Infrastructure.AspNet.Logging;
+namespace Lewee.Infrastructure.Logging;
 
 /// <summary>
 /// Logging Configuration
@@ -16,23 +16,18 @@ public static class LoggingConfiguration
     /// <see cref="IServiceCollection"/> extension method to configure logging
     /// </summary>
     /// <param name="builder">
-    /// Logging builder
+    /// Host builder
     /// </param>
-    /// <param name="applicationSettings">
-    /// Application settings
+    /// <param name="configuration">
+    /// Configuration
     /// </param>
-    /// <param name="seqSettings">
-    /// Seq settings
-    /// </param>
-    public static void ConfigureLogging(
-        this IHostBuilder builder,
-        ApplicationSettings applicationSettings,
-        SeqSettings? seqSettings)
+    /// <returns>
+    /// Serilog logger
+    /// </returns>
+    public static Logger ConfigureLogging(this IHostBuilder builder, IConfiguration configuration)
     {
-        if (applicationSettings is null)
-        {
-            throw new ArgumentNullException(nameof(applicationSettings));
-        }
+        var applicationSettings = configuration.GetSettings<ApplicationSettings>(nameof(ApplicationSettings));
+        var seqSettings = configuration.GetSettings<SeqSettings>(nameof(SeqSettings));
 
         var serilogLevelSwitch = new LoggingLevelSwitch
         {
@@ -66,6 +61,6 @@ public static class LoggingConfiguration
 
         logger.Information("================= {ApplicationName} Started =================", applicationSettings.Name);
 
-        builder.UseSerilog(logger, dispose: true);
+        return logger;
     }
 }

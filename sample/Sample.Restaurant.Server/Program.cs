@@ -1,14 +1,14 @@
 ﻿using System.Text.Json;
 using Lewee.Application;
 using Lewee.Infrastructure.AspNet.Auth;
-using Lewee.Infrastructure.AspNet.Logging;
-using Lewee.Infrastructure.AspNet.Settings;
 using Lewee.Infrastructure.AspNet.SignalR;
 using Lewee.Infrastructure.AspNet.WebApi;
 using Lewee.Infrastructure.Data;
+using Lewee.Infrastructure.Logging;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using Sample.Restaurant.Application;
 using Sample.Restaurant.Infrastructure.Data;
+using Serilog;
 
 namespace Sample.Restaurant.Server;
 
@@ -26,12 +26,11 @@ public class Program
             throw new ApplicationException("Could not find database connection string");
         }
 
-        var appSettings = builder.Configuration.GetSettings<ApplicationSettings>(nameof(ApplicationSettings));
-        var seqSettings = builder.Configuration.GetSettings<SeqSettings>(nameof(SeqSettings));
         var migrateDatabases = builder.Configuration.GetValue<bool>("MigrateDatabases");
         /* var serviceBusSettings = builder.Configuration.GetSettings<ServiceBusSettings>(nameof(ServiceBusSettings)); */
 
-        builder.Host.ConfigureLogging(appSettings, seqSettings);
+        var logger = builder.Host.ConfigureLogging(builder.Configuration);
+        builder.Host.UseSerilog(logger, dispose: true);
 
         builder.Services.AddMapper();
 
