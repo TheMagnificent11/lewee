@@ -7,6 +7,8 @@ This package assists with building the application layer of an application using
 - [FluentValidation](https://github.com/jbogard/MediatR)
 - [Mediatr](https://github.com/jbogard/MediatR)
 - [Serilog](https://github.com/serilog)
+- [Lewee.Domain](../Lewee.Domain/README.md)
+- [Lewee.Contracts](../Lewee.Contracts/README.md)
 
 ## Configuration
 
