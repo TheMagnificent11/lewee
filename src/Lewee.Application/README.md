@@ -4,12 +4,11 @@ This package assists with building the application layer of an application using
 
 ## Dependencies
 
-- [FluentValidation](TODO)
-- [Mapster](TODO)
-- [Mediatr](TODO)
-- [Serilog](TODO)
+- [FluentValidation](https://github.com/jbogard/MediatR)
+- [Mediatr](https://github.com/jbogard/MediatR)
+- [Serilog](https://github.com/serilog)
 
-## How To
+## Configuration
 
 To use this packages add the following lines to your service configuration of your application (`services` in the code below is `Microsoft.Extensions.DependencyInjection.ServicesCollection`).
 
@@ -18,9 +17,9 @@ services.AddApplication(typeof(ApplicationLayerClass).Assembly, typeof(DomainLay
 services.AddPipelineBehaviors();
 ```
 
-The assembly parameters of `AddApplication` are use to configure `Mediatr` (it will scan these assemblies for requests and notification classes/handlers).  In addition to this, the application layer assembly will by used to configure `FluentValidation` (it will use this assembly to scan for validators).
+The assembly parameters of `AddApplication` are used to configure `Mediatr` (it will scan these assemblies for request and notification classes/handlers).  In addition to this, the application layer assembly will by used to configure `FluentValidation` (it will use this assembly to scan for validators).
 
-`AddPipelineBehaviors` adds the `Mediatr` request pipelines behaviors listed in the [Pipeline Behaviors](#pipeline-behaviors) section.
+`AddPipelineBehaviors` adds the `Mediatr` request pipelines behaviors listed in the [Pipeline Behaviors](#pipeline-behaviors) section.  This only needs to be added once per application/solution; not for once each project that uses this package.
 
 Additional behaviors can be added as parameters to `AddPipelineBehaviors`.
 
@@ -28,7 +27,7 @@ Additional behaviors can be added as parameters to `AddPipelineBehaviors`.
 
 `Mediatr` is used to assist with mediation, which allows the presentation layer of the application to have less dependencies e.g. API controller classes only need to inject the `IMediator` interface to handle web requests.
 
-There a several interfaces that add a further layer of [command-query responsibility separation (CQRS)](TODO) on top of the `IRequest` interface in `Mediatr`.
+There a several interfaces that add a further layer of [command-query responsibility separation (CQRS)](https://learn.microsoft.com/en-us/azure/architecture/patterns/cqrs) on top of the `IRequest` interface in `Mediatr`.
 
 - [IQuery](./Mediation/Requests/IQuery.cs)
 - [ICommand](./Mediation/Requests/ICommand.cs)

@@ -7,7 +7,7 @@ using Sample.Restaurant.Domain;
 
 namespace Sample.Restaurant.Application;
 
-public sealed class GetTablesQuery : IQuery<QueryResult<IEnumerable<TableDto>>>
+public sealed class GetTablesQuery : IQuery<IEnumerable<TableDto>>
 {
     public GetTablesQuery(Guid correlationId)
     {

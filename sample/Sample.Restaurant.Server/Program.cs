@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using Lewee.Application;
 using Lewee.Infrastructure.AspNet.Auth;
 using Lewee.Infrastructure.AspNet.SignalR;
 using Lewee.Infrastructure.AspNet.WebApi;
@@ -8,6 +7,7 @@ using Lewee.Infrastructure.Logging;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using Sample.Restaurant.Application;
 using Sample.Restaurant.Infrastructure.Data;
+using Sample.Restaurant.Server.Configuration;
 using Serilog;
 
 namespace Sample.Restaurant.Server;
