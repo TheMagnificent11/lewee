@@ -53,6 +53,12 @@ Both `QueryResult` and `CommandResult` inherit from [Result](./Mediation/Request
 - `Errors`
   - A dictionary keyed by request property for any errors encountered
 
+#### Sample Code
+
+[Query](../../sample/Sample.Restaurant.Application/GetTablesQuery.cs)
+
+[Command](../../sample/Sample.Restaurant.Application/UseTableCommand.cs)
+
 ### ITenantRequest
 
 `ITenantedRequest` has a `TenantId` `Guid` property used to specify the tenant ID for multi-tenanted applications.
@@ -80,4 +86,6 @@ As mentioned in the [Pipeline Behaviors](#pipeline-behaviors) section, the `Tena
 
 The [ClientEvent](./Mediation/Notifications/ClientEvent.cs) can be published via `Mediatr.IMediator.Publish` to send a `SignalR` event to the a client application.
 
-See sample code [here](../../sample/Sample.Restaurant.Application/TableDomainEventHandler.cs).
+#### Sample
+
+[Client Event](../../sample/Sample.Restaurant.Application/TableDomainEventHandler.cs).
