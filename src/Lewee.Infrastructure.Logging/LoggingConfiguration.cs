@@ -26,13 +26,8 @@ public static class LoggingConfiguration
     /// </returns>
     public static Logger ConfigureLogging(this IHostBuilder builder, IConfiguration configuration)
     {
-        var applicationSettings = configuration.GetValue<ApplicationSettings>(nameof(ApplicationSettings));
-        var seqSettings = configuration.GetValue<SeqSettings>(nameof(SeqSettings));
-
-        if (applicationSettings == null)
-        {
-            throw new InvalidOperationException("ApplicationSettings do not exist in appsettings.json");
-        }
+        var applicationSettings = configuration.GetSettings<ApplicationSettings>(nameof(ApplicationSettings));
+        var seqSettings = configuration.GetSettings<SeqSettings>(nameof(SeqSettings));
 
         var serilogLevelSwitch = new LoggingLevelSwitch
         {
