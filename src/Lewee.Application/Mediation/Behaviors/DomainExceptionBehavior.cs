@@ -16,11 +16,11 @@ internal class DomainExceptionBehavior<TCommand, TResponse> : IPipelineBehavior<
         this.logger = logger.ForContext<DomainExceptionBehavior<TCommand, TResponse>>();
     }
 
-    public Task<TResponse> Handle(TCommand request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+    public async Task<TResponse> Handle(TCommand request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         try
         {
-            return next();
+            return await next();
         }
         catch (DomainException ex)
         {
@@ -28,7 +28,7 @@ internal class DomainExceptionBehavior<TCommand, TResponse> : IPipelineBehavior<
 
             var result = CommandResult.Fail(ResultStatus.BadRequest, ex.Message);
 
-            return Task.FromResult((TResponse)result);
+            return (TResponse)result;
         }
     }
 }
