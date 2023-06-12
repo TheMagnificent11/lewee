@@ -20,7 +20,8 @@ public sealed class UseTableTests : TabeTestsBase
 
         this.Given(x => this.AnEmptyRestaurant())
             .When(x => this.TheWaiterSeatsACustomerAtTable(tableNumber, true, true))
-            .Then(x => this.AnEmptyOrderIsCreatedForTable(tableNumber));
+            .Then(x => this.AnEmptyOrderIsCreatedForTable(tableNumber))
+            .BDDfy();
     }
 
     [BddfyFact]
@@ -31,7 +32,8 @@ public sealed class UseTableTests : TabeTestsBase
         this.Given(x => this.AnEmptyRestaurant())
             .When(x => this.TheWaiterSeatsACustomerAtTable(tableNumber, true, true))
                 .And(x => this.TheWaiterSeatsACustomerAtTable(tableNumber, false, false))
-            .Then(x => this.TheWaiterShouldntBeAbleToUseTheTableAsItIsAlreadyInUse());
+            .Then(x => this.TheWaiterShouldntBeAbleToUseTheTableAsItIsAlreadyInUse())
+            .BDDfy();
     }
 
     private async Task AnEmptyOrderIsCreatedForTable(int tableNumber)

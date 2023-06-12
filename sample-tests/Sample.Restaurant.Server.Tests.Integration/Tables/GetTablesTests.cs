@@ -19,7 +19,8 @@ public sealed class GetTablesTests : TabeTestsBase
     {
         this.Given(x => this.AnEmptyRestaurant())
             .When(x => this.GetTablesRequestIsExecuted())
-            .Then(x => x.TheCorrectTablesAreReturned());
+            .Then(x => x.TheCorrectTablesAreReturned())
+            .BDDfy();
     }
 
     private async Task GetTablesRequestIsExecuted()

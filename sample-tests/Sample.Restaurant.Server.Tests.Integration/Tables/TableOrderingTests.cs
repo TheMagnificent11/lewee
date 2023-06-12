@@ -39,7 +39,8 @@ public sealed class TableOrderingTests : TabeTestsBase
                 .And(x => this.TheCustomrOrdersAnItemOfTheMenu(tableNumber, Menu.IceCream, true))
                 .And(x => this.TheCustomrOrdersAnItemOfTheMenu(tableNumber, Menu.IceCream, true))
                 .And(x => this.TheCustomerHasFinishedOrdering())
-            .Then(x => this.TheOrderForTheTableContainsTheCorretItems(tableNumber, expectedOrderItems));
+            .Then(x => this.TheOrderForTheTableContainsTheCorretItems(tableNumber, expectedOrderItems))
+            .BDDfy();
     }
 
     [BddfyFact]
@@ -49,7 +50,8 @@ public sealed class TableOrderingTests : TabeTestsBase
 
         this.Given(x => this.AnEmptyRestaurant())
             .When(x => this.TheCustomrOrdersAnItemOfTheMenu(tableNumber, Menu.Pasta, false))
-            .Then(x => this.TheRestaurantManagerTellsTheCustomerThatTheyNeedToBeSeatedAtATableToOrderOffTheMenu());
+            .Then(x => this.TheRestaurantManagerTellsTheCustomerThatTheyNeedToBeSeatedAtATableToOrderOffTheMenu())
+            .BDDfy();
     }
 
     private async Task TheCustomrOrdersAnItemOfTheMenu(int tableNumber, MenuItem item, bool isSuccessExpected)
