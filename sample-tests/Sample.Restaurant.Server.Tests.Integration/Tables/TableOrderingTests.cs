@@ -66,7 +66,7 @@ public sealed class TableOrderingTests : TabeTestsBase
 
     private async Task OrderItem(int tableNumber, Guid itemId, bool isSuccessExpected)
     {
-        using (var response = await this.HttpRequest(HttpMethod.Put, $"/tables/{tableNumber}/menu-items/{itemId}"))
+        using (var response = await this.HttpRequest(HttpMethod.Put, $"/api/v1/tables/{tableNumber}/menu-items/{itemId}"))
         {
             if (isSuccessExpected)
             {
@@ -81,7 +81,7 @@ public sealed class TableOrderingTests : TabeTestsBase
 
     private async Task RemoveItem(int tableNumber, Guid itemId, bool isSuccessExpected)
     {
-        using (var response = await this.HttpRequest(HttpMethod.Delete, $"/tables/{tableNumber}/menu-items/{itemId}"))
+        using (var response = await this.HttpRequest(HttpMethod.Delete, $"/api/v1/tables/{tableNumber}/menu-items/{itemId}"))
         {
             if (isSuccessExpected)
             {
@@ -101,7 +101,7 @@ public sealed class TableOrderingTests : TabeTestsBase
 
     private async Task TheOrderForTheTableContainsTheCorretItems(int tableNumber, MenuItem[] items)
     {
-        var tableDetails = await this.HttpGet<TableDetailsDto>($"tables/{tableNumber}");
+        var tableDetails = await this.HttpGet<TableDetailsDto>($"/api/v1/tables/{tableNumber}");
 
         var expectedItems = items
             .GroupBy(x => x.Id)

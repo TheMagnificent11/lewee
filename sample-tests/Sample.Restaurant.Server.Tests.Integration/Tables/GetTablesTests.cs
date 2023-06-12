@@ -25,7 +25,7 @@ public sealed class GetTablesTests : TabeTestsBase
 
     private async Task GetTablesRequestIsExecuted()
     {
-        this.Tables = await this.HttpGet<TableDto[]>("/tables");
+        this.Tables = await this.HttpGet<TableDto[]>("/api/v1/tables");
     }
 
     private void TheCorrectTablesAreReturned()
