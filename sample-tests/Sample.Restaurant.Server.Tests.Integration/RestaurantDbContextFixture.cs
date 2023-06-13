@@ -15,8 +15,6 @@ public sealed class RestaurantDbContextFixture : DatabaseContextFixture<Restaura
         SchemasToExclude = new[] { "dbo" },
         TablesToIgnore = new[]
         {
-            new Table(RestaurantDbSchema, nameof(RestaurantDbContext.DomainEventReferences)),
-            new Table(RestaurantDbSchema, nameof(RestaurantDbContext.Tables)),
             new Table(RestaurantDbSchema, nameof(RestaurantDbContext.MenuItems)),
             new Table(RestaurantDbSchema, "OrderStatuses"),
             new Table(RestaurantDbSchema, "MenuItemTypes")

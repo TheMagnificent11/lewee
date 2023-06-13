@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using NUnit.Framework;
 
 namespace Sample.Restaurant.Server.Tests.Integration.Tables;
 
@@ -8,9 +9,16 @@ public abstract class TableTestsBase : RestaurantTestsBase
 {
     protected ValidationProblemDetails ProblemDetails { get; private set; }
 
+    [SetUp]
+    public override Task Setup()
+    {
+        this.ProblemDetails = null;
+        return base.Setup();
+    }
+
     protected async Task SetProblemDetails(HttpResponseMessage response)
     {
-        this.ProblemDetails = await this.DeserializeResponse<ValidationProblemDetails>(response);
+        this.ProblemDetails = await this.DeserializeResponse<ValidationProblemDetails>(response, false);
     }
 
     protected async Task TheWaiterSeatsACustomerAtTable(int tableNumber, bool isSuccessExpected, bool dispatchEvents)

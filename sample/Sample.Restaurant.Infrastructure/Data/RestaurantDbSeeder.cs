@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Sample.Restaurant.Domain;
 
 namespace Sample.Restaurant.Infrastructure.Data;
+
 public class RestaurantDbSeeder : IDatabaseSeeder
 {
     private readonly RestaurantDbContext context;

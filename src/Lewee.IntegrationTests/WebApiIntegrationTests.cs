@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Linq.Expressions;
 using System.Net.Http.Json;
 using System.Text;
@@ -31,10 +32,7 @@ public abstract class WebApiIntegrationTests<TEntryPoint, TFactory>
     /// </summary>
     protected TFactory Factory { get; }
 
-    /// <summary>
-    /// Gets the scope factory
-    /// </summary>
-    protected IServiceScopeFactory ScopeFactory
+    private IServiceScopeFactory ScopeFactory
     {
         get
         {
@@ -133,6 +131,20 @@ public abstract class WebApiIntegrationTests<TEntryPoint, TFactory>
     protected async Task WaitForDomainEventsToBeDispatched()
     {
         await Task.Delay(TimeSpan.FromSeconds(3));
+    }
+
+    /// <summary>
+    /// Gets a service of type <typeparamref name="T"/> from the dependency injection conatiner
+    /// </summary>
+    /// <typeparam name="T">Service type</typeparam>
+    /// <returns>The service if it exists, otherwise null</returns>
+    protected T? GetService<T>()
+        where T : class
+    {
+        return this.ScopeFactory
+            .CreateScope()
+            .ServiceProvider
+            .GetService<T>();
     }
 
     /// <summary>
