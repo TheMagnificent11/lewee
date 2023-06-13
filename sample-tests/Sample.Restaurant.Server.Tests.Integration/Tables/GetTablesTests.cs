@@ -33,12 +33,12 @@ public sealed class GetTablesTests : TabeTestsBase
         this.Tables.Should().NotBeNull();
         this.Tables.Should().HaveCount(10);
 
-        for (var i = 1; i <= 10; i++)
+        for (var i = 0; i < 10; i++)
         {
             var table = this.Tables[i];
             table.Should().NotBeNull();
             table.Id.Should().NotBeEmpty();
-            table.TableNumber.Should().Be(i);
+            table.TableNumber.Should().Be(i + 1);
             table.Status.Should().Be(TableDto.Statuses.Available);
         }
     }

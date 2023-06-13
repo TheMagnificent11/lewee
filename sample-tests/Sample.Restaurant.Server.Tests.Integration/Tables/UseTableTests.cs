@@ -38,7 +38,7 @@ public sealed class UseTableTests : TabeTestsBase
 
     private async Task AnEmptyOrderIsCreatedForTable(int tableNumber)
     {
-        var tableDetails = await this.HttpGet<TableDetailsDto>($"tables/{tableNumber}");
+        var tableDetails = await this.HttpGet<TableDetailsDto>($"/api/v1/tables/{tableNumber}");
 
         this.ProblemDetails.Should().BeNull();
 

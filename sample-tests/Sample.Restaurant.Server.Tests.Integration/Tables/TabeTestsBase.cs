@@ -32,7 +32,7 @@ public abstract class TabeTestsBase : RestaurantTestsBase
 
     private async Task UseTable(int tableNumber, bool isSuccessExpected)
     {
-        using (var response = await this.HttpRequest(HttpMethod.Post, $"/tables/{tableNumber}"))
+        using (var response = await this.HttpRequest(HttpMethod.Put, $"/api/v1/tables/{tableNumber}"))
         {
             if (isSuccessExpected)
             {

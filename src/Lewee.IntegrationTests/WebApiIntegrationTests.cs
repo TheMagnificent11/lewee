@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using System.Linq.Expressions;
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -118,13 +119,10 @@ public abstract class WebApiIntegrationTests<TEntryPoint, TFactory> : IClassFixt
             response.EnsureSuccessStatusCode();
         }
 
-        var json = await response.Content.ReadAsStringAsync();
-        if (json == null)
+        return await response.Content.ReadFromJsonAsync<T>(new JsonSerializerOptions
         {
-            return default;
-        }
-
-        return JsonSerializer.Deserialize<T>(json);
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        });
     }
 
     /// <summary>
