@@ -4,13 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Sample.Restaurant.Server.Tests.Integration.Tables;
 
-public abstract class TabeTestsBase : RestaurantTestsBase
+public abstract class TableTestsBase : RestaurantTestsBase
 {
-    protected TabeTestsBase(RestaurantWebApplicationFactory factory)
-        : base(factory)
-    {
-    }
-
     protected ValidationProblemDetails ProblemDetails { get; private set; }
 
     protected async Task SetProblemDetails(HttpResponseMessage response)

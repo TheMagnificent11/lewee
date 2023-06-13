@@ -1,20 +1,16 @@
 ﻿using FluentAssertions;
+using NUnit.Framework;
 using Sample.Restaurant.Application;
 using TestStack.BDDfy;
-using TestStack.BDDfy.Xunit;
 
 namespace Sample.Restaurant.Server.Tests.Integration.Tables;
 
-public sealed class GetTablesTests : TabeTestsBase
+[TestFixture]
+public sealed class GetTablesTests : TableTestsBase
 {
-    public GetTablesTests(RestaurantWebApplicationFactory factory)
-        : base(factory)
-    {
-    }
-
     private TableDto[] Tables { get; set; }
 
-    [BddfyFact]
+    [Test]
     public void GetTables_ShouldReturnTheCorrectTables()
     {
         this.Given(x => this.AnEmptyRestaurant())

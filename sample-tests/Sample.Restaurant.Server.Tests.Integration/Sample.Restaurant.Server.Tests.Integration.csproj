@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <PackageReference Include="TestStack.BDDfy.Xunit" />
+    <PackageReference Include="TestStack.BDDfy" />
   </ItemGroup>
   
   <ItemGroup>

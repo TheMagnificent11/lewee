@@ -6,29 +6,30 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Xunit;
 
 namespace Lewee.IntegrationTests;
 
 /// <summary>
 /// Web API Integration Tests
 /// </summary>
-/// <typeparam name="TEntryPoint">ASP.Net app entrypoint class</typeparam>
+/// <typeparam name="TEntryPoint">ASP.Net app entry point class</typeparam>
 /// <typeparam name="TFactory">Web application factory type</typeparam>
-public abstract class WebApiIntegrationTests<TEntryPoint, TFactory> : IClassFixture<TFactory>
+public abstract class WebApiIntegrationTests<TEntryPoint, TFactory>
     where TEntryPoint : class
-    where TFactory : WebApplicationFactory<TEntryPoint>
+    where TFactory : WebApplicationFactory<TEntryPoint>, new()
 {
-    private readonly TFactory factory;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="WebApiIntegrationTests{TEntryPoint, TFactory}"/> class
     /// </summary>
-    /// <param name="factory">Web application factory</param>
-    protected WebApiIntegrationTests(TFactory factory)
+    protected WebApiIntegrationTests()
     {
-        this.factory = factory;
+        this.Factory = new TFactory();
     }
+
+    /// <summary>
+    /// Gets the Web Application Factory
+    /// </summary>
+    protected TFactory Factory { get; }
 
     /// <summary>
     /// Gets the scope factory
@@ -37,7 +38,7 @@ public abstract class WebApiIntegrationTests<TEntryPoint, TFactory> : IClassFixt
     {
         get
         {
-            var scopeFactory = this.factory.Services.GetService<IServiceScopeFactory>()
+            var scopeFactory = this.Factory.Services.GetService<IServiceScopeFactory>()
                 ?? throw new InvalidOperationException("Could not get scope factory");
 
             return scopeFactory;
@@ -51,7 +52,7 @@ public abstract class WebApiIntegrationTests<TEntryPoint, TFactory> : IClassFixt
     /// <param name="httpMethod">HTTP method</param>
     /// <param name="apiPath">API path</param>
     /// <param name="content">Request body content</param>
-    /// <returns>A HTTP request meesage</returns>
+    /// <returns>A HTTP request message</returns>
     protected static HttpRequestMessage CreateHttpRequestMessage(HttpMethod httpMethod, string apiPath, object content)
     {
         var request = new HttpRequestMessage(httpMethod, apiPath)
@@ -86,7 +87,7 @@ public abstract class WebApiIntegrationTests<TEntryPoint, TFactory> : IClassFixt
     {
         // TODO (https://github.com/TheMagnificent11/lewee/issues/14): add request body parameter
         using (var request = new HttpRequestMessage(method, apiPath))
-        using (var httpClient = this.factory.CreateClient())
+        using (var httpClient = this.Factory.CreateClient())
         {
             return await httpClient.SendAsync(request);
         }

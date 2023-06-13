@@ -1,14 +1,21 @@
 ﻿using Lewee.IntegrationTests;
-using Xunit;
+using NUnit.Framework;
 
 namespace Sample.Restaurant.Server.Tests.Integration;
 
-[Collection(nameof(RestaurantCollection))]
 public abstract class RestaurantTestsBase : WebApiIntegrationTests<Program, RestaurantWebApplicationFactory>
 {
-    protected RestaurantTestsBase(RestaurantWebApplicationFactory factory)
-        : base(factory)
+    private readonly RestaurantDbContextFixture dbContextFixture;
+
+    protected RestaurantTestsBase()
     {
+        this.dbContextFixture = new RestaurantDbContextFixture();
+    }
+
+    [SetUp]
+    public async Task Setup()
+    {
+        await this.dbContextFixture.ResetDatabase();
     }
 
     protected async Task AnEmptyRestaurant()

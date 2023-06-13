@@ -1,19 +1,21 @@
 ﻿using FluentAssertions;
 using Lewee.Domain;
-using Xunit;
+using NUnit.Framework;
 
 namespace Sample.Restaurant.Domain.Tests.Unit;
 
+[TestFixture]
 public class TableOrderingTests
 {
-    private readonly Table target;
+    private Table target;
 
-    public TableOrderingTests()
+    [SetUp]
+    public void Setup()
     {
         this.target = new Table(Guid.NewGuid(), 17);
     }
 
-    [Fact]
+    [Test]
     public void CannotOrderMenuItemWhenNotInUse()
     {
         var garlicBread = new MenuItem(Guid.NewGuid(), "Garlic Bread", 5, MenuItemType.Food);
@@ -24,14 +26,14 @@ public class TableOrderingTests
             .WithMessage(Table.ErrorMessages.CannotOrderIfTableNotInUse);
     }
 
-    [Fact]
+    [Test]
     public void CanOrderMenuItemWhenTableIsInUse()
     {
         var correlationId = Guid.NewGuid();
         var pizza = new MenuItem(Guid.NewGuid(), "Pizza", 20, MenuItemType.Food);
 
         this.target.Use(Guid.NewGuid());
-        this.target.DomainEvents.GetAndClear(); // reset domain events before perfoming action under test
+        this.target.DomainEvents.GetAndClear(); // reset domain events before performing action under test
 
         this.target.OrderMenuItem(pizza, correlationId);
 
@@ -65,7 +67,7 @@ public class TableOrderingTests
         orderItemAddedEvent.TableId.Should().Be(this.target.Id);
     }
 
-    [Fact]
+    [Test]
     public void CannotRemoveMenuItemWhenNotInUse()
     {
         var redWine = new MenuItem(Guid.NewGuid(), "House Red Wine (Glass)", 10, MenuItemType.Drink);
@@ -76,7 +78,7 @@ public class TableOrderingTests
             .WithMessage(Table.ErrorMessages.CannotOrderIfTableNotInUse);
     }
 
-    [Fact]
+    [Test]
     public void NothingHappensWhenRemovingMenuItemNotAddedToOrder()
     {
         var juice = new MenuItem(Guid.NewGuid(), "Juice", 3, MenuItemType.Drink);
@@ -94,7 +96,7 @@ public class TableOrderingTests
         this.target.CurrentOrder.Items.Should().HaveCount(originalItemsCount);
     }
 
-    [Fact]
+    [Test]
     public void RemovesCorrectItemWhenRemovingItemPreviouslyAddedToOrder()
     {
         var correlationId = Guid.NewGuid();
@@ -115,7 +117,7 @@ public class TableOrderingTests
         this.target.OrderMenuItem(pizza, Guid.NewGuid());
         this.target.OrderMenuItem(icecream, Guid.NewGuid());
 
-        this.target.DomainEvents.GetAndClear(); // reset domain events before perfoming action under test
+        this.target.DomainEvents.GetAndClear(); // reset domain events before performing action under test
 
         this.target.RemovedMenuItem(garlicBread, correlationId);
 

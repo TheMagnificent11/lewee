@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Respawn;
-using Xunit;
 
 namespace Lewee.IntegrationTests;
 
@@ -10,7 +9,7 @@ namespace Lewee.IntegrationTests;
 /// Database Context Fixture
 /// </summary>
 /// <typeparam name="T">Database context type</typeparam>
-public abstract class DatabaseContextFixture<T> : IAsyncLifetime
+public abstract class DatabaseContextFixture<T>
     where T : DbContext
 {
     private readonly string connectionString;
@@ -46,8 +45,11 @@ public abstract class DatabaseContextFixture<T> : IAsyncLifetime
     /// </summary>
     protected abstract string ConnectionStringName { get; }
 
-    /// <inheritdoc />
-    public async Task InitializeAsync()
+    /// <summary>
+    /// Resets the database
+    /// </summary>
+    /// <returns>An asynchronous task</returns>
+    public async Task ResetDatabase()
     {
         try
         {
@@ -64,11 +66,5 @@ public abstract class DatabaseContextFixture<T> : IAsyncLifetime
 
         var respawner = await Respawner.CreateAsync(this.connectionString, this.ResetOptions);
         await respawner.ResetAsync(this.connectionString);
-    }
-
-    /// <inheritdoc />
-    public Task DisposeAsync()
-    {
-        return Task.CompletedTask;
     }
 }

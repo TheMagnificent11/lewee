@@ -1,20 +1,16 @@
 ﻿using FluentAssertions;
+using NUnit.Framework;
 using Sample.Restaurant.Application;
 using Sample.Restaurant.Domain;
 using TestStack.BDDfy;
-using TestStack.BDDfy.Xunit;
 
 namespace Sample.Restaurant.Server.Tests.Integration.Tables;
 
-public sealed class UseTableTests : TabeTestsBase
+[TestFixture]
+public sealed class UseTableTests : TableTestsBase
 {
-    public UseTableTests(RestaurantWebApplicationFactory factory)
-        : base(factory)
-    {
-    }
-
-    [BddfyFact]
-    public void UseTable_ShouldSetupStoredQueryWhenTableIsntInUse()
+    [Test]
+    public void UseTable_ShouldSetupStoredQueryWhenTableIsNotInUse()
     {
         var tableNumber = 4;
 
@@ -24,7 +20,7 @@ public sealed class UseTableTests : TabeTestsBase
             .BDDfy();
     }
 
-    [BddfyFact]
+    [Test]
     public void UseTable_ShouldFailValidationWhenAttemptingToUseATableThatIsAlreadyInUse()
     {
         var tableNumber = 7;
@@ -32,7 +28,7 @@ public sealed class UseTableTests : TabeTestsBase
         this.Given(x => this.AnEmptyRestaurant())
             .When(x => this.TheWaiterSeatsACustomerAtTable(tableNumber, true, true))
                 .And(x => this.TheWaiterSeatsACustomerAtTable(tableNumber, false, false))
-            .Then(x => this.TheWaiterShouldntBeAbleToUseTheTableAsItIsAlreadyInUse())
+            .Then(x => this.TheWaiterShouldNotBeAbleToUseTheTableAsItIsAlreadyInUse())
             .BDDfy();
     }
 
@@ -67,7 +63,7 @@ public sealed class UseTableTests : TabeTestsBase
         }
     }
 
-    private void TheWaiterShouldntBeAbleToUseTheTableAsItIsAlreadyInUse()
+    private void TheWaiterShouldNotBeAbleToUseTheTableAsItIsAlreadyInUse()
     {
         this.ProblemDetails.Should().NotBeNull();
         this.ProblemDetails.Errors.Should().NotBeEmpty();

@@ -1,10 +1,10 @@
-﻿using System.ComponentModel;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Lewee.Shared;
-using Xunit;
+using NUnit.Framework;
 
 namespace Lewee.Util.Shared.Unit;
 
+[TestFixture]
 public static class EnumExtensionTests
 {
     public enum TableStatus
@@ -13,14 +13,14 @@ public static class EnumExtensionTests
 
         Reserved = 1,
 
-        [Description("In Use")]
+        [System.ComponentModel.Description("In Use")]
         InUse = 2
     }
 
-    [Theory]
-    [InlineData(TableStatus.Available, "Available")]
-    [InlineData(TableStatus.Reserved, "Reserved")]
-    [InlineData(TableStatus.InUse, "In Use")]
+    [Test]
+    [TestCase(TableStatus.Available, "Available")]
+    [TestCase(TableStatus.Reserved, "Reserved")]
+    [TestCase(TableStatus.InUse, "In Use")]
     public static void GetDescription_ReturnCorrectDescription(TableStatus value, string expectedDescription)
     {
         var result = value.GetDescription();

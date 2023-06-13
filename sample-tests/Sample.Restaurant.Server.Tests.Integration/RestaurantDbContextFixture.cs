@@ -7,7 +7,7 @@ namespace Sample.Restaurant.Server.Tests.Integration;
 
 public sealed class RestaurantDbContextFixture : DatabaseContextFixture<RestaurantDbContext>
 {
-    private const string RestuarantDbSchema = "res";
+    private const string RestaurantDbSchema = "res";
 
     protected override RespawnerOptions ResetOptions => new()
     {
@@ -15,11 +15,11 @@ public sealed class RestaurantDbContextFixture : DatabaseContextFixture<Restaura
         SchemasToExclude = new[] { "dbo" },
         TablesToIgnore = new[]
         {
-            new Table(RestuarantDbSchema, nameof(RestaurantDbContext.DomainEventReferences)),
-            new Table(RestuarantDbSchema, nameof(RestaurantDbContext.Tables)),
-            new Table(RestuarantDbSchema, nameof(RestaurantDbContext.MenuItems)),
-            new Table(RestuarantDbSchema, "OrderStatuses"),
-            new Table(RestuarantDbSchema, "MenuItemTypes")
+            new Table(RestaurantDbSchema, nameof(RestaurantDbContext.DomainEventReferences)),
+            new Table(RestaurantDbSchema, nameof(RestaurantDbContext.Tables)),
+            new Table(RestaurantDbSchema, nameof(RestaurantDbContext.MenuItems)),
+            new Table(RestaurantDbSchema, "OrderStatuses"),
+            new Table(RestaurantDbSchema, "MenuItemTypes")
         }
     };
 

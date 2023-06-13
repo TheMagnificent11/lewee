@@ -1,19 +1,21 @@
 ﻿using FluentAssertions;
 using Lewee.Domain;
-using Xunit;
+using NUnit.Framework;
 
 namespace Sample.Restaurant.Domain.Tests.Unit;
 
+[TestFixture]
 public sealed class UseTableTests
 {
-    private readonly Table target;
+    private Table target;
 
-    public UseTableTests()
+    [SetUp]
+    public void Setup()
     {
         this.target = new Table(Guid.NewGuid(), 3);
     }
 
-    [Fact]
+    [Test]
     public void CanUseWhenNotInUse()
     {
         var correlationId = Guid.NewGuid();
@@ -37,7 +39,7 @@ public sealed class UseTableTests
         tableInUseEvent.TableNumber.Should().Be(this.target.TableNumber);
     }
 
-    [Fact]
+    [Test]
     public void CannotUseWhenInUse()
     {
         this.target.Use(Guid.NewGuid());
