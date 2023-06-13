@@ -24,7 +24,7 @@ jobs:
       with:
         dotnet-version: 7.0.*
     - name: Pack
-      run: dotnet pack ./Lewee-Pack.sln --configuration Release --nologo /p:PackageVersion=${{ steps.version.outputs.fullSemVer }} --output ./output
+      run: dotnet pack ./pack.sln --configuration Release --nologo /p:PackageVersion=${{ steps.version.outputs.fullSemVer }} --output ./output
     - name: Install NuGet
       uses: NuGet/setup-nuget@v1.0.5
     - name: Publish to NuGet
