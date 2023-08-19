@@ -1,16 +1,20 @@
 ﻿using System.Net;
 using FluentAssertions;
-using NUnit.Framework;
 using Sample.Restaurant.Application;
 using Sample.Restaurant.Domain;
 using TestStack.BDDfy;
+using Xunit;
 
 namespace Sample.Restaurant.Server.Tests.Integration.Tables;
 
-[TestFixture]
 public sealed class TableOrderingTests : TableTestsBase
 {
-    [Test]
+    public TableOrderingTests(RestaurantWebApplicationFactory webApplicationFactory)
+        : base(webApplicationFactory)
+    {
+    }
+
+    [Fact]
     public void Ordering_ShouldCorrectlyUpdateTheOrderWhenItemsAreAddedAndRemoved()
     {
         var tableNumber = 10;
@@ -39,7 +43,7 @@ public sealed class TableOrderingTests : TableTestsBase
             .BDDfy();
     }
 
-    [Test]
+    [Fact]
     public void Ordering_ShouldFailToPlaceOrderWhenTableIsNotInUse()
     {
         var tableNumber = 3;

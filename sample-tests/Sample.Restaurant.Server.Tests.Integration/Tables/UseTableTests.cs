@@ -1,15 +1,19 @@
 ﻿using FluentAssertions;
-using NUnit.Framework;
 using Sample.Restaurant.Application;
 using Sample.Restaurant.Domain;
 using TestStack.BDDfy;
+using Xunit;
 
 namespace Sample.Restaurant.Server.Tests.Integration.Tables;
 
-[TestFixture]
 public sealed class UseTableTests : TableTestsBase
 {
-    [Test]
+    public UseTableTests(RestaurantWebApplicationFactory webApplicationFactory)
+        : base(webApplicationFactory)
+    {
+    }
+
+    [Fact]
     public void UseTable_ShouldSetupStoredQueryWhenTableIsNotInUse()
     {
         var tableNumber = 4;
@@ -20,7 +24,7 @@ public sealed class UseTableTests : TableTestsBase
             .BDDfy();
     }
 
-    [Test]
+    [Fact]
     public void UseTable_ShouldFailValidationWhenAttemptingToUseATableThatIsAlreadyInUse()
     {
         var tableNumber = 7;

@@ -6,6 +6,7 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Xunit;
 
 namespace Lewee.IntegrationTests;
 
@@ -14,16 +15,25 @@ namespace Lewee.IntegrationTests;
 /// </summary>
 /// <typeparam name="TEntryPoint">ASP.Net app entry point class</typeparam>
 /// <typeparam name="TFactory">Web application factory type</typeparam>
-public abstract class WebApiIntegrationTests<TEntryPoint, TFactory>
+/// <typeparam name="TDbContextFixture">Database context fixure type</typeparam>
+/// <typeparam name="TDbContext">Database context type</typeparam>
+public abstract class WebApiIntegrationTests<TEntryPoint, TFactory, TDbContextFixture, TDbContext> : IAsyncLifetime
     where TEntryPoint : class
-    where TFactory : WebApplicationFactory<TEntryPoint>, new()
+    where TFactory : WebApplicationFactory<TEntryPoint>
+    where TDbContextFixture : DatabaseContextFixture<TDbContext>, new()
+    where TDbContext : DbContext
 {
+    private readonly TDbContextFixture dbContextFixture;
+
     /// <summary>
-    /// Initializes a new instance of the <see cref="WebApiIntegrationTests{TEntryPoint, TFactory}"/> class
+    /// Initializes a new instance of the
+    /// <see cref="WebApiIntegrationTests{TEntryPoint, TFactory, TDbContextFixture, TDbContext}"/> class
     /// </summary>
-    protected WebApiIntegrationTests()
+    /// <param name="factory">Web application factory</param>
+    protected WebApiIntegrationTests(TFactory factory)
     {
-        this.Factory = new TFactory();
+        this.Factory = factory;
+        this.dbContextFixture = new();
     }
 
     /// <summary>
@@ -40,6 +50,18 @@ public abstract class WebApiIntegrationTests<TEntryPoint, TFactory>
 
             return scopeFactory;
         }
+    }
+
+    /// <inheritdoc />
+    public virtual async Task InitializeAsync()
+    {
+        await this.dbContextFixture.ResetDatabase();
+    }
+
+    /// <inheritdoc />
+    public virtual Task DisposeAsync()
+    {
+        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -150,12 +172,10 @@ public abstract class WebApiIntegrationTests<TEntryPoint, TFactory>
     /// Reads data from the targeted <typeparamref name="TDbContext"/>
     /// </summary>
     /// <typeparam name="TData">DB context set type</typeparam>
-    /// <typeparam name="TDbContext">DB context type</typeparam>
     /// <param name="predicate">Predicate for query</param>
     /// <returns>A list of matched data objects</returns>
-    protected async Task<List<TData>> GetData<TData, TDbContext>(Expression<Func<TData, bool>> predicate)
+    protected async Task<List<TData>> GetData<TData>(Expression<Func<TData, bool>> predicate)
         where TData : class
-        where TDbContext : DbContext
     {
         using (var scope = this.ScopeFactory.CreateScope())
         {

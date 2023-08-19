@@ -1,13 +1,12 @@
 ﻿using System.Text.Json;
 using FluentAssertions;
-using NUnit.Framework;
+using Xunit;
 
 namespace Lewee.Domain.Tests.Unit;
 
-[TestFixture]
 public partial class DomainEventReferenceTests
 {
-    [Test]
+    [Fact]
     public static void Ctor()
     {
         // Arrange
@@ -34,7 +33,7 @@ public partial class DomainEventReferenceTests
         result.DispatchedAt.Should().BeNull();
     }
 
-    [Test]
+    [Fact]
     public static void ToDomainEvent()
     {
         // Arrange

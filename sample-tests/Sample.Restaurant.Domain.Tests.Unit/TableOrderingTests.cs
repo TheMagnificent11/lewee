@@ -1,21 +1,19 @@
 ﻿using FluentAssertions;
 using Lewee.Domain;
-using NUnit.Framework;
+using Xunit;
 
 namespace Sample.Restaurant.Domain.Tests.Unit;
 
-[TestFixture]
 public class TableOrderingTests
 {
-    private Table target;
+    private readonly Table target;
 
-    [SetUp]
-    public void Setup()
+    public TableOrderingTests()
     {
         this.target = new Table(Guid.NewGuid(), 17);
     }
 
-    [Test]
+    [Fact]
     public void CannotOrderMenuItemWhenNotInUse()
     {
         var garlicBread = new MenuItem(Guid.NewGuid(), "Garlic Bread", 5, MenuItemType.Food);
@@ -26,7 +24,7 @@ public class TableOrderingTests
             .WithMessage(Table.ErrorMessages.CannotOrderIfTableNotInUse);
     }
 
-    [Test]
+    [Fact]
     public void CanOrderMenuItemWhenTableIsInUse()
     {
         var correlationId = Guid.NewGuid();
@@ -67,7 +65,7 @@ public class TableOrderingTests
         orderItemAddedEvent.TableId.Should().Be(this.target.Id);
     }
 
-    [Test]
+    [Fact]
     public void CannotRemoveMenuItemWhenNotInUse()
     {
         var redWine = new MenuItem(Guid.NewGuid(), "House Red Wine (Glass)", 10, MenuItemType.Drink);
@@ -78,7 +76,7 @@ public class TableOrderingTests
             .WithMessage(Table.ErrorMessages.CannotOrderIfTableNotInUse);
     }
 
-    [Test]
+    [Fact]
     public void NothingHappensWhenRemovingMenuItemNotAddedToOrder()
     {
         var juice = new MenuItem(Guid.NewGuid(), "Juice", 3, MenuItemType.Drink);
@@ -96,7 +94,7 @@ public class TableOrderingTests
         this.target.CurrentOrder.Items.Should().HaveCount(originalItemsCount);
     }
 
-    [Test]
+    [Fact]
     public void RemovesCorrectItemWhenRemovingItemPreviouslyAddedToOrder()
     {
         var correlationId = Guid.NewGuid();

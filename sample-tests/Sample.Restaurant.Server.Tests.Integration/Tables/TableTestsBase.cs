@@ -1,20 +1,17 @@
 ﻿using System.Net;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
-using NUnit.Framework;
 
 namespace Sample.Restaurant.Server.Tests.Integration.Tables;
 
 public abstract class TableTestsBase : RestaurantTestsBase
 {
-    protected ValidationProblemDetails ProblemDetails { get; private set; }
-
-    [SetUp]
-    public override Task Setup()
+    public TableTestsBase(RestaurantWebApplicationFactory webApplicationFactory)
+        : base(webApplicationFactory)
     {
-        this.ProblemDetails = null;
-        return base.Setup();
     }
+
+    protected ValidationProblemDetails ProblemDetails { get; private set; }
 
     protected async Task SetProblemDetails(HttpResponseMessage response)
     {
