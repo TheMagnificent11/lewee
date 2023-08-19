@@ -1,4 +1,5 @@
-﻿using Lewee.IntegrationTests;
+﻿using Lewee.Domain;
+using Lewee.IntegrationTests;
 using Microsoft.EntityFrameworkCore;
 using Respawn;
 using Respawn.Graph;
@@ -32,12 +33,17 @@ public sealed class RestaurantDbContextFixture : DatabaseContextFixture<Restaura
             .UseSqlServer(this.ConnectionString)
             .Options;
 
-        var dbContext = new RestaurantDbContext(dbContextOptions, null);
+        var dbContext = new RestaurantDbContext(dbContextOptions, new TestAuthenticatedUserService());
         return dbContext;
     }
 
     protected override RestaurantDbSeeder CreateDbSeeder()
     {
         return new RestaurantDbSeeder(this.CreateDbContext());
+    }
+
+    private class TestAuthenticatedUserService : IAuthenticatedUserService
+    {
+        public string UserId => "Integration Tests";
     }
 }
