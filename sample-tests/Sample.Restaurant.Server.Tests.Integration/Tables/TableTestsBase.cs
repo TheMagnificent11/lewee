@@ -6,8 +6,10 @@ namespace Sample.Restaurant.Server.Tests.Integration.Tables;
 
 public abstract class TableTestsBase : RestaurantTestsBase
 {
-    public TableTestsBase(RestaurantWebApplicationFactory webApplicationFactory)
-        : base(webApplicationFactory)
+    public TableTestsBase(
+        RestaurantWebApplicationFactory webApplicationFactory,
+        RestaurantDbContextFixture dbContextFixture)
+        : base(webApplicationFactory, dbContextFixture)
     {
     }
 

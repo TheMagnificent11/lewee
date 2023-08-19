@@ -1,9 +1,13 @@
-﻿namespace Lewee.Infrastructure.Data;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace Lewee.Infrastructure.Data;
 
 /// <summary>
 /// Database Seeder Interface
 /// </summary>
-public interface IDatabaseSeeder
+/// <typeparam name="TDbContext">Database context type</typeparam>
+public interface IDatabaseSeeder<TDbContext>
+    where TDbContext : DbContext
 {
     /// <summary>
     /// Seeds data

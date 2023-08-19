@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
+using Lewee.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,23 +18,27 @@ namespace Lewee.IntegrationTests;
 /// <typeparam name="TFactory">Web application factory type</typeparam>
 /// <typeparam name="TDbContextFixture">Database context fixure type</typeparam>
 /// <typeparam name="TDbContext">Database context type</typeparam>
-public abstract class WebApiIntegrationTests<TEntryPoint, TFactory, TDbContextFixture, TDbContext> : IAsyncLifetime
+/// <typeparam name="TDbSeeder">Database seeder type</typeparam>
+public abstract class WebApiIntegrationTests<TEntryPoint, TFactory, TDbContextFixture, TDbContext, TDbSeeder>
+    : IClassFixture<TFactory>, IAsyncLifetime
     where TEntryPoint : class
     where TFactory : WebApplicationFactory<TEntryPoint>
-    where TDbContextFixture : DatabaseContextFixture<TDbContext>, new()
+    where TDbContextFixture : DatabaseContextFixture<TDbContext, TDbSeeder>, new()
     where TDbContext : DbContext
+    where TDbSeeder : IDatabaseSeeder<TDbContext>
 {
     private readonly TDbContextFixture dbContextFixture;
 
     /// <summary>
     /// Initializes a new instance of the
-    /// <see cref="WebApiIntegrationTests{TEntryPoint, TFactory, TDbContextFixture, TDbContext}"/> class
+    /// <see cref="WebApiIntegrationTests{TEntryPoint, TFactory, TDbContextFixture, TDbContext, TDbSeeder}"/> class
     /// </summary>
     /// <param name="factory">Web application factory</param>
-    protected WebApiIntegrationTests(TFactory factory)
+    /// <param name="dbContextFixture">Database context fixture</param>
+    protected WebApiIntegrationTests(TFactory factory, TDbContextFixture dbContextFixture)
     {
         this.Factory = factory;
-        this.dbContextFixture = new();
+        this.dbContextFixture = dbContextFixture;
     }
 
     /// <summary>

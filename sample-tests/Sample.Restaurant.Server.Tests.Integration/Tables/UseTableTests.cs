@@ -8,8 +8,10 @@ namespace Sample.Restaurant.Server.Tests.Integration.Tables;
 
 public sealed class UseTableTests : TableTestsBase
 {
-    public UseTableTests(RestaurantWebApplicationFactory webApplicationFactory)
-        : base(webApplicationFactory)
+    public UseTableTests(
+        RestaurantWebApplicationFactory webApplicationFactory,
+        RestaurantDbContextFixture dbContextFixture)
+        : base(webApplicationFactory, dbContextFixture)
     {
     }
 

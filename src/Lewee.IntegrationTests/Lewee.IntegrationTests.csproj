@@ -6,5 +6,9 @@
     <PackageReference Include="Respawn" />
     <PackageReference Include="xunit.extensibility.core" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Lewee.Infrastructure.Data\Lewee.Infrastructure.Data.csproj" />
+  </ItemGroup>
   
 </Project>

@@ -1,11 +1,12 @@
 ﻿using Lewee.IntegrationTests;
+using Microsoft.EntityFrameworkCore;
 using Respawn;
 using Respawn.Graph;
 using Sample.Restaurant.Infrastructure.Data;
 
 namespace Sample.Restaurant.Server.Tests.Integration;
 
-public sealed class RestaurantDbContextFixture : DatabaseContextFixture<RestaurantDbContext>
+public sealed class RestaurantDbContextFixture : DatabaseContextFixture<RestaurantDbContext, RestaurantDbSeeder>
 {
     private const string RestaurantDbSchema = "res";
 
@@ -24,4 +25,19 @@ public sealed class RestaurantDbContextFixture : DatabaseContextFixture<Restaura
     protected override string EnvironmentName => "Testing";
 
     protected override string ConnectionStringName => "Sample.Restaurant";
+
+    protected override RestaurantDbContext CreateDbContext()
+    {
+        var dbContextOptions = new DbContextOptionsBuilder<RestaurantDbContext>()
+            .UseSqlServer(this.ConnectionString)
+            .Options;
+
+        var dbContext = new RestaurantDbContext(dbContextOptions, null);
+        return dbContext;
+    }
+
+    protected override RestaurantDbSeeder CreateDbSeeder()
+    {
+        return new RestaurantDbSeeder(this.CreateDbContext());
+    }
 }
