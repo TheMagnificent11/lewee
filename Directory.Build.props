@@ -85,7 +85,11 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup Condition="$(MSBuildProjectName.Contains('.Tests.')) OR $(MSBuildProjectName.StartsWith('Sample.'))">
+  <ItemGroup Condition="$(MSBuildProjectName.Contains('.Tests.'))">
+    <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(MSBuildProjectName.StartsWith('Sample.')) AND !$(MSBuildProjectName.Contains('.Tests.'))">
     <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
   </ItemGroup>
 
