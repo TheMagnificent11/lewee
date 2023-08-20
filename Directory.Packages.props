@@ -3,55 +3,46 @@
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
-  <PropertyGroup>
-    <DOTNET_VERSION>7.0.7</DOTNET_VERSION>
-    <COVERLET_VERSION>6.0.0</COVERLET_VERSION>
-    <FLUENTVALIDATOR_VERSION>11.5.2</FLUENTVALIDATOR_VERSION>
-    <XUNIT_VERSION>2.5.0</XUNIT_VERSION>
-  </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="coverlet.collector" Version="$(COVERLET_VERSION)" />
-    <PackageVersion Include="coverlet.msbuild" Version="$(COVERLET_VERSION)" />
+    <PackageVersion Include="coverlet.collector" Version="6.0.0" />
+    <PackageVersion Include="coverlet.msbuild" Version="6.0.0" />
     <PackageVersion Include="FluentAssertions" Version="6.11.0" />
-    <PackageVersion Include="FluentAssertions.Analyzers" Version="0.19.1" />
-    <PackageVersion Include="FluentValidation" Version="$(FLUENTVALIDATOR_VERSION)" />
-    <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="$(FLUENTVALIDATOR_VERSION)" />
+    <PackageVersion Include="FluentAssertions.Analyzers" Version="0.22.0" />
+    <PackageVersion Include="FluentValidation" Version="11.5.2" />
+    <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="11.7.1" />
     <PackageVersion Include="Fluxor.Blazor.Web.ReduxDevTools" Version="5.9.0" />
     <PackageVersion Include="Mapster" Version="7.3.0" />
     <PackageVersion Include="Mapster.DependencyInjection" Version="1.0.0" />
-    <PackageVersion Include="MediatR" Version="12.0.1" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="$(DOTNET_VERSION)" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="$(DOTNET_VERSION)" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="$(DOTNET_VERSION)" />
-    <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="$(DOTNET_VERSION)" />
-    <!-- Out-of-sync with Microsoft major version -->
+    <PackageVersion Include="MediatR" Version="12.1.1" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.10" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.10" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="7.0.10" />
+    <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="7.0.10" />
     <PackageVersion Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="$(DOTNET_VERSION)" />
-    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="$(DOTNET_VERSION)" />
-    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="$(DOTNET_VERSION)" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.10" />
+    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="7.0.10" />
+    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.10" />
     <PackageVersion Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="7.0.3" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="$(DOTNET_VERSION)" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="$(DOTNET_VERSION)" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="$(DOTNET_VERSION)" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="$(DOTNET_VERSION)" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="7.0.10" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.10" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.10" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.4" />
-    <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="$(DOTNET_VERSION)" />
+    <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="7.0.10" />
     <PackageVersion Include="Microsoft.Extensions.DependencyModel" Version="7.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.6.2" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.7.1" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.1.1" />
-    <PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.18.1" />
-    <PackageVersion Include="MudBlazor" Version="6.4.1" />
-    <PackageVersion Include="Respawn" Version="6.0.0" />
-    <PackageVersion Include="Serilog" Version="2.12.0" />
+    <PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
+    <PackageVersion Include="MudBlazor" Version="6.9.0" />
+    <PackageVersion Include="Respawn" Version="6.1.0" />
+    <PackageVersion Include="Serilog" Version="3.0.1" />
     <PackageVersion Include="Serilog.AspNetCore" Version="7.0.0" />
     <PackageVersion Include="Serilog.AspNetCore.Ingestion" Version="1.0.0-dev-00032" />
     <PackageVersion Include="Serilog.Enrichers.Environment" Version="2.2.0" />
     <PackageVersion Include="Serilog.Enrichers.Process" Version="2.0.2" />
     <PackageVersion Include="Serilog.Enrichers.Thread" Version="3.1.0" />
     <PackageVersion Include="Serilog.Extensions.Logging" Version="7.0.0" />
-    <!-- For Blazor WASM - not currently used -->
-    <PackageVersion Include="Serilog.Sinks.BrowserHttp" Version="1.0.0-dev-00032" />
+    <PackageVersion Include="Serilog.Sinks.BrowserHttp" Version="1.0.0-dev-00032" /><!-- For Blazor WASM - not currently used -->
     <PackageVersion Include="Serilog.Sinks.Console" Version="4.1.0" />
     <PackageVersion Include="Serilog.Sinks.Seq" Version="5.2.2" />
     <PackageVersion Include="Serilog.Sinks.Trace" Version="3.0.0" />
@@ -60,10 +51,10 @@
     <PackageVersion Include="StyleCop.Analyzers" Version="1.1.118" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageVersion Include="TestStack.BDDfy" Version="4.3.2" />
-    <PackageVersion Include="xunit" Version="$(XUNIT_VERSION)" />
+    <PackageVersion Include="xunit" Version="2.5.0" />
     <PackageVersion Include="xunit.analyzers" Version="1.2.0" />
-    <PackageVersion Include="xunit.core" Version="$(XUNIT_VERSION)" />
+    <PackageVersion Include="xunit.core" Version="2.5.0" />
     <PackageVersion Include="xunit.extensibility.core" Version="2.5.0" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="$(XUNIT_VERSION)" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="2.5.0" />
   </ItemGroup>
 </Project>

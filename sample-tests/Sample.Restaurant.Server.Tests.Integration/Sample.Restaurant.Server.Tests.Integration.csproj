@@ -9,4 +9,11 @@
     <ProjectReference Include="..\..\src\Lewee.IntegrationTests\Lewee.IntegrationTests.csproj" />
   </ItemGroup>
   
+  <ItemGroup>
+    <PackageReference Update="FluentAssertions.Analyzers">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  
 </Project>
