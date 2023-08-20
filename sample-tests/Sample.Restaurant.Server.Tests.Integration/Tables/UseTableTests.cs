@@ -2,28 +2,31 @@
 using Sample.Restaurant.Application;
 using Sample.Restaurant.Domain;
 using TestStack.BDDfy;
-using TestStack.BDDfy.Xunit;
+using Xunit;
 
 namespace Sample.Restaurant.Server.Tests.Integration.Tables;
 
-public sealed class UseTableTests : TabeTestsBase
+public sealed class UseTableTests : TableTestsBase
 {
-    public UseTableTests(RestaurantWebApplicationFactory factory)
-        : base(factory)
+    public UseTableTests(
+        RestaurantWebApplicationFactory webApplicationFactory,
+        RestaurantDbContextFixture dbContextFixture)
+        : base(webApplicationFactory, dbContextFixture)
     {
     }
 
-    [BddfyFact]
-    public void UseTable_ShouldSetupStoredQueryWhenTableIsntInUse()
+    [Fact]
+    public void UseTable_ShouldSetupStoredQueryWhenTableIsNotInUse()
     {
         var tableNumber = 4;
 
         this.Given(x => this.AnEmptyRestaurant())
             .When(x => this.TheWaiterSeatsACustomerAtTable(tableNumber, true, true))
-            .Then(x => this.AnEmptyOrderIsCreatedForTable(tableNumber));
+            .Then(x => this.AnEmptyOrderIsCreatedForTable(tableNumber))
+            .BDDfy();
     }
 
-    [BddfyFact]
+    [Fact]
     public void UseTable_ShouldFailValidationWhenAttemptingToUseATableThatIsAlreadyInUse()
     {
         var tableNumber = 7;
@@ -31,12 +34,13 @@ public sealed class UseTableTests : TabeTestsBase
         this.Given(x => this.AnEmptyRestaurant())
             .When(x => this.TheWaiterSeatsACustomerAtTable(tableNumber, true, true))
                 .And(x => this.TheWaiterSeatsACustomerAtTable(tableNumber, false, false))
-            .Then(x => this.TheWaiterShouldntBeAbleToUseTheTableAsItIsAlreadyInUse());
+            .Then(x => this.TheWaiterShouldNotBeAbleToUseTheTableAsItIsAlreadyInUse())
+            .BDDfy();
     }
 
     private async Task AnEmptyOrderIsCreatedForTable(int tableNumber)
     {
-        var tableDetails = await this.HttpGet<TableDetailsDto>($"tables/{tableNumber}");
+        var tableDetails = await this.HttpGet<TableDetailsDto>($"/api/v1/tables/{tableNumber}");
 
         this.ProblemDetails.Should().BeNull();
 
@@ -65,7 +69,7 @@ public sealed class UseTableTests : TabeTestsBase
         }
     }
 
-    private void TheWaiterShouldntBeAbleToUseTheTableAsItIsAlreadyInUse()
+    private void TheWaiterShouldNotBeAbleToUseTheTableAsItIsAlreadyInUse()
     {
         this.ProblemDetails.Should().NotBeNull();
         this.ProblemDetails.Errors.Should().NotBeEmpty();

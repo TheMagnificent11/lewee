@@ -5,7 +5,7 @@ namespace Lewee.Application.Mediation.Requests;
 /// <summary>
 /// Result
 /// </summary>
-public abstract class Result : IResult
+public abstract class Result
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="Result"/> class
@@ -23,20 +23,26 @@ public abstract class Result : IResult
         this.IsSuccess = status == ResultStatus.Success;
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Gets a value indicating whether request was successfully processed
+    /// </summary>
     public bool IsSuccess { get; private set; }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Gets the status for the result
+    /// </summary>
     public ResultStatus Status { get; private set; }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Gets a dictionary of error messages keyed by request property
+    /// </summary>
     public Dictionary<string, List<string>> Errors { get; private set; }
 
     /// <summary>
     /// Generates an error message from the <see cref="Errors"/> dictionary.
     /// </summary>
     /// <returns>Error message</returns>
-    /// <remarks>Each string in the dictionay is separated by a new-line character</remarks>
+    /// <remarks>Each string in the dictionary is separated by a new-line character</remarks>
     public string GenerateErrorMessage()
     {
         if (!this.Errors.Any())

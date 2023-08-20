@@ -3,18 +3,20 @@ using FluentAssertions;
 using Sample.Restaurant.Application;
 using Sample.Restaurant.Domain;
 using TestStack.BDDfy;
-using TestStack.BDDfy.Xunit;
+using Xunit;
 
 namespace Sample.Restaurant.Server.Tests.Integration.Tables;
 
-public sealed class TableOrderingTests : TabeTestsBase
+public sealed class TableOrderingTests : TableTestsBase
 {
-    public TableOrderingTests(RestaurantWebApplicationFactory factory)
-        : base(factory)
+    public TableOrderingTests(
+        RestaurantWebApplicationFactory webApplicationFactory,
+        RestaurantDbContextFixture dbContextFixture)
+        : base(webApplicationFactory, dbContextFixture)
     {
     }
 
-    [BddfyFact]
+    [Fact]
     public void Ordering_ShouldCorrectlyUpdateTheOrderWhenItemsAreAddedAndRemoved()
     {
         var tableNumber = 10;
@@ -30,29 +32,31 @@ public sealed class TableOrderingTests : TabeTestsBase
 
         this.Given(x => this.AnEmptyRestaurant())
             .When(x => this.TheWaiterSeatsACustomerAtTable(tableNumber, true, false))
-                .And(x => this.TheCustomrOrdersAnItemOfTheMenu(tableNumber, Menu.Beer, true))
-                .And(x => this.TheCustomrOrdersAnItemOfTheMenu(tableNumber, Menu.Wine, true))
-                .And(x => this.TheCustomrOrdersAnItemOfTheMenu(tableNumber, Menu.GarlicBread, true))
-                .And(x => this.TheCustomrOrdersAnItemOfTheMenu(tableNumber, Menu.GarlicBread, true))
+                .And(x => this.TheCustomerOrdersAnItemOfTheMenu(tableNumber, Menu.Beer, true))
+                .And(x => this.TheCustomerOrdersAnItemOfTheMenu(tableNumber, Menu.Wine, true))
+                .And(x => this.TheCustomerOrdersAnItemOfTheMenu(tableNumber, Menu.GarlicBread, true))
+                .And(x => this.TheCustomerOrdersAnItemOfTheMenu(tableNumber, Menu.GarlicBread, true))
                 .And(x => this.TheCustomerRemovesAnItemFromTheirOrder(tableNumber, Menu.GarlicBread, true))
-                .And(x => this.TheCustomrOrdersAnItemOfTheMenu(tableNumber, Menu.Pizza, true))
-                .And(x => this.TheCustomrOrdersAnItemOfTheMenu(tableNumber, Menu.IceCream, true))
-                .And(x => this.TheCustomrOrdersAnItemOfTheMenu(tableNumber, Menu.IceCream, true))
+                .And(x => this.TheCustomerOrdersAnItemOfTheMenu(tableNumber, Menu.Pizza, true))
+                .And(x => this.TheCustomerOrdersAnItemOfTheMenu(tableNumber, Menu.IceCream, true))
+                .And(x => this.TheCustomerOrdersAnItemOfTheMenu(tableNumber, Menu.IceCream, true))
                 .And(x => this.TheCustomerHasFinishedOrdering())
-            .Then(x => this.TheOrderForTheTableContainsTheCorretItems(tableNumber, expectedOrderItems));
+            .Then(x => this.TheOrderForTheTableContainsTheCorrectItems(tableNumber, expectedOrderItems))
+            .BDDfy();
     }
 
-    [BddfyFact]
+    [Fact]
     public void Ordering_ShouldFailToPlaceOrderWhenTableIsNotInUse()
     {
         var tableNumber = 3;
 
         this.Given(x => this.AnEmptyRestaurant())
-            .When(x => this.TheCustomrOrdersAnItemOfTheMenu(tableNumber, Menu.Pasta, false))
-            .Then(x => this.TheRestaurantManagerTellsTheCustomerThatTheyNeedToBeSeatedAtATableToOrderOffTheMenu());
+            .When(x => this.TheCustomerOrdersAnItemOfTheMenu(tableNumber, Menu.Pasta, false))
+            .Then(x => this.TheRestaurantManagerTellsTheCustomerThatTheyNeedToBeSeatedAtATableToOrderOffTheMenu())
+            .BDDfy();
     }
 
-    private async Task TheCustomrOrdersAnItemOfTheMenu(int tableNumber, MenuItem item, bool isSuccessExpected)
+    private async Task TheCustomerOrdersAnItemOfTheMenu(int tableNumber, MenuItem item, bool isSuccessExpected)
     {
         await this.OrderItem(tableNumber, item.Id, isSuccessExpected);
     }
@@ -64,7 +68,7 @@ public sealed class TableOrderingTests : TabeTestsBase
 
     private async Task OrderItem(int tableNumber, Guid itemId, bool isSuccessExpected)
     {
-        using (var response = await this.HttpRequest(HttpMethod.Put, $"/tables/{tableNumber}/menu-items/{itemId}"))
+        using (var response = await this.HttpRequest(HttpMethod.Put, $"/api/v1/tables/{tableNumber}/menu-items/{itemId}"))
         {
             if (isSuccessExpected)
             {
@@ -79,7 +83,7 @@ public sealed class TableOrderingTests : TabeTestsBase
 
     private async Task RemoveItem(int tableNumber, Guid itemId, bool isSuccessExpected)
     {
-        using (var response = await this.HttpRequest(HttpMethod.Delete, $"/tables/{tableNumber}/menu-items/{itemId}"))
+        using (var response = await this.HttpRequest(HttpMethod.Delete, $"/api/v1/tables/{tableNumber}/menu-items/{itemId}"))
         {
             if (isSuccessExpected)
             {
@@ -97,9 +101,9 @@ public sealed class TableOrderingTests : TabeTestsBase
         await this.WaitForDomainEventsToBeDispatched();
     }
 
-    private async Task TheOrderForTheTableContainsTheCorretItems(int tableNumber, MenuItem[] items)
+    private async Task TheOrderForTheTableContainsTheCorrectItems(int tableNumber, MenuItem[] items)
     {
-        var tableDetails = await this.HttpGet<TableDetailsDto>($"tables/{tableNumber}");
+        var tableDetails = await this.HttpGet<TableDetailsDto>($"/api/v1/tables/{tableNumber}");
 
         var expectedItems = items
             .GroupBy(x => x.Id)

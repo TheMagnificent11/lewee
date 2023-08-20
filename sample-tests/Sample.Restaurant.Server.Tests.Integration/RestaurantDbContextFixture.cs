@@ -1,13 +1,15 @@
-﻿using Lewee.IntegrationTests;
+﻿using Lewee.Domain;
+using Lewee.IntegrationTests;
+using Microsoft.EntityFrameworkCore;
 using Respawn;
 using Respawn.Graph;
 using Sample.Restaurant.Infrastructure.Data;
 
 namespace Sample.Restaurant.Server.Tests.Integration;
 
-public sealed class RestaurantDbContextFixture : DatabaseContextFixture<RestaurantDbContext>
+public sealed class RestaurantDbContextFixture : DatabaseContextFixture<RestaurantDbContext, RestaurantDbSeeder>
 {
-    private const string RestuarantDbSchema = "res";
+    private const string RestaurantDbSchema = "res";
 
     protected override RespawnerOptions ResetOptions => new()
     {
@@ -15,15 +17,35 @@ public sealed class RestaurantDbContextFixture : DatabaseContextFixture<Restaura
         SchemasToExclude = new[] { "dbo" },
         TablesToIgnore = new[]
         {
-            new Table(RestuarantDbSchema, nameof(RestaurantDbContext.DomainEventReferences)),
-            new Table(RestuarantDbSchema, nameof(RestaurantDbContext.Tables)),
-            new Table(RestuarantDbSchema, nameof(RestaurantDbContext.MenuItems)),
-            new Table(RestuarantDbSchema, "OrderStatuses"),
-            new Table(RestuarantDbSchema, "MenuItemTypes")
+            new Table(RestaurantDbSchema, nameof(RestaurantDbContext.MenuItems)),
+            new Table(RestaurantDbSchema, "OrderStatuses"),
+            new Table(RestaurantDbSchema, "MenuItemTypes")
         }
     };
 
     protected override string EnvironmentName => "Testing";
 
     protected override string ConnectionStringName => "Sample.Restaurant";
+
+    protected override RestaurantDbContext CreateDbContext()
+    {
+        var dbContextOptions = new DbContextOptionsBuilder<RestaurantDbContext>()
+            .UseSqlServer(this.ConnectionString)
+            .Options;
+
+        var dbContext = new RestaurantDbContext(dbContextOptions, new TestAuthenticatedUserService());
+        return dbContext;
+    }
+
+    protected override RestaurantDbSeeder CreateDbSeeder(RestaurantDbContext dbContext)
+    {
+        dbContext ??= this.CreateDbContext();
+
+        return new RestaurantDbSeeder(dbContext);
+    }
+
+    private class TestAuthenticatedUserService : IAuthenticatedUserService
+    {
+        public string UserId => "Integration Tests";
+    }
 }

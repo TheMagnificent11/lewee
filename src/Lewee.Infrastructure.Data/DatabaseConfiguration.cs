@@ -67,11 +67,11 @@ public static class DatabaseConfiguration
         this IServiceCollection services,
         string connectionString)
         where TContext : ApplicationDbContext<TContext>
-        where TSeeder : class, IDatabaseSeeder
+        where TSeeder : class, IDatabaseSeeder<TContext>
     {
         var newServices = ConfigureDatabase<TContext>(services, connectionString);
 
-        newServices.AddScoped<IDatabaseSeeder, TSeeder>();
+        newServices.AddScoped<IDatabaseSeeder<TContext>, TSeeder>();
 
         return newServices;
     }
@@ -99,7 +99,7 @@ public static class DatabaseConfiguration
                 return;
             }
 
-            var seeder = serviceScope.ServiceProvider.GetService<IDatabaseSeeder>();
+            var seeder = serviceScope.ServiceProvider.GetService<IDatabaseSeeder<T>>();
             if (seeder == null)
             {
                 return;

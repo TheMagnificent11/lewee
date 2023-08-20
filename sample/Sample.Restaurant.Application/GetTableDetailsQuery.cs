@@ -7,7 +7,7 @@ using Serilog;
 
 namespace Sample.Restaurant.Application;
 
-public sealed class GetTableDetailsQuery : IQuery<QueryResult<TableDetailsDto>>
+public sealed class GetTableDetailsQuery : IQuery<TableDetailsDto>
 {
     public GetTableDetailsQuery(Guid correlationId, int tableNumber)
     {

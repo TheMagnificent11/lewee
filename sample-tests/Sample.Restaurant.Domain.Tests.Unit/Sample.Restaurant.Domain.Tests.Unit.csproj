@@ -2,4 +2,10 @@
   <ItemGroup>
     <ProjectReference Include="..\..\sample\Sample.Restaurant.Domain\Sample.Restaurant.Domain.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="FluentAssertions.Analyzers">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
 </Project>

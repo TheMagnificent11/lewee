@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Lewee.Shared;
 using Xunit;
 
@@ -13,7 +12,7 @@ public static class EnumExtensionTests
 
         Reserved = 1,
 
-        [Description("In Use")]
+        [System.ComponentModel.Description("In Use")]
         InUse = 2
     }
 

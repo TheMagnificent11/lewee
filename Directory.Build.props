@@ -31,11 +31,16 @@
     </AllowedOutputExtensionsInPackageBuildOutputFolder>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="$(MSBuildProjectName.Contains('.Tests.'))">
     <IsPackable>false</IsPackable>
   </PropertyGroup>
+
+  <ItemGroup Condition="!$(MSBuildProjectName.Contains('.Tests.')) AND !$(MSBuildProjectName.StartsWith('Sample.'))">
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
   <ItemGroup Condition="!$(MSBuildProjectName.Contains('.Tests.'))">
     <PackageReference Include="Microsoft.SourceLink.GitHub">
@@ -69,17 +74,23 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="StyleCop.Analyzers">
-      <ExcludeAssets>all</ExcludeAssets>
-    </PackageReference>
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.analyzers">
       <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="xunit.runner.visualstudio">
-      <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="StyleCop.Analyzers">
+      <ExcludeAssets>all</ExcludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup Condition="$(MSBuildProjectName.Contains('.Tests.'))">
+    <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(MSBuildProjectName.StartsWith('Sample.')) AND !$(MSBuildProjectName.Contains('.Tests.'))">
+    <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
   </ItemGroup>
 
 </Project>

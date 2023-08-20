@@ -1,22 +1,24 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using Lewee.Infrastructure.Data;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Respawn;
-using Xunit;
 
 namespace Lewee.IntegrationTests;
 
 /// <summary>
 /// Database Context Fixture
 /// </summary>
-/// <typeparam name="T">Database context type</typeparam>
-public abstract class DatabaseContextFixture<T> : IAsyncLifetime
-    where T : DbContext
+/// <typeparam name="TDbContext">Database context type</typeparam>
+/// <typeparam name="TDbSeeder">Database seeder type</typeparam>
+public abstract class DatabaseContextFixture<TDbContext, TDbSeeder>
+    where TDbContext : DbContext
+    where TDbSeeder : IDatabaseSeeder<TDbContext>
 {
-    private readonly string connectionString;
+    private bool isDbInitialized = false;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="DatabaseContextFixture{T}"/> class
+    /// Initializes a new instance of the <see cref="DatabaseContextFixture{TDbContext, TDbSeeder}"/> class
     /// </summary>
     protected DatabaseContextFixture()
     {
@@ -25,11 +27,14 @@ public abstract class DatabaseContextFixture<T> : IAsyncLifetime
             .AddJsonFile($"appsettings.{this.EnvironmentName}.json")
             .Build();
 
-        var connectionString = configuration.GetConnectionString(this.ConnectionStringName)
+        this.ConnectionString = configuration.GetConnectionString(this.ConnectionStringName)
             ?? throw new InvalidOperationException("Could not find connection string");
-
-        this.connectionString = connectionString;
     }
+
+    /// <summary>
+    /// Gets the database connection string
+    /// </summary>
+    protected string ConnectionString { get; }
 
     /// <summary>
     /// Gets the database reset options
@@ -46,12 +51,26 @@ public abstract class DatabaseContextFixture<T> : IAsyncLifetime
     /// </summary>
     protected abstract string ConnectionStringName { get; }
 
-    /// <inheritdoc />
-    public async Task InitializeAsync()
+    /// <summary>
+    /// Resets the database
+    /// </summary>
+    /// <returns>An asynchronous task</returns>
+    public async Task ResetDatabase()
     {
+        var dbContext = this.CreateDbContext();
+        var seeder = this.CreateDbSeeder(dbContext);
+
+        if (!this.isDbInitialized)
+        {
+            await dbContext.Database.MigrateAsync();
+            await seeder.Run();
+            this.isDbInitialized = true;
+            return;
+        }
+
         try
         {
-            using (var connection = new SqlConnection(this.connectionString))
+            using (var connection = new SqlConnection(this.ConnectionString))
             {
                 await connection.OpenAsync();
             }
@@ -62,13 +81,22 @@ public abstract class DatabaseContextFixture<T> : IAsyncLifetime
             return;
         }
 
-        var respawner = await Respawner.CreateAsync(this.connectionString, this.ResetOptions);
-        await respawner.ResetAsync(this.connectionString);
+        var respawner = await Respawner.CreateAsync(this.ConnectionString, this.ResetOptions);
+        await respawner.ResetAsync(this.ConnectionString);
+
+        await seeder.Run();
     }
 
-    /// <inheritdoc />
-    public Task DisposeAsync()
-    {
-        return Task.CompletedTask;
-    }
+    /// <summary>
+    /// Creates a database context
+    /// </summary>
+    /// <returns>Database context</returns>
+    protected abstract TDbContext CreateDbContext();
+
+    /// <summary>
+    /// Create a database seeder
+    /// </summary>
+    /// <param name="context">Database context</param>
+    /// <returns>Database seeder</returns>
+    protected abstract TDbSeeder CreateDbSeeder(TDbContext? context = null);
 }

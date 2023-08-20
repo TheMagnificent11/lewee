@@ -4,10 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Sample.Restaurant.Server.Tests.Integration.Tables;
 
-public abstract class TabeTestsBase : RestaurantTestsBase
+public abstract class TableTestsBase : RestaurantTestsBase
 {
-    protected TabeTestsBase(RestaurantWebApplicationFactory factory)
-        : base(factory)
+    public TableTestsBase(
+        RestaurantWebApplicationFactory webApplicationFactory,
+        RestaurantDbContextFixture dbContextFixture)
+        : base(webApplicationFactory, dbContextFixture)
     {
     }
 
@@ -15,7 +17,7 @@ public abstract class TabeTestsBase : RestaurantTestsBase
 
     protected async Task SetProblemDetails(HttpResponseMessage response)
     {
-        this.ProblemDetails = await this.DeserializeResponse<ValidationProblemDetails>(response);
+        this.ProblemDetails = await this.DeserializeResponse<ValidationProblemDetails>(response, false);
     }
 
     protected async Task TheWaiterSeatsACustomerAtTable(int tableNumber, bool isSuccessExpected, bool dispatchEvents)
@@ -32,7 +34,7 @@ public abstract class TabeTestsBase : RestaurantTestsBase
 
     private async Task UseTable(int tableNumber, bool isSuccessExpected)
     {
-        using (var response = await this.HttpRequest(HttpMethod.Post, $"/tables/{tableNumber}"))
+        using (var response = await this.HttpRequest(HttpMethod.Put, $"/api/v1/tables/{tableNumber}"))
         {
             if (isSuccessExpected)
             {

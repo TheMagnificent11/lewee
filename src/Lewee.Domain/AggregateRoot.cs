@@ -3,7 +3,7 @@
 /// <summary>
 /// Aggregate Root
 /// </summary>
-public abstract class AggregateRoot : Entity, IAggregateRoot
+public abstract class AggregateRoot : Entity
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="AggregateRoot"/> class

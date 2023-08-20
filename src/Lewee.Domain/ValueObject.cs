@@ -4,7 +4,7 @@
 /// Value Object
 /// </summary>
 /// <typeparam name="T">Value object type</typeparam>
-public abstract class ValueObject<T> : IValueObject<T>
+public abstract class ValueObject<T> : IEquatable<T>
     where T : ValueObject<T>
 {
     /// <inheritdoc />

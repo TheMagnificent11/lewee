@@ -9,7 +9,7 @@ namespace Lewee.Infrastructure.Data;
 /// <typeparam name="TAggregate">Aggregate root type</typeparam>
 /// <typeparam name="TContext">Databae context type</typeparam>
 public class Repository<TAggregate, TContext> : IRepository<TAggregate>, IDisposable
-    where TAggregate : class, IAggregateRoot
+    where TAggregate : AggregateRoot
     where TContext : DbContext
 {
     private readonly TContext context;

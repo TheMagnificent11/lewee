@@ -3,7 +3,7 @@
 /// <summary>
 /// Entity
 /// </summary>
-public abstract class Entity : IEntity, ISoftDeleteEntity
+public abstract class Entity : ISoftDeleteEntity
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="Entity"/> class
@@ -28,26 +28,38 @@ public abstract class Entity : IEntity, ISoftDeleteEntity
         this.ModifiedAtUtc = DateTime.UtcNow;
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Gets or sets the ID of the entity
+    /// </summary>
     public Guid Id { get; protected set; }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Gets the username of the user that created the entity
+    /// </summary>
     public string CreatedBy { get; private set; }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Gets the date-time in UTC at which the entity was created
+    /// </summary>
     public DateTime CreatedAtUtc { get; private set; }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Gets the username of the user that last modified the entity
+    /// </summary>
     public string ModifiedBy { get; private set; }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Gets the date-time in UTC at which the entity was last updated
+    /// </summary>
     public DateTime ModifiedAtUtc { get; private set; }
 
     /// <inheritdoc />
     public bool IsDeleted { get; protected set; }
 
-    /// <inheritdoc />
-    public byte[] Timestamp { get; protected set; } = default!;
+    /// <summary>
+    /// Gets the timestamp
+    /// </summary>
+    public byte[] Timestamp { get; private set; } = default!;
 
     /// <inheritdoc />
     public override bool Equals(object? obj)
