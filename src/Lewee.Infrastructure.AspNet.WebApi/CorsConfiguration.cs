@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Lewee.Infrastructure.AspNet.WebApi;
 
@@ -12,6 +13,7 @@ public static class CorsConfiguration
     /// </summary>
     /// <param name="services">Services collection</param>
     /// <param name="allowedOrigins">Semicolon-separated list of allowed origins</param>
+    [ExcludeFromCodeCoverage]
     public static void ConfigureCorsDefaultPolicy(this IServiceCollection services, string allowedOrigins)
     {
         services.AddCors(options => options.AddDefaultPolicy(policyBuilder =>
