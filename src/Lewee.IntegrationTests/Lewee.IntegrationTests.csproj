@@ -10,5 +10,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Lewee.Infrastructure.Data\Lewee.Infrastructure.Data.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
+  </ItemGroup>
   
 </Project>
