@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Lewee.Infrastructure.AspNet.WebApi;
@@ -13,6 +14,7 @@ public static class ControllerConfiguration
     /// </summary>
     /// <param name="services">Services collection</param>
     /// <returns>Updated services collection</returns>
+    [ExcludeFromCodeCoverage]
     public static IServiceCollection ConfigureControllers(this IServiceCollection services)
     {
         services
