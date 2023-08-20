@@ -17,12 +17,14 @@ jobs:
               MSSQL_PID: Express
           ports:
               - 5434:1433
+          volumes:
+            - mssql:/var/opt/mssql
           options: >-
-              --health-cmd "/opt/mssql-tools/bin/sqlcmd -U $DB_USER -P $SA_PASSWORD -Q 'select 1' -b -o /dev/null"
-              --health-interval 60s
-              --health-timeout 30s
-              --health-start-period 20s
-              --health-retries 3
+            --health-cmd "/opt/mssql-tools/bin/sqlcmd -U sa -P $SA_PASSWORD -Q 'select 1' -b -o /dev/null"
+            --health-interval 60s
+            --health-timeout 30s
+            --health-start-period 20s
+            --health-retries 3
     steps:
     - uses: actions/checkout@v2
       with:
@@ -31,16 +33,12 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 7.0.*
-    # - name: Create SQL Server Container
-    #   run: docker compose -f ./docker-compose.ci.yml up
     - name: Install Dependencies
       run: dotnet restore ./ci.sln --nologo
     - name: Build
       run: dotnet build ./ci.sln --configuration Release --no-restore --nologo
     - name: Test
       run: dotnet test ./ci.sln --configuration Release --no-build --nologo --settings coverage.runsettings --results-directory ./coverage
-    # - name: Tear Down SQL Server Container
-    #   run: docker compose -f ./docker-compose.ci.yml down
     - name: Code Coverage Report
       uses: irongut/CodeCoverageSummary@v1.3.0
       if: ${{ inputs.is-pr == true }}
