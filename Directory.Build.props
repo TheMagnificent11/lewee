@@ -85,4 +85,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup Condition="$(MSBuildProjectName.Contains('.Tests.'))">
+    <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
+  </ItemGroup>
+
 </Project>
