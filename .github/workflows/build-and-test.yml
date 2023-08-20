@@ -39,8 +39,8 @@ jobs:
       run: dotnet build ./ci.sln --configuration Release --no-restore --nologo
     - name: Test
       run: dotnet test ./ci.sln --configuration Release --no-build --nologo --settings coverage.runsettings --results-directory ./coverage
-    - name: Tear Down SQL Server Container
-      run: docker compose -f ./docker-compose.ci.yml down
+    # - name: Tear Down SQL Server Container
+    #   run: docker compose -f ./docker-compose.ci.yml down
     - name: Code Coverage Report
       uses: irongut/CodeCoverageSummary@v1.3.0
       if: ${{ inputs.is-pr == true }}
