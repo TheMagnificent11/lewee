@@ -57,12 +57,12 @@ public abstract class DatabaseContextFixture<TDbContext, TDbSeeder>
     /// <returns>An asynchronous task</returns>
     public async Task ResetDatabase()
     {
+        var dbContext = this.CreateDbContext();
+        var seeder = this.CreateDbSeeder(dbContext);
+
         if (!this.isDbInitialized)
         {
-            var dbContext = this.CreateDbContext();
             await dbContext.Database.MigrateAsync();
-
-            var seeder = this.CreateDbSeeder();
             await seeder.Run();
             this.isDbInitialized = true;
             return;
@@ -83,6 +83,8 @@ public abstract class DatabaseContextFixture<TDbContext, TDbSeeder>
 
         var respawner = await Respawner.CreateAsync(this.ConnectionString, this.ResetOptions);
         await respawner.ResetAsync(this.ConnectionString);
+
+        await seeder.Run();
     }
 
     /// <summary>
@@ -94,6 +96,7 @@ public abstract class DatabaseContextFixture<TDbContext, TDbSeeder>
     /// <summary>
     /// Create a database seeder
     /// </summary>
+    /// <param name="context">Database context</param>
     /// <returns>Database seeder</returns>
-    protected abstract TDbSeeder CreateDbSeeder();
+    protected abstract TDbSeeder CreateDbSeeder(TDbContext? context = null);
 }

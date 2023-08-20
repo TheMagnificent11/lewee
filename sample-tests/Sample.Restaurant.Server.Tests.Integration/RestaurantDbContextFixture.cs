@@ -37,9 +37,11 @@ public sealed class RestaurantDbContextFixture : DatabaseContextFixture<Restaura
         return dbContext;
     }
 
-    protected override RestaurantDbSeeder CreateDbSeeder()
+    protected override RestaurantDbSeeder CreateDbSeeder(RestaurantDbContext dbContext)
     {
-        return new RestaurantDbSeeder(this.CreateDbContext());
+        dbContext ??= this.CreateDbContext();
+
+        return new RestaurantDbSeeder(dbContext);
     }
 
     private class TestAuthenticatedUserService : IAuthenticatedUserService
