@@ -9,13 +9,13 @@ namespace Sample.Restaurant.Application;
 
 public sealed class GetTableDetailsQuery : IQuery<TableDetailsDto>
 {
-    public GetTableDetailsQuery(Guid correlationId, int tableNumber)
+    public GetTableDetailsQuery(Guid? correlationId, int tableNumber)
     {
         this.CorrelationId = correlationId;
         this.TableNumber = tableNumber;
     }
 
-    public Guid CorrelationId { get; }
+    public Guid? CorrelationId { get; }
     public int TableNumber { get; }
 
     internal class GetTableDetailsQueryHandler : IRequestHandler<GetTableDetailsQuery, QueryResult<TableDetailsDto>>

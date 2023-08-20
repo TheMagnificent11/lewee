@@ -5,6 +5,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Correlate.AspNetCore" />
     <PackageReference Include="Serilog" />
     <PackageReference Include="SerilogAnalyzer">
       <ExcludeAssets>all</ExcludeAssets>

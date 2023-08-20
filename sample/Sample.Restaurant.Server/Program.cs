@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using Lewee.Infrastructure.AspNet.Auth;
+using Lewee.Infrastructure.AspNet.Correlation;
 using Lewee.Infrastructure.AspNet.SignalR;
 using Lewee.Infrastructure.AspNet.WebApi;
 using Lewee.Infrastructure.Data;
@@ -44,6 +45,8 @@ public class Program
             /* .ConfigureServiceBusPublisher(serviceBusSettings) */
             .AddRestaurantApplication();
 
+        builder.Services.AddCorrelationIdServices();
+
         builder.Services
             .AddControllersWithViews(options =>
             {
@@ -78,6 +81,8 @@ public class Program
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
+
+        app.UseCorrelationIdMiddleware();
 
         app.UseHealthChecks("/health")
             .UseHttpsRedirection()

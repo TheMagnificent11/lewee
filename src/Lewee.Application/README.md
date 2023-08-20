@@ -37,10 +37,6 @@ There a several interfaces that add a further layer of [command-query responsibi
 
 ### IQuery & ICommand
 
-Both `IQuery` and `ICommand` implement [IApplicationRequest](./Mediation/Requests/IApplicationRequest.cs), which has a `CorrelationId` `Guid` property.
-
-As mentioned in the [Pipeline Behaviors](#pipeline-behaviors) section, the `CorrelationId` property is used in the `CorelationIdLoggingBehavior` to decorate the logs with the correlation ID for every `Mediatr` request that implements `IApplicationRequest`.
-
 Query handlers that handle `IQuery` input types are required to have [QueryResult](./Mediation/Requests/QueryResult.cs) as the return type.  `QueryResult` has a type parameter that is used to specify the query data type.
 
 Command handlers that handle `ICommand` input types are required to return a [CommandResult](./Mediation/Requests/CommandResult.cs).
@@ -69,7 +65,7 @@ As mentioned in the [Pipeline Behaviors](#pipeline-behaviors) section, the `Tena
 ### Pipeline Behaviors
 
 - [CorelationIdLoggingBehavior](./Mediation//Behaviors/CorrelationIdLoggingBehavior.cs)
-  - Adds a `CorrelationId` structured logging property for every request that implements `IApplicationRequest`.
+  - Adds a `CorrelationId` structured logging property for every request.
 - [DomainExceptionBehavior](./Mediation/Behaviors/DomainExceptionBehavior.cs)
   - Catches [DomainException](../Lewee.Domain/DomainException.cs), which is defined in the [Lewee.Domain](../Lewee.Domain/README.md) package, and returns a failure result.
 - [FailureLoggingBehavior](./Mediation/Behaviors/FailureLoggingBehavior.cs)

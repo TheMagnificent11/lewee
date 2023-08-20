@@ -9,13 +9,13 @@ namespace Sample.Restaurant.Application;
 
 public sealed class UseTableCommand : ICommand, ITableRequest
 {
-    public UseTableCommand(Guid correlationId, int tableNumber)
+    public UseTableCommand(Guid? correlationId, int tableNumber)
     {
         this.CorrelationId = correlationId;
         this.TableNumber = tableNumber;
     }
 
-    public Guid CorrelationId { get; }
+    public Guid? CorrelationId { get; }
     public int TableNumber { get; }
 
     internal class UseTableCommandHandler : IRequestHandler<UseTableCommand, CommandResult>
