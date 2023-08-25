@@ -4,10 +4,11 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
+    <PackageVersion Include="Correlate.AspNetCore" Version="4.0.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.0" />
     <PackageVersion Include="coverlet.msbuild" Version="6.0.0" />
-    <PackageVersion Include="FluentAssertions" Version="6.11.0" />
-    <PackageVersion Include="FluentAssertions.Analyzers" Version="0.22.0" />
+    <PackageVersion Include="FluentAssertions" Version="6.12.0" />
+    <PackageVersion Include="FluentAssertions.Analyzers" Version="0.23.1" />
     <PackageVersion Include="FluentValidation" Version="11.5.2" />
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="11.7.1" />
     <PackageVersion Include="Fluxor.Blazor.Web.ReduxDevTools" Version="5.9.0" />
@@ -42,7 +43,8 @@
     <PackageVersion Include="Serilog.Enrichers.Process" Version="2.0.2" />
     <PackageVersion Include="Serilog.Enrichers.Thread" Version="3.1.0" />
     <PackageVersion Include="Serilog.Extensions.Logging" Version="7.0.0" />
-    <PackageVersion Include="Serilog.Sinks.BrowserHttp" Version="1.0.0-dev-00032" /><!-- For Blazor WASM - not currently used -->
+    <!-- For Blazor WASM - not currently used -->
+    <PackageVersion Include="Serilog.Sinks.BrowserHttp" Version="1.0.0-dev-00032" />
     <PackageVersion Include="Serilog.Sinks.Console" Version="4.1.0" />
     <PackageVersion Include="Serilog.Sinks.Seq" Version="5.2.2" />
     <PackageVersion Include="Serilog.Sinks.Trace" Version="3.0.0" />

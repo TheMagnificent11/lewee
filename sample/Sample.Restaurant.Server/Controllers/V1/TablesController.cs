@@ -1,5 +1,5 @@
 using Lewee.Infrastructure.AspNet.WebApi;
-using MediatR;
+using Lewee.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Sample.Restaurant.Application;
 
@@ -9,15 +9,10 @@ namespace Sample.Restaurant.Server.Controllers.V1;
 [Produces(ApplicationJson)]
 public sealed class TablesController : ApiControllerBase
 {
-    public TablesController(IMediator mediator)
-        : base(mediator)
-    {
-    }
-
     [HttpGet(Name = "GetAll")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TableDto>))]
     public async Task<IActionResult> GetAll(
-        [FromHeader] Guid? correlationId,
+        [FromHeader(Name = RequestHeaders.CorrelationId)] Guid? correlationId,
         CancellationToken cancellationToken = default)
     {
         var query = new GetTablesQuery(correlationId ?? this.CorrelationId);
@@ -33,7 +28,10 @@ public sealed class TablesController : ApiControllerBase
         [FromHeader] Guid? correlationId,
         CancellationToken cancellationToken = default)
     {
-        var query = new GetTableDetailsQuery(correlationId ?? this.CorrelationId, tableNumber);
+        var query = new GetTableDetailsQuery(
+            correlationId ?? this.CorrelationId,
+            tableNumber);
+
         var result = await this.Mediator.Send(query, cancellationToken);
 
         return result.ToActionResult();
@@ -48,7 +46,10 @@ public sealed class TablesController : ApiControllerBase
         [FromHeader] Guid? correlationId,
         CancellationToken cancellationToken = default)
     {
-        var command = new UseTableCommand(correlationId ?? this.CorrelationId, tableNumber);
+        var command = new UseTableCommand(
+            correlationId ?? this.CorrelationId,
+            tableNumber);
+
         var result = await this.Mediator.Send(command, cancellationToken);
 
         return result.ToActionResult();

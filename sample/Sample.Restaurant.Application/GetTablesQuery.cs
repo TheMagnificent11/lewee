@@ -27,7 +27,9 @@ public sealed class GetTablesQuery : IQuery<IEnumerable<TableDto>>
             this.mapper = mapper;
         }
 
-        public async Task<QueryResult<IEnumerable<TableDto>>> Handle(GetTablesQuery request, CancellationToken cancellationToken)
+        public async Task<QueryResult<IEnumerable<TableDto>>> Handle(
+            GetTablesQuery request,
+            CancellationToken cancellationToken)
         {
             var entites = await this.repository
                 .All()
