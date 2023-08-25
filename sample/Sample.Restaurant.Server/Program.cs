@@ -38,11 +38,9 @@ public class Program
         builder.Services
             .ConfigureDatabaseWithSeeder<RestaurantDbContext, RestaurantDbSeeder>(connectionString)
             .ConfigureAuthenticatedUserService()
-            .ConfigureRestaurantData() // TODO (https://github.com/TheMagnificent11/lewee/issues/16)): ideally this would not be needed if IRepository would be registered globally
 #if DEBUG
             .AddDatabaseDeveloperPageExceptionFilter()
 #endif
-            /* .ConfigureServiceBusPublisher(serviceBusSettings) */
             .AddRestaurantApplication();
 
         builder.Services.AddCorrelationIdServices();
