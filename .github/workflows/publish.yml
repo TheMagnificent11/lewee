@@ -28,4 +28,8 @@ jobs:
     - name: Install NuGet
       uses: NuGet/setup-nuget@v1.0.5
     - name: Publish to NuGet
-      run: nuget push ./output/*.nupkg -ApiKey ${{ secrets.NUGET_API_KEY }} -Source https://api.nuget.org/v3/index.json
+      run: |
+        for pkg in $(find ./output/*.nupkgs -name "*.nupkg"); do
+          echo "Publishing $pkg"
+          dotnet nuget push $pkg  -ApiKey ${{ secrets.NUGET_API_KEY }} -Source https://api.nuget.org/v3/index.json
+        done
