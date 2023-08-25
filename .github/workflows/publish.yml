@@ -28,4 +28,4 @@ jobs:
     - name: Install NuGet
       uses: NuGet/setup-nuget@v1.0.5
     - name: Publish to NuGet
-      run: dotnet nuget push ./output/*.nupkg -ApiKey ${{ secrets.NUGET_API_KEY }} -Source https://api.nuget.org/v3/index.json
+      run: dotnet nuget push ./output/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} -source https://api.nuget.org/v3/index.json --skip-duplicate
