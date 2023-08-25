@@ -37,6 +37,10 @@ There a several interfaces that add a further layer of [command-query responsibi
 
 ### IQuery & ICommand
 
+Both `IQuery` and `ICommand` implement [IApplicationRequest](./Mediation/Requests/IApplicationRequest.cs), which has a `CorrelationId` `Guid` property.
+
+As mentioned in the [Pipeline Behaviors](#pipeline-behaviors) section, the `CorrelationId` property is used in the `CorelationIdLoggingBehavior` to decorate the logs with the correlation ID for every `Mediatr` request that implements `IApplicationRequest`.
+
 Query handlers that handle `IQuery` input types are required to have [QueryResult](./Mediation/Requests/QueryResult.cs) as the return type.  `QueryResult` has a type parameter that is used to specify the query data type.
 
 Command handlers that handle `ICommand` input types are required to return a [CommandResult](./Mediation/Requests/CommandResult.cs).
