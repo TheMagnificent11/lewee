@@ -28,17 +28,9 @@ jobs:
     #     useConfigFile: true
     - name: Get Latest Tag
       id: get_latest_tag
-      uses: actions/github-script@v4
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          const tags = await github.repos.listTags({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-          });
-          const latestTag = tags.data[0].name;
-          console.log(`Latest tag: ${latestTag}`);
-          core.setOutput("latest_tag", latestTag);
+      run: |
+        latest_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
+        echo "::set-output name=latest_tag::${latest_tag}"
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
