@@ -69,7 +69,7 @@ As mentioned in the [Pipeline Behaviors](#pipeline-behaviors) section, the `Tena
 ### Pipeline Behaviors
 
 - [CorelationIdLoggingBehavior](./Mediation//Behaviors/CorrelationIdLoggingBehavior.cs)
-  - Adds a `CorrelationId` structured logging property for every request.
+  - Adds a `CorrelationId` structured logging property for every request.  Uses `CorrelationId` property if the request implemenats `IApplicationRequest`, otherwise it generates a new GUID.
 - [DomainExceptionBehavior](./Mediation/Behaviors/DomainExceptionBehavior.cs)
   - Catches [DomainException](../Lewee.Domain/DomainException.cs), which is defined in the [Lewee.Domain](../Lewee.Domain/README.md) package, and returns a failure result.
 - [FailureLoggingBehavior](./Mediation/Behaviors/FailureLoggingBehavior.cs)
