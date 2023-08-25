@@ -63,9 +63,7 @@ public abstract class DatabaseContextFixture<TDbContext, TDbSeeder>
         if (!this.isDbInitialized)
         {
             await dbContext.Database.MigrateAsync();
-            await seeder.Run();
             this.isDbInitialized = true;
-            return;
         }
 
         try

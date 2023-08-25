@@ -7,14 +7,14 @@ using Sample.Restaurant.Domain;
 
 namespace Sample.Restaurant.Application;
 
-public sealed class GetTablesQuery : IQuery<IEnumerable<TableDto>>, IApplicationRequest
+public sealed class GetTablesQuery : IQuery<IEnumerable<TableDto>>
 {
-    public GetTablesQuery(Guid? correlationId)
+    public GetTablesQuery(Guid correlationId)
     {
         this.CorrelationId = correlationId;
     }
 
-    public Guid? CorrelationId { get; }
+    public Guid CorrelationId { get; }
 
     internal class GetTablesQueryHandler : IRequestHandler<GetTablesQuery, QueryResult<IEnumerable<TableDto>>>
     {

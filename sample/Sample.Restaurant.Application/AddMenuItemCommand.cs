@@ -9,14 +9,14 @@ namespace Sample.Restaurant.Application;
 
 public sealed class AddMenuItemCommand : ICommand
 {
-    public AddMenuItemCommand(Guid? correlationId, int tableNumber, Guid menuItemId)
+    public AddMenuItemCommand(Guid correlationId, int tableNumber, Guid menuItemId)
     {
         this.CorrelationId = correlationId;
         this.TableNumber = tableNumber;
         this.MenuItemId = menuItemId;
     }
 
-    public Guid? CorrelationId { get; }
+    public Guid CorrelationId { get; }
     public int TableNumber { get; }
     public Guid MenuItemId { get; }
 

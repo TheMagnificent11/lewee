@@ -8,5 +8,5 @@ public interface IApplicationRequest
     /// <summary>
     /// Gets the correlation
     /// </summary>
-    Guid? CorrelationId { get; }
+    Guid CorrelationId { get; }
 }
