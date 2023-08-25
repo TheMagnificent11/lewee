@@ -31,7 +31,7 @@ public class TableOrderingTests
         var pizza = new MenuItem(Guid.NewGuid(), "Pizza", 20, MenuItemType.Food);
 
         this.target.Use(Guid.NewGuid());
-        this.target.DomainEvents.GetAndClear(); // reset domain events before perfoming action under test
+        this.target.DomainEvents.GetAndClear(); // reset domain events before performing action under test
 
         this.target.OrderMenuItem(pizza, correlationId);
 
@@ -115,7 +115,7 @@ public class TableOrderingTests
         this.target.OrderMenuItem(pizza, Guid.NewGuid());
         this.target.OrderMenuItem(icecream, Guid.NewGuid());
 
-        this.target.DomainEvents.GetAndClear(); // reset domain events before perfoming action under test
+        this.target.DomainEvents.GetAndClear(); // reset domain events before performing action under test
 
         this.target.RemovedMenuItem(garlicBread, correlationId);
 

@@ -27,10 +27,9 @@ Obj/
 # Seq logs
 /.logs
 
-# XPlat Code Coverage
+# Test Coverage
 /coverage
-
-# Coverage Report
+/coverage-logs
 /coverage-Report
 
 # Docker Volumes

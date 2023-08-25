@@ -1,8 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
     <PackageReference Include="Mapster" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\..\src\Lewee.Application\Lewee.Application.csproj" />
     <ProjectReference Include="..\Sample.Restaurant.Contracts\Sample.Restaurant.Contracts.csproj" />

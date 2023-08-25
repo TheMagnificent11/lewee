@@ -16,21 +16,19 @@ internal class DomainExceptionBehavior<TCommand, TResponse> : IPipelineBehavior<
         this.logger = logger.ForContext<DomainExceptionBehavior<TCommand, TResponse>>();
     }
 
-    public Task<TResponse> Handle(TCommand request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+    public async Task<TResponse> Handle(TCommand request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         try
         {
-            return next();
+            return await next();
         }
         catch (DomainException ex)
         {
-#pragma warning disable Serilog004 // Constant MessageTemplate verifier
-            this.logger.Warning(ex, ex.Message);
-#pragma warning restore Serilog004 // Constant MessageTemplate verifier
+            this.logger.Information(ex, "Domain exception caught");
 
             var result = CommandResult.Fail(ResultStatus.BadRequest, ex.Message);
 
-            return Task.FromResult((TResponse)result);
+            return (TResponse)result;
         }
     }
 }

@@ -7,7 +7,7 @@ using Serilog;
 
 namespace Sample.Restaurant.Application;
 
-public sealed class AddMenuItemCommand : ICommand, ITableRequest
+public sealed class AddMenuItemCommand : ICommand
 {
     public AddMenuItemCommand(Guid correlationId, int tableNumber, Guid menuItemId)
     {

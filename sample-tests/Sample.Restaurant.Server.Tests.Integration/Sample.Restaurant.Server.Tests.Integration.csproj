@@ -1,12 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <PackageReference Include="TestStack.BDDfy.Xunit" />
+    <PackageReference Include="TestStack.BDDfy" />
   </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\..\sample\Sample.Restaurant.Server\Sample.Restaurant.Server.csproj" />
     <ProjectReference Include="..\..\src\Lewee.IntegrationTests\Lewee.IntegrationTests.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Update="FluentAssertions.Analyzers">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
   
 </Project>

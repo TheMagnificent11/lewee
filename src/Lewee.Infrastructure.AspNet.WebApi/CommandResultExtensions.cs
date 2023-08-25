@@ -45,6 +45,12 @@ public static class CommandResultExtensions
             case ResultStatus.NotFound:
                 return new NotFoundResult();
 
+            case ResultStatus.Unauthenticated:
+                return new UnauthorizedResult();
+
+            case ResultStatus.Unauthorized:
+                return new ForbidResult();
+
             case ResultStatus.BadRequest:
                 var problems = result.ToProblemDetails();
                 return new BadRequestObjectResult(problems);

@@ -5,7 +5,7 @@
 /// </summary>
 public class DomainEventsCollection
 {
-    private readonly List<IDomainEvent> domainEvents = new();
+    private readonly List<DomainEvent> domainEvents = new();
     private readonly object syncLock = new();
 
     /// <summary>
@@ -18,7 +18,7 @@ public class DomainEventsCollection
     /// Domain event
     /// </param>
     public void Raise<T>(T domainEvent)
-        where T : IDomainEvent
+        where T : DomainEvent
     {
         lock (this.syncLock)
         {
@@ -32,7 +32,7 @@ public class DomainEventsCollection
     /// <returns>
     /// An array of domain events
     /// </returns>
-    public IDomainEvent[] GetAndClear()
+    public DomainEvent[] GetAndClear()
     {
         lock (this.syncLock)
         {

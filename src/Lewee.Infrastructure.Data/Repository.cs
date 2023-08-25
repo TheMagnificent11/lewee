@@ -9,7 +9,7 @@ namespace Lewee.Infrastructure.Data;
 /// <typeparam name="TAggregate">Aggregate root type</typeparam>
 /// <typeparam name="TContext">Databae context type</typeparam>
 public class Repository<TAggregate, TContext> : IRepository<TAggregate>, IDisposable
-    where TAggregate : class, IAggregateRoot
+    where TAggregate : AggregateRoot
     where TContext : DbContext
 {
     private readonly TContext context;
@@ -65,16 +65,7 @@ public class Repository<TAggregate, TContext> : IRepository<TAggregate>, IDispos
                 this.context.Dispose();
             }
 
-            // TODO: free unmanaged resources (unmanaged objects) and override finalizer
-            // TODO: set large fields to null
             this.disposedValue = true;
         }
     }
-
-    // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
-    // ~Repository()
-    // {
-    //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-    //     Dispose(disposing: false);
-    // }
 }

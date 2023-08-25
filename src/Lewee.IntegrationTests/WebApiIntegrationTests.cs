@@ -1,53 +1,73 @@
 ﻿using System.Data;
 using System.Linq.Expressions;
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
+using Lewee.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Respawn;
 using Xunit;
 
 namespace Lewee.IntegrationTests;
 
 /// <summary>
-/// Base Integration Tests
+/// Web API Integration Tests
 /// </summary>
-/// <typeparam name="TEntryPoint">ASP.Net app entrypoint class</typeparam>
+/// <typeparam name="TEntryPoint">ASP.Net app entry point class</typeparam>
 /// <typeparam name="TFactory">Web application factory type</typeparam>
-public abstract class WebApiIntegrationTestsBase<TEntryPoint, TFactory> : IClassFixture<TFactory>
+/// <typeparam name="TDbContextFixture">Database context fixure type</typeparam>
+/// <typeparam name="TDbContext">Database context type</typeparam>
+/// <typeparam name="TDbSeeder">Database seeder type</typeparam>
+public abstract class WebApiIntegrationTests<TEntryPoint, TFactory, TDbContextFixture, TDbContext, TDbSeeder>
+    : IClassFixture<TFactory>, IAsyncLifetime
     where TEntryPoint : class
     where TFactory : WebApplicationFactory<TEntryPoint>
+    where TDbContextFixture : DatabaseContextFixture<TDbContext, TDbSeeder>, new()
+    where TDbContext : DbContext
+    where TDbSeeder : IDatabaseSeeder<TDbContext>
 {
-    private readonly TFactory factory;
+    private readonly TDbContextFixture dbContextFixture;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="WebApiIntegrationTestsBase{TEntryPoint, TFactory}"/> class
+    /// Initializes a new instance of the
+    /// <see cref="WebApiIntegrationTests{TEntryPoint, TFactory, TDbContextFixture, TDbContext, TDbSeeder}"/> class
     /// </summary>
     /// <param name="factory">Web application factory</param>
-    protected WebApiIntegrationTestsBase(TFactory factory)
+    /// <param name="dbContextFixture">Database context fixture</param>
+    protected WebApiIntegrationTests(TFactory factory, TDbContextFixture dbContextFixture)
     {
-        this.factory = factory;
+        this.Factory = factory;
+        this.dbContextFixture = dbContextFixture;
     }
 
     /// <summary>
-    /// Gets the scope factory
+    /// Gets the Web Application Factory
     /// </summary>
-    protected IServiceScopeFactory ScopeFactory
+    protected TFactory Factory { get; }
+
+    private IServiceScopeFactory ScopeFactory
     {
         get
         {
-            var scopeFactory = this.factory.Services.GetService<IServiceScopeFactory>()
+            var scopeFactory = this.Factory.Services.GetService<IServiceScopeFactory>()
                 ?? throw new InvalidOperationException("Could not get scope factory");
 
             return scopeFactory;
         }
     }
 
-    /// <summary>
-    /// Gets an array of the test database detials
-    /// </summary>
-    protected abstract DatabaseResetConfiguration[] TestDatabases { get; }
+    /// <inheritdoc />
+    public virtual async Task InitializeAsync()
+    {
+        await this.dbContextFixture.ResetDatabase();
+    }
+
+    /// <inheritdoc />
+    public virtual Task DisposeAsync()
+    {
+        return Task.CompletedTask;
+    }
 
     /// <summary>
     /// Creates a HTTP request message for the specified <paramref name="httpMethod"/> and <paramref name="apiPath"/>
@@ -56,7 +76,7 @@ public abstract class WebApiIntegrationTestsBase<TEntryPoint, TFactory> : IClass
     /// <param name="httpMethod">HTTP method</param>
     /// <param name="apiPath">API path</param>
     /// <param name="content">Request body content</param>
-    /// <returns>A HTTP request meesage</returns>
+    /// <returns>A HTTP request message</returns>
     protected static HttpRequestMessage CreateHttpRequestMessage(HttpMethod httpMethod, string apiPath, object content)
     {
         var request = new HttpRequestMessage(httpMethod, apiPath)
@@ -65,43 +85,6 @@ public abstract class WebApiIntegrationTestsBase<TEntryPoint, TFactory> : IClass
         };
 
         return request;
-    }
-
-    /// <summary>
-    /// Resets the database to the state defined in <see cref="DatabaseResetConfiguration"/>
-    /// </summary>
-    /// <typeparam name="T">Database context type</typeparam>
-    /// <returns>Asynchronous task</returns>
-    protected async Task ResetDatabase<T>()
-        where T : DbContext
-    {
-        var dbDetails = this.TestDatabases.FirstOrDefault(x => x.DbContextType == typeof(T))
-            ?? throw new InvalidOperationException(
-                $"{typeof(T).FullName} not configured in {nameof(this.TestDatabases)}");
-
-        using (var scope = this.ScopeFactory.CreateScope())
-        {
-            var scopedServices = scope.ServiceProvider;
-
-            if (!dbDetails.DbContextType.IsSubclassOf(typeof(DbContext)))
-            {
-                throw new InvalidOperationException(
-                    $"{dbDetails.DbContextType.FullName} does not inherit from {typeof(DbContext).FullName}");
-            }
-
-            if (scopedServices.GetRequiredService(dbDetails.DbContextType) is not DbContext db)
-            {
-                throw new InvalidOperationException(
-                    $"Could not cast {dbDetails.DbContextType.FullName} to {typeof(DbContext).FullName}");
-            }
-
-            var connectionString = db.Database.GetConnectionString()
-                ?? throw new InvalidOperationException(
-                    $"Could not get connection string for {dbDetails.DbContextType.FullName}");
-
-            var respawner = await Respawner.CreateAsync(connectionString, dbDetails.RespawnerOptions);
-            await respawner.ResetAsync(connectionString);
-        }
     }
 
     /// <summary>
@@ -126,10 +109,24 @@ public abstract class WebApiIntegrationTestsBase<TEntryPoint, TFactory> : IClass
     /// <returns>The HTTP response</returns>
     protected async Task<HttpResponseMessage> HttpRequest(HttpMethod method, string apiPath)
     {
+        // TODO (https://github.com/TheMagnificent11/lewee/issues/14): add request body parameter
         using (var request = new HttpRequestMessage(method, apiPath))
-        using (var httpClient = this.factory.CreateClient())
+        using (var httpClient = this.Factory.CreateClient())
         {
             return await httpClient.SendAsync(request);
+        }
+    }
+
+    /// <summary>
+    /// Calls the health check endpoint and ensures a success status code
+    /// </summary>
+    /// <param name="healthPath">Health path</param>
+    /// <returns>An asynchronous task</returns>
+    protected async Task HealthCheck(string healthPath)
+    {
+        using (var response = await this.HttpRequest(HttpMethod.Get, healthPath))
+        {
+            response.EnsureSuccessStatusCode();
         }
     }
 
@@ -147,13 +144,10 @@ public abstract class WebApiIntegrationTestsBase<TEntryPoint, TFactory> : IClass
             response.EnsureSuccessStatusCode();
         }
 
-        var json = await response.Content.ReadAsStringAsync();
-        if (json == null)
+        return await response.Content.ReadFromJsonAsync<T>(new JsonSerializerOptions
         {
-            return default;
-        }
-
-        return JsonSerializer.Deserialize<T>(json);
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        });
     }
 
     /// <summary>
@@ -166,15 +160,27 @@ public abstract class WebApiIntegrationTestsBase<TEntryPoint, TFactory> : IClass
     }
 
     /// <summary>
+    /// Gets a service of type <typeparamref name="T"/> from the dependency injection conatiner
+    /// </summary>
+    /// <typeparam name="T">Service type</typeparam>
+    /// <returns>The service if it exists, otherwise null</returns>
+    protected T? GetService<T>()
+        where T : class
+    {
+        return this.ScopeFactory
+            .CreateScope()
+            .ServiceProvider
+            .GetService<T>();
+    }
+
+    /// <summary>
     /// Reads data from the targeted <typeparamref name="TDbContext"/>
     /// </summary>
     /// <typeparam name="TData">DB context set type</typeparam>
-    /// <typeparam name="TDbContext">DB context type</typeparam>
     /// <param name="predicate">Predicate for query</param>
     /// <returns>A list of matched data objects</returns>
-    protected async Task<List<TData>> GetData<TData, TDbContext>(Expression<Func<TData, bool>> predicate)
+    protected async Task<List<TData>> GetData<TData>(Expression<Func<TData, bool>> predicate)
         where TData : class
-        where TDbContext : DbContext
     {
         using (var scope = this.ScopeFactory.CreateScope())
         {

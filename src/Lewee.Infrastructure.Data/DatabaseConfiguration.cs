@@ -1,7 +1,9 @@
-﻿using Lewee.Domain;
+﻿using System.Reflection;
+using Lewee.Domain;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Sample.Restaurant.Domain;
 
 namespace Lewee.Infrastructure.Data;
 
@@ -22,19 +24,34 @@ public static class DatabaseConfiguration
     /// <param name="connectionString">
     /// Database connection string
     /// </param>
+    /// <param name="domainAssembly">
+    /// Assembly containing <see cref="AggregateRoot"/> classes
+    /// </param>
     /// <returns>
     /// Services collection for chaining
     /// </returns>
     public static IServiceCollection ConfigureDatabase<T>(
         this IServiceCollection services,
-        string connectionString)
+        string connectionString,
+        Assembly domainAssembly)
         where T : ApplicationDbContext<T>
     {
         services.AddDbContextFactory<T>(options => options.UseSqlServer(connectionString));
         services.AddScoped<T>();
 
-        // TODO: figure out how to register each IRepository<TAggregateRoot> with an implementation of Repository<Repository<, T, T>
-        ////services.AddTransient(typeof(IRepository<>), typeof(Repository<, T>));
+        var aggregateRootType = typeof(AggregateRoot);
+        var aggregateRoots = domainAssembly.GetTypes()
+            .Where(x => x.IsClass)
+            .Where(x => !x.IsAbstract)
+            .Where(x => aggregateRootType.IsAssignableFrom(x))
+            .ToArray();
+
+        foreach (var ag in aggregateRoots)
+        {
+            var repositoryIntefaceType = typeof(IRepository<>).MakeGenericType(ag);
+            var repositoryType = typeof(Repository<,>).MakeGenericType(ag, typeof(T));
+            services.AddTransient(repositoryIntefaceType, repositoryType);
+        }
 
         services.AddSingleton<DomainEventDispatcher<T>>();
         services.AddHostedService<DomainEventDispatcherService<T>>();
@@ -66,20 +83,20 @@ public static class DatabaseConfiguration
         this IServiceCollection services,
         string connectionString)
         where TContext : ApplicationDbContext<TContext>
-        where TSeeder : class, IDatabaseSeeder
+        where TSeeder : class, IDatabaseSeeder<TContext>
     {
-        var newServices = ConfigureDatabase<TContext>(services, connectionString);
+        var newServices = ConfigureDatabase<TContext>(services, connectionString, typeof(MenuItem).Assembly);
 
-        newServices.AddScoped<IDatabaseSeeder, TSeeder>();
+        newServices.AddScoped<IDatabaseSeeder<TContext>, TSeeder>();
 
         return newServices;
     }
 
     /// <summary>
-    /// Migrates the databaes related to the DB context of type <typeparamref name="T"/>
+    /// Migrates the database related to the DB context of type <typeparamref name="T"/>
     /// </summary>
     /// <typeparam name="T">DB context to migrate</typeparam>
-    /// <param name="app">Application buider</param>
+    /// <param name="app">Application builder</param>
     /// <param name="seedData">Whether to seed data</param>
     /// <returns>Asynchronous task</returns>
     public static async Task MigrationDatabase<T>(this IApplicationBuilder app, bool seedData = false)
@@ -98,7 +115,7 @@ public static class DatabaseConfiguration
                 return;
             }
 
-            var seeder = serviceScope.ServiceProvider.GetService<IDatabaseSeeder>();
+            var seeder = serviceScope.ServiceProvider.GetService<IDatabaseSeeder<T>>();
             if (seeder == null)
             {
                 return;

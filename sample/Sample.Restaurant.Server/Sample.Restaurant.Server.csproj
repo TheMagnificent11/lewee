@@ -8,18 +8,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Mapster.DependencyInjection" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
-    <PackageReference Include="Serilog.AspNetCore.Ingestion" />
+    <PackageReference Include="Serilog.AspNetCore" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Lewee.Infrastructure.AspNet.WebApi\Lewee.Infrastructure.AspNet.WebApi.csproj" />
+    <ProjectReference Include="..\..\src\Lewee.Infrastructure.Logging\Lewee.Infrastructure.Logging.csproj" />
     <ProjectReference Include="..\Sample.Restaurant.Client\Sample.Restaurant.Client.csproj" />
     <ProjectReference Include="..\Sample.Restaurant.Infrastructure\Sample.Restaurant.Infrastructure.csproj" />
   </ItemGroup>

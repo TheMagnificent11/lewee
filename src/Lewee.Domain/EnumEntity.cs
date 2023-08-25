@@ -8,7 +8,7 @@ namespace Lewee.Domain;
 /// <typeparam name="TKey">
 /// Enum entity key type
 /// </typeparam>
-public class EnumEntity<TKey> : IEnumEntity<TKey>
+public class EnumEntity<TKey>
     where TKey : struct, Enum
 {
     /// <summary>
@@ -29,9 +29,13 @@ public class EnumEntity<TKey> : IEnumEntity<TKey>
         this.Name = "EF";
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Gets or sets the ID of the enum entity
+    /// </summary>
     public TKey Id { get; protected set; }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Gets or sets the enum item's name
+    /// </summary>
     public string Name { get; protected set; }
 }

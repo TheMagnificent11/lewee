@@ -76,7 +76,7 @@ internal class DomainEventDispatcher<TContext>
                 .Take(BatchSize)
                 .ToArrayAsync(token);
 
-            var domainEvents = new List<IDomainEvent>();
+            var domainEvents = new List<DomainEvent>();
 
             foreach (var domainEventReference in events)
             {

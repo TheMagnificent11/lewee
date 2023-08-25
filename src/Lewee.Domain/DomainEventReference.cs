@@ -20,7 +20,7 @@ public class DomainEventReference
     /// <exception cref="InvalidOperationException">
     /// Thrown if type of the domain event cannot be determined
     /// </exception>
-    public DomainEventReference(IDomainEvent domainEvent, string? userId = null)
+    public DomainEventReference(DomainEvent domainEvent, string? userId = null)
     {
         var (assemblyName, fullClassName, domainEventType) = domainEvent.GetBasicTypeInfo("Invalid domain event type");
 
@@ -84,12 +84,12 @@ public class DomainEventReference
     public string? UserId { get; protected set; }
 
     /// <summary>
-    /// Coverts this <see cref="DomainEventReference"/> to a <see cref="IDomainEvent"/>
+    /// Coverts this <see cref="DomainEventReference"/> to a <see cref="DomainEvent"/>
     /// </summary>
     /// <returns>
-    /// A <see cref="IDomainEvent"/>
+    /// A <see cref="DomainEvent"/>
     /// </returns>
-    public IDomainEvent? ToDomainEvent()
+    public DomainEvent? ToDomainEvent()
     {
         if (string.IsNullOrWhiteSpace(this.DomainEventJson))
         {
@@ -105,7 +105,7 @@ public class DomainEventReference
         }
 
         var objDomainEvent = JsonSerializer.Deserialize(this.DomainEventJson, targetType);
-        if (objDomainEvent is not IDomainEvent domainEvent)
+        if (objDomainEvent is not DomainEvent domainEvent)
         {
             return null;
         }

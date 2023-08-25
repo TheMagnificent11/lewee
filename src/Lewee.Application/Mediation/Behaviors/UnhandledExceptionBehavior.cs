@@ -13,11 +13,11 @@ internal class UnhandledExceptionBehavior<TRequest, TResponse> : IPipelineBehavi
         this.logger = logger.ForContext<UnhandledExceptionBehavior<TRequest, TResponse>>();
     }
 
-    public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         try
         {
-            return next();
+            return await next();
         }
         catch (Exception ex)
         {
@@ -25,6 +25,7 @@ internal class UnhandledExceptionBehavior<TRequest, TResponse> : IPipelineBehavi
 
             this.logger.Error(ex, "Request: Unhandled Exception for Request {Name} {@Request}", requestName, request);
 
+            // TODO: instead of re-throwing, return `Result`
             throw;
         }
     }

@@ -6,7 +6,7 @@ namespace Lewee.Application.Mediation.Behaviors;
 
 internal class FailureLoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
-    where TResponse : IResult
+    where TResponse : Result
 {
     private readonly ILogger logger;
 
@@ -28,11 +28,11 @@ internal class FailureLoggingBehavior<TRequest, TResponse> : IPipelineBehavior<T
 
         if (statusId >= 500)
         {
-            this.logger.Error("Unexpected error occured {@Errors}", result.Errors);
+            this.logger.Error("Unexpected error occurred {@Errors}", result.Errors);
         }
         else
         {
-            this.logger.Warning("Bad request {@Errors}", result.Errors);
+            this.logger.Information("Bad request {@Errors}", result.Errors);
         }
 
         return result;

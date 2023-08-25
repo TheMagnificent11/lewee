@@ -7,7 +7,7 @@ using Sample.Restaurant.Domain;
 
 namespace Sample.Restaurant.Application;
 
-public sealed class GetTablesQuery : IQuery<QueryResult<IEnumerable<TableDto>>>
+public sealed class GetTablesQuery : IQuery<IEnumerable<TableDto>>
 {
     public GetTablesQuery(Guid correlationId)
     {
@@ -27,7 +27,9 @@ public sealed class GetTablesQuery : IQuery<QueryResult<IEnumerable<TableDto>>>
             this.mapper = mapper;
         }
 
-        public async Task<QueryResult<IEnumerable<TableDto>>> Handle(GetTablesQuery request, CancellationToken cancellationToken)
+        public async Task<QueryResult<IEnumerable<TableDto>>> Handle(
+            GetTablesQuery request,
+            CancellationToken cancellationToken)
         {
             var entites = await this.repository
                 .All()
