@@ -25,7 +25,5 @@ jobs:
         dotnet-version: 7.0.*
     - name: Pack
       run: dotnet pack ./pack.sln --configuration Release --nologo /p:PackageVersion=${{ steps.version.outputs.fullSemVer }} --output ./output
-    - name: Install NuGet
-      uses: NuGet/setup-nuget@v1.0.5
     - name: Publish to NuGet
-      run: dotnet nuget push ./output/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} -source https://api.nuget.org/v3/index.json --skip-duplicate
+      run: dotnet nuget push ./output/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
