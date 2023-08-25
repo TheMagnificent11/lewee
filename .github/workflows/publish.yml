@@ -12,25 +12,39 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@latest
       with:
         fetch-depth: 0
-    - name: Install GitVersion
-      uses: gittools/actions/gitversion/setup@v0
+    # - name: Install GitVersion
+    #   uses: gittools/actions/gitversion/setup@v0
+    #   with:
+    #     versionSpec: '6.x'
+    #     preferLatestVersion: true
+    #     includePrerelease: true
+    # - name: Determine Version
+    #   id: version
+    #   uses: gittools/actions/gitversion/execute@v0
+    #   with:
+    #     useConfigFile: true
+    - name: Get Latest Tag
+      id: get_latest_tag
+      uses: actions/github-script@v4
       with:
-        versionSpec: '6.x'
-        preferLatestVersion: true
-        includePrerelease: true
-    - name: Determine Version
-      id: version
-      uses: gittools/actions/gitversion/execute@v0
-      with:
-        useConfigFile: true
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const tags = await github.repos.listTags({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+          });
+          const latestTag = tags.data[0].name;
+          console.log(`Latest tag: ${latestTag}`);
+          core.setOutput("latest_tag", latestTag);
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 7.0.*
     - name: Pack
-      run: dotnet pack ./pack.sln --configuration Release --nologo /p:PackageVersion=${{ steps.version.outputs.fullSemVer }} --output ./output
+      run: dotnet pack ./pack.sln --configuration Release --nologo /p:PackageVersion=${{ steps.get_latest_tag.outputs.latest_tag }} --output ./output
+      # run: dotnet pack ./pack.sln --configuration Release --nologo /p:PackageVersion=${{ steps.version.outputs.fullSemVer }} --output ./output
     - name: Publish to NuGet
       run: dotnet nuget push ./output/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
