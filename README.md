@@ -3,6 +3,7 @@
 Lewee is an opinionated set of packages to assist with setting up a domain-driven design architecture within ASP.Net.
 
 ## Status
+
 [![CI Build](https://github.com/TheMagnificent11/Lewee/actions/workflows/ci.yml/badge.svg)](https://github.com/TheMagnificent11/Lewee/actions/workflows/ci.yml)
 
 ## Dependencies
@@ -15,6 +16,7 @@ Below is summary of the dependencies used by Lewee. Note that this isn't a list 
 - [Mediatr](https://github.com/jbogard/MediatR)
 - [FluentValidation](https://docs.fluentvalidation.net/en/latest)
 - [Mapster](https://github.com/MapsterMapper/Mapster)
+- [xUnit](https://xunit.net/)
 
 ## Running the sample application
 
