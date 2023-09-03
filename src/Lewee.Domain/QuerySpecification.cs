@@ -22,7 +22,7 @@ public class QuerySpecification<T>
     /// <summary>
     /// Gets the query criteria
     /// </summary>
-    public Expression<Func<T, bool>> Criteria { get; private set; }
+    public Expression<Func<T, bool>> Criteria { get; }
 
     /// <summary>
     /// Gets the query includes
