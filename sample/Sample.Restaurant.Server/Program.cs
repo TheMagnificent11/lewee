@@ -7,6 +7,7 @@ using Lewee.Infrastructure.Data;
 using Lewee.Infrastructure.Logging;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using Sample.Restaurant.Application;
+using Sample.Restaurant.Domain;
 using Sample.Restaurant.Infrastructure.Data;
 using Sample.Restaurant.Server.Configuration;
 using Serilog;
@@ -36,7 +37,9 @@ public class Program
         builder.Services.AddMapper();
 
         builder.Services
-            .ConfigureDatabaseWithSeeder<RestaurantDbContext, RestaurantDbSeeder>(connectionString)
+            .ConfigureDatabaseWithSeeder<RestaurantDbContext, RestaurantDbSeeder>(
+                connectionString,
+                typeof(MenuItem).Assembly)
             .ConfigureAuthenticatedUserService()
 #if DEBUG
             .AddDatabaseDeveloperPageExceptionFilter()
