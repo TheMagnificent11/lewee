@@ -7,7 +7,7 @@ namespace Lewee.Infrastructure.Data;
 /// Base Repository
 /// </summary>
 /// <typeparam name="TAggregate">Aggregate root type</typeparam>
-/// <typeparam name="TContext">Databae context type</typeparam>
+/// <typeparam name="TContext">Database context type</typeparam>
 public class Repository<TAggregate, TContext> : IRepository<TAggregate>, IDisposable
     where TAggregate : AggregateRoot
     where TContext : DbContext
@@ -40,13 +40,31 @@ public class Repository<TAggregate, TContext> : IRepository<TAggregate>, IDispos
     }
 
     /// <inheritdoc />
-    public Task<TAggregate?> RetrieveById(Guid id, CancellationToken cancellationToken)
+    public async Task<List<TAggregate>> Query(
+        QuerySpecification<TAggregate> querySpecification,
+        CancellationToken cancellationToken = default)
+    {
+        var query = this.ApplySpecification(querySpecification);
+
+        return await query.ToListAsync(cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<TAggregate?> RetrieveById(Guid id, CancellationToken cancellationToken = default)
     {
         return this.All()
             .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
+    public void Add(TAggregate entity)
+    {
+        this.context
+            .Set<TAggregate>()
+            .Add(entity);
+    }
+
+    /// <inheritdoc />
     public Task<int> SaveChanges(CancellationToken cancellationToken = default)
     {
         return this.context.SaveChangesAsync(cancellationToken);
@@ -67,5 +85,22 @@ public class Repository<TAggregate, TContext> : IRepository<TAggregate>, IDispos
 
             this.disposedValue = true;
         }
+    }
+
+    private IQueryable<TAggregate> ApplySpecification(QuerySpecification<TAggregate> spec)
+    {
+        var query = this.context.Set<TAggregate>().AsQueryable();
+
+        if (spec.Criteria != null)
+        {
+            query = query.Where(spec.Criteria);
+        }
+
+        foreach (var include in spec.Includes)
+        {
+            query = query.Include(include);
+        }
+
+        return query;
     }
 }
