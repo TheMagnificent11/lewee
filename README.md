@@ -15,7 +15,6 @@ Below is summary of the dependencies used by Lewee. Note that this isn't a list 
 - [Entity Framework 7](https://learn.microsoft.com/en-us/ef) (using SQL Server)
 - [Mediatr](https://github.com/jbogard/MediatR)
 - [FluentValidation](https://docs.fluentvalidation.net/en/latest)
-- [Mapster](https://github.com/MapsterMapper/Mapster)
 - [xUnit](https://xunit.net/)
 
 ## Running the sample application
