@@ -3,7 +3,6 @@ using Lewee.Domain;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Sample.Restaurant.Domain;
 
 namespace Lewee.Infrastructure.Data;
 
@@ -76,16 +75,20 @@ public static class DatabaseConfiguration
     /// <param name="connectionString">
     /// Database connection string
     /// </param>
+    /// <param name="domainAssembly">
+    /// Domain assembly
+    /// </param>
     /// <returns>
     /// Services collection for chaining
     /// </returns>
     public static IServiceCollection ConfigureDatabaseWithSeeder<TContext, TSeeder>(
         this IServiceCollection services,
-        string connectionString)
+        string connectionString,
+        Assembly domainAssembly)
         where TContext : ApplicationDbContext<TContext>
         where TSeeder : class, IDatabaseSeeder<TContext>
     {
-        var newServices = ConfigureDatabase<TContext>(services, connectionString, typeof(MenuItem).Assembly);
+        var newServices = ConfigureDatabase<TContext>(services, connectionString, domainAssembly);
 
         newServices.AddScoped<IDatabaseSeeder<TContext>, TSeeder>();
 
