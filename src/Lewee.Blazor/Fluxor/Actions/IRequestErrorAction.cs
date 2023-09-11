@@ -6,6 +6,11 @@
 public interface IRequestErrorAction
 {
     /// <summary>
+    /// Gets the request type
+    /// </summary>
+    string RequestType { get; }
+
+    /// <summary>
     /// Gets the error message
     /// </summary>
     string ErrorMessage { get; }

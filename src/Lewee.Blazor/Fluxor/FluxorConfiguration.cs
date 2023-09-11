@@ -14,7 +14,7 @@ public static class FluxorConfiguration
     /// Configures Fluxor
     /// </summary>
     /// <param name="services">Services collection</param>
-    /// <returns>Updated servics collection</returns>
+    /// <returns>Updated services collection</returns>
     public static IServiceCollection ConfigureFluxor(this IServiceCollection services)
     {
         services.AddFluxor(options =>

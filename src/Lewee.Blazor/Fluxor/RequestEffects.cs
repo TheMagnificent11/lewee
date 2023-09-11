@@ -24,7 +24,7 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
     /// </summary>
     /// <param name="state">State</param>
     /// <param name="logger">Logger</param>
-    public RequestEffects(IState<TState> state, ILogger logger)
+    protected RequestEffects(IState<TState> state, ILogger logger)
     {
         this.State = state;
         this.Logger = logger;
@@ -47,12 +47,12 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
     /// <param name="dispatcher">Dispatcher</param>
     /// <returns>Asynchronous task</returns>
     [EffectMethod]
-    public virtual async Task Query(TRequestAction action, IDispatcher dispatcher)
+    public virtual async Task Request(TRequestAction action, IDispatcher dispatcher)
     {
         using (this.Logger.BeginScope(new Dictionary<string, string>
         {
             { LoggingConsts.CorrelationId, action.CorrelationId.ToString() },
-            { LoggingConsts.RequestType, this.State.Value.RequestType }
+            { LoggingConsts.RequestType, action.RequestType }
         }))
         {
             this.Logger.LogDebug("Executing query request...");
@@ -68,12 +68,12 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
     /// <param name="dispatcher">Dispatcher</param>
     /// <returns>Asynchronous task</returns>
     [EffectMethod]
-    public virtual Task QuerySucces(TRequestSuccessAction action, IDispatcher dispatcher)
+    public virtual Task RequestSuccess(TRequestSuccessAction action, IDispatcher dispatcher)
     {
         using (this.Logger.BeginScope(new Dictionary<string, string>
         {
             { LoggingConsts.CorrelationId, this.State.Value.CorrelationId.ToString() },
-            { LoggingConsts.RequestType, this.State.Value.RequestType }
+            { LoggingConsts.RequestType, action.RequestType }
         }))
         {
             this.Logger.LogDebug("Executing query request...success");
@@ -88,12 +88,12 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
     /// <param name="dispatcher">Dispatcher</param>
     /// <returns>Asynchronous task</returns>
     [EffectMethod]
-    public virtual Task QueryError(TRequestErrorAction action, IDispatcher dispatcher)
+    public virtual Task RequestError(TRequestErrorAction action, IDispatcher dispatcher)
     {
         using (this.Logger.BeginScope(new Dictionary<string, string>
         {
             { LoggingConsts.CorrelationId, this.State.Value.CorrelationId.ToString() },
-            { LoggingConsts.RequestType, this.State.Value.RequestType }
+            { LoggingConsts.RequestType, action.RequestType }
         }))
         {
             this.Logger.LogError("Executing query request...error (Error Message: {ErrorMessage})", action.ErrorMessage);

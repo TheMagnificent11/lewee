@@ -39,7 +39,7 @@ public sealed class TableDetailsEffects
         using (this.Logger.BeginScope(new Dictionary<string, string>
         {
             { LoggingConsts.CorrelationId, action.CorrelationId.ToString() },
-            { LoggingConsts.RequestType, this.State.Value.RequestType }
+            { LoggingConsts.RequestType, action.RequestType }
         }))
         {
             this.Logger.LogDebug("Ordering menu item...");
@@ -108,7 +108,7 @@ public sealed class TableDetailsEffects
         using (this.Logger.BeginScope(new Dictionary<string, string>
         {
             { LoggingConsts.CorrelationId, action.CorrelationId.ToString() },
-            { LoggingConsts.RequestType, this.State.Value.RequestType }
+            { LoggingConsts.RequestType, action.RequestType }
         }))
         {
             this.Logger.LogDebug("Removing menu item...");

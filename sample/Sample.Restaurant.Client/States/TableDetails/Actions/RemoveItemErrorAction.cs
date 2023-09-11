@@ -10,4 +10,6 @@ public record RemoveItemErrorAction : IRequestErrorAction
     }
 
     public string ErrorMessage { get; }
+
+    public string RequestType => "RemoveItem";
 }

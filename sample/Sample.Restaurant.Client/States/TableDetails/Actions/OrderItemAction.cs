@@ -14,4 +14,6 @@ public record OrderItemAction : IRequestAction
     public Guid CorrelationId { get; }
     public int TableNumber { get; }
     public Guid MenuItemId { get; }
+
+    public string RequestType => "OrderItem";
 }

@@ -9,4 +9,9 @@ public interface IRequestAction
     /// Gets the correlation ID
     /// </summary>
     Guid CorrelationId { get; }
+
+    /// <summary>
+    /// Gets the request type
+    /// </summary>
+    string RequestType { get; }
 }
