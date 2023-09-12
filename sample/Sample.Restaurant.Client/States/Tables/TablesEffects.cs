@@ -1,3 +1,4 @@
+using Correlate;
 using Fluxor;
 using Lewee.Blazor.ErrorHandling;
 using Lewee.Blazor.Fluxor;
@@ -10,8 +11,12 @@ public sealed class TablesEffects
 {
     private readonly ITableClient tableClient;
 
-    public TablesEffects(IState<TablesState> state, ITableClient tableClient, ILogger<TablesEffects> logger)
-        : base(state, logger)
+    public TablesEffects(
+        IState<TablesState> state,
+        ITableClient tableClient,
+        ICorrelationContextAccessor correlationContextAccessor,
+        ILogger<TablesEffects> logger)
+        : base(state, correlationContextAccessor, logger)
     {
         this.tableClient = tableClient;
     }

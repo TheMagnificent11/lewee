@@ -1,4 +1,5 @@
-﻿using Fluxor;
+﻿using Correlate;
+using Fluxor;
 using Lewee.Blazor.ErrorHandling;
 using Lewee.Blazor.Fluxor;
 using Lewee.Shared;
@@ -18,8 +19,9 @@ public sealed class UseTableEffects
         IState<UseTableState> state,
         ITableClient tableClient,
         NavigationManager navigationManager,
+        ICorrelationContextAccessor correlationContextAccessor,
         ILogger<UseTableEffects> logger)
-        : base(state, logger)
+        : base(state, correlationContextAccessor, logger)
     {
         this.tableClient = tableClient;
         this.navigationManager = navigationManager;

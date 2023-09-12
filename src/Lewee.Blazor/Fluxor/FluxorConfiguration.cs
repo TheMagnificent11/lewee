@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Correlate.DependencyInjection;
 using Fluxor;
 using Lewee.Blazor.Messaging.Health;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,6 +25,8 @@ public static class FluxorConfiguration
             options.UseReduxDevTools();
 #endif
         });
+
+        services.AddCorrelate();
 
         return services;
     }

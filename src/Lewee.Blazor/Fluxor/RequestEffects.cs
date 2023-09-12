@@ -1,4 +1,5 @@
-﻿using Fluxor;
+﻿using Correlate;
+using Fluxor;
 using Lewee.Blazor.Fluxor.Actions;
 using Lewee.Shared;
 using Microsoft.Extensions.Logging; // TODO (https://github.com/TheMagnificent11/lewee/issues/15): switch to Serilog
@@ -19,14 +20,21 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
     where TRequestSuccessAction : IRequestSuccessAction
     where TRequestErrorAction : IRequestErrorAction
 {
+    private readonly ICorrelationContextAccessor correlationContextAccessor;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="RequestEffects{TState, TRequestAction, TRequestSuccessAction, TRequestErrorAction}"/> class
     /// </summary>
     /// <param name="state">State</param>
+    /// <param name="correlationContextAccessor">Correlation context accessor</param>
     /// <param name="logger">Logger</param>
-    protected RequestEffects(IState<TState> state, ILogger logger)
+    protected RequestEffects(
+        IState<TState> state,
+        ICorrelationContextAccessor correlationContextAccessor,
+        ILogger logger)
     {
         this.State = state;
+        this.correlationContextAccessor = correlationContextAccessor;
         this.Logger = logger;
     }
 
@@ -49,6 +57,11 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
     [EffectMethod]
     public virtual async Task Request(TRequestAction action, IDispatcher dispatcher)
     {
+        this.correlationContextAccessor.CorrelationContext = new CorrelationContext
+        {
+            CorrelationId = action.CorrelationId.ToString()
+        };
+
         using (this.Logger.BeginScope(new Dictionary<string, string>
         {
             { LoggingConsts.CorrelationId, action.CorrelationId.ToString() },
