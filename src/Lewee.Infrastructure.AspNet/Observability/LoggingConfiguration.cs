@@ -1,8 +1,6 @@
 ﻿using Lewee.Infrastructure.Logging;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;
@@ -15,22 +13,52 @@ namespace Lewee.Infrastructure.AspNet.Observability;
 public static class LoggingConfiguration
 {
     /// <summary>
-    /// <see cref="IServiceCollection"/> extension method to configure logging
+    /// Configures logging
     /// </summary>
-    /// <param name="builder">
-    /// Host builder
-    /// </param>
-    /// <param name="configuration">
-    /// Configuration
-    /// </param>
-    /// <param name="webHostEnvironment">
-    /// Web host environment
-    /// </param>
-    /// <returns>
-    /// Serilog logger
-    /// </returns>
+    /// <param name="webHostEnvironment">Web host environment</param>
+    /// <param name="configuration">Configuration</param>
+    /// <returns> Serilog logger </returns>
     public static Logger ConfigureLogging(
-        this IHostBuilder builder,
+        this IWebHostEnvironment webHostEnvironment,
+        IConfiguration configuration)
+    {
+        var config = ConfigureCommonLogging(configuration, webHostEnvironment);
+
+        var logger = config.CreateLogger();
+
+        logger.Information(
+            "================= {ApplicationName} Started =================",
+            webHostEnvironment.ApplicationName);
+
+        return logger;
+    }
+
+    /// <summary>
+    /// Configures logging with browser injestion
+    /// </summary>
+    /// <param name="webHostEnvironment">Web host environment</param>
+    /// <param name="configuration">Configuration</param>
+    /// <param name="baseAddress">Base address</param>
+    /// <returns> Serilog logger </returns>
+    public static Logger ConfigureLoggingWithBrowserInjestion(
+        this IWebHostEnvironment webHostEnvironment,
+        IConfiguration configuration,
+        string baseAddress)
+    {
+        var config = ConfigureCommonLogging(configuration, webHostEnvironment);
+
+        config.WriteTo.BrowserHttp($"{baseAddress}ingest");
+
+        var logger = config.CreateLogger();
+
+        logger.Information(
+            "================= {ApplicationName} Started =================",
+            webHostEnvironment.ApplicationName);
+
+        return logger;
+    }
+
+    private static LoggerConfiguration ConfigureCommonLogging(
         IConfiguration configuration,
         IWebHostEnvironment webHostEnvironment)
     {
@@ -64,12 +92,6 @@ public static class LoggingConfiguration
             config.WriteTo.Seq(seqSettings.Uri, apiKey: seqSettings.Key, controlLevelSwitch: seqLevelSwitch);
         }
 
-        var logger = config.CreateLogger();
-
-        logger.Information(
-            "================= {ApplicationName} Started =================",
-            webHostEnvironment.ApplicationName);
-
-        return logger;
+        return config;
     }
 }

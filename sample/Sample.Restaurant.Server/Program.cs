@@ -27,7 +27,7 @@ public class Program
             throw new ApplicationException("Could not find database connection string");
         }
 
-        var logger = builder.Host.ConfigureLogging(builder.Configuration, builder.Environment);
+        var logger = builder.Environment.ConfigureLogging(builder.Configuration);
         builder.Host.UseSerilog(logger, dispose: true);
 
         builder.Services.AddMapper();
@@ -65,7 +65,8 @@ public class Program
 
         var app = builder.Build();
 
-        app.UseResponseCompression();
+        app.UseSerilogIngestion()
+            .UseResponseCompression();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
