@@ -3,7 +3,7 @@ using Lewee.Blazor.Messaging.Health.Actions;
 using Lewee.Contracts;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace Lewee.Blazor.Messaging;
 
@@ -25,7 +25,7 @@ public class MessageReceiverInitializer : ComponentBase
     private IDispatcher Dispatcher { get; set; }
 
     [Inject]
-    private ILogger Logger { get; set; }
+    private ILogger<MessageReceiverInitializer> Logger { get; set; }
 
     /// <inheritdoc />
     protected override async Task OnInitializedAsync()
@@ -44,12 +44,12 @@ public class MessageReceiverInitializer : ComponentBase
             var action = this.MessageToActionMapper.Map(messageBody, correlationId ?? Guid.Empty);
             if (action == null)
             {
-                this.Logger.Information("No action mapped to {@MessageBody}", messageBody);
+                this.Logger.LogInformation("No action mapped to {@MessageBody}", messageBody);
                 return;
             }
 
             this.Dispatcher.Dispatch(action);
-            this.Logger.Information(
+            this.Logger.LogInformation(
                 "Action Type {Action} dispatched (Message Body: {@MessageBody})",
                 action.GetType().Name,
                 messageBody);

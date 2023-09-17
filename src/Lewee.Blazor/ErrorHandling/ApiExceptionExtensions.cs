@@ -1,4 +1,4 @@
-﻿using Serilog;
+﻿using Microsoft.Extensions.Logging;
 
 namespace Lewee.Blazor.ErrorHandling;
 
@@ -16,13 +16,13 @@ public static class ApiExceptionExtensions
     {
         if (exception.StatusCode < 400)
         {
-            logger.Warning(exception, "Unexpected response status (Status Code: {StatusCode})", exception.StatusCode);
+            logger.LogWarning(exception, "Unexpected response status (Status Code: {StatusCode})", exception.StatusCode);
             return;
         }
 
         if (exception.StatusCode == 400)
         {
-            logger.Information(
+            logger.LogInformation(
                 exception,
                 "Request failed (Status Code: {StatusCode}, Message: {BadRequestMessage}, Response Body: {BadRequestResponseBody})",
                 exception.StatusCode,
@@ -33,7 +33,7 @@ public static class ApiExceptionExtensions
 
         if (exception.StatusCode > 400 && exception.StatusCode < 500)
         {
-            logger.Information(
+            logger.LogInformation(
                 exception,
                 "Request failed (Status Code: {StatusCode}, Message: {ErrorMessage}",
                 exception.StatusCode,
@@ -41,7 +41,7 @@ public static class ApiExceptionExtensions
             return;
         }
 
-        logger.Error(
+        logger.LogError(
             exception,
             "Request failed due to server error (Status Code: {StateCode}, Message: {Message})",
             exception.StatusCode,

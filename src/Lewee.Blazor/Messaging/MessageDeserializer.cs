@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Text.Json;
 using Lewee.Contracts;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace Lewee.Blazor.Messaging;
 
@@ -11,11 +11,11 @@ internal class MessageDeserializer
     private const string CouldNotFindContractError =
         "Could not find JSON contract type for message (Contract Assembly: {ContractAssembly}, Contract Class: {ContractClass})";
 
-    private readonly ILogger logger;
+    private readonly ILogger<MessageDeserializer> logger;
 
-    public MessageDeserializer(ILogger logger)
+    public MessageDeserializer(ILogger<MessageDeserializer> logger)
     {
-        this.logger = logger.ForContext<MessageDeserializer>();
+        this.logger = logger;
     }
 
     public (object? messageBody, Guid? correlationId) Deserialize(ClientMessage clientMessage)
@@ -26,7 +26,7 @@ internal class MessageDeserializer
             var targetType = assembly.GetType(clientMessage.ContractFullClassName);
             if (targetType == null)
             {
-                this.logger.Error(
+                this.logger.LogError(
                     CouldNotFindContractError,
                     clientMessage.ContractAssemblyName,
                     clientMessage.ContractFullClassName);
@@ -37,7 +37,7 @@ internal class MessageDeserializer
             var obj = JsonSerializer.Deserialize(clientMessage.MessageJson, targetType);
             if (obj == null)
             {
-                this.logger.Error(
+                this.logger.LogError(
                     CouldNotFindContractError,
                     clientMessage.ContractAssemblyName,
                     clientMessage.ContractFullClassName);
@@ -47,7 +47,7 @@ internal class MessageDeserializer
         }
         catch (Exception ex)
         {
-            this.logger.Error(ex, CouldNotDeserializeError, clientMessage);
+            this.logger.LogError(ex, CouldNotDeserializeError, clientMessage);
             return (null, null);
         }
     }

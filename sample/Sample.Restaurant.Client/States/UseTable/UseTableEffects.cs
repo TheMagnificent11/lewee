@@ -6,7 +6,6 @@ using Lewee.Shared;
 using Microsoft.AspNetCore.Components;
 using Sample.Restaurant.Client.States.TableDetails.Actions;
 using Sample.Restaurant.Client.States.UseTable.Actions;
-using Serilog.Context;
 
 namespace Sample.Restaurant.Client.States.UseTable;
 
@@ -21,7 +20,7 @@ public sealed class UseTableEffects
         ITableClient tableClient,
         NavigationManager navigationManager,
         ICorrelationContextAccessor correlationContextAccessor,
-        Serilog.ILogger logger)
+        ILogger<UseTableEffects> logger)
         : base(state, correlationContextAccessor, logger)
     {
         this.tableClient = tableClient;
@@ -31,10 +30,12 @@ public sealed class UseTableEffects
     [EffectMethod]
     public Task MesageReceived(UseTableCompletedAction action, IDispatcher dispatcher)
     {
-        using (LogContext.PushProperty(LoggingConsts.CorrelationId, action.CorrelationId.ToString()))
-        using (LogContext.PushProperty(LoggingConsts.RequestType, action.RequestType))
+        using (this.Logger.BeginScope(new Dictionary<string, string>
         {
-            this.Logger.Debug("Received tabled used message from server");
+            { LoggingConsts.CorrelationId, action.CorrelationId.ToString() }
+        }))
+        {
+            this.Logger.LogDebug("Received tabled used message from server");
 
             dispatcher.Dispatch(new GetTableDetailsAction(action.CorrelationId, action.TableNumber));
 

@@ -15,7 +15,7 @@ public sealed class TablesEffects
         IState<TablesState> state,
         ITableClient tableClient,
         ICorrelationContextAccessor correlationContextAccessor,
-        Serilog.ILogger logger)
+        ILogger<TablesEffects> logger)
         : base(state, correlationContextAccessor, logger)
     {
         this.tableClient = tableClient;

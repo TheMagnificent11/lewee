@@ -1,21 +1,21 @@
-﻿using Serilog;
+﻿using Microsoft.Extensions.Logging;
 
 namespace Lewee.Blazor.Messaging.Health;
 
 internal class HealthCheckService
 {
     private readonly HttpClient httpClient;
-    private readonly ILogger logger;
+    private readonly ILogger<HealthCheckService> logger;
 
-    public HealthCheckService(HttpClient httpClient, ILogger logger)
+    public HealthCheckService(HttpClient httpClient, ILogger<HealthCheckService> logger)
     {
         this.httpClient = httpClient;
-        this.logger = logger.ForContext<HealthCheckService>();
+        this.logger = logger;
     }
 
     public async Task<bool> IsServerHealthy(CancellationToken cancellationToken = default)
     {
-        this.logger.Debug("Checking server health {ServerBaseAddress}", this.httpClient.BaseAddress);
+        this.logger.LogDebug("Checking server health {ServerBaseAddress}", this.httpClient.BaseAddress);
 
         try
         {
@@ -24,7 +24,7 @@ internal class HealthCheckService
         }
         catch (Exception ex)
         {
-            this.logger.Error(ex, "Failed health check");
+            this.logger.LogError(ex, "Failed health check");
             return false;
         }
     }
