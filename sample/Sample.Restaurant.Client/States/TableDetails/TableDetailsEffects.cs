@@ -5,6 +5,7 @@ using Lewee.Blazor.Fluxor;
 using Lewee.Shared;
 using Microsoft.AspNetCore.Components;
 using Sample.Restaurant.Client.States.TableDetails.Actions;
+using Serilog.Context;
 
 namespace Sample.Restaurant.Client.States.TableDetails;
 
@@ -19,7 +20,7 @@ public sealed class TableDetailsEffects
         ITableClient tableClient,
         NavigationManager navigationManager,
         ICorrelationContextAccessor correlationContextAccessor,
-        ILogger<TableDetailsEffects> logger)
+        Serilog.ILogger logger)
         : base(state, correlationContextAccessor, logger)
     {
         this.tableClient = tableClient;
@@ -38,13 +39,10 @@ public sealed class TableDetailsEffects
     [EffectMethod]
     public async Task OrderItem(OrderItemAction action, IDispatcher dispatcher)
     {
-        using (this.Logger.BeginScope(new Dictionary<string, string>
+        using (LogContext.PushProperty(LoggingConsts.CorrelationId, action.CorrelationId.ToString()))
+        using (LogContext.PushProperty(LoggingConsts.RequestType, action.RequestType))
         {
-            { LoggingConsts.CorrelationId, action.CorrelationId.ToString() },
-            { LoggingConsts.RequestType, action.RequestType }
-        }))
-        {
-            this.Logger.LogDebug("Ordering menu item...");
+            this.Logger.Debug("Ordering menu item...");
 
             try
             {
@@ -63,12 +61,10 @@ public sealed class TableDetailsEffects
     [EffectMethod]
     public Task OrderItemSuccess(OrderItemSuccessAction action, IDispatcher dispatcher)
     {
-        using (this.Logger.BeginScope(new Dictionary<string, string>
+        using (LogContext.PushProperty(LoggingConsts.CorrelationId, this.State.Value.CorrelationId.ToString()))
+        using (LogContext.PushProperty(LoggingConsts.RequestType, action.RequestType))
         {
-            { LoggingConsts.CorrelationId, this.State.Value.CorrelationId.ToString() }
-        }))
-        {
-            this.Logger.LogDebug("Ordering menu item...success");
+            this.Logger.Debug("Ordering menu item...success");
             return Task.CompletedTask;
         }
     }
@@ -76,13 +72,11 @@ public sealed class TableDetailsEffects
     [EffectMethod]
     public Task OrderItemError(OrderItemErrorAction action, IDispatcher dispatcher)
     {
-        using (this.Logger.BeginScope(new Dictionary<string, string>
-        {
-            { LoggingConsts.CorrelationId, this.State.Value.CorrelationId.ToString() }
-        }))
+        using (LogContext.PushProperty(LoggingConsts.CorrelationId, this.State.Value.CorrelationId.ToString()))
+        using (LogContext.PushProperty(LoggingConsts.RequestType, action.RequestType))
         {
             // TODO: show error toast
-            this.Logger.LogDebug("Ordering menu item...error");
+            this.Logger.Debug("Ordering menu item...error");
             return Task.CompletedTask;
         }
     }
@@ -91,12 +85,10 @@ public sealed class TableDetailsEffects
     [EffectMethod]
     public Task OrderItemCompleted(OrderItemCompletedAction action, IDispatcher dispatcher)
     {
-        using (this.Logger.BeginScope(new Dictionary<string, string>
+        using (LogContext.PushProperty(LoggingConsts.CorrelationId, action.CorrelationId.ToString()))
+        using (LogContext.PushProperty(LoggingConsts.RequestType, action.RequestType))
         {
-            { LoggingConsts.CorrelationId, action.CorrelationId.ToString() }
-        }))
-        {
-            this.Logger.LogDebug("Received item added message from server");
+            this.Logger.Debug("Received item added message from server");
 
             dispatcher.Dispatch(new GetTableDetailsAction(action.CorrelationId, action.TableNumber));
 
@@ -107,13 +99,10 @@ public sealed class TableDetailsEffects
     [EffectMethod]
     public async Task RemoveItem(RemoveItemAction action, IDispatcher dispatcher)
     {
-        using (this.Logger.BeginScope(new Dictionary<string, string>
+        using (LogContext.PushProperty(LoggingConsts.CorrelationId, action.CorrelationId.ToString()))
+        using (LogContext.PushProperty(LoggingConsts.RequestType, action.RequestType))
         {
-            { LoggingConsts.CorrelationId, action.CorrelationId.ToString() },
-            { LoggingConsts.RequestType, action.RequestType }
-        }))
-        {
-            this.Logger.LogDebug("Removing menu item...");
+            this.Logger.Debug("Removing menu item...");
 
             try
             {
@@ -132,12 +121,10 @@ public sealed class TableDetailsEffects
     [EffectMethod]
     public Task RemoveItemSuccess(RemoveItemSuccessAction action, IDispatcher dispatcher)
     {
-        using (this.Logger.BeginScope(new Dictionary<string, string>
+        using (LogContext.PushProperty(LoggingConsts.CorrelationId, this.State.Value.CorrelationId.ToString()))
+        using (LogContext.PushProperty(LoggingConsts.RequestType, action.RequestType))
         {
-            { LoggingConsts.CorrelationId, this.State.Value.CorrelationId.ToString() }
-        }))
-        {
-            this.Logger.LogDebug("Removing menu item...success");
+            this.Logger.Debug("Removing menu item...success");
             return Task.CompletedTask;
         }
     }
@@ -145,13 +132,11 @@ public sealed class TableDetailsEffects
     [EffectMethod]
     public Task RemoveItemError(RemoveItemErrorAction action, IDispatcher dispatcher)
     {
-        using (this.Logger.BeginScope(new Dictionary<string, string>
-        {
-            { LoggingConsts.CorrelationId, this.State.Value.CorrelationId.ToString() }
-        }))
+        using (LogContext.PushProperty(LoggingConsts.CorrelationId, this.State.Value.CorrelationId.ToString()))
+        using (LogContext.PushProperty(LoggingConsts.RequestType, action.RequestType))
         {
             // TODO: show error toast
-            this.Logger.LogDebug("Removing menu item...error");
+            this.Logger.Debug("Removing menu item...error");
             return Task.CompletedTask;
         }
     }
@@ -160,12 +145,10 @@ public sealed class TableDetailsEffects
     [EffectMethod]
     public Task RemoveItemCompleted(RemoveItemCompletedAction action, IDispatcher dispatcher)
     {
-        using (this.Logger.BeginScope(new Dictionary<string, string>
+        using (LogContext.PushProperty(LoggingConsts.CorrelationId, action.CorrelationId.ToString()))
+        using (LogContext.PushProperty(LoggingConsts.RequestType, action.RequestType))
         {
-            { LoggingConsts.CorrelationId, action.CorrelationId.ToString() }
-        }))
-        {
-            this.Logger.LogDebug("Received item removed message from server");
+            this.Logger.Debug("Received item removed message from server");
 
             dispatcher.Dispatch(new GetTableDetailsAction(action.CorrelationId, action.TableNumber));
 

@@ -2,7 +2,8 @@
 using Fluxor;
 using Lewee.Blazor.Fluxor.Actions;
 using Lewee.Shared;
-using Microsoft.Extensions.Logging; // TODO (https://github.com/TheMagnificent11/lewee/issues/15): switch to Serilog
+using Serilog;
+using Serilog.Context;
 
 namespace Lewee.Blazor.Fluxor;
 
@@ -23,7 +24,8 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
     private readonly ICorrelationContextAccessor correlationContextAccessor;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="RequestEffects{TState, TRequestAction, TRequestSuccessAction, TRequestErrorAction}"/> class
+    /// Initializes a new instance of the
+    /// <see cref="RequestEffects{TState, TRequestAction, TRequestSuccessAction, TRequestErrorAction}"/> class
     /// </summary>
     /// <param name="state">State</param>
     /// <param name="correlationContextAccessor">Correlation context accessor</param>
@@ -62,13 +64,10 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
             CorrelationId = action.CorrelationId.ToString()
         };
 
-        using (this.Logger.BeginScope(new Dictionary<string, string>
+        using (LogContext.PushProperty(LoggingConsts.CorrelationId, action.CorrelationId.ToString()))
+        using (LogContext.PushProperty(LoggingConsts.RequestType, action.RequestType))
         {
-            { LoggingConsts.CorrelationId, action.CorrelationId.ToString() },
-            { LoggingConsts.RequestType, action.RequestType }
-        }))
-        {
-            this.Logger.LogDebug("Executing query request...");
+            this.Logger.Debug("Executing query request...");
 
             await this.ExecuteRequest(action, dispatcher);
         }
@@ -83,13 +82,10 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
     [EffectMethod]
     public virtual Task RequestSuccess(TRequestSuccessAction action, IDispatcher dispatcher)
     {
-        using (this.Logger.BeginScope(new Dictionary<string, string>
+        using (LogContext.PushProperty(LoggingConsts.CorrelationId, this.State.Value.CorrelationId.ToString()))
+        using (LogContext.PushProperty(LoggingConsts.RequestType, action.RequestType))
         {
-            { LoggingConsts.CorrelationId, this.State.Value.CorrelationId.ToString() },
-            { LoggingConsts.RequestType, action.RequestType }
-        }))
-        {
-            this.Logger.LogDebug("Executing query request...success");
+            this.Logger.Debug("Executing query request...success");
             return Task.FromResult(true);
         }
     }
@@ -103,13 +99,10 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
     [EffectMethod]
     public virtual Task RequestError(TRequestErrorAction action, IDispatcher dispatcher)
     {
-        using (this.Logger.BeginScope(new Dictionary<string, string>
+        using (LogContext.PushProperty(LoggingConsts.CorrelationId, this.State.Value.CorrelationId.ToString()))
+        using (LogContext.PushProperty(LoggingConsts.RequestType, action.RequestType))
         {
-            { LoggingConsts.CorrelationId, this.State.Value.CorrelationId.ToString() },
-            { LoggingConsts.RequestType, action.RequestType }
-        }))
-        {
-            this.Logger.LogError("Executing query request...error (Error Message: {ErrorMessage})", action.ErrorMessage);
+            this.Logger.Error("Executing query request...error (Error Message: {ErrorMessage})", action.ErrorMessage);
             return Task.FromResult(false);
         }
     }
