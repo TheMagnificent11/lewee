@@ -5,4 +5,8 @@
 /// </summary>
 public interface IRequestSuccessAction
 {
+    /// <summary>
+    /// Gets the request type
+    /// </summary>
+    string RequestType { get; }
 }

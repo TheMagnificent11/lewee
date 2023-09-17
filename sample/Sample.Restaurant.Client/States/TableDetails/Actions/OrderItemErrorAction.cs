@@ -10,4 +10,6 @@ public class OrderItemErrorAction : IRequestErrorAction
     }
 
     public string ErrorMessage { get; }
+
+    public string RequestType => "OrderItem";
 }

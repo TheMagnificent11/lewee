@@ -10,4 +10,6 @@ public record GetTablesSuccessAction : IQuerySuccessAction<TableDto[]>
     }
 
     public TableDto[] Data { get; }
+
+    public string RequestType => "GetTables";
 }

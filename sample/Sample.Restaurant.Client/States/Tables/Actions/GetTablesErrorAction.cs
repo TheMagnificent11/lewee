@@ -10,4 +10,6 @@ public record GetTablesErrorAction : IRequestErrorAction
     }
 
     public string ErrorMessage { get; }
+
+    public string RequestType => "GetTables";
 }

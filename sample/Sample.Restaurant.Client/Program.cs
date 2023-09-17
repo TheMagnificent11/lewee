@@ -1,4 +1,5 @@
 using Lewee.Blazor.Fluxor;
+using Lewee.Blazor.Http;
 using Lewee.Blazor.Messaging;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -11,7 +12,11 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services
-    .AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) })
+    .AddTransient<CorrelationIdDelegatingHandler>()
+    .AddHttpClient<TableClient>(sp => sp.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
+    .AddHttpMessageHandler<CorrelationIdDelegatingHandler>();
+
+builder.Services
     .ConfigureMessageReceiver<MessageToActionMapper>(builder.HostEnvironment.BaseAddress)
     .AddScoped<ITableClient>(provider =>
     {

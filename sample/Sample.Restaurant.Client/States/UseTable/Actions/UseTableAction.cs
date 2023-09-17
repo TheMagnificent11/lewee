@@ -11,4 +11,6 @@ public record UseTableAction : IRequestAction
 
     public Guid CorrelationId { get; }
     public int TableNumber { get; }
+
+    public string RequestType => "UseTable";
 }

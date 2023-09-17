@@ -31,7 +31,7 @@ public static class MessageReceiverConfiguration
             .AddSingleton(hubConnection)
             .AddTransient<IMessageToActionMapper, TMapper>()
             .AddTransient<MessageDeserializer>()
-            .AddTransient<HealthCheckService>();
+            .AddHttpClient<HealthCheckService>(sp => sp.BaseAddress = new Uri(serverApiUrl));
 
         return services;
     }

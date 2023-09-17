@@ -30,15 +30,23 @@ internal class ServerHealthCheckEffects
     {
         this.logger.LogDebug("Checking server health...");
 
-        var isHealthy = await this.healthCheckService.IsServerHealthy();
-
-        if (isHealthy)
+        try
         {
-            dispatcher.Dispatch(new HealthCheckSuccessAction());
-            return;
-        }
+            var isHealthy = await this.healthCheckService.IsServerHealthy();
 
-        dispatcher.Dispatch(new HealthCheckFailedAction());
+            if (isHealthy)
+            {
+                dispatcher.Dispatch(new HealthCheckSuccessAction());
+                return;
+            }
+
+            dispatcher.Dispatch(new HealthCheckFailedAction());
+        }
+        catch (Exception ex)
+        {
+            this.logger.LogError(ex, "Failed health check");
+            dispatcher.Dispatch(new HealthCheckFailedAction());
+        }
     }
 
     [EffectMethod]

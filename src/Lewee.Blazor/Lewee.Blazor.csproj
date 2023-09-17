@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <PackageReference Include="Correlate.DependencyInjection" />
     <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" />
   </ItemGroup>

@@ -1,4 +1,5 @@
-﻿using Fluxor;
+﻿using Correlate;
+using Fluxor;
 using Lewee.Blazor.ErrorHandling;
 using Lewee.Blazor.Fluxor;
 using Lewee.Shared;
@@ -17,8 +18,9 @@ public sealed class TableDetailsEffects
         IState<TableDetailsState> state,
         ITableClient tableClient,
         NavigationManager navigationManager,
+        ICorrelationContextAccessor correlationContextAccessor,
         ILogger<TableDetailsEffects> logger)
-        : base(state, logger)
+        : base(state, correlationContextAccessor, logger)
     {
         this.tableClient = tableClient;
         this.navigationManager = navigationManager;
@@ -39,7 +41,7 @@ public sealed class TableDetailsEffects
         using (this.Logger.BeginScope(new Dictionary<string, string>
         {
             { LoggingConsts.CorrelationId, action.CorrelationId.ToString() },
-            { LoggingConsts.RequestType, this.State.Value.RequestType }
+            { LoggingConsts.RequestType, action.RequestType }
         }))
         {
             this.Logger.LogDebug("Ordering menu item...");
@@ -108,7 +110,7 @@ public sealed class TableDetailsEffects
         using (this.Logger.BeginScope(new Dictionary<string, string>
         {
             { LoggingConsts.CorrelationId, action.CorrelationId.ToString() },
-            { LoggingConsts.RequestType, this.State.Value.RequestType }
+            { LoggingConsts.RequestType, action.RequestType }
         }))
         {
             this.Logger.LogDebug("Removing menu item...");
