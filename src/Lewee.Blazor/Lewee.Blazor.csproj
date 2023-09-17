@@ -4,8 +4,8 @@
     <PackageReference Include="Correlate.DependencyInjection" />
     <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" />
-    <PackageReference Include="Serilog.Sinks.BrowserConsole" />
-    <PackageReference Include="Serilog.Sinks.BrowserHttp" />
+    <!--<PackageReference Include="Serilog.Sinks.BrowserConsole" />
+    <PackageReference Include="Serilog.Sinks.BrowserHttp" />-->
   </ItemGroup>
 
   <ItemGroup>

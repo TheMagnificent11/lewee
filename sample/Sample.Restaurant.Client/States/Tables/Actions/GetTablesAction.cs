@@ -10,6 +10,4 @@ public record GetTablesAction : IRequestAction
     }
 
     public Guid CorrelationId { get; }
-
-    public string RequestType => "GetTables";
 }

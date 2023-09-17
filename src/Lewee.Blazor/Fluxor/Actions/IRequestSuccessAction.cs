@@ -6,7 +6,7 @@
 public interface IRequestSuccessAction
 {
     /// <summary>
-    /// Gets the request type
+    /// Gets the correlation ID
     /// </summary>
-    string RequestType { get; }
+    Guid CorrelationId { get; }
 }

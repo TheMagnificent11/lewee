@@ -26,12 +26,12 @@ public sealed class TablesEffects
         try
         {
             var result = await this.tableClient.GetAllAsync(action.CorrelationId);
-            dispatcher.Dispatch(new GetTablesSuccessAction(result.ToArray()));
+            dispatcher.Dispatch(new GetTablesSuccessAction(result.ToArray(), action.CorrelationId));
         }
         catch (ApiException ex)
         {
             ex.Log(this.Logger);
-            dispatcher.Dispatch(new GetTablesErrorAction(ex.Message));
+            dispatcher.Dispatch(new GetTablesErrorAction(ex.Message, action.CorrelationId));
         }
     }
 }

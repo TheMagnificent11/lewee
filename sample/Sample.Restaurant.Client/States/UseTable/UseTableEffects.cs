@@ -30,10 +30,7 @@ public sealed class UseTableEffects
     [EffectMethod]
     public Task MesageReceived(UseTableCompletedAction action, IDispatcher dispatcher)
     {
-        using (this.Logger.BeginScope(new Dictionary<string, string>
-        {
-            { LoggingConsts.CorrelationId, action.CorrelationId.ToString() }
-        }))
+        using (this.Logger.BeginScope(LoggingConsts.CorrelationId, action.CorrelationId.ToString()))
         {
             this.Logger.LogDebug("Received tabled used message from server");
 
@@ -61,11 +58,11 @@ public sealed class UseTableEffects
         catch (ApiException ex)
         {
             ex.Log(this.Logger);
-            dispatcher.Dispatch(new UseTableErrorAction(ex.Message));
+            dispatcher.Dispatch(new UseTableErrorAction(ex.Message, action.CorrelationId));
 
             return;
         }
 
-        dispatcher.Dispatch(new UseTableSuccessAction());
+        dispatcher.Dispatch(new UseTableSuccessAction(action.CorrelationId));
     }
 }

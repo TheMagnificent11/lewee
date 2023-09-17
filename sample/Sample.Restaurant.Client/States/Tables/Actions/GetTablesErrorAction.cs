@@ -4,12 +4,12 @@ namespace Sample.Restaurant.Client.States.Tables.Actions;
 
 public record GetTablesErrorAction : IRequestErrorAction
 {
-    public GetTablesErrorAction(string errorMessage)
+    public GetTablesErrorAction(string errorMessage, Guid correlationId)
     {
         this.ErrorMessage = errorMessage;
+        this.CorrelationId = correlationId;
     }
 
     public string ErrorMessage { get; }
-
-    public string RequestType => "GetTables";
+    public Guid CorrelationId { get; }
 }

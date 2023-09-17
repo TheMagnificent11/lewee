@@ -38,23 +38,19 @@ public sealed class TableDetailsEffects
     [EffectMethod]
     public async Task OrderItem(OrderItemAction action, IDispatcher dispatcher)
     {
-        using (this.Logger.BeginScope(new Dictionary<string, string>
-        {
-            { LoggingConsts.CorrelationId, action.CorrelationId.ToString() },
-            { LoggingConsts.RequestType, action.RequestType }
-        }))
+        using (this.Logger.BeginScope(LoggingConsts.CorrelationId, action.CorrelationId.ToString()))
         {
             this.Logger.LogDebug("Ordering menu item...");
 
             try
             {
                 await this.tableClient.OrderMenuItemAsync(action.TableNumber, action.MenuItemId, action.CorrelationId);
-                dispatcher.Dispatch(new OrderItemSuccessAction());
+                dispatcher.Dispatch(new OrderItemSuccessAction(action.CorrelationId));
             }
             catch (ApiException ex)
             {
                 ex.Log(this.Logger);
-                dispatcher.Dispatch(new OrderItemErrorAction(ex.Message));
+                dispatcher.Dispatch(new OrderItemErrorAction(ex.Message, action.CorrelationId));
             }
         }
     }
@@ -63,10 +59,7 @@ public sealed class TableDetailsEffects
     [EffectMethod]
     public Task OrderItemSuccess(OrderItemSuccessAction action, IDispatcher dispatcher)
     {
-        using (this.Logger.BeginScope(new Dictionary<string, string>
-        {
-            { LoggingConsts.CorrelationId, this.State.Value.CorrelationId.ToString() }
-        }))
+        using (this.Logger.BeginScope(LoggingConsts.CorrelationId, action.CorrelationId.ToString()))
         {
             this.Logger.LogDebug("Ordering menu item...success");
             return Task.CompletedTask;
@@ -76,10 +69,7 @@ public sealed class TableDetailsEffects
     [EffectMethod]
     public Task OrderItemError(OrderItemErrorAction action, IDispatcher dispatcher)
     {
-        using (this.Logger.BeginScope(new Dictionary<string, string>
-        {
-            { LoggingConsts.CorrelationId, this.State.Value.CorrelationId.ToString() }
-        }))
+        using (this.Logger.BeginScope(LoggingConsts.CorrelationId, action.CorrelationId.ToString()))
         {
             // TODO: show error toast
             this.Logger.LogDebug("Ordering menu item...error");
@@ -91,10 +81,7 @@ public sealed class TableDetailsEffects
     [EffectMethod]
     public Task OrderItemCompleted(OrderItemCompletedAction action, IDispatcher dispatcher)
     {
-        using (this.Logger.BeginScope(new Dictionary<string, string>
-        {
-            { LoggingConsts.CorrelationId, action.CorrelationId.ToString() }
-        }))
+        using (this.Logger.BeginScope(LoggingConsts.CorrelationId, action.CorrelationId.ToString()))
         {
             this.Logger.LogDebug("Received item added message from server");
 
@@ -107,23 +94,19 @@ public sealed class TableDetailsEffects
     [EffectMethod]
     public async Task RemoveItem(RemoveItemAction action, IDispatcher dispatcher)
     {
-        using (this.Logger.BeginScope(new Dictionary<string, string>
-        {
-            { LoggingConsts.CorrelationId, action.CorrelationId.ToString() },
-            { LoggingConsts.RequestType, action.RequestType }
-        }))
+        using (this.Logger.BeginScope(LoggingConsts.CorrelationId, action.CorrelationId.ToString()))
         {
             this.Logger.LogDebug("Removing menu item...");
 
             try
             {
                 await this.tableClient.RemoveMenuItemAsync(action.TableNumber, action.MenuItemId, action.CorrelationId);
-                dispatcher.Dispatch(new RemoveItemSuccessAction());
+                dispatcher.Dispatch(new RemoveItemSuccessAction(action.CorrelationId));
             }
             catch (ApiException ex)
             {
                 ex.Log(this.Logger);
-                dispatcher.Dispatch(new RemoveItemErrorAction(ex.Message));
+                dispatcher.Dispatch(new RemoveItemErrorAction(ex.Message, action.CorrelationId));
             }
         }
     }
@@ -132,10 +115,7 @@ public sealed class TableDetailsEffects
     [EffectMethod]
     public Task RemoveItemSuccess(RemoveItemSuccessAction action, IDispatcher dispatcher)
     {
-        using (this.Logger.BeginScope(new Dictionary<string, string>
-        {
-            { LoggingConsts.CorrelationId, this.State.Value.CorrelationId.ToString() }
-        }))
+        using (this.Logger.BeginScope(LoggingConsts.CorrelationId, action.CorrelationId.ToString()))
         {
             this.Logger.LogDebug("Removing menu item...success");
             return Task.CompletedTask;
@@ -145,10 +125,7 @@ public sealed class TableDetailsEffects
     [EffectMethod]
     public Task RemoveItemError(RemoveItemErrorAction action, IDispatcher dispatcher)
     {
-        using (this.Logger.BeginScope(new Dictionary<string, string>
-        {
-            { LoggingConsts.CorrelationId, this.State.Value.CorrelationId.ToString() }
-        }))
+        using (this.Logger.BeginScope(LoggingConsts.CorrelationId, action.CorrelationId.ToString()))
         {
             // TODO: show error toast
             this.Logger.LogDebug("Removing menu item...error");
@@ -160,10 +137,7 @@ public sealed class TableDetailsEffects
     [EffectMethod]
     public Task RemoveItemCompleted(RemoveItemCompletedAction action, IDispatcher dispatcher)
     {
-        using (this.Logger.BeginScope(new Dictionary<string, string>
-        {
-            { LoggingConsts.CorrelationId, action.CorrelationId.ToString() }
-        }))
+        using (this.Logger.BeginScope(LoggingConsts.CorrelationId, action.CorrelationId.ToString()))
         {
             this.Logger.LogDebug("Received item removed message from server");
 
@@ -178,12 +152,12 @@ public sealed class TableDetailsEffects
         try
         {
             var result = await this.tableClient.GetDetailsAsync(action.TableNumber, action.CorrelationId);
-            dispatcher.Dispatch(new GetTableDetailsSuccessAction(result));
+            dispatcher.Dispatch(new GetTableDetailsSuccessAction(result, action.CorrelationId));
         }
         catch (ApiException ex)
         {
             ex.Log(this.Logger);
-            dispatcher.Dispatch(new GetTableDetailsErrorAction(ex.Message));
+            dispatcher.Dispatch(new GetTableDetailsErrorAction(ex.Message, action.CorrelationId));
         }
     }
 }

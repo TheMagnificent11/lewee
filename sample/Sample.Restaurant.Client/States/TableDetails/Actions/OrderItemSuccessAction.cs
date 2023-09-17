@@ -4,5 +4,10 @@ namespace Sample.Restaurant.Client.States.TableDetails.Actions;
 
 public record OrderItemSuccessAction : IRequestSuccessAction
 {
-    public string RequestType => "OrderItem";
+    public OrderItemSuccessAction(Guid correlationId)
+    {
+        this.CorrelationId = correlationId;
+    }
+
+    public Guid CorrelationId { get; }
 }

@@ -65,8 +65,10 @@ public class Program
 
         var app = builder.Build();
 
-        app.UseSerilogIngestion()
-            .UseResponseCompression();
+        // TODO: https://github.com/TheMagnificent11/lewee/issues/15
+        //app.UseSerilogIngestion();
+
+        app.UseResponseCompression();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())

@@ -7,7 +7,7 @@
   <ItemGroup>
     <PackageReference Include="Correlate.AspNetCore" />
     <PackageReference Include="Serilog" />
-    <PackageReference Include="Serilog.AspNetCore.Ingestion" />
+    <!--<PackageReference Include="Serilog.AspNetCore.Ingestion" />-->
     <PackageReference Include="Serilog.Enrichers.Environment" />
     <PackageReference Include="Serilog.Enrichers.Process" />
     <PackageReference Include="Serilog.Enrichers.Thread" />

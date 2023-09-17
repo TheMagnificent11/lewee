@@ -1,6 +1,5 @@
 using Lewee.Blazor.Fluxor;
 using Lewee.Blazor.Http;
-using Lewee.Blazor.Logging;
 using Lewee.Blazor.Messaging;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -12,7 +11,8 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-LoggingConfiguration.ConfigureLogging(builder.HostEnvironment.BaseAddress);
+// TODO: https://github.com/TheMagnificent11/lewee/issues/15
+// LoggingConfiguration.ConfigureLogging(builder.HostEnvironment.BaseAddress);
 
 builder.Services
     .AddTransient<CorrelationIdDelegatingHandler>()
