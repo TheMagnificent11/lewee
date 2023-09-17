@@ -44,6 +44,11 @@ public class Program
 
         builder.Services.AddCorrelationIdServices();
 
+        builder.Services.AddTelemetry(
+            builder.Environment,
+            "lewee",
+            builder.Configuration["Otlp:Endpoint"] ?? "http://localhost:4317");
+
         builder.Services
             .AddControllersWithViews(options =>
             {
@@ -82,6 +87,7 @@ public class Program
             app.UseHsts();
         }
 
+        app.UseSerilogRequestLogging();
         app.UseCorrelationIdMiddleware();
 
         app.UseHealthChecks("/health")

@@ -2,14 +2,19 @@ version: '3.4'
 
 networks:
   lewee-network:
-    name: lewee_network
+    name: lewee-network
 
 services:
   sample.restaurant.server:
+    container_name: lewee_app
     image: ${DOCKER_REGISTRY-}samplerestaurantserver
     build:
       context: .
       dockerfile: sample/Sample.Restaurant.Server/Dockerfile
+    depends_on:
+      - seq
+      - otel-collector
+      - database
     networks:
       - lewee-network
   seq:
@@ -23,3 +28,97 @@ services:
       - ./seq:/data
     networks:
       - lewee-network
+  database:
+    container_name: lewee_sql
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports:
+      - 5434:1433
+    environment:
+      - ACCEPT_EULA=Y
+    volumes:
+      - ./data:/var/opt/mssql/data
+    networks:
+      - lewee-network
+  blackbox:
+    container_name: lewee_blackbox
+    image: prom/blackbox-exporter:v0.24.0
+    restart: unless-stopped
+    ports:
+      - 9115:9115
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./docker-config/blackbox.yml:/etc/blackbox/blackbox.yml
+    command: --config.file=/etc/blackbox/blackbox.yml
+    networks:
+      - lewee-network
+  prometheus:
+    container_name: lewee_prometheus
+    image: prom/prometheus:v2.46.0
+    hostname: prometheus
+    restart: unless-stopped
+    ports:
+      - 9090:9090
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./docker-config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - lewee-prometheus:/prometheus
+    depends_on:
+      - blackbox
+    networks:
+      - lewee-network
+  otel-collector:
+    container_name: lewee_otel
+    hostname: otel
+    image: otel/opentelemetry-collector-contrib:0.84.0
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    volumes:
+      - ./docker-config/otel.yml:/etc/otel-collector-config.yaml
+    restart: unless-stopped
+    ports:
+      - 8888:8888   # Prometheus metrics exposed by the collector
+      - 8889:8889   # Prometheus exporter metrics
+      - 4317:4317   # OTLP gRPC receiver
+      - 9200:55679  # zpages
+    networks:
+      - lewee-network
+  tempo:
+    container_name: lewee_tempo
+    image: grafana/tempo:2.2.0
+    command: [ "-config.file=/etc/tempo.yaml" ]
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./docker-config/tempo.yml:/etc/tempo.yaml
+      - lewee-tempo:/tmp/tempo
+    restart: unless-stopped
+    ports:
+      - 3200:3200  # tempo
+      - 4007:4317  # otlp grpc
+    depends_on:
+      - otel-collector
+    networks:
+      - lewee-network
+  grafana:
+    container_name: lewee_grafana
+    image: grafana/grafana:10.0.5
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./docker-config/grafana/provisioning:/etc/grafana/provisioning
+      - lewee-grafana-data:/var/lib/grafana
+    restart: unless-stopped
+    user: root
+    ports:
+      - 3000:3000
+    depends_on:
+      - prometheus
+      - tempo
+    networks:
+      - lewee-network
+
+volumes:
+  lewee-prometheus:
+  lewee-tempo:
+  lewee-grafana-data:

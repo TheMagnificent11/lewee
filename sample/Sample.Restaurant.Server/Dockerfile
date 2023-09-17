@@ -8,13 +8,11 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["Directory.Build.props", "."]
-COPY ["Directory.Build.targets", "."]
-COPY ["Packages.props", "."]
+COPY ["Directory.Packages.props", "."]
 COPY ["src/Lewee.Shared/Lewee.Shared.csproj", "src/Lewee.Shared/"]
 COPY ["src/Lewee.Domain/Lewee.Domain.csproj", "src/Lewee.Domain/"]
 COPY ["src/Lewee.Application/Lewee.Application.csproj", "src/Lewee.Application/"]
 COPY ["src/Lewee.Contracts/Lewee.Contracts.csproj", "src/Lewee.Contracts/"]
-COPY ["src/Lewee.Infrastructure.Data/Lewee.Infrastructure.Logging.csproj", "src/Lewee.Infrastructure.Logging/"]
 COPY ["src/Lewee.Infrastructure.Data/Lewee.Infrastructure.Data.csproj", "src/Lewee.Infrastructure.Data/"]
 COPY ["src/Lewee.Infrastructure.AspNet/Lewee.Infrastructure.AspNet.csproj", "src/Lewee.Infrastructure.AspNet/"]
 COPY ["src/Lewee.Infrastructure.AspNet.WebApi/Lewee.Infrastructure.AspNet.WebApi.csproj", "src/Lewee.Infrastructure.AspNet.WebApi/"]

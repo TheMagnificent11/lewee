@@ -65,7 +65,7 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
 
         using (this.Logger.BeginScope(LoggingConsts.CorrelationId, action.CorrelationId.ToString()))
         {
-            this.Logger.LogDebug("Executing query request...");
+            this.Logger.LogDebug("Executing request...");
 
             await this.ExecuteRequest(action, dispatcher);
         }
@@ -82,7 +82,7 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
     {
         using (this.Logger.BeginScope(LoggingConsts.CorrelationId, action.CorrelationId.ToString()))
         {
-            this.Logger.LogDebug("Executing query request...success");
+            this.Logger.LogDebug("Executing request...success");
             return Task.FromResult(true);
         }
     }

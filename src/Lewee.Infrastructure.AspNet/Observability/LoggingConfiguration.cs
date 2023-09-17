@@ -1,5 +1,4 @@
-﻿using Lewee.Infrastructure.Logging;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Core;
@@ -67,6 +66,15 @@ public static class LoggingConfiguration
             .MinimumLevel.ControlledBy(serilogLevelSwitch)
             .WriteTo.Trace()
             .WriteTo.Console()
+            .WriteTo.OpenTelemetry(options =>
+            {
+                options.Endpoint = "http://localhost:4317/v1/logs";
+                options.Protocol = Serilog.Sinks.OpenTelemetry.OtlpProtocol.Grpc;
+                options.ResourceAttributes = new Dictionary<string, object>
+                {
+                    ["service.name"] = webHostEnvironment.ApplicationName
+                };
+            })
             .Enrich.WithProperty("ApplicationName", webHostEnvironment.ApplicationName)
             .Enrich.WithProperty("Environment", webHostEnvironment.EnvironmentName)
             .Enrich.WithProperty("Version", VersionHelper.GetVersion())
