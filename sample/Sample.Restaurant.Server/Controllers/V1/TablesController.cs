@@ -1,5 +1,4 @@
 using Lewee.Infrastructure.AspNet.WebApi;
-using Lewee.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Sample.Restaurant.Application;
 
@@ -11,11 +10,9 @@ public sealed class TablesController : ApiControllerBase
 {
     [HttpGet(Name = "GetAll")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TableDto>))]
-    public async Task<IActionResult> GetAll(
-        [FromHeader(Name = RequestHeaders.CorrelationId)] Guid? correlationId,
-        CancellationToken cancellationToken = default)
+    public async Task<IActionResult> GetAll(CancellationToken cancellationToken = default)
     {
-        var query = new GetTablesQuery(correlationId ?? this.CorrelationId);
+        var query = new GetTablesQuery(this.CorrelationId);
         var result = await this.Mediator.Send(query, cancellationToken);
 
         return result.ToActionResult();
@@ -25,13 +22,9 @@ public sealed class TablesController : ApiControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TableDetailsDto))]
     public async Task<IActionResult> GetOne(
         [FromRoute] int tableNumber,
-        [FromHeader] Guid? correlationId,
         CancellationToken cancellationToken = default)
     {
-        var query = new GetTableDetailsQuery(
-            correlationId ?? this.CorrelationId,
-            tableNumber);
-
+        var query = new GetTableDetailsQuery(this.CorrelationId, tableNumber);
         var result = await this.Mediator.Send(query, cancellationToken);
 
         return result.ToActionResult();
@@ -43,13 +36,9 @@ public sealed class TablesController : ApiControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Use(
         [FromRoute] int tableNumber,
-        [FromHeader] Guid? correlationId,
         CancellationToken cancellationToken = default)
     {
-        var command = new UseTableCommand(
-            correlationId ?? this.CorrelationId,
-            tableNumber);
-
+        var command = new UseTableCommand(this.CorrelationId, tableNumber);
         var result = await this.Mediator.Send(command, cancellationToken);
 
         return result.ToActionResult();
@@ -62,13 +51,9 @@ public sealed class TablesController : ApiControllerBase
     public async Task<IActionResult> AddToOrder(
         [FromRoute] int tableNumber,
         [FromRoute] Guid menuItemId,
-        [FromHeader] Guid? correlationId,
         CancellationToken cancellationToken = default)
     {
-        var command = new AddMenuItemCommand(
-            correlationId ?? this.CorrelationId,
-            tableNumber,
-            menuItemId);
+        var command = new AddMenuItemCommand(this.CorrelationId, tableNumber, menuItemId);
         var result = await this.Mediator.Send(command, cancellationToken);
 
         return result.ToActionResult();
@@ -81,13 +66,9 @@ public sealed class TablesController : ApiControllerBase
     public async Task<IActionResult> RemoveFromToOrder(
         [FromRoute] int tableNumber,
         [FromRoute] Guid menuItemId,
-        [FromHeader] Guid? correlationId,
         CancellationToken cancellationToken = default)
     {
-        var command = new RemoveMenuItemCommand(
-            correlationId ?? this.CorrelationId,
-            tableNumber,
-            menuItemId);
+        var command = new RemoveMenuItemCommand(this.CorrelationId, tableNumber, menuItemId);
         var result = await this.Mediator.Send(command, cancellationToken);
 
         return result.ToActionResult();

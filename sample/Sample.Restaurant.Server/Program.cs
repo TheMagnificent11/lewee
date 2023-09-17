@@ -1,10 +1,9 @@
 ﻿using System.Text.Json;
 using Lewee.Infrastructure.AspNet.Auth;
-using Lewee.Infrastructure.AspNet.Correlation;
+using Lewee.Infrastructure.AspNet.Observability;
 using Lewee.Infrastructure.AspNet.SignalR;
 using Lewee.Infrastructure.AspNet.WebApi;
 using Lewee.Infrastructure.Data;
-using Lewee.Infrastructure.Logging;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using Sample.Restaurant.Application;
 using Sample.Restaurant.Domain;
@@ -28,10 +27,7 @@ public class Program
             throw new ApplicationException("Could not find database connection string");
         }
 
-        var migrateDatabases = builder.Configuration.GetValue<bool>("MigrateDatabases");
-        /* var serviceBusSettings = builder.Configuration.GetSettings<ServiceBusSettings>(nameof(ServiceBusSettings)); */
-
-        var logger = builder.Host.ConfigureLogging(builder.Configuration);
+        var logger = builder.Environment.ConfigureLogging(builder.Configuration);
         builder.Host.UseSerilog(logger, dispose: true);
 
         builder.Services.AddMapper();
@@ -69,6 +65,9 @@ public class Program
 
         var app = builder.Build();
 
+        // TODO: https://github.com/TheMagnificent11/lewee/issues/15
+        //app.UseSerilogIngestion();
+
         app.UseResponseCompression();
 
         // Configure the HTTP request pipeline.
@@ -103,10 +102,7 @@ public class Program
             app.UseSwaggerUI();
         }
 
-        if (migrateDatabases)
-        {
-            await app.MigrationDatabase<RestaurantDbContext>(seedData: true);
-        }
+        await app.MigrationDatabase<RestaurantDbContext>(seedData: true);
 
         app.Run();
     }

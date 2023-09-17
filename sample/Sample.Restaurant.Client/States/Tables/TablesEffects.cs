@@ -1,3 +1,4 @@
+using Correlate;
 using Fluxor;
 using Lewee.Blazor.ErrorHandling;
 using Lewee.Blazor.Fluxor;
@@ -10,8 +11,12 @@ public sealed class TablesEffects
 {
     private readonly ITableClient tableClient;
 
-    public TablesEffects(IState<TablesState> state, ITableClient tableClient, ILogger<TablesEffects> logger)
-        : base(state, logger)
+    public TablesEffects(
+        IState<TablesState> state,
+        ITableClient tableClient,
+        ICorrelationContextAccessor correlationContextAccessor,
+        ILogger<TablesEffects> logger)
+        : base(state, correlationContextAccessor, logger)
     {
         this.tableClient = tableClient;
     }
@@ -20,13 +25,13 @@ public sealed class TablesEffects
     {
         try
         {
-            var result = await this.tableClient.GetAllAsync(action.CorrelationId);
-            dispatcher.Dispatch(new GetTablesSuccessAction(result.ToArray()));
+            var result = await this.tableClient.GetAllAsync();
+            dispatcher.Dispatch(new GetTablesSuccessAction(result.ToArray(), action.CorrelationId));
         }
         catch (ApiException ex)
         {
             ex.Log(this.Logger);
-            dispatcher.Dispatch(new GetTablesErrorAction(ex.Message));
+            dispatcher.Dispatch(new GetTablesErrorAction(ex.Message, action.CorrelationId));
         }
     }
 }

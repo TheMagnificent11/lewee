@@ -1,9 +1,10 @@
 ﻿using Correlate.AspNetCore;
 using Correlate.DependencyInjection;
+using Lewee.Shared;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Lewee.Infrastructure.AspNet.Correlation;
+namespace Lewee.Infrastructure.AspNet.Observability;
 
 /// <summary>
 /// Correlation ID Configuration
@@ -17,7 +18,7 @@ public static class CorrelationIdConfiguration
     /// <returns>The updated services collection</returns>
     public static IServiceCollection AddCorrelationIdServices(this IServiceCollection services)
     {
-        services.AddCorrelate(options => options.RequestHeaders = new[] { "X-Correlation-ID" });
+        services.AddCorrelate(options => options.RequestHeaders = new[] { RequestHeaders.CorrelationId });
 
         return services;
     }

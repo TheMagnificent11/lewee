@@ -1,4 +1,5 @@
-﻿using Fluxor;
+﻿using Correlate;
+using Fluxor;
 using Lewee.Blazor.ErrorHandling;
 using Lewee.Blazor.Fluxor;
 using Lewee.Shared;
@@ -18,8 +19,9 @@ public sealed class UseTableEffects
         IState<UseTableState> state,
         ITableClient tableClient,
         NavigationManager navigationManager,
+        ICorrelationContextAccessor correlationContextAccessor,
         ILogger<UseTableEffects> logger)
-        : base(state, logger)
+        : base(state, correlationContextAccessor, logger)
     {
         this.tableClient = tableClient;
         this.navigationManager = navigationManager;
@@ -28,10 +30,7 @@ public sealed class UseTableEffects
     [EffectMethod]
     public Task MesageReceived(UseTableCompletedAction action, IDispatcher dispatcher)
     {
-        using (this.Logger.BeginScope(new Dictionary<string, string>
-        {
-            { LoggingConsts.CorrelationId, action.CorrelationId.ToString() }
-        }))
+        using (this.Logger.BeginScope(LoggingConsts.CorrelationId, action.CorrelationId.ToString()))
         {
             this.Logger.LogDebug("Received tabled used message from server");
 
@@ -54,16 +53,16 @@ public sealed class UseTableEffects
     {
         try
         {
-            await this.tableClient.UseAsync(action.TableNumber, action.CorrelationId);
+            await this.tableClient.UseAsync(action.TableNumber);
         }
         catch (ApiException ex)
         {
             ex.Log(this.Logger);
-            dispatcher.Dispatch(new UseTableErrorAction(ex.Message));
+            dispatcher.Dispatch(new UseTableErrorAction(ex.Message, action.CorrelationId));
 
             return;
         }
 
-        dispatcher.Dispatch(new UseTableSuccessAction());
+        dispatcher.Dispatch(new UseTableSuccessAction(action.CorrelationId));
     }
 }

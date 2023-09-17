@@ -1,4 +1,5 @@
-﻿using Fluxor;
+﻿using Correlate;
+using Fluxor;
 using Lewee.Blazor.Fluxor.Actions;
 using Lewee.Shared;
 using Microsoft.Extensions.Logging; // TODO (https://github.com/TheMagnificent11/lewee/issues/15): switch to Serilog
@@ -19,14 +20,22 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
     where TRequestSuccessAction : IRequestSuccessAction
     where TRequestErrorAction : IRequestErrorAction
 {
+    private readonly ICorrelationContextAccessor correlationContextAccessor;
+
     /// <summary>
-    /// Initializes a new instance of the <see cref="RequestEffects{TState, TRequestAction, TRequestSuccessAction, TRequestErrorAction}"/> class
+    /// Initializes a new instance of the
+    /// <see cref="RequestEffects{TState, TRequestAction, TRequestSuccessAction, TRequestErrorAction}"/> class
     /// </summary>
     /// <param name="state">State</param>
+    /// <param name="correlationContextAccessor">Correlation context accessor</param>
     /// <param name="logger">Logger</param>
-    public RequestEffects(IState<TState> state, ILogger logger)
+    protected RequestEffects(
+        IState<TState> state,
+        ICorrelationContextAccessor correlationContextAccessor,
+        ILogger logger)
     {
         this.State = state;
+        this.correlationContextAccessor = correlationContextAccessor;
         this.Logger = logger;
     }
 
@@ -47,13 +56,14 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
     /// <param name="dispatcher">Dispatcher</param>
     /// <returns>Asynchronous task</returns>
     [EffectMethod]
-    public virtual async Task Query(TRequestAction action, IDispatcher dispatcher)
+    public virtual async Task Request(TRequestAction action, IDispatcher dispatcher)
     {
-        using (this.Logger.BeginScope(new Dictionary<string, string>
+        this.correlationContextAccessor.CorrelationContext = new CorrelationContext
         {
-            { LoggingConsts.CorrelationId, action.CorrelationId.ToString() },
-            { LoggingConsts.RequestType, this.State.Value.RequestType }
-        }))
+            CorrelationId = action.CorrelationId.ToString()
+        };
+
+        using (this.Logger.BeginScope(LoggingConsts.CorrelationId, action.CorrelationId.ToString()))
         {
             this.Logger.LogDebug("Executing query request...");
 
@@ -68,13 +78,9 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
     /// <param name="dispatcher">Dispatcher</param>
     /// <returns>Asynchronous task</returns>
     [EffectMethod]
-    public virtual Task QuerySucces(TRequestSuccessAction action, IDispatcher dispatcher)
+    public virtual Task RequestSuccess(TRequestSuccessAction action, IDispatcher dispatcher)
     {
-        using (this.Logger.BeginScope(new Dictionary<string, string>
-        {
-            { LoggingConsts.CorrelationId, this.State.Value.CorrelationId.ToString() },
-            { LoggingConsts.RequestType, this.State.Value.RequestType }
-        }))
+        using (this.Logger.BeginScope(LoggingConsts.CorrelationId, action.CorrelationId.ToString()))
         {
             this.Logger.LogDebug("Executing query request...success");
             return Task.FromResult(true);
@@ -88,15 +94,13 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
     /// <param name="dispatcher">Dispatcher</param>
     /// <returns>Asynchronous task</returns>
     [EffectMethod]
-    public virtual Task QueryError(TRequestErrorAction action, IDispatcher dispatcher)
+    public virtual Task RequestError(TRequestErrorAction action, IDispatcher dispatcher)
     {
-        using (this.Logger.BeginScope(new Dictionary<string, string>
+        using (this.Logger.BeginScope(LoggingConsts.CorrelationId, action.CorrelationId.ToString()))
         {
-            { LoggingConsts.CorrelationId, this.State.Value.CorrelationId.ToString() },
-            { LoggingConsts.RequestType, this.State.Value.RequestType }
-        }))
-        {
-            this.Logger.LogError("Executing query request...error (Error Message: {ErrorMessage})", action.ErrorMessage);
+            this.Logger.LogError(
+                "Executing query request...error (Error Message: {ErrorMessage})",
+                action.ErrorMessage);
             return Task.FromResult(false);
         }
     }
