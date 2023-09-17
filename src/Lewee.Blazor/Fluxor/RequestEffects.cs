@@ -23,7 +23,8 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
     private readonly ICorrelationContextAccessor correlationContextAccessor;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="RequestEffects{TState, TRequestAction, TRequestSuccessAction, TRequestErrorAction}"/> class
+    /// Initializes a new instance of the
+    /// <see cref="RequestEffects{TState, TRequestAction, TRequestSuccessAction, TRequestErrorAction}"/> class
     /// </summary>
     /// <param name="state">State</param>
     /// <param name="correlationContextAccessor">Correlation context accessor</param>
@@ -62,11 +63,7 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
             CorrelationId = action.CorrelationId.ToString()
         };
 
-        using (this.Logger.BeginScope(new Dictionary<string, string>
-        {
-            { LoggingConsts.CorrelationId, action.CorrelationId.ToString() },
-            { LoggingConsts.RequestType, action.RequestType }
-        }))
+        using (this.Logger.BeginScope(LoggingConsts.CorrelationId, action.CorrelationId.ToString()))
         {
             this.Logger.LogDebug("Executing query request...");
 
@@ -83,11 +80,7 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
     [EffectMethod]
     public virtual Task RequestSuccess(TRequestSuccessAction action, IDispatcher dispatcher)
     {
-        using (this.Logger.BeginScope(new Dictionary<string, string>
-        {
-            { LoggingConsts.CorrelationId, this.State.Value.CorrelationId.ToString() },
-            { LoggingConsts.RequestType, action.RequestType }
-        }))
+        using (this.Logger.BeginScope(LoggingConsts.CorrelationId, action.CorrelationId.ToString()))
         {
             this.Logger.LogDebug("Executing query request...success");
             return Task.FromResult(true);
@@ -103,13 +96,11 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
     [EffectMethod]
     public virtual Task RequestError(TRequestErrorAction action, IDispatcher dispatcher)
     {
-        using (this.Logger.BeginScope(new Dictionary<string, string>
+        using (this.Logger.BeginScope(LoggingConsts.CorrelationId, action.CorrelationId.ToString()))
         {
-            { LoggingConsts.CorrelationId, this.State.Value.CorrelationId.ToString() },
-            { LoggingConsts.RequestType, action.RequestType }
-        }))
-        {
-            this.Logger.LogError("Executing query request...error (Error Message: {ErrorMessage})", action.ErrorMessage);
+            this.Logger.LogError(
+                "Executing query request...error (Error Message: {ErrorMessage})",
+                action.ErrorMessage);
             return Task.FromResult(false);
         }
     }

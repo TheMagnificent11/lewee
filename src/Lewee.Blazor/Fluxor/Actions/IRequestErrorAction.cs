@@ -6,9 +6,9 @@
 public interface IRequestErrorAction
 {
     /// <summary>
-    /// Gets the request type
+    /// Gets the correlation ID
     /// </summary>
-    string RequestType { get; }
+    Guid CorrelationId { get; }
 
     /// <summary>
     /// Gets the error message

@@ -11,6 +11,9 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
+// TODO: https://github.com/TheMagnificent11/lewee/issues/15
+// LoggingConfiguration.ConfigureLogging(builder.HostEnvironment.BaseAddress);
+
 builder.Services
     .AddTransient<CorrelationIdDelegatingHandler>()
     .AddHttpClient<TableClient>(sp => sp.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))

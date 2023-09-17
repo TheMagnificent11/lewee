@@ -27,7 +27,7 @@ public class Program
             throw new ApplicationException("Could not find database connection string");
         }
 
-        var logger = builder.Host.ConfigureLogging(builder.Configuration, builder.Environment);
+        var logger = builder.Environment.ConfigureLogging(builder.Configuration);
         builder.Host.UseSerilog(logger, dispose: true);
 
         builder.Services.AddMapper();
@@ -64,6 +64,9 @@ public class Program
         builder.Services.AddRazorPages();
 
         var app = builder.Build();
+
+        // TODO: https://github.com/TheMagnificent11/lewee/issues/15
+        //app.UseSerilogIngestion();
 
         app.UseResponseCompression();
 
