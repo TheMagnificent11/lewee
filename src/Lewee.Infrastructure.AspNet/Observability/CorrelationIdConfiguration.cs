@@ -3,7 +3,7 @@ using Correlate.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Lewee.Infrastructure.AspNet.Correlation;
+namespace Lewee.Infrastructure.AspNet.Observability;
 
 /// <summary>
 /// Correlation ID Configuration
