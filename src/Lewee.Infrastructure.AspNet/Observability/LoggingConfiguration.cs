@@ -1,11 +1,13 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Lewee.Infrastructure.Logging;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;
 
-namespace Lewee.Infrastructure.Logging;
+namespace Lewee.Infrastructure.AspNet.Observability;
 
 /// <summary>
 /// Logging Configuration
@@ -21,12 +23,17 @@ public static class LoggingConfiguration
     /// <param name="configuration">
     /// Configuration
     /// </param>
+    /// <param name="webHostEnvironment">
+    /// Web host environment
+    /// </param>
     /// <returns>
     /// Serilog logger
     /// </returns>
-    public static Logger ConfigureLogging(this IHostBuilder builder, IConfiguration configuration)
+    public static Logger ConfigureLogging(
+        this IHostBuilder builder,
+        IConfiguration configuration,
+        IWebHostEnvironment webHostEnvironment)
     {
-        var applicationSettings = configuration.GetSettings<ApplicationSettings>(nameof(ApplicationSettings));
         var seqSettings = configuration.GetSettings<SeqSettings>(nameof(SeqSettings));
 
         var serilogLevelSwitch = new LoggingLevelSwitch
@@ -38,9 +45,9 @@ public static class LoggingConfiguration
             .MinimumLevel.ControlledBy(serilogLevelSwitch)
             .WriteTo.Trace()
             .WriteTo.Console()
-            .Enrich.WithProperty("ApplicationName", applicationSettings.Name)
-            .Enrich.WithProperty("Environment", applicationSettings.Environment)
-            .Enrich.WithProperty("Version", applicationSettings.Version)
+            .Enrich.WithProperty("ApplicationName", webHostEnvironment.ApplicationName)
+            .Enrich.WithProperty("Environment", webHostEnvironment.EnvironmentName)
+            .Enrich.WithProperty("Version", VersionHelper.GetVersion())
             .Enrich.WithProcessId()
             .Enrich.WithProcessName()
             .Enrich.WithMachineName()
@@ -59,7 +66,9 @@ public static class LoggingConfiguration
 
         var logger = config.CreateLogger();
 
-        logger.Information("================= {ApplicationName} Started =================", applicationSettings.Name);
+        logger.Information(
+            "================= {ApplicationName} Started =================",
+            webHostEnvironment.ApplicationName);
 
         return logger;
     }

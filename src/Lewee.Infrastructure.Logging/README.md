@@ -1,2 +1,0 @@
-# Lewee.Infrastructure.Logging
-
