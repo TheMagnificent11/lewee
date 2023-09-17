@@ -33,30 +33,24 @@ public static class LoggingConfiguration
         return logger;
     }
 
-    /// <summary>
-    /// Configures logging with browser injestion
-    /// </summary>
-    /// <param name="webHostEnvironment">Web host environment</param>
-    /// <param name="configuration">Configuration</param>
-    /// <param name="baseAddress">Base address</param>
-    /// <returns> Serilog logger </returns>
-    public static Logger ConfigureLoggingWithBrowserInjestion(
-        this IWebHostEnvironment webHostEnvironment,
-        IConfiguration configuration,
-        string baseAddress)
-    {
-        var config = ConfigureCommonLogging(configuration, webHostEnvironment);
+    // TODO: https://github.com/TheMagnificent11/lewee/issues/15
+    //public static Logger ConfigureLoggingWithBrowserInjestion(
+    //    this IWebHostEnvironment webHostEnvironment,
+    //    IConfiguration configuration,
+    //    string baseAddress)
+    //{
+    //    var config = ConfigureCommonLogging(configuration, webHostEnvironment);
 
-        config.WriteTo.BrowserHttp($"{baseAddress}ingest");
+    //    config.WriteTo.BrowserHttp($"{baseAddress}ingest");
 
-        var logger = config.CreateLogger();
+    //    var logger = config.CreateLogger();
 
-        logger.Information(
-            "================= {ApplicationName} Started =================",
-            webHostEnvironment.ApplicationName);
+    //    logger.Information(
+    //        "================= {ApplicationName} Started =================",
+    //        webHostEnvironment.ApplicationName);
 
-        return logger;
-    }
+    //    return logger;
+    //}
 
     private static LoggerConfiguration ConfigureCommonLogging(
         IConfiguration configuration,
