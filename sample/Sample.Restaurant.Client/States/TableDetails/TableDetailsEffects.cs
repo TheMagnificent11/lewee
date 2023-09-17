@@ -44,7 +44,7 @@ public sealed class TableDetailsEffects
 
             try
             {
-                await this.tableClient.OrderMenuItemAsync(action.TableNumber, action.MenuItemId, action.CorrelationId);
+                await this.tableClient.OrderMenuItemAsync(action.TableNumber, action.MenuItemId);
                 dispatcher.Dispatch(new OrderItemSuccessAction(action.CorrelationId));
             }
             catch (ApiException ex)
@@ -100,7 +100,7 @@ public sealed class TableDetailsEffects
 
             try
             {
-                await this.tableClient.RemoveMenuItemAsync(action.TableNumber, action.MenuItemId, action.CorrelationId);
+                await this.tableClient.RemoveMenuItemAsync(action.TableNumber, action.MenuItemId);
                 dispatcher.Dispatch(new RemoveItemSuccessAction(action.CorrelationId));
             }
             catch (ApiException ex)
@@ -151,7 +151,7 @@ public sealed class TableDetailsEffects
     {
         try
         {
-            var result = await this.tableClient.GetDetailsAsync(action.TableNumber, action.CorrelationId);
+            var result = await this.tableClient.GetDetailsAsync(action.TableNumber);
             dispatcher.Dispatch(new GetTableDetailsSuccessAction(result, action.CorrelationId));
         }
         catch (ApiException ex)

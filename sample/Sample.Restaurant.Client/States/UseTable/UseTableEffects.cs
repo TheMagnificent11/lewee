@@ -53,7 +53,7 @@ public sealed class UseTableEffects
     {
         try
         {
-            await this.tableClient.UseAsync(action.TableNumber, action.CorrelationId);
+            await this.tableClient.UseAsync(action.TableNumber);
         }
         catch (ApiException ex)
         {

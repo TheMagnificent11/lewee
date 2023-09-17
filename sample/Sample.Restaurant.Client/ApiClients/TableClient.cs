@@ -28,27 +28,27 @@ namespace Sample.Restaurant.Client
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TableDto>> GetAllAsync(System.Guid? x_Correlation_ID = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TableDto>> GetAllAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<TableDetailsDto> GetDetailsAsync(int tableNumber, System.Guid? correlationId = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task<TableDetailsDto> GetDetailsAsync(int tableNumber, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task UseAsync(int tableNumber, System.Guid? correlationId = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task UseAsync(int tableNumber, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task OrderMenuItemAsync(int tableNumber, System.Guid menuItemId, System.Guid? correlationId = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task OrderMenuItemAsync(int tableNumber, System.Guid menuItemId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task RemoveMenuItemAsync(int tableNumber, System.Guid menuItemId, System.Guid? correlationId = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task RemoveMenuItemAsync(int tableNumber, System.Guid menuItemId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
     }
 
@@ -90,7 +90,7 @@ namespace Sample.Restaurant.Client
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TableDto>> GetAllAsync(System.Guid? x_Correlation_ID = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TableDto>> GetAllAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/v1/tables");
@@ -101,9 +101,6 @@ namespace Sample.Restaurant.Client
             {
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
-
-                    if (x_Correlation_ID != null)
-                        request_.Headers.TryAddWithoutValidation("X-Correlation-ID", ConvertToString(x_Correlation_ID, System.Globalization.CultureInfo.InvariantCulture));
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
 
@@ -160,7 +157,7 @@ namespace Sample.Restaurant.Client
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<TableDetailsDto> GetDetailsAsync(int tableNumber, System.Guid? correlationId = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task<TableDetailsDto> GetDetailsAsync(int tableNumber, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (tableNumber == null)
                 throw new System.ArgumentNullException("tableNumber");
@@ -175,9 +172,6 @@ namespace Sample.Restaurant.Client
             {
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
-
-                    if (correlationId != null)
-                        request_.Headers.TryAddWithoutValidation("correlationId", ConvertToString(correlationId, System.Globalization.CultureInfo.InvariantCulture));
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
 
@@ -234,7 +228,7 @@ namespace Sample.Restaurant.Client
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task UseAsync(int tableNumber, System.Guid? correlationId = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task UseAsync(int tableNumber, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (tableNumber == null)
                 throw new System.ArgumentNullException("tableNumber");
@@ -249,9 +243,6 @@ namespace Sample.Restaurant.Client
             {
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
-
-                    if (correlationId != null)
-                        request_.Headers.TryAddWithoutValidation("correlationId", ConvertToString(correlationId, System.Globalization.CultureInfo.InvariantCulture));
                     request_.Content = new System.Net.Http.StringContent(string.Empty, System.Text.Encoding.UTF8, "application/json");
                     request_.Method = new System.Net.Http.HttpMethod("PUT");
 
@@ -323,7 +314,7 @@ namespace Sample.Restaurant.Client
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task OrderMenuItemAsync(int tableNumber, System.Guid menuItemId, System.Guid? correlationId = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task OrderMenuItemAsync(int tableNumber, System.Guid menuItemId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (tableNumber == null)
                 throw new System.ArgumentNullException("tableNumber");
@@ -342,9 +333,6 @@ namespace Sample.Restaurant.Client
             {
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
-
-                    if (correlationId != null)
-                        request_.Headers.TryAddWithoutValidation("correlationId", ConvertToString(correlationId, System.Globalization.CultureInfo.InvariantCulture));
                     request_.Content = new System.Net.Http.StringContent(string.Empty, System.Text.Encoding.UTF8, "application/json");
                     request_.Method = new System.Net.Http.HttpMethod("PUT");
 
@@ -416,7 +404,7 @@ namespace Sample.Restaurant.Client
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task RemoveMenuItemAsync(int tableNumber, System.Guid menuItemId, System.Guid? correlationId = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task RemoveMenuItemAsync(int tableNumber, System.Guid menuItemId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (tableNumber == null)
                 throw new System.ArgumentNullException("tableNumber");
@@ -435,9 +423,6 @@ namespace Sample.Restaurant.Client
             {
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
-
-                    if (correlationId != null)
-                        request_.Headers.TryAddWithoutValidation("correlationId", ConvertToString(correlationId, System.Globalization.CultureInfo.InvariantCulture));
                     request_.Method = new System.Net.Http.HttpMethod("DELETE");
 
                     PrepareRequest(client_, request_, urlBuilder_);
