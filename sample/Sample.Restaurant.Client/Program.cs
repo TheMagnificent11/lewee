@@ -1,5 +1,6 @@
 using Lewee.Blazor.Fluxor;
 using Lewee.Blazor.Http;
+using Lewee.Blazor.Logging;
 using Lewee.Blazor.Messaging;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -10,6 +11,8 @@ using Sample.Restaurant.Client.States;
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
+
+LoggingConfiguration.ConfigureLogging(builder.HostEnvironment.BaseAddress);
 
 builder.Services
     .AddTransient<CorrelationIdDelegatingHandler>()

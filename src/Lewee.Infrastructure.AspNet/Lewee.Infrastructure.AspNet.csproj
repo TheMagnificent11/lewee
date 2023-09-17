@@ -17,6 +17,7 @@
     <PackageReference Include="SerilogAnalyzer">
       <ExcludeAssets>all</ExcludeAssets>
     </PackageReference>
+    <PackageReference Include="Serilog.AspNetCore.Ingestion" />
   </ItemGroup>
 
   <ItemGroup>
