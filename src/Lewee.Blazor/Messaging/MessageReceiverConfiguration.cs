@@ -14,14 +14,14 @@ public static class MessageReceiverConfiguration
     /// </summary>
     /// <typeparam name="TMapper">Mapper type</typeparam>
     /// <param name="services">Services collection</param>
-    /// <param name="serverApiUrl">Server API URL</param>
+    /// <param name="serverBaseAddress">Server base address</param>
     /// <returns>Updated services collection</returns>
     public static IServiceCollection ConfigureMessageReceiver<TMapper>(
         this IServiceCollection services,
-        string serverApiUrl)
+        string serverBaseAddress)
         where TMapper : class, IMessageToActionMapper
     {
-        var hubUrl = serverApiUrl.EndsWith('/') ? $"{serverApiUrl}events" : $"{serverApiUrl}/events";
+        var hubUrl = serverBaseAddress.EndsWith('/') ? $"{serverBaseAddress}events" : $"{serverBaseAddress}/events";
         var hubConnection = new HubConnectionBuilder()
             .WithUrl(hubUrl)
             .WithAutomaticReconnect()
@@ -31,7 +31,7 @@ public static class MessageReceiverConfiguration
             .AddSingleton(hubConnection)
             .AddTransient<IMessageToActionMapper, TMapper>()
             .AddTransient<MessageDeserializer>()
-            .AddHttpClient<HealthCheckService>(sp => sp.BaseAddress = new Uri(serverApiUrl));
+            .AddHttpClient<HealthCheckService>(sp => sp.BaseAddress = new Uri(serverBaseAddress));
 
         return services;
     }
