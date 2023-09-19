@@ -1,6 +1,4 @@
-using Lewee.Blazor.Fluxor;
-using Lewee.Blazor.Http;
-using Lewee.Blazor.Messaging;
+using Lewee.Blazor;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
@@ -11,21 +9,17 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-// TODO: https://github.com/TheMagnificent11/lewee/issues/15
-// LoggingConfiguration.ConfigureLogging(builder.HostEnvironment.BaseAddress);
-
 builder.Services
-    .AddTransient<CorrelationIdDelegatingHandler>()
-    .AddHttpClient<TableClient>(sp => sp.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
-    .AddHttpMessageHandler<CorrelationIdDelegatingHandler>();
-
-builder.Services
-    .ConfigureMessageReceiver<MessageToActionMapper>(builder.HostEnvironment.BaseAddress)
+    .ConfigureLeweeBlazor<MessageToActionMapper>(
+        builder.HostEnvironment.BaseAddress,
+        builder.HostEnvironment.IsDevelopment())
     .AddScoped<ITableClient>(provider =>
     {
         return new TableClient(builder.HostEnvironment.BaseAddress, provider.GetService<HttpClient>());
     })
-    .ConfigureFluxor()
-    .AddMudServices();
+    .AddHttpClient<TableClient>(sp => sp.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
+    .ConfigureCorrelationIdDelegation();
+
+builder.Services.AddMudServices();
 
 await builder.Build().RunAsync();
