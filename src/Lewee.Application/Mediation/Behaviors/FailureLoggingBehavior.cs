@@ -15,7 +15,10 @@ internal class FailureLoggingBehavior<TRequest, TResponse> : IPipelineBehavior<T
         this.logger = logger.ForContext<FailureLoggingBehavior<TRequest, TResponse>>();
     }
 
-    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+    public async Task<TResponse> Handle(
+        TRequest request,
+        RequestHandlerDelegate<TResponse> next,
+        CancellationToken cancellationToken)
     {
         var result = await next();
 

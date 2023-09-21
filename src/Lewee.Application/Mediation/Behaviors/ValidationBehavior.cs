@@ -38,18 +38,6 @@ internal class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequ
 
     private static CommandResult GetBadRequestCommandResult(List<ValidationFailure> failures)
     {
-        var errors = new Dictionary<string, List<string>>();
-
-        foreach (var item in failures)
-        {
-            if (!errors.ContainsKey(item.PropertyName))
-            {
-                errors[item.PropertyName] = new List<string>();
-            }
-
-            errors[item.PropertyName].Add(item.ErrorMessage);
-        }
-
-        return CommandResult.Fail(ResultStatus.BadRequest, errors);
+        return CommandResult.Fail(ResultStatus.BadRequest, failures);
     }
 }

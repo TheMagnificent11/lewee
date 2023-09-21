@@ -1,8 +1,8 @@
-﻿using System.Text.Json;
+﻿using FastEndpoints;
+using FastEndpoints.Swagger;
 using Lewee.Infrastructure.AspNet.Auth;
 using Lewee.Infrastructure.AspNet.Observability;
 using Lewee.Infrastructure.AspNet.SignalR;
-using Lewee.Infrastructure.AspNet.WebApi;
 using Lewee.Infrastructure.Data;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using Sample.Restaurant.Application;
@@ -40,23 +40,17 @@ public class Program
 #if DEBUG
             .AddDatabaseDeveloperPageExceptionFilter()
 #endif
-            .AddRestaurantApplication();
-
-        builder.Services.AddCorrelationIdServices();
-
-        builder.Services
-            .AddControllersWithViews(options =>
+            .AddRestaurantApplication()
+            .AddCorrelationIdServices()
+            .AddFastEndpoints()
+            .SwaggerDocument(x =>
             {
-                options.Conventions.Add(new KebabCaseControllerModelConvention());
+                x.DocumentSettings = y =>
+                {
+                    y.Title = "Restaurant API";
+                    y.Version = "v1";
+                };
             })
-            .AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-            });
-
-        builder.Services
-            .AddEndpointsApiExplorer()
-            .AddSwaggerGen()
             .ConfigureSignalR()
             .AddHealthChecks()
             .AddDbContextCheck<RestaurantDbContext>();
@@ -82,24 +76,23 @@ public class Program
             app.UseHsts();
         }
 
-        app.UseCorrelationIdMiddleware();
-
-        app.UseHealthChecks("/health")
+        app
+            .UseCorrelationIdMiddleware()
+            .UseFastEndpoints()
+            .UseHealthChecks("/health")
             .UseHttpsRedirection()
             .UseBlazorFrameworkFiles()
             .UseStaticFiles()
             .UseRouting();
 
         app.MapRazorPages();
-        app.MapControllers();
         app.MapHub<ClientEventHub>("/events");
         app.MapFallbackToFile("index.html");
 
         if (app.Environment.IsDevelopment())
         {
             app.UseMigrationsEndPoint();
-            app.UseSwagger();
-            app.UseSwaggerUI();
+            app.UseSwaggerGen();
         }
 
         await app.MigrationDatabase<RestaurantDbContext>(seedData: true);
