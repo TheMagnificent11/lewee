@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using FluentValidation.Results;
 
 namespace Lewee.Application.Mediation.Requests;
 
@@ -16,27 +17,27 @@ public abstract class Result
     /// <param name="errors">
     /// Error messages (keyed by request property)
     /// </param>
-    protected Result(ResultStatus status, Dictionary<string, List<string>>? errors)
+    protected Result(ResultStatus status, List<ValidationFailure>? errors)
     {
         this.Status = status;
-        this.Errors = errors ?? new Dictionary<string, List<string>>();
+        this.Errors = errors ?? new List<ValidationFailure>();
         this.IsSuccess = status == ResultStatus.Success;
     }
 
     /// <summary>
     /// Gets a value indicating whether request was successfully processed
     /// </summary>
-    public bool IsSuccess { get; private set; }
+    public bool IsSuccess { get; }
 
     /// <summary>
     /// Gets the status for the result
     /// </summary>
-    public ResultStatus Status { get; private set; }
+    public ResultStatus Status { get; }
 
     /// <summary>
     /// Gets a dictionary of error messages keyed by request property
     /// </summary>
-    public Dictionary<string, List<string>> Errors { get; private set; }
+    public List<ValidationFailure> Errors { get; }
 
     /// <summary>
     /// Generates an error message from the <see cref="Errors"/> dictionary.
@@ -52,18 +53,8 @@ public abstract class Result
 
         var errorMessage = new StringBuilder();
 
-        foreach (var error in this.Errors)
-        {
-            errorMessage.Append($"{error.Key}:");
-
-            foreach (var subError in error.Value)
-            {
-                errorMessage.Append($" {subError},");
-            }
-
-            errorMessage.Remove(errorMessage.Length - 1, 1);
-            errorMessage.AppendLine();
-        }
+        this.Errors
+            .ForEach(x => errorMessage.AppendLine($"{x.PropertyName}: {x.ErrorMessage}"));
 
         return errorMessage.ToString();
     }
