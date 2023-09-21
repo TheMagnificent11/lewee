@@ -29,6 +29,9 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - name: Set Version
+        id: version
+        uses: ./.github/workflows/set-version.yml
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
@@ -57,4 +60,4 @@ jobs:
           recreate: true
           path: code-coverage-results.md
       - name: Pack
-        run: dotnet pack ./pack.sln --configuration Release --no-restore --nologo
+        run: dotnet pack ./pack.sln --configuration Release --no-restore --nologo /p:PackageVersion=${{ steps.version.outputs.version }}
