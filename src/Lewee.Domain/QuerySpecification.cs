@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+﻿using Ardalis.Specification;
 
 namespace Lewee.Domain;
 
@@ -6,35 +6,7 @@ namespace Lewee.Domain;
 /// Query Specification
 /// </summary>
 /// <typeparam name="T">Aggregate root type</typeparam>
-public class QuerySpecification<T>
+public class QuerySpecification<T> : Specification<T>
     where T : AggregateRoot
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="QuerySpecification{T}"/> class
-    /// </summary>
-    /// <param name="criteria">Query criteria</param>
-    public QuerySpecification(Expression<Func<T, bool>> criteria)
-    {
-        this.Criteria = criteria;
-        this.Includes = new();
-    }
-
-    /// <summary>
-    /// Gets the query criteria
-    /// </summary>
-    public Expression<Func<T, bool>> Criteria { get; }
-
-    /// <summary>
-    /// Gets the query includes
-    /// </summary>
-    public List<Expression<Func<T, object>>> Includes { get; }
-
-    /// <summary>
-    /// Adds an include
-    /// </summary>
-    /// <param name="includeExpression">Include expression</param>
-    protected void AddInclude(Expression<Func<T, object>> includeExpression)
-    {
-        this.Includes.Add(includeExpression);
-    }
 }

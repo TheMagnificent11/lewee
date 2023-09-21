@@ -2,7 +2,6 @@
 using Lewee.Domain;
 using Lewee.Shared;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Sample.Restaurant.Contracts.ClientMessages;
 using Sample.Restaurant.Domain;
 using Serilog;
@@ -37,11 +36,12 @@ internal class TableDomainEventHandler :
         using (LogContext.PushProperty(LoggingConsts.CorrelationId, notification.CorrelationId))
         using (LogContext.PushProperty(nameof(notification.TableNumber), notification.TableNumber))
         {
-            var menuItems = await this.menuItemRepository
-                .All()
+            var menuItems = await this.menuItemRepository.All(cancellationToken);
+
+            var sortedMenuItems = menuItems
                 .OrderBy(x => x.ItemTypeId)
                 .ThenBy(x => x.Name)
-                .ToArrayAsync(cancellationToken);
+                .ToArray();
 
             var projection = TableDetails.FromTableInUseDomainEvent(notification, menuItems);
 
