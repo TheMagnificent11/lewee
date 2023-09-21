@@ -27,9 +27,8 @@ jobs:
     - name: Set Version
       uses: vers-one/dotnet-project-version-updater@v1.3
       with:
-        file: |
-          "**/*.csproj"
-        version: $latest_tag
+        file: "Directory.Build.props"
+        verion: $latest_tag
     - name: Pack
       run: dotnet pack ./pack.sln --configuration Release --nologo /p:PackageVersion=$latest_tag --output ./output
     - name: Publish to NuGet

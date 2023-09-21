@@ -13,6 +13,7 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <Authors>Saji Weerasingham</Authors>
     <Company>NA</Company>
+    <Version>0.0.1</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="!$(MSBuildProjectName.Contains('.Tests.'))">
