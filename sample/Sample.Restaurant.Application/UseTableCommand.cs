@@ -1,7 +1,7 @@
 ﻿using Lewee.Application.Mediation.Requests;
 using Lewee.Domain;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
+using Sample.Restaurant.Application.QuerySpecifications;
 using Sample.Restaurant.Domain;
 using Serilog;
 
@@ -31,11 +31,9 @@ public sealed class UseTableCommand : ICommand, ITableRequest
 
         public async Task<CommandResult> Handle(UseTableCommand request, CancellationToken cancellationToken)
         {
-            var table = await this.repository
-                .All()
-                .Where(x => x.TableNumber == request.TableNumber)
-                .Include(x => x.Orders)
-                .FirstOrDefaultAsync(cancellationToken);
+            var table = await this.repository.QueryOne(
+                new TableOrderQuerySpecification(request.TableNumber),
+                cancellationToken);
 
             if (table == null)
             {

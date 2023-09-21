@@ -16,10 +16,11 @@ public interface IRepository<T>
     Task<T?> RetrieveById(Guid id, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Gets an <see cref="IQueryable{T}"/> of all entities
+    /// Gets all entities
     /// </summary>
-    /// <returns><see cref="IQueryable{T}"/> of all entities</returns>
-    IQueryable<T> All();
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>A list of all the entities</returns>
+    Task<List<T>> All(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Retrieves the entities that match the <paramref name="querySpecification"/>
@@ -28,6 +29,14 @@ public interface IRepository<T>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>An asynchronous task containing the list of query results</returns>
     Task<List<T>> Query(QuerySpecification<T> querySpecification, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Retrieves the first entity that matches the <paramref name="querySpecification"/>
+    /// </summary>
+    /// <param name="querySpecification">Query specification</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>An asynchronous task containing the result of the query</returns>
+    Task<T?> QueryOne(QuerySpecification<T> querySpecification, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Adds an entity

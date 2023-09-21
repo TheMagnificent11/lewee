@@ -1,7 +1,7 @@
 ﻿using Lewee.Application.Mediation.Requests;
 using Lewee.Domain;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
+using Sample.Restaurant.Application.QuerySpecifications;
 using Sample.Restaurant.Domain;
 using Serilog;
 
@@ -38,21 +38,16 @@ public sealed class RemoveMenuItemCommand : ICommand, ITableRequest
 
         public async Task<CommandResult> Handle(RemoveMenuItemCommand request, CancellationToken cancellationToken)
         {
-            var table = await this.tableRepository
-                .All()
-                .Where(x => x.TableNumber == request.TableNumber)
-                .Include(x => x.Orders)
-                .ThenInclude(x => x.Items)
-                .FirstOrDefaultAsync(cancellationToken);
+            var table = await this.tableRepository.QueryOne(
+                new TableOrderQuerySpecification(request.TableNumber),
+                cancellationToken);
 
             if (table == null)
             {
                 return CommandResult.Fail(ResultStatus.NotFound, "Table not found");
             }
 
-            var menuItem = await this.menuItemRepository
-                .All()
-                .FirstOrDefaultAsync(x => x.Id == request.MenuItemId, cancellationToken);
+            var menuItem = await this.menuItemRepository.RetrieveById(request.MenuItemId, cancellationToken);
 
             if (menuItem == null)
             {

@@ -2,7 +2,6 @@
 using Lewee.Domain;
 using MapsterMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Sample.Restaurant.Domain;
 
 namespace Sample.Restaurant.Application;
@@ -31,12 +30,12 @@ public sealed class GetTablesQuery : IQuery<IEnumerable<TableDto>>
             GetTablesQuery request,
             CancellationToken cancellationToken)
         {
-            var entites = await this.repository
-                .All()
+            var entites = await this.repository.All(cancellationToken);
+            var sortedEntities = entites
                 .OrderBy(x => x.TableNumber)
-                .ToArrayAsync(cancellationToken);
+                .ToArray();
 
-            var dtos = this.mapper.Map<IEnumerable<TableDto>>(entites);
+            var dtos = this.mapper.Map<IEnumerable<TableDto>>(sortedEntities);
 
             return QueryResult<IEnumerable<TableDto>>.Success(dtos);
         }
