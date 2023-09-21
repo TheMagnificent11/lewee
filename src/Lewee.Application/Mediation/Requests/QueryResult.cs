@@ -1,4 +1,6 @@
-﻿namespace Lewee.Application.Mediation.Requests;
+﻿using FluentValidation.Results;
+
+namespace Lewee.Application.Mediation.Requests;
 
 /// <summary>
 /// Query Result
@@ -7,7 +9,7 @@
 public class QueryResult<T> : Result
     where T : class
 {
-    private QueryResult(T? data, ResultStatus status, Dictionary<string, List<string>>? errors)
+    private QueryResult(T? data, ResultStatus status, List<ValidationFailure>? errors)
         : base(status, errors)
     {
         this.Data = data;
@@ -47,12 +49,10 @@ public class QueryResult<T> : Result
     {
         CheckIfFailure(status);
 
-        var errors = new Dictionary<string, List<string>>()
-        {
-            { string.Empty, new List<string> { errorMessage } }
-        };
-
-        return new QueryResult<T>(null, status, errors);
+        return new QueryResult<T>(
+            null,
+            status,
+            new List<ValidationFailure> { new ValidationFailure(string.Empty, errorMessage) });
     }
 
     /// <summary>
@@ -74,6 +74,9 @@ public class QueryResult<T> : Result
     {
         CheckIfFailure(status);
 
-        return new QueryResult<T>(null, status, errors);
+        return new QueryResult<T>(
+            null,
+            status,
+            errors.Select(x => new ValidationFailure(x.Key, x.Value.First())).ToList());
     }
 }

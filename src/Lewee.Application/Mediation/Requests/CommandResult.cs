@@ -1,11 +1,13 @@
-﻿namespace Lewee.Application.Mediation.Requests;
+﻿using FluentValidation.Results;
+
+namespace Lewee.Application.Mediation.Requests;
 
 /// <summary>
 /// Command Result
 /// </summary>
 public class CommandResult : Result
 {
-    private CommandResult(ResultStatus status, Dictionary<string, List<string>>? errors)
+    private CommandResult(ResultStatus status, List<ValidationFailure>? errors)
         : base(status, errors)
     {
     }
@@ -40,12 +42,9 @@ public class CommandResult : Result
     {
         CheckIfFailure(status);
 
-        var errors = new Dictionary<string, List<string>>()
-        {
-            { string.Empty, new List<string> { errorMessage } }
-        };
-
-        return new CommandResult(status, errors);
+        return new CommandResult(
+            status,
+            new List<ValidationFailure> { new ValidationFailure(string.Empty, errorMessage) });
     }
 
     /// <summary>
@@ -63,7 +62,7 @@ public class CommandResult : Result
     /// <exception cref="InvalidOperationException">
     /// Thrown if <see cref="ResultStatus"/> is <see cref="ResultStatus.Success"/> or <see cref="ResultStatus.NotApplicable"/>
     /// </exception>
-    public static CommandResult Fail(ResultStatus status, Dictionary<string, List<string>> errors)
+    public static CommandResult Fail(ResultStatus status, List<ValidationFailure> errors)
     {
         CheckIfFailure(status);
 
