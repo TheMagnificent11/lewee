@@ -23,12 +23,12 @@ jobs:
     - name: Set Version
       uses: Mudlet/xmlstarlet-action@master
       with:
-        args: ed -L --update "//Project/PropertyGroup/Version" -v $latest_tag Directory.Build.props
+        args: ed -L --update "//Project/PropertyGroup/Version" -v ${{ latest_tag }} Directory.Build.props
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 7.0.*
     - name: Pack
-      run: dotnet pack ./pack.sln --configuration Release --nologo /p:PackageVersion=$latest_tag --output ./output
+      run: dotnet pack ./pack.sln --configuration Release --nologo /p:PackageVersion=${{ latest_tag }} --output ./output
     - name: Publish to NuGet
       run: dotnet nuget push ./output/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
