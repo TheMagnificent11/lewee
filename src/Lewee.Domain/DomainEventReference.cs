@@ -104,7 +104,7 @@ public class DomainEventReference
             return null;
         }
 
-        var objDomainEvent = JsonSerializer.Deserialize(this.DomainEventJson, targetType);
+        var objDomainEvent = Deserialize(this.DomainEventJson, targetType);
         if (objDomainEvent is not DomainEvent domainEvent)
         {
             return null;
@@ -113,6 +113,18 @@ public class DomainEventReference
         domainEvent.UserId = this.UserId;
 
         return domainEvent;
+
+        static object? Deserialize(string json, Type type)
+        {
+            try
+            {
+                return JsonSerializer.Deserialize(json, type);
+            }
+            catch
+            {
+                return null;
+            }
+        }
     }
 
     /// <summary>
