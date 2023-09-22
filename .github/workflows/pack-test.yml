@@ -12,7 +12,7 @@ jobs:
           fetch-depth: 0
       - name: Determine Version
         id: version
-        uses: ./..actions/get-version@develop
+        uses: ./../actions/get-version@develop
       - name: Set Version
         uses: ./../actions/set-version@develop
         with:
