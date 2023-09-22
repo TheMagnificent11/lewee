@@ -12,9 +12,9 @@ jobs:
           fetch-depth: 0
       - name: Determine Version
         id: version
-        uses: ./.github/actions/get-version@latest
+        uses: ./.github/actions/get-version@develop
       - name: Set Version
-        uses: ./.github/actions/set-version
+        uses: ./.github/actions/set-version@develop
         with:
           version: $steps.version.outputs.latest-tag
       - name: Setup .NET
