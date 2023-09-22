@@ -16,7 +16,7 @@ jobs:
       - name: Set Version
         uses: ./.github/actions/set-version
         with:
-          version: $step.version.outputs.latest-tag
+          version: $steps.version.outputs.latest-tag
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
