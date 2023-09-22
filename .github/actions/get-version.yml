@@ -6,9 +6,7 @@ runs:
       uses: actions/checkout@v2
     - name: Detect Latest Tag
       id: latest-tag
+      shell: bash
       run: |
         latest_tag=$(git describe --tags --abbrev=0)
         echo "::set-output name=tag::$latest_tag"
-      shell: bash
-    - name: Display Latest Tag
-      run: echo "Latest Tag: ${{ steps.latest-tag.outputs.tag }}"
