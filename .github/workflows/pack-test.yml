@@ -12,11 +12,14 @@ jobs:
           fetch-depth: 0
       - name: Determine Version
         id: version
-        uses: ./.github/actions/get-version
+        shell: bash
+        run: |
+          latest_tag=$(git describe --tags --abbrev=0)
+          echo "::set-output name=latest-tag::$latest_tag"
       - name: Set Version
-        uses: ./.github/actions/set-version
+        uses: Mudlet/xmlstarlet-action@master
         with:
-          version: $steps.version.outputs.latest-tag
+          args: ed -L --update "//Project/PropertyGroup/Version" -v ${{ steps.version.outcome.latest_tag }} Directory.Build.props
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
