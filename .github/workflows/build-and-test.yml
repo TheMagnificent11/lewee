@@ -31,7 +31,7 @@ jobs:
           fetch-depth: 0
       - name: Determine Version
         id: version
-        uses: ./get-version.yml
+        uses: ./.github/actions/get-version.yml
       - name: Set Version
         uses: Mudlet/xmlstarlet-action@master
         with:
