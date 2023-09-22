@@ -21,7 +21,7 @@ jobs:
     - name: Set Version
       uses: Mudlet/xmlstarlet-action@master
       with:
-        args: ed -L --update "//Project/PropertyGroup/Version" -v ${{ version.latest_tag }} Directory.Build.props
+        args: ed -L --update "//Project/PropertyGroup/Version" -v ${{ steps.version.outputs.latest_tag }} Directory.Build.props
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
