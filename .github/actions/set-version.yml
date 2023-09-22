@@ -8,4 +8,4 @@ runs:
   steps:
     - uses: Mudlet/xmlstarlet-action@master
       with:
-        args: ed -L --update "//Project/PropertyGroup/Version" -v ${{ inputs.version }} Directory.Build.props
+        args: ed -L --update "//Project/PropertyGroup/Version" -v ${{ inputs.version }} ./Directory.Build.props

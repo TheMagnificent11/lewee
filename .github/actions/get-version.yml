@@ -9,4 +9,4 @@ runs:
       shell: bash
       run: |
         latest_tag=$(git describe --tags --abbrev=0)
-        echo "::set-output name=latest-tag::$latest_tag"
+        echo "name=latest-tag::$latest_tag" >> $GITHUB_OUTPUT
