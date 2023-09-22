@@ -2,8 +2,6 @@ name: 'get-version'
 runs:
   using: 'composite'
   steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
     - name: Detect Latest Tag
       id: latest-tag
       shell: bash
