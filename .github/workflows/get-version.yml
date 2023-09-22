@@ -1,0 +1,24 @@
+name: Git Checkout and Tag Detection
+
+on:
+  workflow_call:
+
+jobs:
+  checkout-and-detect-tag:
+    runs-on: ubuntu-latest
+    outptus:
+      latest_tag: ${{ steps.latest_tag.outptus.latest_tag }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Detect Latest Tag
+        id: latest-tag
+        run: |
+          latest_tag=$(git describe --tags --abbrev=0)
+          echo "::set-output name=tag::$latest_tag"
+        shell: bash
+
+      - name: Display Latest Tag
+        run: echo "Latest Tag: ${{ steps.latest-tag.outputs.tag }}"
