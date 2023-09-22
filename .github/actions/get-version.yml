@@ -1,0 +1,12 @@
+name: 'get-version'
+outputs:
+  latest-tag:
+runs:
+  using: 'composite'
+  steps:
+    - name: Detect Latest Tag
+      id: latest-tag
+      shell: bash
+      run: |
+        latest_tag=$(git describe --tags --abbrev=0)
+        echo "::set-output name=latest-tag::$latest_tag"

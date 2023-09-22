@@ -1,0 +1,11 @@
+name: 'set-version'
+inputs:
+  version:
+    required: true
+    default: '0.0.1'
+runs:
+  using: 'composite'
+  steps:
+    - uses: Mudlet/xmlstarlet-action@master
+      with:
+        args: ed -L --update "//Project/PropertyGroup/Version" -v ${{ inputs.version }} Directory.Build.props
