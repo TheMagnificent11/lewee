@@ -17,12 +17,9 @@ jobs:
           latest_tag=$(git describe --tags --abbrev=0)
           echo "name=latest-tag::$latest_tag" >> $GITHUB_OUTPUT
       - name: Set Version
-        uses: jacobtomlinson/gha-find-replace@v3
-        with:
-          find: "0.0.1"
-          replace: "${{ steps.version.outputs.latest_tag }}"
-          include: "./Directory.Build.props"
-          regex: "false"
+        shell: bash
+        run: |
+          sed -i 's/0.0.1/${{ steps.version.outputs.latest-tag }}/g' Directory.Build.props
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
