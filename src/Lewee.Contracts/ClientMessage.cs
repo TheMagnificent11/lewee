@@ -13,15 +13,15 @@ public class ClientMessage
     /// <summary>
     /// Gets or sets the assembly name of the JSON contract class
     /// </summary>
-    public string ContractAssemblyName { get; set; }
+    public string ContractAssemblyName { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets or sets the full class name of the JSON contract class
     /// </summary>
-    public string ContractFullClassName { get; set; }
+    public string ContractFullClassName { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets or sets the message JSON
     /// </summary>
-    public string MessageJson { get; set; }
+    public string MessageJson { get; set; } = string.Empty;
 }
