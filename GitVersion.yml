@@ -1,8 +1,19 @@
-mode: Mainline
-mainline:
-  mode: Tag
+mode: ContinuousDeployment
 branches:
+  develop:
+    regex: ^develop$  # This matches the develop branch
+    mode: ContinuousDeployment  # Increment versions on the develop branch
   main:
-    regex: ^main$
+    regex: ^main$  # This matches the main branch
+    mode: ContinuousDeployment  # Increment versions on the master branch
+  feature:
+    regex: ^feature/  # This matches feature branches
+    mode: Increment  # Increment the patch version on feature branches
+  release:
+    regex: ^release/  # This matches release branches
+    mode: Mainline  # Use the latest tag on release branches
+  hotfix:
+    regex: ^hotfix/  # This matches hotfix branches
+    mode: Increment  # Increment the patch version on hotfix branches
 ignore:
   sha: []
