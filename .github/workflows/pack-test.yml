@@ -20,7 +20,7 @@ jobs:
         uses: jacobtomlinson/gha-find-replace@v3
         with:
           find: "0.0.1"
-          replace: ${{ steps.version.outputs.latest_tag }}
+          replace: "${{ steps.version.outputs.latest_tag }}"
           include: "./Directory.Build.props"
           regex: "false"
       - name: Setup .NET
