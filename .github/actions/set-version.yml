@@ -6,6 +6,7 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - uses: Mudlet/xmlstarlet-action@master
-      with:
-        args: ed -L --update "//Project/PropertyGroup/Version" -v ${{ inputs.version }} ./Directory.Build.props
+    - name: Set Version
+      shell: bash
+      run: |
+        sed -i 's/0.0.1/${{ steps.version.outputs.latest-tag }}/g' Directory.Build.props
