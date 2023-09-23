@@ -15,20 +15,22 @@ jobs:
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
-    - name: Get Latest Tag
-      id: get_latest_tag
-      run: |
-        latest_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
-        echo "latest_tag=${latest_tag}" >> "$GITHUB_ENV"
-    - name: Set Version
-      uses: Mudlet/xmlstarlet-action@master
-      with:
-        args: ed -L --update "//Project/PropertyGroup/Version" -v ${{ latest_tag }} Directory.Build.props
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 7.0.*
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v0
+      with:
+        versionSpec: '5.x'
+        preferLatestVersion: true
+        includePrerelease: false
+    - name: Determine Version
+      id: version
+      uses: gittools/actions/gitversion/execute@v0
+      with:
+        useConfigFile: true
     - name: Pack
-      run: dotnet pack ./pack.sln --configuration Release --nologo /p:PackageVersion=${{ latest_tag }} --output ./output
+      run: dotnet pack ./pack.sln --configuration Release --nologo /p:PackageVersion=${{ steps.version.outputs.fullSemVer }} --output ./output
     - name: Publish to NuGet
       run: dotnet nuget push ./output/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
