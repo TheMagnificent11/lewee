@@ -1,3 +1,8 @@
 mode: Mainline
 mainline:
   mode: Tag
+branches:
+  main:
+    regex: ^main$
+ignore:
+  sha: []
