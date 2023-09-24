@@ -38,7 +38,7 @@ jobs:
         with:
           versionSpec: '5.x'
           preferLatestVersion: true
-          includePrerelease: false
+          includePrerelease: true
       - name: Determine Version
         id: version
         uses: gittools/actions/gitversion/execute@v0
