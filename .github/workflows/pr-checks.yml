@@ -1,4 +1,5 @@
 name: PR Checks
+
 on:
   pull_request:
     branches: [ main, develop ]
@@ -8,4 +9,3 @@ jobs:
     uses: ./.github/workflows/build-and-test.yml
     with:
       is-pr: true
-      
