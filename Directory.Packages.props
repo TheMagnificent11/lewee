@@ -7,7 +7,7 @@
     <PackageVersion Include="Ardalis.Specification" Version="7.0.0" />
     <PackageVersion Include="Ardalis.Specification.EntityFrameworkCore" Version="7.0.0" />
     <PackageVersion Include="Correlate.AspNetCore" Version="5.0.0" />
-    <PackageVersion Include="Correlate.DependencyInjection" Version="5.0.0" />
+    <PackageVersion Include="Correlate.DependencyInjection" Version="5.1.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.0" />
     <PackageVersion Include="coverlet.msbuild" Version="6.0.0" />
     <PackageVersion Include="FastEndpoints" Version="5.18.0" />
