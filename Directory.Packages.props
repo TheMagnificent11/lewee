@@ -13,7 +13,7 @@
     <PackageVersion Include="FastEndpoints" Version="5.18.0" />
     <PackageVersion Include="FastEndpoints.Swagger" Version="5.18.0" />
     <PackageVersion Include="FluentAssertions" Version="6.12.0" />
-    <PackageVersion Include="FluentAssertions.Analyzers" Version="0.24.0" />
+    <PackageVersion Include="FluentAssertions.Analyzers" Version="0.26.0" />
     <PackageVersion Include="FluentValidation" Version="11.7.1" />
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="11.7.1" />
     <PackageVersion Include="Fluxor.Blazor.Web.ReduxDevTools" Version="5.9.1" />
