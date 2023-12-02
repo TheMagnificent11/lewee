@@ -3,7 +3,6 @@
   <ItemGroup>
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
     <PackageReference Include="MediatR" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" />
     <PackageReference Include="Serilog" />
     <PackageReference Include="SerilogAnalyzer">
       <ExcludeAssets>all</ExcludeAssets>
