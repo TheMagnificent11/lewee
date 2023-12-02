@@ -10,19 +10,17 @@ public abstract class ValueObject<T> : IEquatable<T>
     /// <inheritdoc />
     public bool Equals(T? other)
     {
-        if (other is not T valueObject)
+        if (other is null)
         {
             return false;
         }
 
-        return this.Equals(valueObject);
+        return this.GetEqualityComponents().SequenceEqual(other.GetEqualityComponents());
     }
 
     /// <summary>
-    /// Equality check
+    /// Returns the an enumerable collection of object properties to use in equality checks
     /// </summary>
-    /// <param name="other">Object to compare against</param>
-    /// <returns>True if equivalent, otherwise false</returns>
-    /// <remarks>Null check not required</remarks>
-    protected abstract bool EqualsCore(T other);
+    /// <returns>An enemerable collection of property values</returns>
+    protected abstract IEnumerable<object> GetEqualityComponents();
 }

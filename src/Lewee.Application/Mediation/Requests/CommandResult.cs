@@ -44,7 +44,7 @@ public class CommandResult : Result
 
         return new CommandResult(
             status,
-            new List<ValidationFailure> { new ValidationFailure(string.Empty, errorMessage) });
+            new List<ValidationFailure> { new(string.Empty, errorMessage) });
     }
 
     /// <summary>
