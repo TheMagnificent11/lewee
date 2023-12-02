@@ -52,7 +52,7 @@ public class QueryResult<T> : Result
         return new QueryResult<T>(
             null,
             status,
-            new List<ValidationFailure> { new ValidationFailure(string.Empty, errorMessage) });
+            new List<ValidationFailure> { new(string.Empty, errorMessage) });
     }
 
     /// <summary>
