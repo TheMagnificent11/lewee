@@ -137,6 +137,7 @@ dotnet_diagnostic.SA1000.severity = none
 dotnet_diagnostic.SA1005.severity = none
 dotnet_diagnostic.SA1011.severity = none
 dotnet_diagnostic.SA1200.severity = none
+dotnet_diagnostic.SA1407.severity = none
 dotnet_diagnostic.SA1500.max_line_length = 120
 dotnet_diagnostic.SA1500 = warn
 dotnet_diagnostic.SA1512.severity = none
