@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using Lewee.Domain;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -99,16 +98,13 @@ public static class DatabaseConfiguration
     /// Migrates the database related to the DB context of type <typeparamref name="T"/>
     /// </summary>
     /// <typeparam name="T">DB context to migrate</typeparam>
-    /// <param name="app">Application builder</param>
+    /// <param name="serviceProvider">Service provider</param>
     /// <param name="seedData">Whether to seed data</param>
     /// <returns>Asynchronous task</returns>
-    public static async Task MigrationDatabase<T>(this IApplicationBuilder app, bool seedData = false)
+    public static async Task MigrateDatabase<T>(this IServiceProvider serviceProvider, bool seedData = false)
         where T : DbContext
     {
-        var service = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>()
-            ?? throw new InvalidOperationException("Could not find IServiceScopeFactory");
-
-        using (var serviceScope = service.CreateScope())
+        using (var serviceScope = serviceProvider.CreateScope())
         {
             var dbContext = serviceScope.ServiceProvider.GetRequiredService<T>();
             await dbContext.Database.MigrateAsync();

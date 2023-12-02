@@ -95,7 +95,7 @@ public class Program
             app.UseSwaggerGen();
         }
 
-        await app.MigrationDatabase<RestaurantDbContext>(seedData: true);
+        await app.Services.MigrateDatabase<RestaurantDbContext>(seedData: true);
 
         app.Run();
     }
