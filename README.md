@@ -10,9 +10,9 @@ Lewee is an opinionated set of packages to assist with setting up a domain-drive
 
 Below is summary of the dependencies used by Lewee. Note that this isn't a list of NuGet packages, just a high-level list of software used and each can have several related NuGet packages.
 
-- [.Net 7](https://dotnet.microsoft.com/en-us/download/dotnet/7.0)
+- [.Net 8](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
 - [Serilog](https://serilog.net)
-- [Entity Framework 7](https://learn.microsoft.com/en-us/ef) (using SQL Server)
+- [Entity Framework](https://learn.microsoft.com/en-us/ef) (using SQL Server)
 - [Mediatr](https://github.com/jbogard/MediatR)
 - [FastEndpoints](https://fast-endpoints.com)
 - [FluentValidation](https://docs.fluentvalidation.net/en/latest)
@@ -26,38 +26,20 @@ Below is summary of the dependencies used by Lewee. Note that this isn't a list 
 - .Net CLI
 - [Docker Desktop](https://www.docker.com/products/docker-desktop)
 
-### Visual Studio
-
-1. Open `Lewee.sln` in Visual Studio
-2. Set the startup project to `docker-compose`
-3. Build the solution
-4. Run/Debug the solution
-
-Visual Studio/Docker Compose picks a localhost port to host the sample application and will launch the appropriate browser tabes.
-
 ### CLI
 
 Execute the following in a terminal at the root of this Git repository.
 
 ```bash
-docker compose up
+docker compose up -d
+dotnet run --project .\sample\Sample.Restaurant.Server\
 ```
 
-Your browser should launch an navigate to [https://localhost:54577](https://localhost:54577).
-
-### VS Code
-
-You can use the [CLI](#cli) steps to run the sample application.
-
-Don't use the `Docker: Compose Up` command from the Command Palette because it does not include the overrides.
-
-Unfortunately, there is now easy way to debug a Docker Compose application using VS Code.
-
-[This Gist](https://gist.github.com/kendrahavens/cd3ba570e2e59fb4b0cbfe7e3529f0b5) that explains how it can be done, but it hasn't been tested for this solution/workspace.
+Navigate to [https://localhost:54577](https://localhost:54577).
 
 ## Contributing
 
-Lewee usings the [Gitflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow) branching model, which keeps the `main` branch clean and essentially represents the latest version available in production.
+Lewee uses the [Gitflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow) branching model, which keeps the `main` branch clean and essentially represents the latest version available in production.
 
 The `develop` branch is the default branch and what you should branch from to implement features and fix bugs.
 

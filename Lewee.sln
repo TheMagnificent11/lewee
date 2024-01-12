@@ -13,6 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.Build.props = Directory.Build.props
 		Directory.Packages.props = Directory.Packages.props
 		README.md = README.md
+		spelling-exclusion.txt = spelling-exclusion.txt
 		test-coverage.ps1 = test-coverage.ps1
 	EndProjectSection
 EndProject
@@ -27,8 +28,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Restaurant.Application", "sample\Sample.Restaurant.Application\Sample.Restaurant.Application.csproj", "{D73A3EA5-C39D-4627-920B-256836E26332}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Restaurant.Contracts", "sample\Sample.Restaurant.Contracts\Sample.Restaurant.Contracts.csproj", "{8C561EB7-3BFF-4F68-9AF1-00EC42138316}"
-EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{A9F3F510-CEEA-44D1-A3E0-FA4F93E6E656}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Restaurant.Domain.Tests.Unit", "sample-tests\Sample.Restaurant.Domain.Tests.Unit\Sample.Restaurant.Domain.Tests.Unit.csproj", "{026C2EB0-3697-45C6-AF12-C85FE5907073}"
 EndProject
@@ -88,10 +87,6 @@ Global
 		{8C561EB7-3BFF-4F68-9AF1-00EC42138316}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C561EB7-3BFF-4F68-9AF1-00EC42138316}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C561EB7-3BFF-4F68-9AF1-00EC42138316}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A9F3F510-CEEA-44D1-A3E0-FA4F93E6E656}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A9F3F510-CEEA-44D1-A3E0-FA4F93E6E656}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A9F3F510-CEEA-44D1-A3E0-FA4F93E6E656}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A9F3F510-CEEA-44D1-A3E0-FA4F93E6E656}.Release|Any CPU.Build.0 = Release|Any CPU
 		{026C2EB0-3697-45C6-AF12-C85FE5907073}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{026C2EB0-3697-45C6-AF12-C85FE5907073}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{026C2EB0-3697-45C6-AF12-C85FE5907073}.Release|Any CPU.ActiveCfg = Release|Any CPU

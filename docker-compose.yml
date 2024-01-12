@@ -1,17 +1,6 @@
 version: '3.4'
 
-networks:
-  lewee-network:
-    name: lewee_network
-
 services:
-  sample.restaurant.server:
-    image: ${DOCKER_REGISTRY-}samplerestaurantserver
-    build:
-      context: .
-      dockerfile: sample/Sample.Restaurant.Server/Dockerfile
-    networks:
-      - lewee-network
   seq:
     container_name: lewee_seq
     image: datalust/seq
@@ -21,5 +10,14 @@ services:
       - ACCEPT_EULA=Y
     volumes:
       - ./seq:/data
-    networks:
-      - lewee-network
+  database:
+    container_name: lewee_sql
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports:
+      - 5434:1433
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_PID=Express
+      - SA_PASSWORD=<YourStrong@Passw0rd!>
+    volumes:
+      - ./data:/var/opt/mssql/data

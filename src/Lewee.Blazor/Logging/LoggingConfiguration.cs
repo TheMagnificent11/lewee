@@ -11,13 +11,13 @@
 //    /// <summary>
 //    /// Configures logging
 //    /// </summary>
-//    /// <param name="loggingInjestionUrl">Logging injestion URL</param>
-//    public static void ConfigureLogging(string loggingInjestionUrl)
+//    /// <param name="loggingIngestionUrl">Logging ingestion URL</param>
+//    public static void ConfigureLogging(string loggingIngestionUrl)
 //    {
 //        Log.Logger = new LoggerConfiguration()
 //            .MinimumLevel.Debug()
 //            .WriteTo.BrowserConsole()
-//            .WriteTo.BrowserHttp($"{loggingInjestionUrl}injest")
+//            .WriteTo.BrowserHttp($"{loggingIngestionUrl}ingest")
 //            .CreateLogger();
 
 //        Log.Information("Started client-side application");

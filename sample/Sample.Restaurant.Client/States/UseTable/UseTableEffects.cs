@@ -2,7 +2,7 @@
 using Fluxor;
 using Lewee.Blazor.ErrorHandling;
 using Lewee.Blazor.Fluxor;
-using Lewee.Shared;
+using Lewee.Blazor.Logging;
 using Microsoft.AspNetCore.Components;
 using Sample.Restaurant.Client.States.TableDetails.Actions;
 using Sample.Restaurant.Client.States.UseTable.Actions;
@@ -28,9 +28,9 @@ public sealed class UseTableEffects
     }
 
     [EffectMethod]
-    public Task MesageReceived(UseTableCompletedAction action, IDispatcher dispatcher)
+    public Task MessageReceived(UseTableCompletedAction action, IDispatcher dispatcher)
     {
-        using (this.Logger.BeginScope(LoggingConsts.CorrelationId, action.CorrelationId.ToString()))
+        using (this.Logger.BeginCorrelationIdScope(action.CorrelationId))
         {
             this.Logger.LogDebug("Received tabled used message from server");
 

@@ -6,6 +6,7 @@ root = true
 [*]
 end_of_line = crlf
 trim_trailing_whitespace = true
+spelling_exclusion_path = spelling-exclusion.txt
 
 [*.{config,cs,xml}]
 indent_style = space
@@ -178,3 +179,6 @@ dotnet_diagnostic.IDE0063.severity = none
 
 # IDE0090: Use 'new(...)'
 dotnet_diagnostic.IDE0090.severity = warning
+
+# IDE0290: Use primary constructor
+dotnet_diagnostic.IDE0290.severity = none
