@@ -2,7 +2,7 @@
 using Fluxor;
 using Lewee.Blazor.ErrorHandling;
 using Lewee.Blazor.Fluxor;
-using Lewee.Shared;
+using Lewee.Blazor.Logging;
 using Sample.Restaurant.Client.States.TableDetails.Actions;
 
 namespace Sample.Restaurant.Client.States.TableDetails;
@@ -25,7 +25,7 @@ public sealed class OrderItemEffects
     [EffectMethod]
     public Task OrderItemCompleted(OrderItemCompletedAction action, IDispatcher dispatcher)
     {
-        using (this.Logger.BeginScope(LoggingConsts.CorrelationId, action.CorrelationId.ToString()))
+        using (this.Logger.BeginCorrelationIdScope(action.CorrelationId))
         {
             this.Logger.LogDebug("Received item added message from server");
 

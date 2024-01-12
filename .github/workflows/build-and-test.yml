@@ -45,11 +45,11 @@ jobs:
         with:
           useConfigFile: true
       - name: Install Dependencies
-        run: dotnet restore ./ci.sln --nologo
+        run: dotnet restore ./Lewee.sln --nologo
       - name: Build
-        run: dotnet build ./ci.sln --configuration Release --no-restore --nologo
+        run: dotnet build ./Lewee.sln --configuration Release --no-restore --nologo
       - name: Test
-        run: dotnet test ./ci.sln --configuration Release --no-build --nologo --settings coverage.runsettings --results-directory ./coverage
+        run: dotnet test ./Lewee.sln --configuration Release --no-build --nologo --settings coverage.runsettings --results-directory ./coverage
       - name: Code Coverage Report
         uses: irongut/CodeCoverageSummary@v1.3.0
         if: ${{ inputs.is-pr == true }}
@@ -68,7 +68,7 @@ jobs:
           recreate: true
           path: code-coverage-results.md
       - name: Pack
-        run: dotnet pack ./pack.sln --configuration Release --nologo /p:PackageVersion=${{ steps.version.outputs.fullSemVer }} --output ./output
+        run: dotnet pack ./Lewee.sln --configuration Release --nologo /p:PackageVersion=${{ steps.version.outputs.fullSemVer }} --output ./output
       - name: Publish to NuGet
         run: dotnet nuget push ./output/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
         if: github.ref == 'refs/heads/main'

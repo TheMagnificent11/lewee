@@ -1,7 +1,7 @@
 ﻿using Correlate;
 using Fluxor;
 using Lewee.Blazor.Fluxor.Actions;
-using Lewee.Shared;
+using Lewee.Blazor.Logging;
 using Microsoft.Extensions.Logging; // TODO (https://github.com/TheMagnificent11/lewee/issues/15): switch to Serilog
 
 namespace Lewee.Blazor.Fluxor;
@@ -63,7 +63,7 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
             CorrelationId = action.CorrelationId.ToString()
         };
 
-        using (this.Logger.BeginScope(LoggingConsts.CorrelationId, action.CorrelationId.ToString()))
+        using (this.Logger.BeginCorrelationIdScope(action.CorrelationId))
         {
             this.Logger.LogDebug("Executing query request...");
 
@@ -80,7 +80,7 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
     [EffectMethod]
     public virtual Task RequestSuccess(TRequestSuccessAction action, IDispatcher dispatcher)
     {
-        using (this.Logger.BeginScope(LoggingConsts.CorrelationId, action.CorrelationId.ToString()))
+        using (this.Logger.BeginCorrelationIdScope(action.CorrelationId))
         {
             this.Logger.LogDebug("Executing query request...success");
             return Task.FromResult(true);
@@ -96,7 +96,7 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
     [EffectMethod]
     public virtual Task RequestError(TRequestErrorAction action, IDispatcher dispatcher)
     {
-        using (this.Logger.BeginScope(LoggingConsts.CorrelationId, action.CorrelationId.ToString()))
+        using (this.Logger.BeginCorrelationIdScope(action.CorrelationId))
         {
             this.Logger.LogError(
                 "Executing query request...error (Error Message: {ErrorMessage})",
