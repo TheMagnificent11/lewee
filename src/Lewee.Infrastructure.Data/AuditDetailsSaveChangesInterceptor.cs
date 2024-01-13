@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace Lewee.Infrastructure.SqlServer;
+namespace Lewee.Infrastructure.Data;
 
 internal class AuditDetailsSaveChangesInterceptor : SaveChangesInterceptor
 {

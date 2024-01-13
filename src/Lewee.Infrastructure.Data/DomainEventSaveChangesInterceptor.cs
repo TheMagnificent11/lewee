@@ -1,10 +1,9 @@
-﻿using Lewee.Application.Data;
-using Lewee.Domain;
+﻿using Lewee.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace Lewee.Infrastructure.SqlServer;
+namespace Lewee.Infrastructure.Data;
 
 internal class DomainEventSaveChangesInterceptor<TContext> : SaveChangesInterceptor
     where TContext : DbContext, IApplicationDbContext

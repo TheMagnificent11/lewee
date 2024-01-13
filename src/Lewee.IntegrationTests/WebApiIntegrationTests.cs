@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
-using Lewee.Infrastructure.SqlServer;
+using Lewee.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,7 +16,7 @@ namespace Lewee.IntegrationTests;
 /// </summary>
 /// <typeparam name="TEntryPoint">ASP.Net app entry point class</typeparam>
 /// <typeparam name="TFactory">Web application factory type</typeparam>
-/// <typeparam name="TDbContextFixture">Database context fixure type</typeparam>
+/// <typeparam name="TDbContextFixture">Database context fixture type</typeparam>
 /// <typeparam name="TDbContext">Database context type</typeparam>
 /// <typeparam name="TDbSeeder">Database seeder type</typeparam>
 public abstract class WebApiIntegrationTests<TEntryPoint, TFactory, TDbContextFixture, TDbContext, TDbSeeder>
@@ -133,7 +133,7 @@ public abstract class WebApiIntegrationTests<TEntryPoint, TFactory, TDbContextFi
     /// <summary>
     /// Deserializes a HTTP response
     /// </summary>
-    /// <typeparam name="T">Reponse body type</typeparam>
+    /// <typeparam name="T">Response body type</typeparam>
     /// <param name="response">Response to deserialize</param>
     /// <param name="isSuccess">Whether the response was expected successful</param>
     /// <returns>The deserialized data</returns>
@@ -160,7 +160,7 @@ public abstract class WebApiIntegrationTests<TEntryPoint, TFactory, TDbContextFi
     }
 
     /// <summary>
-    /// Gets a service of type <typeparamref name="T"/> from the dependency injection conatiner
+    /// Gets a service of type <typeparamref name="T"/> from the dependency injection container
     /// </summary>
     /// <typeparam name="T">Service type</typeparam>
     /// <returns>The service if it exists, otherwise null</returns>

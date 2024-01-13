@@ -1,5 +1,5 @@
 ﻿using Lewee.Domain;
-using Lewee.Infrastructure.SqlServer;
+using Lewee.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Sample.Restaurant.Domain;
 using Sample.Restaurant.Infrastructure.Data.Configuration;

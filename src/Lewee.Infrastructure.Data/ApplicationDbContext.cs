@@ -1,8 +1,7 @@
-﻿using Lewee.Application.Data;
-using Lewee.Domain;
+﻿using Lewee.Domain;
 using Microsoft.EntityFrameworkCore;
 
-namespace Lewee.Infrastructure.SqlServer;
+namespace Lewee.Infrastructure.Data;
 
 /// <summary>
 /// Application Database Context
@@ -66,7 +65,7 @@ public abstract class ApplicationDbContext<TContext> : DbContext, IApplicationDb
     }
 
     /// <summary>
-    /// Conigures the database model
+    /// Configures the database model
     /// </summary>
     /// <param name="modelBuilder">
     /// Database model builder

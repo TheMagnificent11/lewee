@@ -3,7 +3,7 @@ using Lewee.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Lewee.Infrastructure.SqlServer;
+namespace Lewee.Infrastructure.Data;
 
 /// <summary>
 /// Enum Entity Configuration

@@ -5,3 +5,6 @@ Fluxor
 Gitflow
 Mediatr
 Serilog
+
+appsettings
+respawner

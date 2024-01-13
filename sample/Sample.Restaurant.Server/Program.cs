@@ -3,6 +3,7 @@ using FastEndpoints.Swagger;
 using Lewee.Infrastructure.AspNet.Auth;
 using Lewee.Infrastructure.AspNet.Observability;
 using Lewee.Infrastructure.AspNet.SignalR;
+using Lewee.Infrastructure.Data;
 using Lewee.Infrastructure.SqlServer;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using Sample.Restaurant.Application;
@@ -33,7 +34,7 @@ public class Program
         builder.Services.AddMapper();
 
         builder.Services
-            .ConfigureDatabaseWithSeeder<RestaurantDbContext, RestaurantDbSeeder>(
+            .AddSqlDatabaseWithSeeder<RestaurantDbContext, RestaurantDbSeeder>(
                 connectionString,
                 typeof(MenuItem).Assembly)
             .ConfigureAuthenticatedUserService()

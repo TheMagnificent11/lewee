@@ -1,4 +1,4 @@
-﻿using Lewee.Infrastructure.SqlServer;
+﻿using Lewee.Infrastructure.Data;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

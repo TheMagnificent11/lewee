@@ -1,10 +1,9 @@
-﻿using Lewee.Application.Data;
-using Lewee.Domain;
+﻿using Lewee.Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
-namespace Lewee.Infrastructure.SqlServer;
+namespace Lewee.Infrastructure.Data;
 
 /*
  * TODO: potential better ways to do domain event dispatching

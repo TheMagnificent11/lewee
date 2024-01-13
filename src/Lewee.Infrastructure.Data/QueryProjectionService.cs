@@ -1,8 +1,7 @@
-﻿using Lewee.Application.Data;
-using Lewee.Domain;
+﻿using Lewee.Domain;
 using Microsoft.EntityFrameworkCore;
 
-namespace Lewee.Infrastructure.SqlServer;
+namespace Lewee.Infrastructure.Data;
 
 internal class QueryProjectionService<TContext> : IQueryProjectionService
     where TContext : DbContext, IApplicationDbContext

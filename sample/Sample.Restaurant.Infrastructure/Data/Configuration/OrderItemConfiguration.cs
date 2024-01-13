@@ -1,4 +1,4 @@
-﻿using Lewee.Infrastructure.SqlServer;
+﻿using Lewee.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Sample.Restaurant.Domain;

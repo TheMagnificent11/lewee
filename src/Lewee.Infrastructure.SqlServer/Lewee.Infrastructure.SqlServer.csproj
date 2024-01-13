@@ -1,17 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" />
-    <PackageReference Include="MediatR" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" />
-    <PackageReference Include="Microsoft.Extensions.DependencyModel" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" />
-    <PackageReference Include="Serilog" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Lewee.Domain\Lewee.Domain.csproj" />
+    <ProjectReference Include="..\Lewee.Infrastructure.Data\Lewee.Infrastructure.Data.csproj" />
   </ItemGroup>
 
 </Project>
