@@ -1,4 +1,4 @@
-﻿using Lewee.Infrastructure.Data;
+﻿using Lewee.Infrastructure.SqlServer;
 using Sample.Restaurant.Domain;
 
 namespace Sample.Restaurant.Infrastructure.Data.Configuration;

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Lewee.Infrastructure.Data;
+namespace Lewee.Infrastructure.SqlServer;
 
 /// <summary>
 /// Database Seeder Interface

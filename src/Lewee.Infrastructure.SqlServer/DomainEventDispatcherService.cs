@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 
-namespace Lewee.Infrastructure.Data;
+namespace Lewee.Infrastructure.SqlServer;
 
 internal class DomainEventDispatcherService<TContext> : BackgroundService
     where TContext : DbContext, IApplicationDbContext

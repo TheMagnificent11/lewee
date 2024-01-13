@@ -1,4 +1,4 @@
-﻿using Lewee.Infrastructure.Data;
+﻿using Lewee.Infrastructure.SqlServer;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 

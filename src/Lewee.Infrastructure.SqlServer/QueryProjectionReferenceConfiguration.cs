@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Lewee.Infrastructure.Data;
+namespace Lewee.Infrastructure.SqlServer;
 
 internal class QueryProjectionReferenceConfiguration : IEntityTypeConfiguration<QueryProjectionReference>
 {

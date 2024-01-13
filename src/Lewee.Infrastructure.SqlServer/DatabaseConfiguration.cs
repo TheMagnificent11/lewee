@@ -3,7 +3,7 @@ using Lewee.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Lewee.Infrastructure.Data;
+namespace Lewee.Infrastructure.SqlServer;
 
 /// <summary>
 /// Database Configuration

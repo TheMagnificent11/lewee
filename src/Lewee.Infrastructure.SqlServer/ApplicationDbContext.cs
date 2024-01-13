@@ -2,7 +2,7 @@
 using Lewee.Domain;
 using Microsoft.EntityFrameworkCore;
 
-namespace Lewee.Infrastructure.Data;
+namespace Lewee.Infrastructure.SqlServer;
 
 /// <summary>
 /// Application Database Context

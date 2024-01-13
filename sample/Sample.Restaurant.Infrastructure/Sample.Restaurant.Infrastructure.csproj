@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Lewee.Infrastructure.Data\Lewee.Infrastructure.Data.csproj" />
+    <ProjectReference Include="..\..\src\Lewee.Infrastructure.SqlServer\Lewee.Infrastructure.SqlServer.csproj" />
     <ProjectReference Include="..\Sample.Restaurant.Application\Sample.Restaurant.Application.csproj" />
     <ProjectReference Include="..\Sample.Restaurant.Domain\Sample.Restaurant.Domain.csproj" />
   </ItemGroup>

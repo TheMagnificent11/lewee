@@ -39,7 +39,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lewee.Infrastructure.AspNet
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lewee.Infrastructure.AspNet.WebApi", "src\Lewee.Infrastructure.AspNet.WebApi\Lewee.Infrastructure.AspNet.WebApi.csproj", "{8F8633FD-1887-43F9-82F5-BDB2DAA96130}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lewee.Infrastructure.Data", "src\Lewee.Infrastructure.Data\Lewee.Infrastructure.Data.csproj", "{17B724E1-E933-456D-9E10-6C379FD0642E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lewee.Infrastructure.SqlServer", "src\Lewee.Infrastructure.SqlServer\Lewee.Infrastructure.SqlServer.csproj", "{17B724E1-E933-456D-9E10-6C379FD0642E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lewee.Blazor", "src\Lewee.Blazor\Lewee.Blazor.csproj", "{4507AB85-C9F4-4F1B-ADA1-C70DEC2A14A1}"
 EndProject

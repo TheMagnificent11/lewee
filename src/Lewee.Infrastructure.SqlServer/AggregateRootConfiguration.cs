@@ -1,7 +1,7 @@
 ﻿using Lewee.Domain;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Lewee.Infrastructure.Data;
+namespace Lewee.Infrastructure.SqlServer;
 
 /// <summary>
 /// Aggregate Root Configuration

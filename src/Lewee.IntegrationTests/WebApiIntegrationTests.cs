@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
-using Lewee.Infrastructure.Data;
+using Lewee.Infrastructure.SqlServer;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
