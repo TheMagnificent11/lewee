@@ -22,7 +22,7 @@ public class Program
 
         StaticWebAssetsLoader.UseStaticWebAssets(builder.Environment, builder.Configuration);
 
-        var connectionString = builder.Configuration.GetConnectionString("Sample.Restaurant");
+        var connectionString = builder.Configuration.GetConnectionString("Sample.Restaurant.SqlServer");
         if (string.IsNullOrWhiteSpace(connectionString))
         {
             throw new ApplicationException("Could not find database connection string");

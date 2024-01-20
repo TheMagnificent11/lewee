@@ -25,7 +25,7 @@ public sealed class RestaurantDbContextFixture : DatabaseContextFixture<Restaura
 
     protected override string EnvironmentName => "Testing";
 
-    protected override string ConnectionStringName => "Sample.Restaurant";
+    protected override string ConnectionStringName => "Sample.Restaurant.SqlServer";
 
     protected override RestaurantDbContext CreateDbContext()
     {
