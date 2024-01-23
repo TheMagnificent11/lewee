@@ -10,8 +10,8 @@ services:
       - ACCEPT_EULA=Y
     volumes:
       - ./seq:/data
-  database:
-    container_name: lewee_sql
+  sqlserver:
+    container_name: lewee_sqlserver
     image: mcr.microsoft.com/mssql/server:2022-latest
     ports:
       - 5434:1433
@@ -21,3 +21,13 @@ services:
       - SA_PASSWORD=<YourStrong@Passw0rd!>
     volumes:
       - ./data:/var/opt/mssql/data
+  postgres:
+    container_name: lewee_postgres
+    image: postgres:latest
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=<YourStrong@Passw0rd!>
+      - POSTGRES_USER=postgres
+    volumes:
+      - ./data:/var/lib/postgresql/data

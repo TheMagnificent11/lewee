@@ -4,6 +4,7 @@ using Lewee.Infrastructure.AspNet.Auth;
 using Lewee.Infrastructure.AspNet.Observability;
 using Lewee.Infrastructure.AspNet.SignalR;
 using Lewee.Infrastructure.Data;
+using Lewee.Infrastructure.PostgreSql;
 using Lewee.Infrastructure.SqlServer;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using Sample.Restaurant.Application;
@@ -38,10 +39,20 @@ public class Program
 
         builder.Services.AddMapper();
 
-        builder.Services
-            .AddSqlServerDatabaseWithSeeder<RestaurantDbContext, RestaurantDbSeeder>(
+        if (useSqlServer)
+        {
+            builder.Services.AddSqlServerDatabaseWithSeeder<RestaurantDbContext, RestaurantDbSeeder>(
                 connectionString,
-                typeof(MenuItem).Assembly)
+                typeof(MenuItem).Assembly);
+        }
+        else
+        {
+            builder.Services.AddPostgreSqlDatabaseWithSeeder<RestaurantDbContext, RestaurantDbSeeder>(
+                connectionString,
+                typeof(MenuItem).Assembly);
+        }
+
+        builder.Services
             .ConfigureAuthenticatedUserService()
 #if DEBUG
             .AddDatabaseDeveloperPageExceptionFilter()

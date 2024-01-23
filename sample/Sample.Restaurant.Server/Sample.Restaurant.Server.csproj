@@ -24,6 +24,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Lewee.Infrastructure.AspNet.WebApi\Lewee.Infrastructure.AspNet.WebApi.csproj" />
+    <ProjectReference Include="..\..\src\Lewee.Infrastructure.PostgreSql\Lewee.Infrastructure.PostgreSql.csproj" />
+    <ProjectReference Include="..\..\src\Lewee.Infrastructure.SqlServer\Lewee.Infrastructure.SqlServer.csproj" />
     <ProjectReference Include="..\Sample.Restaurant.Client\Sample.Restaurant.Client.csproj" />
     <ProjectReference Include="..\Sample.Restaurant.Infrastructure\Sample.Restaurant.Infrastructure.csproj" />
   </ItemGroup>
