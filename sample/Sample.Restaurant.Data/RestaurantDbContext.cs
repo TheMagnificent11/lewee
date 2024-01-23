@@ -1,10 +1,10 @@
 ﻿using Lewee.Domain;
 using Lewee.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Sample.Restaurant.Data.Configuration;
 using Sample.Restaurant.Domain;
-using Sample.Restaurant.Infrastructure.Data.Configuration;
 
-namespace Sample.Restaurant.Infrastructure.Data;
+namespace Sample.Restaurant.Data;
 
 public class RestaurantDbContext : ApplicationDbContext<RestaurantDbContext>
 {

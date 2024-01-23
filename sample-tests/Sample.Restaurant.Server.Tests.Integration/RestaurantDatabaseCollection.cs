@@ -1,5 +1,5 @@
 ﻿using Lewee.IntegrationTests;
-using Sample.Restaurant.Infrastructure.Data;
+using Sample.Restaurant.Data;
 using Xunit;
 
 namespace Sample.Restaurant.Server.Tests.Integration;

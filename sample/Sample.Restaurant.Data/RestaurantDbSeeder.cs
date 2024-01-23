@@ -3,7 +3,7 @@ using Lewee.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Sample.Restaurant.Domain;
 
-namespace Sample.Restaurant.Infrastructure.Data;
+namespace Sample.Restaurant.Data;
 
 public class RestaurantDbSeeder : IDatabaseSeeder<RestaurantDbContext>
 {
@@ -16,7 +16,7 @@ public class RestaurantDbSeeder : IDatabaseSeeder<RestaurantDbContext>
 
     public async Task Run()
     {
-        var hasNewTables = await this.Seed(Domain.Table.DefaultData);
+        var hasNewTables = await this.Seed(Table.DefaultData);
         var hasNewMenuItems = await this.Seed(MenuItem.DefaultData);
 
         if (!hasNewTables && !hasNewMenuItems)

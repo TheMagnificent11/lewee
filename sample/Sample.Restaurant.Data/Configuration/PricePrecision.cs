@@ -1,4 +1,4 @@
-﻿namespace Sample.Restaurant.Infrastructure.Data.Configuration;
+﻿namespace Sample.Restaurant.Data.Configuration;
 
 internal static class PricePrecision
 {

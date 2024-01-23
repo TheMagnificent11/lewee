@@ -5,11 +5,9 @@ using Lewee.Infrastructure.AspNet.Observability;
 using Lewee.Infrastructure.AspNet.SignalR;
 using Lewee.Infrastructure.Data;
 using Lewee.Infrastructure.PostgreSql;
-using Lewee.Infrastructure.SqlServer;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using Sample.Restaurant.Application;
 using Sample.Restaurant.Domain;
-using Sample.Restaurant.Infrastructure.Data;
 using Sample.Restaurant.Server.Configuration;
 using Serilog;
 

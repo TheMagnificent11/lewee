@@ -1,5 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\src\Lewee.Infrastructure.Data\Lewee.Infrastructure.Data.csproj" />
     <ProjectReference Include="..\Sample.Restaurant.Application\Sample.Restaurant.Application.csproj" />
     <ProjectReference Include="..\Sample.Restaurant.Domain\Sample.Restaurant.Domain.csproj" />
