@@ -4,6 +4,7 @@ Ardalis
 Fluxor
 Gitflow
 Mediatr
+Postgre
 Serilog
 
 appsettings

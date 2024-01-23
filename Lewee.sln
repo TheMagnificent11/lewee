@@ -53,7 +53,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Restaurant.Server.Te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lewee.IntegrationTests", "src\Lewee.IntegrationTests\Lewee.IntegrationTests.csproj", "{27CE2C4C-ED90-44DA-B3E3-E798459E4B5B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lewee.Infrastructure.Data", "src\Lewee.Infrastructure.Data\Lewee.Infrastructure.Data.csproj", "{6EA2F36D-4911-40CD-AD44-A9DCB0FE4554}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lewee.Infrastructure.Data", "src\Lewee.Infrastructure.Data\Lewee.Infrastructure.Data.csproj", "{6EA2F36D-4911-40CD-AD44-A9DCB0FE4554}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lewee.Infrastructure.PostgreSql", "src\Lewee.Infrastructure.PostgreSql\Lewee.Infrastructure.PostgreSql.csproj", "{36A1A5A3-BBB0-4D33-A018-E1DCD7467C50}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -141,6 +143,10 @@ Global
 		{6EA2F36D-4911-40CD-AD44-A9DCB0FE4554}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6EA2F36D-4911-40CD-AD44-A9DCB0FE4554}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6EA2F36D-4911-40CD-AD44-A9DCB0FE4554}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36A1A5A3-BBB0-4D33-A018-E1DCD7467C50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36A1A5A3-BBB0-4D33-A018-E1DCD7467C50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36A1A5A3-BBB0-4D33-A018-E1DCD7467C50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36A1A5A3-BBB0-4D33-A018-E1DCD7467C50}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
