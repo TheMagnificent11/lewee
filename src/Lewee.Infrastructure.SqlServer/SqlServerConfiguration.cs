@@ -7,9 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Lewee.Infrastructure.SqlServer;
 
 /// <summary>
-/// Database Configuration
+/// SQL Server Configuration
 /// </summary>
-public static class DatabaseConfiguration
+public static class SqlServerConfiguration
 {
     /// <summary>
     /// Configures the domain database related to the <typeparamref name="T"/> database context
@@ -21,7 +21,7 @@ public static class DatabaseConfiguration
     /// <returns>
     /// Services collection for chaining
     /// </returns>
-    public static IServiceCollection AddSqlDatabase<T>(
+    public static IServiceCollection AddSqlServerDatabase<T>(
         this IServiceCollection services,
         string connectionString,
         Assembly domainAssembly)
@@ -53,14 +53,14 @@ public static class DatabaseConfiguration
     /// <returns>
     /// Services collection for chaining
     /// </returns>
-    public static IServiceCollection AddSqlDatabaseWithSeeder<TContext, TSeeder>(
+    public static IServiceCollection AddSqlServerDatabaseWithSeeder<TContext, TSeeder>(
         this IServiceCollection services,
         string connectionString,
         Assembly domainAssembly)
         where TContext : ApplicationDbContext<TContext>
         where TSeeder : class, IDatabaseSeeder<TContext>
     {
-        var newServices = services.AddSqlDatabase<TContext>(connectionString, domainAssembly);
+        var newServices = services.AddSqlServerDatabase<TContext>(connectionString, domainAssembly);
 
         newServices.AddScoped<IDatabaseSeeder<TContext>, TSeeder>();
 

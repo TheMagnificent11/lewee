@@ -22,7 +22,12 @@ public class Program
 
         StaticWebAssetsLoader.UseStaticWebAssets(builder.Environment, builder.Configuration);
 
-        var connectionString = builder.Configuration.GetConnectionString("Sample.Restaurant.SqlServer");
+        var useSqlServer = builder.Configuration.GetValue<bool>("UseSqlServer");
+
+        var connectionString = useSqlServer
+            ? builder.Configuration.GetConnectionString("Sample.Restaurant.SqlServer")
+            : builder.Configuration.GetConnectionString("Sample.Restaurant.Postgres");
+
         if (string.IsNullOrWhiteSpace(connectionString))
         {
             throw new ApplicationException("Could not find database connection string");
@@ -34,7 +39,7 @@ public class Program
         builder.Services.AddMapper();
 
         builder.Services
-            .AddSqlDatabaseWithSeeder<RestaurantDbContext, RestaurantDbSeeder>(
+            .AddSqlServerDatabaseWithSeeder<RestaurantDbContext, RestaurantDbSeeder>(
                 connectionString,
                 typeof(MenuItem).Assembly)
             .ConfigureAuthenticatedUserService()
