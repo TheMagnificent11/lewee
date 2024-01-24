@@ -9,7 +9,7 @@ namespace Lewee.Infrastructure.PostgreSql;
 /// <summary>
 /// PostgreSQL Configuration
 /// </summary>
-public static class PostgresConfiguration
+public static class PostgreSqlConfiguration
 {
     /// <summary>
     /// Configures the domain database related to the <typeparamref name="T"/> database context
@@ -35,24 +35,12 @@ public static class PostgresConfiguration
     /// <summary>
     /// Configures the domain database related to the <typeparamref name="TContext"/> database context with a data seeder
     /// </summary>
-    /// <typeparam name="TContext">
-    /// Database context type
-    /// </typeparam>
-    /// <typeparam name="TSeeder">
-    /// Database seeder type
-    /// </typeparam>
-    /// <param name="services">
-    /// Services collection
-    /// </param>
-    /// <param name="connectionString">
-    /// Database connection string
-    /// </param>
-    /// <param name="domainAssembly">
-    /// Domain assembly
-    /// </param>
-    /// <returns>
-    /// Services collection for chaining
-    /// </returns>
+    /// <typeparam name="TContext">Database context type</typeparam>
+    /// <typeparam name="TSeeder">Database seeder type</typeparam>
+    /// <param name="services">Services collection</param>
+    /// <param name="connectionString">Database connection string</param>
+    /// <param name="domainAssembly">Domain assembly</param>
+    /// <returns>Services collection for chaining</returns>
     public static IServiceCollection AddPostgreSqlDatabaseWithSeeder<TContext, TSeeder>(
         this IServiceCollection services,
         string connectionString,

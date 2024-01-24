@@ -1,8 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Lewee.Infrastructure.SqlServer\Lewee.Infrastructure.SqlServer.csproj" />
+    <ProjectReference Include="..\..\src\Lewee.Infrastructure.PostgreSql\Lewee.Infrastructure.PostgreSql.csproj" />
     <ProjectReference Include="..\Sample.Restaurant.Data\Sample.Restaurant.Data.csproj" />
   </ItemGroup>
-
 </Project>

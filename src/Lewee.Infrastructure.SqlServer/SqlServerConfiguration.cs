@@ -35,24 +35,12 @@ public static class SqlServerConfiguration
     /// <summary>
     /// Configures the domain database related to the <typeparamref name="TContext"/> database context with a data seeder
     /// </summary>
-    /// <typeparam name="TContext">
-    /// Database context type
-    /// </typeparam>
-    /// <typeparam name="TSeeder">
-    /// Database seeder type
-    /// </typeparam>
-    /// <param name="services">
-    /// Services collection
-    /// </param>
-    /// <param name="connectionString">
-    /// Database connection string
-    /// </param>
-    /// <param name="domainAssembly">
-    /// Domain assembly
-    /// </param>
-    /// <returns>
-    /// Services collection for chaining
-    /// </returns>
+    /// <typeparam name="TContext">Database context type</typeparam>
+    /// <typeparam name="TSeeder">Database seeder type</typeparam>
+    /// <param name="services">Services collection</param>
+    /// <param name="connectionString">Database connection string</param>
+    /// <param name="domainAssembly">Domain assembly</param>
+    /// <returns>Services collection for chaining</returns>
     public static IServiceCollection AddSqlServerDatabaseWithSeeder<TContext, TSeeder>(
         this IServiceCollection services,
         string connectionString,

@@ -3,7 +3,7 @@ using Lewee.IntegrationTests;
 using Microsoft.EntityFrameworkCore;
 using Respawn;
 using Respawn.Graph;
-using Sample.Restaurant.Infrastructure.Data;
+using Sample.Restaurant.Data;
 
 namespace Sample.Restaurant.Server.Tests.Integration;
 
