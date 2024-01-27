@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Sample.Restaurant.Data;
+using Sample.Restaurant.SqlServer;
 
 
 #nullable disable
@@ -10,7 +10,7 @@ using Sample.Restaurant.Data;
 namespace Sample.Restaurant.Infrastructure.Migrations
 {
     [ExcludeFromCodeCoverage]
-    [DbContext(typeof(RestaurantDbContext))]
+    [DbContext(typeof(SqlServerRestaurantDbContext))]
     partial class RestaurantDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

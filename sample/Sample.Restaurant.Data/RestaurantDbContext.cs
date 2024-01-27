@@ -6,10 +6,11 @@ using Sample.Restaurant.Domain;
 
 namespace Sample.Restaurant.Data;
 
-public class RestaurantDbContext : ApplicationDbContext<RestaurantDbContext>
+public abstract class RestaurantDbContext<TContext> : ApplicationDbContext<TContext>
+    where TContext : DbContext, IApplicationDbContext
 {
-    public RestaurantDbContext(
-        DbContextOptions<RestaurantDbContext> options,
+    protected RestaurantDbContext(
+        DbContextOptions<TContext> options,
         IAuthenticatedUserService authenticatedUserService)
         : base(options, authenticatedUserService)
     {

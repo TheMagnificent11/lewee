@@ -4,13 +4,12 @@ using Lewee.Infrastructure.AspNet.Auth;
 using Lewee.Infrastructure.AspNet.Observability;
 using Lewee.Infrastructure.AspNet.SignalR;
 using Lewee.Infrastructure.Data;
-using Lewee.Infrastructure.PostgreSql;
 using Lewee.Infrastructure.SqlServer;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using Sample.Restaurant.Application;
-using Sample.Restaurant.Data;
 using Sample.Restaurant.Domain;
 using Sample.Restaurant.Server.Configuration;
+using Sample.Restaurant.SqlServer;
 using Serilog;
 
 namespace Sample.Restaurant.Server;
@@ -41,15 +40,15 @@ public class Program
 
         if (useSqlServer)
         {
-            builder.Services.AddSqlServerDatabaseWithSeeder<RestaurantDbContext, RestaurantDbSeeder>(
+            builder.Services.AddSqlServerDatabaseWithSeeder<SqlServerRestaurantDbContext, SqlServerRestaurantDbSeeder>(
                 connectionString,
                 typeof(MenuItem).Assembly);
         }
         else
         {
-            builder.Services.AddPostgreSqlDatabaseWithSeeder<RestaurantDbContext, RestaurantDbSeeder>(
-                connectionString,
-                typeof(MenuItem).Assembly);
+            //builder.Services.AddPostgreSqlDatabaseWithSeeder<RestaurantDbContext, RestaurantDbSeeder>(
+            //    connectionString,
+            //    typeof(MenuItem).Assembly);
         }
 
         builder.Services
@@ -69,8 +68,16 @@ public class Program
                 };
             })
             .ConfigureSignalR()
-            .AddHealthChecks()
-            .AddDbContextCheck<RestaurantDbContext>();
+            .AddHealthChecks();
+
+        if (useSqlServer)
+        {
+            //builder.Services.AddDbContextCheck<SqlServerRestaurantDbContext>();
+        }
+        else
+        {
+            // TODO
+        }
 
         builder.Services.AddRazorPages();
 
@@ -112,7 +119,14 @@ public class Program
             app.UseSwaggerGen();
         }
 
-        await app.Services.MigrateDatabase<RestaurantDbContext>(seedData: true);
+        if (useSqlServer)
+        {
+            await app.Services.MigrateDatabase<SqlServerRestaurantDbContext>(seedData: true);
+        }
+        else
+        {
+            // TODO
+        }
 
         app.Run();
     }

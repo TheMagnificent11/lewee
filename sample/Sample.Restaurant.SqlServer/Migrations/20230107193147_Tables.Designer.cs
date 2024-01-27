@@ -2,14 +2,14 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Sample.Restaurant.Data;
+using Sample.Restaurant.SqlServer;
 
 
 #nullable disable
 
 namespace Sample.Restaurant.Infrastructure.Migrations
 {
-    [DbContext(typeof(RestaurantDbContext))]
+    [DbContext(typeof(SqlServerRestaurantDbContext))]
     [Migration("20230107193147_Tables")]
     partial class Tables
     {

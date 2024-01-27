@@ -5,11 +5,12 @@ using Sample.Restaurant.Domain;
 
 namespace Sample.Restaurant.Data;
 
-public class RestaurantDbSeeder : IDatabaseSeeder<RestaurantDbContext>
+public abstract class RestaurantDbSeeder<TContext> : IDatabaseSeeder<TContext>
+    where TContext : DbContext
 {
-    private readonly RestaurantDbContext context;
+    private readonly TContext context;
 
-    public RestaurantDbSeeder(RestaurantDbContext context)
+    protected RestaurantDbSeeder(TContext context)
     {
         this.context = context;
     }
