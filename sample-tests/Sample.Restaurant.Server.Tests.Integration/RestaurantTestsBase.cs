@@ -1,12 +1,16 @@
 ﻿using Lewee.IntegrationTests;
-using Sample.Restaurant.Infrastructure.Data;
+using Sample.Restaurant.Data;
 using Xunit;
 
 namespace Sample.Restaurant.Server.Tests.Integration;
 
 [Collection("RestaurantDatabaseCollection")]
 public abstract class RestaurantTestsBase :
-    WebApiIntegrationTests<Program, RestaurantWebApplicationFactory, RestaurantDbContextFixture, RestaurantDbContext, RestaurantDbSeeder>
+    WebApiIntegrationTests<Program,
+    RestaurantWebApplicationFactory,
+    RestaurantDbContextFixture,
+    RestaurantDbContext,
+    RestaurantDbSeeder>
 {
     protected RestaurantTestsBase(
         RestaurantWebApplicationFactory webApplicationFactory,
