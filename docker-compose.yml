@@ -20,7 +20,7 @@ services:
       - MSSQL_PID=Express
       - SA_PASSWORD=<YourStrong@Passw0rd!>
     volumes:
-      - ./data:/var/opt/mssql/data
+      - ./data-sqlserver:/var/opt/mssql/data
   postgres:
     container_name: lewee_postgres
     image: postgres:latest
@@ -30,4 +30,4 @@ services:
       - POSTGRES_PASSWORD=<YourStrong@Passw0rd!>
       - POSTGRES_USER=postgres
     volumes:
-      - ./data:/var/lib/postgresql/data
+      - ./data-postgres:/var/lib/postgresql/data

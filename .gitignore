@@ -33,7 +33,8 @@ Obj/
 /coverage-Report
 
 # Docker Volumes
-/data
+/data-sqlserver
+/data-postgres
 /seq
 
 # Dotnet Pack Location
