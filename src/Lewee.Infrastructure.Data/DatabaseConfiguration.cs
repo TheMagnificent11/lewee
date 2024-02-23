@@ -46,9 +46,9 @@ public static class DatabaseConfiguration
 
         foreach (var ag in aggregateRoots)
         {
-            var repositoryIntefaceType = typeof(IRepository<>).MakeGenericType(ag);
+            var repositoryInterfaceType = typeof(IRepository<>).MakeGenericType(ag);
             var repositoryType = typeof(Repository<,>).MakeGenericType(ag, typeof(T));
-            services.AddTransient(repositoryIntefaceType, repositoryType);
+            services.AddTransient(repositoryInterfaceType, repositoryType);
         }
 
         services.AddSingleton<DomainEventDispatcher<T>>();

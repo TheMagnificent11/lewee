@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-namespace Lewee.Infrastructure.Logging;
+namespace Lewee.Infrastructure.AspNet.Observability;
 
 internal static class SettingsExtensions
 {

@@ -20,8 +20,7 @@ public static class SignalRConfiguration
         services.AddSignalR();
         services.AddResponseCompression(opts =>
         {
-            opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
-                new[] { "application/octet-stream" });
+            opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(["application/octet-stream"]);
         });
         services.AddMediatR(config => config.RegisterServicesFromAssemblies(
             typeof(ClientEvent).Assembly,

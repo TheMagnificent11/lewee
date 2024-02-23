@@ -1,6 +1,6 @@
 ﻿using Serilog.Events;
 
-namespace Lewee.Infrastructure.Logging;
+namespace Lewee.Infrastructure.AspNet.Observability;
 
 internal class SeqSettings
 {

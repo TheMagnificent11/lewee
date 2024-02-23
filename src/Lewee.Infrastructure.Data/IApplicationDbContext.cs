@@ -1,7 +1,7 @@
 ﻿using Lewee.Domain;
 using Microsoft.EntityFrameworkCore;
 
-namespace Lewee.Application.Data;
+namespace Lewee.Infrastructure.Data;
 
 /// <summary>
 /// Application Database Context Interface

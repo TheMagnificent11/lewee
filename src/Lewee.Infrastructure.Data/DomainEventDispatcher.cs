@@ -1,5 +1,4 @@
-﻿using Lewee.Application.Data;
-using Lewee.Domain;
+﻿using Lewee.Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Serilog;

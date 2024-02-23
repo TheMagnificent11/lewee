@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Lewee.Infrastructure.Data\Lewee.Infrastructure.Data.csproj" />
+    <ProjectReference Include="..\Sample.Pizzeria.Domain\Sample.Pizzeria.Domain.csproj" />
+  </ItemGroup>
+  
+</Project>

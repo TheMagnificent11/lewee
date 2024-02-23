@@ -1,5 +1,4 @@
-﻿using Lewee.Application.Data;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 
 namespace Lewee.Infrastructure.Data;
