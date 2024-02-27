@@ -3,10 +3,40 @@
 @using Microsoft.AspNetCore.Authorization
 
 @attribute [Authorize]
-@rendermode InteractiveAuto
+@attribute [StreamRendering]
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Orders</h1>
 
-Welcome to your new app.
+@if (this.Orders == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    if (this.Orders.Length == 0)
+    {
+        <p>No orders found.</p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Order Date</th>
+                    <th>Order Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in this.Orders)
+                {
+                    <tr>
+                        <td>@item.OrderDate.ToShortDateString()</td>
+                        <td>@item.Status</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}

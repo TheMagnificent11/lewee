@@ -6,7 +6,7 @@ namespace Sample.Pizzeria.Endpoints;
 
 public sealed class GetUserOrdersEndpoint : QueryEndpoint<OrderDto[]>
 {
-    protected override string Route => "/api/v1/orders";
+    protected override string Route => OrderRoutes.GetUserOrders;
 
     protected override string Name => "GetOrdersForAuthenticatedUser";
 

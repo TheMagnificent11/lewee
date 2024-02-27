@@ -11,6 +11,7 @@ internal class OrdersForUserQuerySpecification : QuerySpecification<Order>
         this.Query
             .Where(x => x.UserId == userId)
             .Include(x => x.Status)
-            .Include(x => x.Pizzas);
+            .Include(x => x.Pizzas)
+            .OrderByDescending(x => x.CreatedAtUtc);
     }
 }

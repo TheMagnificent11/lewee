@@ -11,6 +11,10 @@ internal static class OrderExtensions
             .Select(x => x.ToDto())
             .ToArray();
 
-        return new OrderDto(order.Id, order.Status.Name, pizzas);
+        var orderDate = order.StatusId == OrderStatus.New
+            ? order.CreatedAtUtc
+            : order.OrderPlacedDateTime;
+
+        return new OrderDto(order.Id, orderDate, order.Status.Name, pizzas);
     }
 }
