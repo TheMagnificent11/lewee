@@ -1,4 +1,5 @@
 using FastEndpoints;
+using FastEndpoints.Swagger;
 using Lewee.Infrastructure.AspNet.Auth;
 using Lewee.Infrastructure.AspNet.Observability;
 using Lewee.Infrastructure.Data;
@@ -61,7 +62,16 @@ builder.Services
     .AddDbContextCheck<ApplicationIdentityDbContext>()
     .AddDbContextCheck<PizzeriaDbContext>();
 
-builder.Services.AddFastEndpoints();
+builder.Services
+    .AddFastEndpoints()
+    .SwaggerDocument(x =>
+    {
+        x.DocumentSettings = y =>
+        {
+            y.Title = "Pizzeria API";
+            y.Version = "v1";
+        };
+    });
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
@@ -89,6 +99,7 @@ app.UseStaticFiles();
 app.UseAntiforgery();
 
 app.UseFastEndpoints();
+app.UseSwaggerGen();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
