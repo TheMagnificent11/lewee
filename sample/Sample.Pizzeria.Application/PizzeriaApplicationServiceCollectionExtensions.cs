@@ -8,7 +8,7 @@ public static class PizzeriaApplicationServiceCollectionExtensions
 {
     public static IServiceCollection AddPizzeriaApplication(this IServiceCollection services)
     {
-        services.AddApplication(typeof(UserOrderDto).Assembly, typeof(Order).Assembly);
+        services.AddApplication(typeof(GetUserOrdersQuery).Assembly, typeof(Order).Assembly);
 
         return services;
     }

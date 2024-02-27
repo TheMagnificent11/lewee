@@ -63,9 +63,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Restaurant.Server", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Pizzeria.Domain", "sample\Sample.Pizzeria.Domain\Sample.Pizzeria.Domain.csproj", "{3B511F28-FDF7-41A1-A7B7-BFFCE369991A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Pizzeria.Infrastructure", "sample\Sample.Pizzeria.Infrastructure\Sample.Pizzeria.Infrastructure.csproj", "{5BD217AC-677F-47B7-A6A8-B7B1BACBCAE1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Pizzeria.Infrastructure", "sample\Sample.Pizzeria.Infrastructure\Sample.Pizzeria.Infrastructure.csproj", "{5BD217AC-677F-47B7-A6A8-B7B1BACBCAE1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Pizzeria.Application", "sample\Sample.Pizzeria.Application\Sample.Pizzeria.Application.csproj", "{5F12392E-6917-4C26-B6D6-B4E281808713}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Pizzeria.Application", "sample\Sample.Pizzeria.Application\Sample.Pizzeria.Application.csproj", "{5F12392E-6917-4C26-B6D6-B4E281808713}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Pizzeria.Contracts", "sample\Sample.Pizzeria.Contracts\Sample.Pizzeria.Contracts.csproj", "{A4D34FAC-7DD7-4CC2-8AA0-4FD0B8D92D0F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -177,6 +179,10 @@ Global
 		{5F12392E-6917-4C26-B6D6-B4E281808713}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F12392E-6917-4C26-B6D6-B4E281808713}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F12392E-6917-4C26-B6D6-B4E281808713}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4D34FAC-7DD7-4CC2-8AA0-4FD0B8D92D0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4D34FAC-7DD7-4CC2-8AA0-4FD0B8D92D0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4D34FAC-7DD7-4CC2-8AA0-4FD0B8D92D0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4D34FAC-7DD7-4CC2-8AA0-4FD0B8D92D0F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

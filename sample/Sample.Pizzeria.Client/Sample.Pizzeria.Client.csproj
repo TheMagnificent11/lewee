@@ -10,4 +10,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Sample.Pizzeria.Contracts\Sample.Pizzeria.Contracts.csproj" />
+  </ItemGroup>
+
 </Project>

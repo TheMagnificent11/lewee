@@ -1,3 +1,4 @@
+using FastEndpoints;
 using Lewee.Infrastructure.AspNet.Auth;
 using Lewee.Infrastructure.AspNet.Observability;
 using Lewee.Infrastructure.Data;
@@ -9,9 +10,9 @@ using Sample.Identity.Infrastructure;
 using Sample.Pizzeria.Application;
 using Sample.Pizzeria.Components;
 using Sample.Pizzeria.Components.Account;
-using Sample.Pizzeria.Domain;
 using Sample.Pizzeria.Infrastructure.Data;
 using Serilog;
+using DomainOrder = Sample.Pizzeria.Domain.Order;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,7 +50,7 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
     .AddSignInManager()
     .AddDefaultTokenProviders();
 
-builder.Services.ConfigureDatabase<PizzeriaDbContext>(pizzeriaConnectionString, typeof(Order).Assembly);
+builder.Services.ConfigureDatabase<PizzeriaDbContext>(pizzeriaConnectionString, typeof(DomainOrder).Assembly);
 
 builder.Services.AddPizzeriaApplication();
 
@@ -59,6 +60,8 @@ builder.Services
     .AddHealthChecks()
     .AddDbContextCheck<ApplicationIdentityDbContext>()
     .AddDbContextCheck<PizzeriaDbContext>();
+
+builder.Services.AddFastEndpoints();
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
@@ -84,6 +87,8 @@ app.UseHealthChecks("/health");
 
 app.UseStaticFiles();
 app.UseAntiforgery();
+
+app.UseFastEndpoints();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()

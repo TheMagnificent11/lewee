@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Lewee.Application\Lewee.Application.csproj" />
+    <ProjectReference Include="..\Sample.Pizzeria.Contracts\Sample.Pizzeria.Contracts.csproj" />
     <ProjectReference Include="..\Sample.Pizzeria.Domain\Sample.Pizzeria.Domain.csproj" />
   </ItemGroup>
 

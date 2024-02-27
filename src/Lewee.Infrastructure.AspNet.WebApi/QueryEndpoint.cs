@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Security.Claims;
 using Correlate;
 using FastEndpoints;
 using Lewee.Application.Mediation.Requests;
@@ -26,6 +27,11 @@ public abstract class QueryEndpoint<T> : EndpointWithoutRequest<T>
     /// Gets the correlation ID
     /// </summary>
     protected Guid CorrelationId => this.CorrelationContextAccessor.GetCorrelationId();
+
+    /// <summary>
+    /// Gets the user ID of the authenticated user if authenticated, otherwise null
+    /// </summary>
+    protected string? UserId => this.HttpContext.User?.FindFirstValue(ClaimTypes.NameIdentifier);
 
     /// <summary>
     /// Gets the endpoint route
