@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Sample.Pizzeria.Client;
 using Sample.Pizzeria.Contracts;
 
-namespace Sample.Pizzeria.Components.Pages;
+namespace Sample.Pizzeria.Client.Pages;
 
 public partial class Home
 {
