@@ -55,10 +55,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Restaurant.Tests.Int
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Restaurant.Client", "sample\Sample.Restaurant.Client\Sample.Restaurant.Client.csproj", "{7FD0D0F6-8EFF-443F-9346-478FFCDFB628}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Pizzeria.Client", "sample\Sample.Pizzeria.Client\Sample.Pizzeria.Client.csproj", "{A8A12A76-6039-49A5-B498-CE5F7B5FC761}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Pizzeria", "sample\Sample.Pizzeria\Sample.Pizzeria.csproj", "{0DFFCBD7-546F-40CA-B982-C02806F9F78A}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Restaurant.Server", "sample\Sample.Restaurant.Server\Sample.Restaurant.Server.csproj", "{5104972A-359B-4F70-AC74-49FCC7FDF296}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Pizzeria.Domain", "sample\Sample.Pizzeria.Domain\Sample.Pizzeria.Domain.csproj", "{3B511F28-FDF7-41A1-A7B7-BFFCE369991A}"
@@ -67,7 +63,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Pizzeria.Infrastruct
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Pizzeria.Application", "sample\Sample.Pizzeria.Application\Sample.Pizzeria.Application.csproj", "{5F12392E-6917-4C26-B6D6-B4E281808713}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Pizzeria.Contracts", "sample\Sample.Pizzeria.Contracts\Sample.Pizzeria.Contracts.csproj", "{A4D34FAC-7DD7-4CC2-8AA0-4FD0B8D92D0F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Pizzeria.Contracts", "sample\Sample.Pizzeria.Contracts\Sample.Pizzeria.Contracts.csproj", "{A4D34FAC-7DD7-4CC2-8AA0-4FD0B8D92D0F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Pizzeria.Client", "sample\Sample.Pizzeria.Client\Sample.Pizzeria.Client.csproj", "{7A45D8F3-C82F-4F9A-91EA-42DDCCAE4BA9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Pizzeria", "sample\Sample.Pizzeria\Sample.Pizzeria.csproj", "{381A5DB3-76D7-4E67-9920-EE50B4808DE6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -155,14 +155,6 @@ Global
 		{7FD0D0F6-8EFF-443F-9346-478FFCDFB628}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7FD0D0F6-8EFF-443F-9346-478FFCDFB628}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7FD0D0F6-8EFF-443F-9346-478FFCDFB628}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A8A12A76-6039-49A5-B498-CE5F7B5FC761}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A8A12A76-6039-49A5-B498-CE5F7B5FC761}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A8A12A76-6039-49A5-B498-CE5F7B5FC761}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A8A12A76-6039-49A5-B498-CE5F7B5FC761}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0DFFCBD7-546F-40CA-B982-C02806F9F78A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0DFFCBD7-546F-40CA-B982-C02806F9F78A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0DFFCBD7-546F-40CA-B982-C02806F9F78A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0DFFCBD7-546F-40CA-B982-C02806F9F78A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5104972A-359B-4F70-AC74-49FCC7FDF296}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5104972A-359B-4F70-AC74-49FCC7FDF296}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5104972A-359B-4F70-AC74-49FCC7FDF296}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -183,6 +175,14 @@ Global
 		{A4D34FAC-7DD7-4CC2-8AA0-4FD0B8D92D0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4D34FAC-7DD7-4CC2-8AA0-4FD0B8D92D0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4D34FAC-7DD7-4CC2-8AA0-4FD0B8D92D0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A45D8F3-C82F-4F9A-91EA-42DDCCAE4BA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A45D8F3-C82F-4F9A-91EA-42DDCCAE4BA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A45D8F3-C82F-4F9A-91EA-42DDCCAE4BA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A45D8F3-C82F-4F9A-91EA-42DDCCAE4BA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{381A5DB3-76D7-4E67-9920-EE50B4808DE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{381A5DB3-76D7-4E67-9920-EE50B4808DE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{381A5DB3-76D7-4E67-9920-EE50B4808DE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{381A5DB3-76D7-4E67-9920-EE50B4808DE6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

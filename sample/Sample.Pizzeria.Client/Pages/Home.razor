@@ -1,8 +1,6 @@
-﻿@page "/"
-@rendermode InteractiveAuto
+﻿@using Microsoft.AspNetCore.Authorization
 
-@using Microsoft.AspNetCore.Authorization
-
+@page "/"
 @attribute [Authorize]
 
 <PageTitle>Home</PageTitle>

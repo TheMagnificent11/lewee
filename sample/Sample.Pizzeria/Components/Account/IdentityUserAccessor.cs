@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Sample.Identity.Domain;
 
 namespace Sample.Pizzeria.Components.Account;
+
 internal sealed class IdentityUserAccessor(UserManager<ApplicationUser> userManager, IdentityRedirectManager redirectManager)
 {
     public async Task<ApplicationUser> GetRequiredUserAsync(HttpContext context)
