@@ -1,0 +1,14 @@
+﻿<NavLink class="nav-link" href="@Href">
+    <NavMenuItemSpan Title="@Title" IconClass="@IconClass" />
+</NavLink>
+
+@code {
+    [Parameter]
+    public string Title { get; set; } = string.Empty;
+
+    [Parameter]
+    public string IconClass { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Href { get; set; } = "/";
+}

@@ -4,7 +4,7 @@
 
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">Sample.Pizzeria</a>
+        <a class="navbar-brand" href="">Sample Pizzeria</a>
     </div>
 </div>
 
@@ -13,17 +13,13 @@
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
     <nav class="flex-column">
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
+            <NavMenuItemHome />
         </div>
 
         <AuthorizeView>
             <Authorized>
                 <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Manage">
-                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
-                    </NavLink>
+                    <NavMenuItem Title="Account" IconClass="bi bi-person-fill-nav-menu" Href="Account/Manage" />
                 </div>
                 <div class="nav-item px-3">
                     <form action="Account/Logout" method="post">
@@ -37,14 +33,10 @@
             </Authorized>
             <NotAuthorized>
                 <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Register">
-                        <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Register
-                    </NavLink>
+                    <NavMenuItem Title="Register" IconClass="bi bi-person-nav-menu" Href="Account/Register" />
                 </div>
                 <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Login">
-                        <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> Login
-                    </NavLink>
+                    <NavMenuItem Title="Login" IconClass="bi bi-person-badge-nav-menu" Href="Account/Login" />
                 </div>
             </NotAuthorized>
         </AuthorizeView>
