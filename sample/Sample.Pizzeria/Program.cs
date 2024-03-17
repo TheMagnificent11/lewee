@@ -2,6 +2,7 @@ using FastEndpoints;
 using FastEndpoints.Swagger;
 using Lewee.Infrastructure.AspNet.Auth;
 using Lewee.Infrastructure.AspNet.Observability;
+using Lewee.Infrastructure.AspNet.SignalR;
 using Lewee.Infrastructure.Data;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -73,6 +74,8 @@ builder.Services
         };
     });
 
+builder.Services.ConfigureSignalR();
+
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
 var app = builder.Build();
@@ -106,6 +109,8 @@ app.MapRazorComponents<App>()
 
 // Add additional endpoints required by the Identity /Account Razor components.
 app.MapAdditionalIdentityEndpoints();
+
+app.MapHub<ClientEventHub>("/events");
 
 await app.Services.MigrateDatabase<ApplicationIdentityDbContext>();
 await app.Services.MigrateDatabase<PizzeriaDbContext>();
