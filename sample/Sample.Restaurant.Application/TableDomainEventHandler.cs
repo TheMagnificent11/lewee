@@ -38,7 +38,7 @@ internal class TableDomainEventHandler :
                 .ThenBy(x => x.Name)
                 .ToArray();
 
-            var projection = TableDetails.FromTableInUseDomainEvent(notification, menuItems);
+            var projection = TableDetails.FromTableInUseDomainEvent(notification, sortedMenuItems);
 
             await this.queryProjectionService.AddOrUpdate(
                 projection,
