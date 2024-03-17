@@ -1,4 +1,4 @@
-﻿namespace Lewee.Blazor.ErrorHandling;
+﻿namespace Sample.Restaurant.Client.ApiClients;
 
 /// <summary>
 /// Api Exception

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace Lewee.Blazor.ErrorHandling;
+namespace Sample.Restaurant.Client.ApiClients;
 
 /// <summary>
 /// Extension methods for <see cref="ApiException"/>

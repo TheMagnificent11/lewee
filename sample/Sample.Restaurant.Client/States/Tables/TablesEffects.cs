@@ -1,7 +1,7 @@
 using Correlate;
 using Fluxor;
-using Lewee.Blazor.ErrorHandling;
 using Lewee.Blazor.Fluxor;
+using Sample.Restaurant.Client.ApiClients;
 using Sample.Restaurant.Client.States.Tables.Actions;
 
 namespace Sample.Restaurant.Client.States.Tables;

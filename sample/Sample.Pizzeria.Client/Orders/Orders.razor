@@ -2,18 +2,19 @@
 
 @page "/"
 @attribute [Authorize]
+@inherits FluxorComponent
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Orders</PageTitle>
 
 <h1>Orders</h1>
 
-@if (this.Orders == null)
+@if (this.State.Value.Data == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-    if (this.Orders.Length == 0)
+    if (this.State.Value.Data.Length == 0)
     {
         <p>No orders found.</p>
     }
@@ -27,7 +28,7 @@ else
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in this.Orders)
+                @foreach (var item in this.State.Value.Data)
                 {
                     <tr>
                         <td>@item.OrderDate.ToShortDateString()</td>
@@ -37,4 +38,7 @@ else
             </tbody>
         </table>
     }
+    <div>
+        <button>Start New Order</button>
+    </div>
 }

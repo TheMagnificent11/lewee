@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Lewee.Blazor\Lewee.Blazor.csproj" />
     <ProjectReference Include="..\Sample.Pizzeria.Contracts\Sample.Pizzeria.Contracts.csproj" />
   </ItemGroup>
 

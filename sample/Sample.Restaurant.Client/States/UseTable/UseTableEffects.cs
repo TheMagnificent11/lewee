@@ -1,9 +1,9 @@
 ﻿using Correlate;
 using Fluxor;
-using Lewee.Blazor.ErrorHandling;
 using Lewee.Blazor.Fluxor;
 using Lewee.Blazor.Logging;
 using Microsoft.AspNetCore.Components;
+using Sample.Restaurant.Client.ApiClients;
 using Sample.Restaurant.Client.States.TableDetails.Actions;
 using Sample.Restaurant.Client.States.UseTable.Actions;
 
