@@ -8,8 +8,8 @@ public class Order : AggregateRoot
 
     private readonly List<OrderPizza> pizzas = [];
 
-    public Order(Guid id, string userId, Guid correlationId)
-        : base(id)
+    public Order(string userId, Guid correlationId)
+        : base()
     {
         this.UserId = userId;
         this.StatusId = OrderStatus.New;

@@ -5,22 +5,19 @@ using Sample.Pizzeria.Contracts;
 
 namespace Sample.Pizzeria.Endpoints;
 
-public sealed class AddPizzaToOrderEndpoint : CommandEndpoint<EmptyRequest>
+public sealed class StartOrderEndpoint : CommandEndpoint<EmptyRequest>
 {
-    protected override string Route => OrderRoutes.AddPizzaToOrder;
+    protected override string Route => OrderRoutes.StartOrder;
 
     protected override CommandType CommandType => CommandType.Post;
 
-    protected override string Name => "AddPizzaToOrder";
+    protected override string Name => "StartOrder";
 
     protected override bool IsAnonymousAllowed => false;
 
     public override async Task HandleAsync(EmptyRequest req, CancellationToken ct)
     {
-        var command = new AddPizzaToOrderCommand(
-            this.Route<Guid>("orderId"),
-            this.Route<int>("pizzaId"),
-            this.CorrelationId);
+        var command = new StartOrderCommand(this.UserId!, this.CorrelationId);
 
         var result = await this.Mediator.Send(command, ct);
 
