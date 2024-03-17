@@ -1,8 +1,9 @@
 ﻿using Lewee.Domain;
+using Sample.Restaurant.Contracts.ClientMessages;
 
 namespace Sample.Restaurant.Domain;
 
-public class OrderItemRemovedDomainEvent : DomainEvent
+public class OrderItemRemovedDomainEvent : DomainEvent, IToClientEvent
 {
     public OrderItemRemovedDomainEvent(
         Guid correlationId,
@@ -25,4 +26,14 @@ public class OrderItemRemovedDomainEvent : DomainEvent
     public Guid OrderId { get; }
     public Guid MenuItemId { get; }
     public decimal Price { get; }
+
+    public ClientEvent ToClientEvent(Guid correlationId, string? userId)
+    {
+        var message = new ItemRemovedMessage
+        {
+            TableNumber = this.TableNumber
+        };
+
+        return new ClientEvent(correlationId, userId, message);
+    }
 }

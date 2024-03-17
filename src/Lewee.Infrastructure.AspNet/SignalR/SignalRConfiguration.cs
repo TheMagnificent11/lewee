@@ -1,4 +1,4 @@
-﻿using Lewee.Application.Mediation.Notifications;
+﻿using Lewee.Domain;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.DependencyInjection;

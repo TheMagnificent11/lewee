@@ -1,11 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
     <PackageReference Include="Ardalis.Specification" />
-    <PackageReference Include="MediatR" />
+    <PackageReference Include="MediatR.Contracts" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Lewee.Contracts\Lewee.Contracts.csproj" />
     <ProjectReference Include="..\Lewee.Shared\Lewee.Shared.csproj" />
   </ItemGroup>
 

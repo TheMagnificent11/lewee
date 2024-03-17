@@ -95,11 +95,20 @@ internal class DomainEventDispatcher<TContext>
                 }
             }
 
-            if (domainEvents.Any())
+            if (domainEvents.Count > 0)
             {
                 foreach (var domainEvent in domainEvents)
                 {
                     await this.mediator.Publish(domainEvent, token);
+
+                    if (domainEvent is IToClientEvent clientDomainEvent)
+                    {
+                        var clientEvent = clientDomainEvent.ToClientEvent(
+                            domainEvent.CorrelationId,
+                            domainEvent.UserId);
+
+                        await this.mediator.Publish(clientEvent, token);
+                    }
                 }
             }
 

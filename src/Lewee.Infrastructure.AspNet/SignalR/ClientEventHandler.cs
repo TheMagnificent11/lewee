@@ -1,5 +1,5 @@
-﻿using Lewee.Application.Mediation.Notifications;
-using Lewee.Contracts;
+﻿using Lewee.Contracts;
+using Lewee.Domain;
 using Lewee.Shared;
 using MediatR;
 using Microsoft.AspNetCore.SignalR;

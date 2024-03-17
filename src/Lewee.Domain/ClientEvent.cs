@@ -2,7 +2,7 @@
 using Lewee.Contracts;
 using MediatR;
 
-namespace Lewee.Application.Mediation.Notifications;
+namespace Lewee.Domain;
 
 /// <summary>
 /// Client Event
