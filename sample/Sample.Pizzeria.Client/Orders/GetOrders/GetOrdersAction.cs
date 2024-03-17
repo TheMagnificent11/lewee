@@ -1,6 +1,6 @@
 ﻿using Lewee.Blazor.Fluxor.Actions;
 
-namespace Sample.Pizzeria.Client.Orders;
+namespace Sample.Pizzeria.Client.Orders.GetOrders;
 
 public record GetOrdersAction : IRequestAction
 {

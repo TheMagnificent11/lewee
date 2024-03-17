@@ -1,5 +1,6 @@
 ﻿using Fluxor;
 using Microsoft.AspNetCore.Components;
+using Sample.Pizzeria.Client.Orders.GetOrders;
 
 namespace Sample.Pizzeria.Client.Orders;
 

@@ -1,6 +1,6 @@
 ﻿using Fluxor;
 
-namespace Sample.Pizzeria.Client.Orders;
+namespace Sample.Pizzeria.Client.Orders.GetOrders;
 
 public sealed class GetOrdersStateFeature : Feature<GetOrdersState>
 {
