@@ -4,7 +4,7 @@ using Lewee.Blazor.Fluxor;
 using Lewee.Blazor.Logging;
 using Refit;
 
-namespace Sample.Pizzeria.Client.Orders.GetOrders;
+namespace Sample.Pizzeria.Client.State.GetOrders;
 
 public sealed class GetOrdersEffects :
     RequestEffects<GetOrdersState, GetOrdersAction, GetOrdersSuccessAction, GetOrdersErrorAction>

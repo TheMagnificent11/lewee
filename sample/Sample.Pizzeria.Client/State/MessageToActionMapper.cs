@@ -1,7 +1,7 @@
 ﻿using Lewee.Blazor.Fluxor.Actions;
 using Lewee.Blazor.Messaging;
 
-namespace Sample.Pizzeria.Client;
+namespace Sample.Pizzeria.Client.State;
 
 public sealed class MessageToActionMapper : IMessageToActionMapper
 {

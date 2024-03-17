@@ -1,7 +1,7 @@
 ﻿using Lewee.Blazor.Fluxor.Actions;
 using Sample.Pizzeria.Contracts;
 
-namespace Sample.Pizzeria.Client.Orders.GetOrders;
+namespace Sample.Pizzeria.Client.State.GetOrders;
 
 public record GetOrdersSuccessAction : IQuerySuccessAction<OrderDto[]>
 {

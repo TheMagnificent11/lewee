@@ -1,8 +1,8 @@
 ﻿using Fluxor;
 using Microsoft.AspNetCore.Components;
-using Sample.Pizzeria.Client.Orders.GetOrders;
+using Sample.Pizzeria.Client.State.GetOrders;
 
-namespace Sample.Pizzeria.Client.Orders;
+namespace Sample.Pizzeria.Client.Pages;
 
 public partial class Orders
 {

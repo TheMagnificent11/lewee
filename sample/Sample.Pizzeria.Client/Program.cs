@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Refit;
 using Sample.Pizzeria.Client;
+using Sample.Pizzeria.Client.State;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
