@@ -8,7 +8,7 @@ public record TableDetails : IQueryProjection
     public Guid Id { get; set; }
     public int TableNumber { get; set; }
     public bool IsInUse { get; set; }
-    public List<OrderItemDetails> Items { get; set; } = new();
+    public List<OrderItemDetails> Items { get; set; } = [];
 
     public static TableDetails FromTableInUseDomainEvent(
         TableInUseDomainEvent domainEvent,

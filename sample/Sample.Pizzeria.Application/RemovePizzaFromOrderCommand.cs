@@ -6,9 +6,9 @@ using Serilog;
 
 namespace Sample.Pizzeria.Application;
 
-public sealed class AddPizzaToOrderCommand : ICommand
+public sealed class RemovePizzaFromOrderCommand : ICommand
 {
-    public AddPizzaToOrderCommand(Guid orderId, int pizzaId, Guid correlationId)
+    public RemovePizzaFromOrderCommand(Guid orderId, int pizzaId, Guid correlationId)
     {
         this.OrderId = orderId;
         this.PizzaId = pizzaId;
@@ -19,18 +19,18 @@ public sealed class AddPizzaToOrderCommand : ICommand
     public int PizzaId { get; }
     public Guid CorrelationId { get; }
 
-    internal class AddPizzaToOrderCommandHandler : IRequestHandler<AddPizzaToOrderCommand, CommandResult>
+    internal class RemovePizzaForOrderCommand : IRequestHandler<RemovePizzaFromOrderCommand, CommandResult>
     {
-        private readonly IRepository<Order> orderRepository;
+        private readonly IRepository<Order> repository;
         private readonly ILogger logger;
 
-        public AddPizzaToOrderCommandHandler(IRepository<Order> repository, ILogger logger)
+        public RemovePizzaForOrderCommand(IRepository<Order> repository, ILogger logger)
         {
-            this.orderRepository = repository;
-            this.logger = logger.ForContext<AddPizzaToOrderCommandHandler>();
+            this.repository = repository;
+            this.logger = logger.ForContext<RemovePizzaForOrderCommand>();
         }
 
-        public async Task<CommandResult> Handle(AddPizzaToOrderCommand request, CancellationToken cancellationToken)
+        public async Task<CommandResult> Handle(RemovePizzaFromOrderCommand request, CancellationToken cancellationToken)
         {
             var pizza = Menu.Pizzas.FirstOrDefault(x => x.Id == request.PizzaId);
             if (pizza == null)
@@ -39,18 +39,21 @@ public sealed class AddPizzaToOrderCommand : ICommand
                 return CommandResult.Fail(ResultStatus.BadRequest, "Pizza not found on menu");
             }
 
-            var order = await this.orderRepository.RetrieveById(request.OrderId, cancellationToken);
+            var order = await this.repository.RetrieveById(request.OrderId, cancellationToken);
             if (order == null)
             {
                 this.logger.Warning("Invalid Order ID {OrderId}", request.OrderId);
                 return CommandResult.Fail(ResultStatus.NotFound, "Order not found");
             }
 
-            order.AddPizza(pizza, request.CorrelationId);
+            order.RemovePizza(pizza, request.CorrelationId);
 
-            await this.orderRepository.SaveChanges(cancellationToken);
+            await this.repository.SaveChanges(cancellationToken);
 
-            this.logger.Information("Pizza {PizzaId} was added to Order {OrderId}", request.PizzaId, request.OrderId);
+            this.logger.Information(
+                "Pizza {PizzaId} was removed from Order {OrderId}",
+                request.PizzaId,
+                request.OrderId);
 
             return CommandResult.Success();
         }
