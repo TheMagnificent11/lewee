@@ -31,7 +31,7 @@ public sealed class GetOrdersEffects :
         catch (ApiException ex)
         {
             this.Logger.LogApiException(ex);
-            dispatcher.Dispatch(new GetOrdersErrorAction(ex.Message, action.CorrelationId));
+            dispatcher.Dispatch(new GetOrdersErrorAction("Failed to retrieve orders", action.CorrelationId));
         }
     }
 }

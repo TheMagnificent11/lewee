@@ -12,7 +12,7 @@ public static class ReducerExtensions
     /// </summary>
     /// <typeparam name="TState">Request state type</typeparam>
     /// <typeparam name="TAction">Request action type</typeparam>
-    /// <param name="state">Requet state</param>
+    /// <param name="state">Request state</param>
     /// <param name="action">Request action</param>
     /// <returns>Updated state</returns>
     public static TState OnRequest<TState, TAction>(this TState state, TAction action)

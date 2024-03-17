@@ -7,4 +7,7 @@ public interface IOrdersApi
 {
     [Get(OrderRoutes.GetUserOrders)]
     Task<OrderDto[]> GetUserOrders(CancellationToken cancellationToken);
+
+    [Post(OrderRoutes.StartOrder)]
+    Task StartOrder(CancellationToken cancellationToken);
 }

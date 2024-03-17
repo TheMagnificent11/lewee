@@ -7,14 +7,14 @@ namespace Sample.Pizzeria.Client.State.GetOrders;
 public static class GetOrdersReducer
 {
     [ReducerMethod]
-    public static GetOrdersState OnGetOrdersAction(GetOrdersState state, GetOrdersAction action) =>
+    public static GetOrdersState OnGetOrders(GetOrdersState state, GetOrdersAction action) =>
         state.OnQuery<GetOrdersState, OrderDto[], GetOrdersAction>(action);
 
     [ReducerMethod]
-    public static GetOrdersState OnGetOrdersSuccessAction(GetOrdersState state, GetOrdersSuccessAction action) =>
+    public static GetOrdersState OnGetOrdersSuccess(GetOrdersState state, GetOrdersSuccessAction action) =>
         state.OnQuerySuccess<GetOrdersState, OrderDto[], GetOrdersSuccessAction>(action);
 
     [ReducerMethod]
-    public static GetOrdersState OnGetOrdersErrorAction(GetOrdersState state, GetOrdersErrorAction action) =>
+    public static GetOrdersState OnGetOrdersError(GetOrdersState state, GetOrdersErrorAction action) =>
         state.OnRequestError(action);
 }
