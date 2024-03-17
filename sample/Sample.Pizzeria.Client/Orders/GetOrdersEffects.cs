@@ -15,7 +15,7 @@ public sealed class GetOrdersEffects :
         IState<GetOrdersState> state,
         IOrdersApi ordersApi,
         ICorrelationContextAccessor correlationContextAccessor,
-        ILogger logger)
+        ILogger<GetOrdersEffects> logger)
         : base(state, correlationContextAccessor, logger)
     {
         this.ordersApi = ordersApi;
