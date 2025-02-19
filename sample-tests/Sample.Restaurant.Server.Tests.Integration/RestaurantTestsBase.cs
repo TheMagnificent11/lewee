@@ -5,6 +5,7 @@ using Xunit;
 namespace Sample.Restaurant.Server.Tests.Integration;
 
 [Collection("RestaurantDatabaseCollection")]
+[Trait("Category", "Integration")]
 public abstract class RestaurantTestsBase :
     WebApiIntegrationTests<Program, RestaurantWebApplicationFactory, RestaurantDbContextFixture, RestaurantDbContext, RestaurantDbSeeder>
 {
