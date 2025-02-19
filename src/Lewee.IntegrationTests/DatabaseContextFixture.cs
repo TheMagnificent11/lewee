@@ -17,6 +17,8 @@ public abstract class DatabaseContextFixture<TDbContext, TDbSeeder> : IAsyncLife
     where TDbContext : DbContext
     where TDbSeeder : IDatabaseSeeder<TDbContext>
 {
+    private const int SqlServerPort = 1433;
+
     private readonly MsSqlContainer msSqlContainer;
     private bool isDbInitialized = false;
 
@@ -27,8 +29,8 @@ public abstract class DatabaseContextFixture<TDbContext, TDbSeeder> : IAsyncLife
     {
         this.msSqlContainer = new MsSqlBuilder()
             .WithImage($"mcr.microsoft.com/mssql/server:{this.MsSqlImageVersion}")
-            .WithPortBinding(1433, 1433) // Bind the standard MS SQL port
-            .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(1433)) // Wait until the port is available
+            .WithPortBinding(SqlServerPort, assignRandomHostPort: true)
+            .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(SqlServerPort))
             .Build();
     }
 
