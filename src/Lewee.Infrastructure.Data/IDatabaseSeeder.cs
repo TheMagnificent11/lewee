@@ -12,6 +12,7 @@ public interface IDatabaseSeeder<TDbContext>
     /// <summary>
     /// Seeds data
     /// </summary>
+    /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Asynchronous task</returns>
-    Task Run();
+    Task RunAsync(CancellationToken cancellationToken = default);
 }
