@@ -14,7 +14,7 @@ public class RestaurantDbSeeder : IDatabaseSeeder<RestaurantDbContext>
         this.context = context;
     }
 
-    public async Task Run()
+    public async Task RunAsync(CancellationToken cancellationToken = default)
     {
         var hasNewTables = await this.Seed(Domain.Table.DefaultData);
         var hasNewMenuItems = await this.Seed(MenuItem.DefaultData);
@@ -24,7 +24,7 @@ public class RestaurantDbSeeder : IDatabaseSeeder<RestaurantDbContext>
             return;
         }
 
-        await this.context.SaveChangesAsync();
+        await this.context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<bool> Seed<T>(T[] data)

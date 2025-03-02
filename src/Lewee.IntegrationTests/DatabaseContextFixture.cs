@@ -104,7 +104,7 @@ public abstract class DatabaseContextFixture<TDbContext, TDbSeeder> : IAsyncLife
         var respawner = await Respawner.CreateAsync(this.ConnectionString, this.ResetOptions);
         await respawner.ResetAsync(this.ConnectionString);
 
-        await seeder.Run();
+        await seeder.RunAsync();
     }
 
     /// <summary>

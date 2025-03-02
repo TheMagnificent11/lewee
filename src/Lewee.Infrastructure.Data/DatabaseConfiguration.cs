@@ -46,9 +46,9 @@ public static class DatabaseConfiguration
 
         foreach (var ag in aggregateRoots)
         {
-            var repositoryIntefaceType = typeof(IRepository<>).MakeGenericType(ag);
+            var repositoryInterfaceType = typeof(IRepository<>).MakeGenericType(ag);
             var repositoryType = typeof(Repository<,>).MakeGenericType(ag, typeof(T));
-            services.AddTransient(repositoryIntefaceType, repositoryType);
+            services.AddTransient(repositoryInterfaceType, repositoryType);
         }
 
         services.AddSingleton<DomainEventDispatcher<T>>();
@@ -101,13 +101,30 @@ public static class DatabaseConfiguration
     /// <param name="serviceProvider">Service provider</param>
     /// <param name="seedData">Whether to seed data</param>
     /// <returns>Asynchronous task</returns>
-    public static async Task MigrateDatabase<T>(this IServiceProvider serviceProvider, bool seedData = false)
+    public static async Task MigrateDatabaseAsync<T>(this IServiceProvider serviceProvider, bool seedData = false)
         where T : DbContext
     {
+        using (var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMinutes(5)))
         using (var serviceScope = serviceProvider.CreateScope())
+        using (var dbContext = serviceScope.ServiceProvider.GetRequiredService<T>())
         {
-            var dbContext = serviceScope.ServiceProvider.GetRequiredService<T>();
-            await dbContext.Database.MigrateAsync();
+            using (var dbConnection = dbContext.Database.GetDbConnection())
+            {
+                while (!cancellationTokenSource.IsCancellationRequested)
+                {
+                    try
+                    {
+                        await dbConnection.OpenAsync(cancellationTokenSource.Token);
+                    }
+                    catch (Exception)
+                    {
+                        await Task.Delay(TimeSpan.FromSeconds(1), cancellationTokenSource.Token);
+                        continue;
+                    }
+                }
+            }
+
+            await dbContext.Database.MigrateAsync(cancellationTokenSource.Token);
 
             if (!seedData)
             {
@@ -120,7 +137,7 @@ public static class DatabaseConfiguration
                 return;
             }
 
-            await seeder.Run();
+            await seeder.RunAsync(cancellationTokenSource.Token);
         }
     }
 }
