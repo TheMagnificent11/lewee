@@ -39,7 +39,7 @@
     <PackageVersion Include="Microsoft.Extensions.Http" Version="8.0.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
-    <PackageVersion Include="Moq" Version="4.20.70" />
+    <PackageVersion Include="Moq" Version="4.20.72" />
     <PackageVersion Include="MudBlazor" Version="6.20.0" />
     <PackageVersion Include="Respawn" Version="6.2.1" />
     <PackageVersion Include="Serilog" Version="4.2.0" />
