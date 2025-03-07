@@ -50,9 +50,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="StyleCop.Analyzers">
-      <ExcludeAssets>all</ExcludeAssets>
-    </PackageReference>
   </ItemGroup>
 
   <ItemGroup Condition="$(MSBuildProjectName.Contains('.Tests.'))">
@@ -80,9 +77,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="xunit.runner.visualstudio" />
-    <PackageReference Include="StyleCop.Analyzers">
-      <ExcludeAssets>all</ExcludeAssets>
-    </PackageReference>
   </ItemGroup>
 
   <ItemGroup Condition="$(MSBuildProjectName.Contains('.Tests.'))">

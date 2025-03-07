@@ -4,7 +4,7 @@ namespace Sample.Restaurant.Domain;
 
 public class Order : Entity
 {
-    private readonly List<OrderItem> items = new();
+    private readonly List<OrderItem> items = [];
 
     private Order(Table table)
         : base(Guid.Empty)
