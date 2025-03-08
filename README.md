@@ -12,7 +12,7 @@ Below is summary of the dependencies used by Lewee. Note that this isn't a list 
 
 - [.Net 8](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
 - [Serilog](https://serilog.net)
-- [Entity Framework](https://learn.microsoft.com/en-us/ef) (using SQL Server)
+- [Entity Framework](https://learn.microsoft.com/en-us/ef)
 - [Mediatr](https://github.com/jbogard/MediatR)
 - [FastEndpoints](https://fast-endpoints.com)
 - [FluentValidation](https://docs.fluentvalidation.net/en/latest)

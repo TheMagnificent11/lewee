@@ -19,22 +19,17 @@ public static class DatabaseConfiguration
     /// <param name="services">
     /// Services collection
     /// </param>
-    /// <param name="connectionString">
-    /// Database connection string
-    /// </param>
     /// <param name="domainAssembly">
     /// Assembly containing <see cref="AggregateRoot"/> classes
     /// </param>
     /// <returns>
     /// Services collection for chaining
     /// </returns>
-    public static IServiceCollection ConfigureDatabase<T>(
+    public static IServiceCollection AddLeweeDatabaseConfiguration<T>(
         this IServiceCollection services,
-        string connectionString,
         Assembly domainAssembly)
         where T : ApplicationDbContext<T>
     {
-        services.AddDbContextFactory<T>(options => options.UseSqlServer(connectionString));
         services.AddScoped<T>();
 
         var aggregateRootType = typeof(AggregateRoot);
@@ -71,23 +66,19 @@ public static class DatabaseConfiguration
     /// <param name="services">
     /// Services collection
     /// </param>
-    /// <param name="connectionString">
-    /// Database connection string
-    /// </param>
     /// <param name="domainAssembly">
     /// Domain assembly
     /// </param>
     /// <returns>
     /// Services collection for chaining
     /// </returns>
-    public static IServiceCollection ConfigureDatabaseWithSeeder<TContext, TSeeder>(
+    public static IServiceCollection AddLeweeDatabaseConfigurationWithSeeder<TContext, TSeeder>(
         this IServiceCollection services,
-        string connectionString,
         Assembly domainAssembly)
         where TContext : ApplicationDbContext<TContext>
         where TSeeder : class, IDatabaseSeeder<TContext>
     {
-        var newServices = ConfigureDatabase<TContext>(services, connectionString, domainAssembly);
+        var newServices = AddLeweeDatabaseConfiguration<TContext>(services, domainAssembly);
 
         newServices.AddScoped<IDatabaseSeeder<TContext>, TSeeder>();
 

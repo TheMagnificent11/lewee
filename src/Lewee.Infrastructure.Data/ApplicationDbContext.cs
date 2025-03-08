@@ -66,7 +66,7 @@ public abstract class ApplicationDbContext<TContext> : DbContext, IApplicationDb
     }
 
     /// <summary>
-    /// Conigures the database model
+    /// Configures the database model
     /// </summary>
     /// <param name="modelBuilder">
     /// Database model builder
