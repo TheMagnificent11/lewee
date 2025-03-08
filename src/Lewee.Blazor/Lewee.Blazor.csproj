@@ -1,5 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup>
+    <!--
+      Don't relelase because it's not working.
+      Package upgrades without appropriate tests are probably the cause.
+    -->
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Correlate.DependencyInjection" />
     <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" />
