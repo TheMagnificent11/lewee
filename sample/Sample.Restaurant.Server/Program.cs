@@ -5,6 +5,7 @@ using Lewee.Infrastructure.AspNet.Observability;
 using Lewee.Infrastructure.AspNet.SignalR;
 using Lewee.Infrastructure.Data;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
+using Microsoft.EntityFrameworkCore;
 using Sample.Restaurant.Application;
 using Sample.Restaurant.Domain;
 using Sample.Restaurant.Infrastructure.Data;

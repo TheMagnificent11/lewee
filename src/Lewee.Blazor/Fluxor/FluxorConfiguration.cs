@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Correlate.DependencyInjection;
 using Fluxor;
+using Fluxor.Blazor.Web.ReduxDevTools;
 using Lewee.Blazor.Messaging.Health;
 using Microsoft.Extensions.DependencyInjection;
 
