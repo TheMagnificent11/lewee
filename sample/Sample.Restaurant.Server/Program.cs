@@ -33,9 +33,8 @@ public class Program
         builder.Services.AddMapper();
 
         builder.Services
-            .ConfigureDatabaseWithSeeder<RestaurantDbContext, RestaurantDbSeeder>(
-                connectionString,
-                typeof(MenuItem).Assembly)
+            .AddDbContextFactory<RestaurantDbContext>(options => options.UseSqlServer(connectionString))
+            .AddLeweeDatabaseConfigurationWithSeeder<RestaurantDbContext, RestaurantDbSeeder>(typeof(MenuItem).Assembly)
             .ConfigureAuthenticatedUserService()
 #if DEBUG
             .AddDatabaseDeveloperPageExceptionFilter()
