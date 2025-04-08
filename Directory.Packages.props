@@ -5,7 +5,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="Fluxor.Blazor.Web.ReduxDevTools" Version="6.6.0" />
-    <PackageVersion Include="MediatR" Version="12.4.1" />
+    <PackageVersion Include="MediatR" Version="12.5.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="9.0.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
@@ -39,8 +39,8 @@
     <PackageVersion Include="Microsoft.Extensions.Http" Version="9.0.3" />
   </ItemGroup>
   <ItemGroup Label="Ardalis">
-    <PackageVersion Include="Ardalis.Specification" Version="8.0.0" />
-    <PackageVersion Include="Ardalis.Specification.EntityFrameworkCore" Version="9.0.0" />
+    <PackageVersion Include="Ardalis.Specification" Version="9.0.1" />
+    <PackageVersion Include="Ardalis.Specification.EntityFrameworkCore" Version="9.0.1" />
   </ItemGroup>
   <ItemGroup Label="Correlate">
     <PackageVersion Include="Correlate.AspNetCore" Version="6.0.0" />
@@ -71,7 +71,7 @@
     <PackageVersion Include="Serilog.Enrichers.Environment" Version="3.0.1" />
     <PackageVersion Include="Serilog.Enrichers.Process" Version="3.0.0" />
     <PackageVersion Include="Serilog.Enrichers.Thread" Version="4.0.0" />
-    <PackageVersion Include="Serilog.Extensions.Logging" Version="9.0.0" />
+    <PackageVersion Include="Serilog.Extensions.Logging" Version="9.0.1" />
     <PackageVersion Include="Serilog.Sinks.BrowserConsole" Version="2.0.0-dev-00057" />
     <PackageVersion Include="Serilog.Sinks.BrowserHttp" Version="1.0.0-dev-00032" />
     <PackageVersion Include="Serilog.Sinks.Console" Version="6.0.0" />
@@ -82,7 +82,7 @@
   </ItemGroup>
   <ItemGroup Label="xunit">
     <PackageVersion Include="xunit" Version="2.9.3" />
-    <PackageVersion Include="xunit.analyzers" Version="1.20.0" />
+    <PackageVersion Include="xunit.analyzers" Version="1.21.0" />
     <PackageVersion Include="xunit.core" Version="2.6.6" />
     <PackageVersion Include="xunit.extensibility.core" Version="2.9.3" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.0.2" />
