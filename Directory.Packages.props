@@ -19,7 +19,7 @@
   <ItemGroup Label="Microsoft.AspNetCore">
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.3" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.3" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.3" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.4" />
     <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="9.0.3" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.3" />
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="9.0.3" />
