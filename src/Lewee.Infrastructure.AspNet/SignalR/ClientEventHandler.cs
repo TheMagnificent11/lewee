@@ -1,10 +1,9 @@
-﻿using Lewee.Application.Mediation.Notifications;
+﻿using FreeMediator;
+using Lewee.Application.Mediation.Notifications;
 using Lewee.Contracts;
 using Lewee.Shared;
-using FreeMediator;
 using Microsoft.AspNetCore.SignalR;
-using Serilog;
-using Serilog.Context;
+using Microsoft.Extensions.Logging;
 
 namespace Lewee.Infrastructure.AspNet.SignalR;
 
@@ -13,15 +12,20 @@ internal class ClientEventHandler : INotificationHandler<ClientEvent>
     private readonly IHubContext<ClientEventHub> hubContext;
     private readonly ILogger logger;
 
-    public ClientEventHandler(IHubContext<ClientEventHub> hubContext, ILogger logger)
+    public ClientEventHandler(
+        IHubContext<ClientEventHub> hubContext,
+        ILogger<ClientEventHandler> logger)
     {
         this.hubContext = hubContext;
-        this.logger = logger.ForContext<ClientEventHandler>();
+        this.logger = logger;
     }
 
     public async Task Handle(ClientEvent notification, CancellationToken cancellationToken)
     {
-        using (LogContext.PushProperty(LoggingConsts.CorrelationId, notification.CorrelationId))
+        using (this.logger.BeginScope(new Dictionary<string, object>
+        {
+            { LoggingConsts.CorrelationId, notification.CorrelationId }
+        }))
         {
             var clientMessage = notification.ToClientMessage();
 
@@ -32,7 +36,7 @@ internal class ClientEventHandler : INotificationHandler<ClientEvent>
                     .All
                     .SendAsync(nameof(ClientMessage), clientMessage, cancellationToken);
 
-                this.logger.Debug("Published message to all clients");
+                this.logger.LogDebug("Published message to all clients");
 
                 return;
             }
@@ -42,7 +46,7 @@ internal class ClientEventHandler : INotificationHandler<ClientEvent>
                 .Group(notification.UserId)
                 .SendAsync(nameof(ClientMessage), clientMessage, cancellationToken);
 
-            this.logger.Debug("Published message to specific client(s)");
+            this.logger.LogDebug("Published message to specific client(s)");
         }
     }
 }

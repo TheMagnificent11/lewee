@@ -1,16 +1,26 @@
 ﻿using FreeMediator;
-using Serilog.Context;
+using Microsoft.Extensions.Logging;
 
 namespace Sample.Restaurant.Application;
 
 internal class TableLoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : class, ITableRequest, IRequest<TResponse>
 {
+    private readonly ILogger<TableLoggingBehavior<TRequest, TResponse>> logger;
+
+    public TableLoggingBehavior(ILogger<TableLoggingBehavior<TRequest, TResponse>> logger)
+    {
+        this.logger = logger;
+    }
+
     public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
-        using (LogContext.PushProperty("TableNumber", request.TableNumber))
+        using (this.logger.BeginScope(new Dictionary<string, object>
         {
-            return next();
+            { "TableNumber", request.TableNumber }
+        }))
+        {
+            return next(cancellationToken);
         }
     }
 }

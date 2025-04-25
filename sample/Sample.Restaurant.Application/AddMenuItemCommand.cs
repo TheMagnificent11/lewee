@@ -1,9 +1,9 @@
-﻿using Lewee.Application.Mediation.Requests;
+﻿using FreeMediator;
+using Lewee.Application.Mediation.Requests;
 using Lewee.Domain;
-using FreeMediator;
+using Microsoft.Extensions.Logging;
 using Sample.Restaurant.Application.QuerySpecifications;
 using Sample.Restaurant.Domain;
-using Serilog;
 
 namespace Sample.Restaurant.Application;
 
@@ -29,11 +29,11 @@ public sealed class AddMenuItemCommand : ICommand
         public AddMenuItemCommandHandler(
             IRepository<Table> tableRepository,
             IRepository<MenuItem> menuItemRepository,
-            ILogger logger)
+            ILogger<AddMenuItemCommandHandler> logger)
         {
             this.tableRepository = tableRepository;
             this.menuItemRepository = menuItemRepository;
-            this.logger = logger.ForContext<AddMenuItemCommandHandler>();
+            this.logger = logger;
         }
 
         public async Task<CommandResult> Handle(AddMenuItemCommand request, CancellationToken cancellationToken)
@@ -58,7 +58,7 @@ public sealed class AddMenuItemCommand : ICommand
 
             await this.tableRepository.SaveChanges(cancellationToken);
 
-            this.logger.Information("Menu Item {@MenuItem} added to table order", menuItem);
+            this.logger.LogInformation("Menu Item {@MenuItem} added to table order", menuItem);
 
             return CommandResult.Success();
         }

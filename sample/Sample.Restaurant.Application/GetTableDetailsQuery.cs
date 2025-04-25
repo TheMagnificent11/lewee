@@ -1,9 +1,9 @@
-﻿using Lewee.Application.Mediation.Requests;
+﻿using FreeMediator;
+using Lewee.Application.Mediation.Requests;
 using Lewee.Domain;
 using MapsterMapper;
-using FreeMediator;
+using Microsoft.Extensions.Logging;
 using Sample.Restaurant.Domain;
-using Serilog;
 
 namespace Sample.Restaurant.Application;
 
@@ -27,11 +27,11 @@ public sealed class GetTableDetailsQuery : IQuery<TableDetailsDto>
         public GetTableDetailsQueryHandler(
             IQueryProjectionService queryProjectionService,
             IMapper mapper,
-            ILogger logger)
+            ILogger<GetTableDetailsQueryHandler> logger)
         {
             this.queryProjectionService = queryProjectionService;
             this.mapper = mapper;
-            this.logger = logger.ForContext<GetTableDetailsQueryHandler>();
+            this.logger = logger;
         }
 
         public async Task<QueryResult<TableDetailsDto>> Handle(GetTableDetailsQuery request, CancellationToken cancellationToken)
@@ -41,7 +41,7 @@ public sealed class GetTableDetailsQuery : IQuery<TableDetailsDto>
                 cancellationToken);
             if (projection == null)
             {
-                this.logger.Error("Table read model does not exist");
+                this.logger.LogError("Table read model does not exist");
                 return QueryResult<TableDetailsDto>.Fail(ResultStatus.NotFound, "Could not find details for the table");
             }
 

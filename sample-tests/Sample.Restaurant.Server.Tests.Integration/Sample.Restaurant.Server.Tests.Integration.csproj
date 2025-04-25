@@ -6,7 +6,6 @@
   
   <ItemGroup>
     <ProjectReference Include="..\..\sample\Sample.Restaurant.Server\Sample.Restaurant.Server.csproj" />
-    <ProjectReference Include="..\..\src\Lewee.IntegrationTests\Lewee.IntegrationTests.csproj" />
   </ItemGroup>
   
 </Project>

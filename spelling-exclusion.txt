@@ -4,4 +4,3 @@ Ardalis
 Fluxor
 Gitflow
 FreeMediator
-Serilog
