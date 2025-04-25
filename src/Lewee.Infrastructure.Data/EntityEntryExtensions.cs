@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Lewee.Domain;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Lewee.Infrastructure.Data;
@@ -10,4 +11,7 @@ internal static class EntityEntryExtensions
             r.TargetEntry != null &&
             r.TargetEntry.Metadata.IsOwned() &&
             (r.TargetEntry.State == EntityState.Added || r.TargetEntry.State == EntityState.Modified));
+
+    public static bool IsAggregateRoot(this EntityEntry entry) =>
+        entry.Entity.GetType().IsSubclassOf(typeof(AggregateRoot));
 }

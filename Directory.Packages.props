@@ -4,6 +4,7 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
+    <PackageVersion Include="CSharpFunctionalExtensions" Version="3.5.1" />
     <PackageVersion Include="FastEndpoints" Version="5.35.0" />
     <PackageVersion Include="Fluxor.Blazor.Web.ReduxDevTools" Version="6.6.0" />
     <PackageVersion Include="FreeMediator" Version="1.2.0" />
@@ -11,10 +12,19 @@
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
     <PackageVersion Include="Moq" Version="4.20.72" />
     <PackageVersion Include="MudBlazor" Version="8.5.1" />
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
     <PackageVersion Include="Respawn" Version="6.2.1" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="8.1.1" />
-    <PackageVersion Include="Testcontainers.MsSql" Version="4.7.0" />
+    <PackageVersion Include="Testcontainers.PostgreSql" Version="4.4.0" />
     <PackageVersion Include="TestStack.BDDfy" Version="4.3.2" />
+  </ItemGroup>
+  <ItemGroup Label="Aspire">
+    <PackageVersion Include="Aspire.Hosting.AppHost" Version="9.2.1" />
+    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="9.2.1" />
+    <PackageVersion Include="Aspire.Hosting.SqlServer" Version="9.2.1" />
+    <PackageVersion Include="Aspire.Hosting.Testing" Version="9.2.1" />
+    <PackageVersion Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="9.2.1" />
+    <PackageVersion Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.2.1" />
   </ItemGroup>
   <ItemGroup Label="Microsoft.AspNetCore">
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.3" />
@@ -27,7 +37,7 @@
   </ItemGroup>
   <ItemGroup Label="Microsoft.EntityFramework">
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.3" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.4" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.3" />
   </ItemGroup>
   <ItemGroup Label="Microsoft.Extensions">
@@ -35,9 +45,11 @@
     <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="9.0.4" />
     <PackageVersion Include="Microsoft.Extensions.DependencyModel" Version="9.0.3" />
     <PackageVersion Include="Microsoft.Extensions.Diagnostics.Testing" Version="9.4.0" />
+    <PackageVersion Include="Microsoft.Extensions.Http" Version="9.0.3" />
+    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="9.4.0" />
     <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.4" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.4" />
-    <PackageVersion Include="Microsoft.Extensions.Http" Version="9.0.3" />
+    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="9.2.0" />
   </ItemGroup>
   <ItemGroup Label="Ardalis">
     <PackageVersion Include="Ardalis.Specification" Version="9.0.1" />
@@ -54,12 +66,17 @@
   <ItemGroup Label="FluentAssertions">
     <PackageVersion Include="FluentAssertions" Version="7.2.0" />
     <PackageVersion Include="FluentAssertions.Analyzers" Version="0.34.1" />
+  </ItemGroup>
+  <ItemGroup Label="FluentValidation">
     <PackageVersion Include="FluentValidation" Version="11.9.2" />
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
   </ItemGroup>
-  <ItemGroup Label="Mapster">
-    <PackageVersion Include="Mapster" Version="7.4.0" />
-    <PackageVersion Include="Mapster.DependencyInjection" Version="1.0.1" />
+  <ItemGroup Label="OpenTelemetry">
+    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.11.2" />
+    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.11.2" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.11.1" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.11.1" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.11.1" />
   </ItemGroup>
   <ItemGroup Label="xunit">
     <PackageVersion Include="xunit" Version="2.9.3" />

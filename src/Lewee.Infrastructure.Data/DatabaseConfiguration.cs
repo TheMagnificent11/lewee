@@ -25,13 +25,11 @@ public static class DatabaseConfiguration
     /// <returns>
     /// Services collection for chaining
     /// </returns>
-    public static IServiceCollection AddLeweeDatabaseConfiguration<T>(
+    public static IServiceCollection AddLeweeDatabaseServices<T>(
         this IServiceCollection services,
         Assembly domainAssembly)
-        where T : ApplicationDbContext<T>
+        where T : DbContext, IApplicationDbContext
     {
-        services.AddScoped<T>();
-
         var aggregateRootType = typeof(AggregateRoot);
         var aggregateRoots = domainAssembly.GetTypes()
             .Where(x => x.IsClass)
@@ -66,23 +64,15 @@ public static class DatabaseConfiguration
     /// <param name="services">
     /// Services collection
     /// </param>
-    /// <param name="domainAssembly">
-    /// Domain assembly
-    /// </param>
     /// <returns>
     /// Services collection for chaining
     /// </returns>
-    public static IServiceCollection AddLeweeDatabaseConfigurationWithSeeder<TContext, TSeeder>(
-        this IServiceCollection services,
-        Assembly domainAssembly)
-        where TContext : ApplicationDbContext<TContext>
+    public static IServiceCollection AddLeweeDatabaseSeeder<TContext, TSeeder>(
+        this IServiceCollection services)
+        where TContext : DbContext, IApplicationDbContext
         where TSeeder : class, IDatabaseSeeder<TContext>
     {
-        var newServices = AddLeweeDatabaseConfiguration<TContext>(services, domainAssembly);
-
-        newServices.AddScoped<IDatabaseSeeder<TContext>, TSeeder>();
-
-        return newServices;
+        return services.AddScoped<IDatabaseSeeder<TContext>, TSeeder>();
     }
 
     /// <summary>
@@ -99,20 +89,20 @@ public static class DatabaseConfiguration
         using (var serviceScope = serviceProvider.CreateScope())
         using (var dbContext = serviceScope.ServiceProvider.GetRequiredService<T>())
         {
-            using (var dbConnection = dbContext.Database.GetDbConnection())
+            while (!cancellationTokenSource.IsCancellationRequested)
             {
-                while (!cancellationTokenSource.IsCancellationRequested)
+                var canConnect = await dbContext.Database.CanConnectAsync(cancellationTokenSource.Token);
+                if (canConnect)
                 {
-                    try
-                    {
-                        await dbConnection.OpenAsync(cancellationTokenSource.Token);
-                    }
-                    catch (Exception)
-                    {
-                        await Task.Delay(TimeSpan.FromSeconds(1), cancellationTokenSource.Token);
-                        continue;
-                    }
+                    break;
                 }
+
+                await Task.Delay(TimeSpan.FromSeconds(5), cancellationTokenSource.Token);
+            }
+
+            if (cancellationTokenSource.IsCancellationRequested)
+            {
+                return;
             }
 
             await dbContext.Database.MigrateAsync(cancellationTokenSource.Token);

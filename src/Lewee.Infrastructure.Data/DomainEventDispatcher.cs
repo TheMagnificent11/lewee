@@ -1,5 +1,4 @@
 ﻿using FreeMediator;
-using Lewee.Application.Data;
 using Lewee.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -96,7 +95,7 @@ internal class DomainEventDispatcher<TContext>
                 }
             }
 
-            if (domainEvents.Any())
+            if (domainEvents.Count > 0)
             {
                 foreach (var domainEvent in domainEvents)
                 {

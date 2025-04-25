@@ -1,8 +1,7 @@
 ﻿using FluentAssertions;
-using Lewee.Shared;
 using Xunit;
 
-namespace Lewee.Util.Shared.Unit;
+namespace Lewee.Shared.Tests.Unit;
 
 public static class EnumExtensionTests
 {
