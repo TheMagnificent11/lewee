@@ -1,6 +1,6 @@
 ﻿using Lewee.Application.Mediation.Requests;
 using Lewee.Shared;
-using MediatR;
+using FreeMediator;
 using Serilog.Context;
 
 namespace Lewee.Application.Mediation.Behaviors;

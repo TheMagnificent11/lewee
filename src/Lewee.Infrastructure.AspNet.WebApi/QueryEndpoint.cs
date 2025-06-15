@@ -2,7 +2,7 @@
 using Correlate;
 using FastEndpoints;
 using Lewee.Application.Mediation.Requests;
-using MediatR;
+using FreeMediator;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;

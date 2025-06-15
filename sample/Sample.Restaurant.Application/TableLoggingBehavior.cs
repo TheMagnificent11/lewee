@@ -1,4 +1,4 @@
-﻿using MediatR;
+﻿using FreeMediator;
 using Serilog.Context;
 
 namespace Sample.Restaurant.Application;

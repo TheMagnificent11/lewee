@@ -6,7 +6,7 @@
         "Consts",
         "CQRS",
         "Lewee",
-        "Mediatr",
+        "FreeMediator",
         "nologo",
         "nupkg",
         "Serilog"

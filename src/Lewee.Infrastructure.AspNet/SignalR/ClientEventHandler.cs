@@ -1,7 +1,7 @@
 ﻿using Lewee.Application.Mediation.Notifications;
 using Lewee.Contracts;
 using Lewee.Shared;
-using MediatR;
+using FreeMediator;
 using Microsoft.AspNetCore.SignalR;
 using Serilog;
 using Serilog.Context;

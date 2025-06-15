@@ -1,7 +1,7 @@
 ﻿using Lewee.Application.Mediation.Requests;
 using Lewee.Domain;
 using MapsterMapper;
-using MediatR;
+using FreeMediator;
 using Sample.Restaurant.Domain;
 
 namespace Sample.Restaurant.Application;

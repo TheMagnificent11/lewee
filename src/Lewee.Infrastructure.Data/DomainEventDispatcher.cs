@@ -1,6 +1,6 @@
 ﻿using Lewee.Application.Data;
 using Lewee.Domain;
-using MediatR;
+using FreeMediator;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 

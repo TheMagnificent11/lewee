@@ -2,7 +2,7 @@
 
   <ItemGroup>
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
-    <PackageReference Include="MediatR" />
+    <PackageReference Include="FreeMediator" />
     <PackageReference Include="Serilog" />
     <PackageReference Include="SerilogAnalyzer">
       <ExcludeAssets>all</ExcludeAssets>
