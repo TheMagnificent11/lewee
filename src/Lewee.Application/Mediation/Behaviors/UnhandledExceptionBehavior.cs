@@ -1,4 +1,4 @@
-﻿using MediatR;
+﻿using FreeMediator;
 using Serilog;
 
 namespace Lewee.Application.Mediation.Behaviors;

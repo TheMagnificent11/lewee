@@ -1,7 +1,7 @@
 ﻿using Lewee.Application.Mediation.Notifications;
 using Lewee.Domain;
 using Lewee.Shared;
-using MediatR;
+using FreeMediator;
 using Sample.Restaurant.Contracts.ClientMessages;
 using Sample.Restaurant.Domain;
 using Serilog;

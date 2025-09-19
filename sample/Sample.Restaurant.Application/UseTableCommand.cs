@@ -1,6 +1,6 @@
 ﻿using Lewee.Application.Mediation.Requests;
 using Lewee.Domain;
-using MediatR;
+using FreeMediator;
 using Sample.Restaurant.Application.QuerySpecifications;
 using Sample.Restaurant.Domain;
 using Serilog;

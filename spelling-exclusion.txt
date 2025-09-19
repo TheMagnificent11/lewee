@@ -3,5 +3,5 @@ Lewee
 Ardalis
 Fluxor
 Gitflow
-Mediatr
+FreeMediator
 Serilog

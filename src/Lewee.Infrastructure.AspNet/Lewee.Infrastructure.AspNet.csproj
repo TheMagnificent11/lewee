@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Correlate.AspNetCore" />
+    <PackageReference Include="FreeMediator" />
     <PackageReference Include="Serilog" />
     <!--<PackageReference Include="Serilog.AspNetCore.Ingestion" />-->
     <PackageReference Include="Serilog.Enrichers.Environment" />
