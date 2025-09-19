@@ -30,8 +30,7 @@ public class Program
         builder.Services.AddMapper();
 
         builder.Services
-            // TODO: fix this
-            //.AddDbContextFactory<RestaurantDbContext>(options => options.UseSqlServer(connectionString))
+            .AddDbContextFactory<RestaurantDbContext>(options => options.UseSqlServer(connectionString))
             .AddLeweeDatabaseConfigurationWithSeeder<RestaurantDbContext, RestaurantDbSeeder>(typeof(MenuItem).Assembly)
             .ConfigureAuthenticatedUserService()
 #if DEBUG
