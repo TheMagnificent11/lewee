@@ -5,6 +5,7 @@
   </ItemGroup>
   
   <ItemGroup>
+    <PackageReference Include="Testcontainers.MsSql" VersionOverride="4.7.0" />
     <ProjectReference Include="..\..\sample\Sample.Restaurant.Server\Sample.Restaurant.Server.csproj" />
     <ProjectReference Include="..\..\src\Lewee.IntegrationTests\Lewee.IntegrationTests.csproj" />
   </ItemGroup>
