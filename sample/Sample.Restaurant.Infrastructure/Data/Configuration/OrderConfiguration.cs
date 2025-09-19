@@ -11,7 +11,10 @@ internal class OrderConfiguration : EntityConfiguration<Order>
     {
         builder.ToTable("Orders");
 
-        builder.HasOne(x => x.OrderStatus);
+        builder.HasOne(x => x.OrderStatus)
+            .WithMany()
+            .HasForeignKey(x => x.OrderStatusId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(x => x.Table)
             .WithMany(x => x.Orders)

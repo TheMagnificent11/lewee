@@ -1,4 +1,5 @@
 ﻿using Lewee.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Sample.Restaurant.Domain;
 
@@ -15,6 +16,9 @@ internal class MenuItemConfiguration : AggregateRootConfiguration<MenuItem>
         builder.Property(x => x.Price)
             .HasPrecision(PricePrecision.Precision, PricePrecision.Scale);
 
-        builder.HasOne(x => x.ItemType);
+        builder.HasOne(x => x.ItemType)
+            .WithMany()
+            .HasForeignKey(x => x.ItemTypeId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }
