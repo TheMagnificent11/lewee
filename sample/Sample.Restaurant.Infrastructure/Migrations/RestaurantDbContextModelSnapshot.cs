@@ -20,8 +20,6 @@ namespace Sample.Restaurant.Infrastructure.Migrations
                 .HasAnnotation("ProductVersion", "7.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
             modelBuilder.Entity("Lewee.Domain.DomainEventReference", b =>
                 {
                     b.Property<Guid>("Id")

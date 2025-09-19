@@ -13,12 +13,8 @@
     <PackageVersion Include="MudBlazor" Version="8.5.1" />
     <PackageVersion Include="Respawn" Version="6.2.1" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="8.1.1" />
-    <PackageVersion Include="Testcontainers.PostgreSql" Version="4.4.0" />
+    <PackageVersion Include="Testcontainers.MsSql" Version="4.7.0" />
     <PackageVersion Include="TestStack.BDDfy" Version="4.3.2" />
-  </ItemGroup>
-  <ItemGroup Label="Aspire">
-    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="9.2.1" />
-    <PackageVersion Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.2.1" />
   </ItemGroup>
   <ItemGroup Label="Microsoft.AspNetCore">
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.3" />
@@ -31,6 +27,7 @@
   </ItemGroup>
   <ItemGroup Label="Microsoft.EntityFramework">
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.3" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.3" />
   </ItemGroup>
   <ItemGroup Label="Microsoft.Extensions">
@@ -63,10 +60,6 @@
   <ItemGroup Label="Mapster">
     <PackageVersion Include="Mapster" Version="7.4.0" />
     <PackageVersion Include="Mapster.DependencyInjection" Version="1.0.1" />
-  </ItemGroup>
-  <ItemGroup Label="MediatR">
-    <PackageVersion Include="MediatR.Contracts" Version="2.0.1" />
-    <PackageVersion Include="MediatR" Version="12.5.0" />
   </ItemGroup>
   <ItemGroup Label="xunit">
     <PackageVersion Include="xunit" Version="2.9.3" />
