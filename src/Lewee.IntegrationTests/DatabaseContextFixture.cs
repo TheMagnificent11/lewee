@@ -30,7 +30,7 @@ public abstract class DatabaseContextFixture<TDbContext, TDbSeeder> : IAsyncLife
         this.msSqlContainer = new MsSqlBuilder()
             .WithImage($"mcr.microsoft.com/mssql/server:{this.MsSqlImageVersion}")
             .WithPortBinding(SqlServerPort, assignRandomHostPort: true)
-            .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(SqlServerPort))
+            .WithWaitStrategy(Wait.ForUnixContainer().UntilInternalTcpPortIsAvailable(SqlServerPort))
             .Build();
     }
 
