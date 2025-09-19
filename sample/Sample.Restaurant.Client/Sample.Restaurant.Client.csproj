@@ -8,6 +8,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" VersionOverride="9.0.9" />
     <ProjectReference Include="..\..\src\Lewee.Blazor\Lewee.Blazor.csproj" />
     <ProjectReference Include="..\Sample.Restaurant.Contracts\Sample.Restaurant.Contracts.csproj" />
   </ItemGroup>
