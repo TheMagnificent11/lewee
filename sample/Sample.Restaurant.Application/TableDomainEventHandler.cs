@@ -1,11 +1,10 @@
-﻿using Lewee.Application.Mediation.Notifications;
+﻿using FreeMediator;
+using Lewee.Application.Mediation.Notifications;
 using Lewee.Domain;
 using Lewee.Shared;
-using FreeMediator;
+using Microsoft.Extensions.Logging;
 using Sample.Restaurant.Contracts.ClientMessages;
 using Sample.Restaurant.Domain;
-using Serilog;
-using Serilog.Context;
 
 namespace Sample.Restaurant.Application;
 
@@ -23,18 +22,21 @@ internal class TableDomainEventHandler :
         IRepository<MenuItem> menuItemRepository,
         IQueryProjectionService queryProjectionService,
         IMediator mediator,
-        ILogger logger)
+        ILogger<TableDomainEventHandler> logger)
     {
         this.menuItemRepository = menuItemRepository;
         this.queryProjectionService = queryProjectionService;
         this.mediator = mediator;
-        this.logger = logger.ForContext<TableDomainEventHandler>();
+        this.logger = logger;
     }
 
     public async Task Handle(TableInUseDomainEvent notification, CancellationToken cancellationToken)
     {
-        using (LogContext.PushProperty(LoggingConsts.CorrelationId, notification.CorrelationId))
-        using (LogContext.PushProperty(nameof(notification.TableNumber), notification.TableNumber))
+        using (this.logger.BeginScope(new Dictionary<string, object>
+        {
+            {  LoggingConsts.CorrelationId, notification.CorrelationId },
+            {  nameof(notification.TableNumber), notification.TableNumber }
+        }))
         {
             var menuItems = await this.menuItemRepository.All(cancellationToken);
 
@@ -50,7 +52,7 @@ internal class TableDomainEventHandler :
                 notification.TableNumber.ToString(),
                 cancellationToken);
 
-            this.logger.Debug("TableDetails query projection created");
+            this.logger.LogDebug("TableDetails query projection created");
 
             var message = new TableUsedMessage { TableNumber = notification.TableNumber };
             await this.PublishClientEvent(message, notification.CorrelationId, cancellationToken);
@@ -59,8 +61,11 @@ internal class TableDomainEventHandler :
 
     public async Task Handle(OrderItemAddedDomainEvent notification, CancellationToken cancellationToken)
     {
-        using (LogContext.PushProperty(LoggingConsts.CorrelationId, notification.CorrelationId))
-        using (LogContext.PushProperty(nameof(notification.TableNumber), notification.TableNumber))
+        using (this.logger.BeginScope(new Dictionary<string, object>
+        {
+            {  LoggingConsts.CorrelationId, notification.CorrelationId },
+            {  nameof(notification.TableNumber), notification.TableNumber }
+        }))
         {
             var projection = await this.queryProjectionService.RetrieveByKey<TableDetails>(
                 notification.TableNumber.ToString(),
@@ -68,7 +73,7 @@ internal class TableDomainEventHandler :
 
             if (projection == null)
             {
-                this.logger.Error("TableDetails query projection not found");
+                this.logger.LogError("TableDetails query projection not found");
                 return;
             }
 
@@ -79,7 +84,7 @@ internal class TableDomainEventHandler :
                 notification.TableNumber.ToString(),
                 cancellationToken);
 
-            this.logger.Debug("TableDetails query projection updated for OrderItemAddedDomainEvent");
+            this.logger.LogDebug("TableDetails query projection updated for OrderItemAddedDomainEvent");
 
             var message = new ItemOrderedMessage { TableNumber = notification.TableNumber };
             await this.PublishClientEvent(message, notification.CorrelationId, cancellationToken);
@@ -88,8 +93,11 @@ internal class TableDomainEventHandler :
 
     public async Task Handle(OrderItemRemovedDomainEvent notification, CancellationToken cancellationToken)
     {
-        using (LogContext.PushProperty(LoggingConsts.CorrelationId, notification.CorrelationId))
-        using (LogContext.PushProperty(nameof(notification.TableNumber), notification.TableNumber))
+        using (this.logger.BeginScope(new Dictionary<string, object>
+        {
+            {  LoggingConsts.CorrelationId, notification.CorrelationId },
+            {  nameof(notification.TableNumber), notification.TableNumber }
+        }))
         {
             var projection = await this.queryProjectionService.RetrieveByKey<TableDetails>(
                 notification.TableNumber.ToString(),
@@ -97,7 +105,7 @@ internal class TableDomainEventHandler :
 
             if (projection == null)
             {
-                this.logger.Error("TableDetails query projection not found");
+                this.logger.LogError("TableDetails query projection not found");
                 return;
             }
 
@@ -108,7 +116,7 @@ internal class TableDomainEventHandler :
                 notification.TableNumber.ToString(),
                 cancellationToken);
 
-            this.logger.Debug("TableDetails query projection updated for OrderItemRemovedDomainEvent");
+            this.logger.LogDebug("TableDetails query projection updated for OrderItemRemovedDomainEvent");
 
             var message = new ItemRemovedMessage { TableNumber = notification.TableNumber };
             await this.PublishClientEvent(message, notification.CorrelationId, cancellationToken);
@@ -120,6 +128,6 @@ internal class TableDomainEventHandler :
         var clientEvent = new ClientEvent(correlationId, null, message);
         await this.mediator.Publish(clientEvent, cancellationToken);
 
-        this.logger.Debug("{ClientEventType} client event published", message.GetType().Name);
+        this.logger.LogDebug("{ClientEventType} client event published", message.GetType().Name);
     }
 }

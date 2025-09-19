@@ -1,16 +1,15 @@
 ﻿using FastEndpoints;
-using FastEndpoints.Swagger;
 using Lewee.Infrastructure.AspNet.Auth;
 using Lewee.Infrastructure.AspNet.Observability;
 using Lewee.Infrastructure.AspNet.SignalR;
 using Lewee.Infrastructure.Data;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using Sample.Restaurant.Application;
 using Sample.Restaurant.Domain;
 using Sample.Restaurant.Infrastructure.Data;
 using Sample.Restaurant.Server.Configuration;
-using Serilog;
 
 namespace Sample.Restaurant.Server;
 
@@ -28,9 +27,6 @@ public class Program
             throw new ApplicationException("Could not find database connection string");
         }
 
-        var logger = builder.Environment.ConfigureLogging(builder.Configuration);
-        builder.Host.UseSerilog(logger, dispose: true);
-
         builder.Services.AddMapper();
 
         builder.Services
@@ -43,13 +39,13 @@ public class Program
             .AddRestaurantApplication()
             .AddCorrelationIdServices()
             .AddFastEndpoints()
-            .SwaggerDocument(x =>
+            .AddSwaggerGen(x =>
             {
-                x.DocumentSettings = y =>
+                x.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    y.Title = "Restaurant API";
-                    y.Version = "v1";
-                };
+                    Title = "Restaurant API",
+                    Version = "v1"
+                });
             })
             .ConfigureSignalR()
             .AddHealthChecks()
@@ -58,9 +54,6 @@ public class Program
         builder.Services.AddRazorPages();
 
         var app = builder.Build();
-
-        // TODO: https://github.com/TheMagnificent11/lewee/issues/15
-        //app.UseSerilogIngestion();
 
         app.UseResponseCompression();
 
@@ -85,6 +78,15 @@ public class Program
             .UseStaticFiles()
             .UseRouting();
 
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI(x =>
+            {
+                x.SwaggerEndpoint("/swagger/v1/swagger.json", "Restaurant API V1");
+            });
+        }
+
         app.MapRazorPages();
         app.MapHub<ClientEventHub>("/events");
         app.MapFallbackToFile("index.html");
@@ -92,7 +94,9 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.UseMigrationsEndPoint();
-            app.UseSwaggerGen();
+
+            // TODO: fix swagger
+            //app.UseSwaggerGen();
         }
 
         await app.Services.MigrateDatabaseAsync<RestaurantDbContext>(seedData: true);

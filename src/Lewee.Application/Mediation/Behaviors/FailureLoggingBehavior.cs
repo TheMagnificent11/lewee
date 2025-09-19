@@ -1,6 +1,6 @@
-﻿using Lewee.Application.Mediation.Requests;
-using FreeMediator;
-using Serilog;
+﻿using FreeMediator;
+using Lewee.Application.Mediation.Requests;
+using Microsoft.Extensions.Logging;
 
 namespace Lewee.Application.Mediation.Behaviors;
 
@@ -10,9 +10,9 @@ internal class FailureLoggingBehavior<TRequest, TResponse> : IPipelineBehavior<T
 {
     private readonly ILogger logger;
 
-    public FailureLoggingBehavior(ILogger logger)
+    public FailureLoggingBehavior(ILogger<FailureLoggingBehavior<TRequest, TResponse>> logger)
     {
-        this.logger = logger.ForContext<FailureLoggingBehavior<TRequest, TResponse>>();
+        this.logger = logger;
     }
 
     public async Task<TResponse> Handle(
@@ -20,7 +20,7 @@ internal class FailureLoggingBehavior<TRequest, TResponse> : IPipelineBehavior<T
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
-        var result = await next();
+        var result = await next(cancellationToken);
 
         if (result.IsSuccess)
         {
@@ -31,11 +31,11 @@ internal class FailureLoggingBehavior<TRequest, TResponse> : IPipelineBehavior<T
 
         if (statusId >= 500)
         {
-            this.logger.Error("Unexpected error occurred {@Errors}", result.Errors);
+            this.logger.LogError("Unexpected error occurred {@Errors}", result.Errors);
         }
         else
         {
-            this.logger.Information("Bad request {@Errors}", result.Errors);
+            this.logger.LogInformation("Bad request {@Errors}", result.Errors);
         }
 
         return result;

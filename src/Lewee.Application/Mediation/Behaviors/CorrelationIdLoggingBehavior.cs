@@ -1,13 +1,20 @@
-﻿using Lewee.Application.Mediation.Requests;
+﻿using FreeMediator;
+using Lewee.Application.Mediation.Requests;
 using Lewee.Shared;
-using FreeMediator;
-using Serilog.Context;
+using Microsoft.Extensions.Logging;
 
 namespace Lewee.Application.Mediation.Behaviors;
 
 internal class CorrelationIdLoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
+    private readonly ILogger<CorrelationIdLoggingBehavior<TRequest, TResponse>> logger;
+
+    public CorrelationIdLoggingBehavior(ILogger<CorrelationIdLoggingBehavior<TRequest, TResponse>> logger)
+    {
+        this.logger = logger;
+    }
+
     public Task<TResponse> Handle(
         TRequest request,
         RequestHandlerDelegate<TResponse> next,
@@ -17,7 +24,10 @@ internal class CorrelationIdLoggingBehavior<TRequest, TResponse> : IPipelineBeha
             ? applicationRequest.CorrelationId
             : Guid.NewGuid();
 
-        using (LogContext.PushProperty(LoggingConsts.CorrelationId, correlationId))
+        using (this.logger.BeginScope(new Dictionary<string, object>
+        {
+            { LoggingConsts.CorrelationId, correlationId }
+        }))
         {
             return next();
         }

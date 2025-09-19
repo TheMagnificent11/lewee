@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <!--
-      Don't relelase because it's not working.
+      Don't release because it's not working.
       Package upgrades without appropriate tests are probably the cause.
     -->
     <IsPackable>false</IsPackable>
@@ -12,8 +12,6 @@
     <PackageReference Include="Correlate.DependencyInjection" />
     <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" />
-    <!--<PackageReference Include="Serilog.Sinks.BrowserConsole" />
-    <PackageReference Include="Serilog.Sinks.BrowserHttp" />-->
   </ItemGroup>
 
   <ItemGroup>

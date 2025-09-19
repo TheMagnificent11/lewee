@@ -4,16 +4,16 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
+    <PackageVersion Include="FastEndpoints" Version="5.35.0" />
     <PackageVersion Include="Fluxor.Blazor.Web.ReduxDevTools" Version="6.6.0" />
     <PackageVersion Include="FreeMediator" Version="1.2.0" />
-    <PackageVersion Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="9.0.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
     <PackageVersion Include="Moq" Version="4.20.72" />
     <PackageVersion Include="MudBlazor" Version="8.5.1" />
     <PackageVersion Include="Respawn" Version="6.2.1" />
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="7.3.2" />
-    <PackageVersion Include="Testcontainers.MsSql" Version="4.3.0" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="8.1.1" />
+    <PackageVersion Include="Testcontainers.MsSql" Version="4.7.0" />
     <PackageVersion Include="TestStack.BDDfy" Version="4.3.2" />
   </ItemGroup>
   <ItemGroup Label="Microsoft.AspNetCore">
@@ -36,6 +36,7 @@
     <PackageVersion Include="Microsoft.Extensions.DependencyModel" Version="9.0.3" />
     <PackageVersion Include="Microsoft.Extensions.Diagnostics.Testing" Version="9.4.0" />
     <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.4" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.4" />
     <PackageVersion Include="Microsoft.Extensions.Http" Version="9.0.3" />
   </ItemGroup>
   <ItemGroup Label="Ardalis">
@@ -50,10 +51,6 @@
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
     <PackageVersion Include="coverlet.msbuild" Version="6.0.4" />
   </ItemGroup>
-  <ItemGroup Label="FastEndpoints">
-    <PackageVersion Include="FastEndpoints" Version="5.35.0" />
-    <PackageVersion Include="FastEndpoints.Swagger" Version="5.35.0" />
-  </ItemGroup>
   <ItemGroup Label="FluentAssertions">
     <PackageVersion Include="FluentAssertions" Version="7.2.0" />
     <PackageVersion Include="FluentAssertions.Analyzers" Version="0.34.1" />
@@ -63,22 +60,6 @@
   <ItemGroup Label="Mapster">
     <PackageVersion Include="Mapster" Version="7.4.0" />
     <PackageVersion Include="Mapster.DependencyInjection" Version="1.0.1" />
-  </ItemGroup>
-  <ItemGroup Label="Serilog">
-    <PackageVersion Include="Serilog" Version="4.2.0" />
-    <PackageVersion Include="Serilog.AspNetCore" Version="9.0.0" />
-    <PackageVersion Include="Serilog.AspNetCore.Ingestion" Version="1.0.0-dev-00032" />
-    <PackageVersion Include="Serilog.Enrichers.Environment" Version="3.0.1" />
-    <PackageVersion Include="Serilog.Enrichers.Process" Version="3.0.0" />
-    <PackageVersion Include="Serilog.Enrichers.Thread" Version="4.0.0" />
-    <PackageVersion Include="Serilog.Extensions.Logging" Version="9.0.1" />
-    <PackageVersion Include="Serilog.Sinks.BrowserConsole" Version="2.0.0-dev-00057" />
-    <PackageVersion Include="Serilog.Sinks.BrowserHttp" Version="1.0.0-dev-00032" />
-    <PackageVersion Include="Serilog.Sinks.Console" Version="6.0.0" />
-    <PackageVersion Include="Serilog.Sinks.Seq" Version="9.0.0" />
-    <PackageVersion Include="Serilog.Sinks.Trace" Version="4.0.0" />
-    <PackageVersion Include="SerilogAnalyzer" Version="0.15.0" />
-    <PackageVersion Include="SerilogMetrics" Version="2.1.0" />
   </ItemGroup>
   <ItemGroup Label="xunit">
     <PackageVersion Include="xunit" Version="2.9.3" />

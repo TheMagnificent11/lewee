@@ -1,9 +1,10 @@
-﻿using Lewee.Application.Mediation.Requests;
+﻿using FreeMediator;
+using Lewee.Application.Mediation.Requests;
 using Lewee.Domain;
-using FreeMediator;
+
+using Microsoft.Extensions.Logging;
 using Sample.Restaurant.Application.QuerySpecifications;
 using Sample.Restaurant.Domain;
-using Serilog;
 
 namespace Sample.Restaurant.Application;
 
@@ -29,11 +30,11 @@ public sealed class RemoveMenuItemCommand : ICommand, ITableRequest
         public RemoveMenuItemCommandHandler(
             IRepository<Table> tableRepository,
             IRepository<MenuItem> menuItemRepository,
-            ILogger logger)
+            ILogger<RemoveMenuItemCommandHandler> logger)
         {
             this.tableRepository = tableRepository;
             this.menuItemRepository = menuItemRepository;
-            this.logger = logger.ForContext<RemoveMenuItemCommandHandler>();
+            this.logger = logger;
         }
 
         public async Task<CommandResult> Handle(RemoveMenuItemCommand request, CancellationToken cancellationToken)
@@ -58,7 +59,7 @@ public sealed class RemoveMenuItemCommand : ICommand, ITableRequest
 
             await this.tableRepository.SaveChanges(cancellationToken);
 
-            this.logger.Information("Menu Item {@MenuItem} removed from table order", menuItem);
+            this.logger.LogInformation("Menu Item {@MenuItem} removed from table order", menuItem);
 
             return CommandResult.Success();
         }
