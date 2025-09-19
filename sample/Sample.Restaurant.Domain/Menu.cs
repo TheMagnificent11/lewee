@@ -36,11 +36,11 @@ public static class Menu
         new Guid("58b91a73-682d-4696-b545-b493b56a0335"),
         "Wine",
         15,
-        MenuItemType.Food);
+        MenuItemType.Drink);
 
     public static readonly MenuItem SoftDrink = new(
         new Guid("110d16d7-3ce5-49dd-a187-d3640fdb42b5"),
         "Soft Drink",
         15,
-        MenuItemType.Food);
+        MenuItemType.Drink);
 }
