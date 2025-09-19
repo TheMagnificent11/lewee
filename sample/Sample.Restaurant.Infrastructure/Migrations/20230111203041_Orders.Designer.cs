@@ -21,6 +21,8 @@ namespace Sample.Restaurant.Infrastructure.Migrations
                 .HasAnnotation("ProductVersion", "7.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
             modelBuilder.Entity("Lewee.Domain.DomainEventReference", b =>
                 {
                     b.Property<Guid>("Id")
