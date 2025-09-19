@@ -9,11 +9,11 @@ using Sample.Restaurant.Infrastructure.Data;
 
 #nullable disable
 
-namespace Sample.Restaurant.Infrastructure.Migrations
-{
-    [DbContext(typeof(RestaurantDbContext))]
-    [Migration("20250919151937_UpdateDeleteBehaviorToRestrict")]
-    partial class UpdateDeleteBehaviorToRestrict
+namespace Sample.Restaurant.Infrastructure.Migrations;
+
+[DbContext(typeof(RestaurantDbContext))]
+[Migration("20250919151937_UpdateDeleteBehaviorToRestrict")]
+partial class UpdateDeleteBehaviorToRestrict
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -435,4 +435,3 @@ namespace Sample.Restaurant.Infrastructure.Migrations
 #pragma warning restore 612, 618
         }
     }
-}
