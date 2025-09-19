@@ -27,7 +27,7 @@ public sealed class RestaurantDbContextFixture : DatabaseContextFixture<Restaura
 
     protected override string ConnectionStringName => "Sample.Restaurant";
 
-    protected override string MsSqlImageVersion => "2022-latest";
+    protected override string MsSqlImageVersion => "2022-CU13-ubuntu-22.04";
 
     protected override RestaurantDbContext CreateDbContext()
     {

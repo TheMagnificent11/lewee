@@ -31,9 +31,6 @@ jobs:
         run: dotnet restore ./lewee.sln --nologo
       - name: Build
         run: dotnet build ./lewee.sln --configuration Release --no-restore --nologo
-      - name: Pull Docker Images for TestContainers
-        run: |
-          docker pull mcr.microsoft.com/mssql/server:2022-latest
       - name: Test
         run: dotnet test ./lewee.sln --configuration Release --no-build --nologo --settings coverage.runsettings --results-directory ./coverage
       - name: Code Coverage Report
