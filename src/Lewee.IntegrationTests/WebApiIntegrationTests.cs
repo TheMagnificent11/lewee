@@ -60,14 +60,17 @@ public abstract class WebApiIntegrationTests<TEntryPoint, TFactory, TDbContextFi
     /// <inheritdoc />
     public virtual async Task InitializeAsync()
     {
-        await this.dbContextFixture.InitializeAsync();
+        // When using collection fixtures, the fixture's InitializeAsync is called by xUnit
+        // We only need to reset the database for each individual test
         await this.dbContextFixture.ResetDatabase();
     }
 
     /// <inheritdoc />
     public virtual async Task DisposeAsync()
     {
-        await this.dbContextFixture.DisposeAsync();
+        // When using collection fixtures, don't dispose the fixture as it's shared
+        // The collection fixture will handle disposal when all tests are complete
+        await Task.CompletedTask;
     }
 
     /// <summary>
