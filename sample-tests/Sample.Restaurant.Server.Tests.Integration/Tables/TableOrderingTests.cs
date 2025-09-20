@@ -9,10 +9,8 @@ namespace Sample.Restaurant.Server.Tests.Integration.Tables;
 
 public sealed class TableOrderingTests : TableTestsBase
 {
-    public TableOrderingTests(
-        RestaurantWebApplicationFactory webApplicationFactory,
-        RestaurantDbContextFixture dbContextFixture)
-        : base(webApplicationFactory, dbContextFixture)
+    public TableOrderingTests(RestaurantDbContextFixture dbContextFixture)
+        : base(dbContextFixture)
     {
     }
 

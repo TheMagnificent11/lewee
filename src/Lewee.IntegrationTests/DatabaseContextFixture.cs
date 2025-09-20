@@ -42,7 +42,7 @@ public abstract class DatabaseContextFixture<TDbContext, TDbSeeder> : IAsyncLife
     /// <summary>
     /// Gets the database connection string
     /// </summary>
-    protected string ConnectionString { get; private set; } = string.Empty;
+    public string ConnectionString { get; private set; } = string.Empty;
 
     /// <summary>
     /// Gets the database reset options

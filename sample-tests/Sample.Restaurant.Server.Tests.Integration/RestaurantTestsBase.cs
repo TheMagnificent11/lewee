@@ -9,10 +9,8 @@ namespace Sample.Restaurant.Server.Tests.Integration;
 public abstract class RestaurantTestsBase :
     WebApiIntegrationTests<Program, RestaurantWebApplicationFactory, RestaurantDbContextFixture, RestaurantDbContext, RestaurantDbSeeder>
 {
-    protected RestaurantTestsBase(
-        RestaurantWebApplicationFactory webApplicationFactory,
-        RestaurantDbContextFixture dbContextFixture)
-        : base(webApplicationFactory, dbContextFixture)
+    protected RestaurantTestsBase(RestaurantDbContextFixture dbContextFixture)
+        : base(new RestaurantWebApplicationFactory(dbContextFixture), dbContextFixture)
     {
     }
 

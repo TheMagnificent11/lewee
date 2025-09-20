@@ -7,10 +7,8 @@ namespace Sample.Restaurant.Server.Tests.Integration.Tables;
 
 public sealed class GetTablesTests : TableTestsBase
 {
-    public GetTablesTests(
-        RestaurantWebApplicationFactory webApplicationFactory,
-        RestaurantDbContextFixture dbContextFixture)
-        : base(webApplicationFactory, dbContextFixture)
+    public GetTablesTests(RestaurantDbContextFixture dbContextFixture)
+        : base(dbContextFixture)
     {
     }
 
