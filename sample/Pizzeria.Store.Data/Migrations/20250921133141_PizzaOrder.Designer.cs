@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Pizzeria.Store.Data.Migrations
 {
     [DbContext(typeof(StoreDbContext))]
-    [Migration("20250920160052_PizzaOrder")]
+    [Migration("20250921133141_PizzaOrder")]
     partial class PizzaOrder
     {
         /// <inheritdoc />

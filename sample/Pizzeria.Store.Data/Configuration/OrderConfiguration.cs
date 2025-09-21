@@ -20,11 +20,6 @@ internal class OrderConfiguration : AggregateRootConfiguration<Order>
         builder
             .HasMany(o => o.Pizzas)
             .WithOne(op => op.Order)
-            .HasForeignKey(op => op.PizzaId);
-
-        builder
-            .HasMany(o => o.Pizzas)
-            .WithOne(op => op.Order)
             .HasForeignKey(op => op.OrderId);
     }
 }
