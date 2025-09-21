@@ -35,7 +35,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
         await this.resourceNotificationService
             .WaitForResourceAsync(ServiceNames.PizzaStoreApi, KnownResourceStates.Running)
-            .WaitAsync(TimeSpan.FromMinutes(1));
+            .WaitAsync(TimeSpan.FromMinutes(10)); // To allow Aspire to pull Docker images
 
         var storeDbConnectionString = await this.app.GetConnectionStringAsync(ServiceNames.PizzaStoreDatabase);
         var storeDbOptionsBuilder = new DbContextOptionsBuilder<StoreDbContext>();
