@@ -36,7 +36,6 @@ public static class PostgreSqlConfiguration
                 if (string.IsNullOrWhiteSpace(schema))
                 {
                     options.UseNpgsql(connectionString);
-                    return;
                 }
                 else
                 {
