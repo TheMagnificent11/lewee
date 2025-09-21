@@ -50,8 +50,8 @@ public class Repository<TAggregate, TContext> : RepositoryBase<TAggregate>, IRep
         return await this.GetByIdAsync(id, cancellationToken);
     }
 
-    Task IRepository<TAggregate>.AddAsync(TAggregate entity, CancellationToken cancellationToken)
+    async Task IRepository<TAggregate>.AddAsync(TAggregate entity, CancellationToken cancellationToken)
     {
-        return base.AddAsync(entity, cancellationToken);
+        await base.AddAsync(entity, cancellationToken);
     }
 }
