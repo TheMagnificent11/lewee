@@ -4,7 +4,7 @@ using Pizzeria.Store.Data;
 using Pizzeria.Store.Domain;
 using Xunit;
 
-namespace Aspire.Pizzeria.Domain.Tests;
+namespace Pizzeria.Domain.Tests;
 
 public sealed class OrderTests
 {
