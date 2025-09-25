@@ -21,18 +21,23 @@ Always reference these instructions first and fallback to search or bash command
   - **TIMING**: Takes ~12-20 seconds. NEVER CANCEL. Set timeout to 120+ seconds minimum.
 - Full rebuild: `dotnet build lewee.sln --configuration Release --no-incremental --nologo`
   - **TIMING**: Takes ~12 seconds. Set timeout to 120+ seconds minimum.
-- Run unit tests: `dotnet test lewee.sln --configuration Release --no-build --nologo --filter "Category!=Integration"`
+- Run unit tests: `dotnet test lewee.sln --configuration Release --no-build --nologo`
   - **TIMING**: Takes ~4 seconds. Set timeout to 60+ seconds.
-- Run integration tests: `dotnet test lewee.sln --configuration Release --no-build --nologo --filter "Category=Integration"`
+- Run integration tests: `dotnet test lewee.sln --configuration Release --no-build --nologo`
   - **TIMING**: Takes 5+ minutes with containers. NEVER CANCEL. Set timeout to 600+ seconds minimum.
   - **NOTE**: Integration tests use TestContainers and .NET Aspire for PostgreSQL containers
 - Pack NuGet packages: `dotnet pack lewee.sln --configuration Release --nologo --no-build`
   - **TIMING**: Takes ~2 seconds. Set timeout to 60+ seconds.
 
 ### Sample Application
-The sample pizzeria store application demonstrates Lewee framework usage:
+The sample pizzeria application demonstrates Lewee framework usage:
+
+Eventually other parts of the pizzeria will be added as services e.g. the pizzeria kitchen and pizzeria delivery.
+
+The idea is use RabbitMQ to publish messages to these other services to carry out operations to fullfil the `Order` created by by the Pizzeria Store.
 
 - **Prerequisites**: 
+  - Docker Desktop for running containers
   - .NET Aspire workload installed: `dotnet workload install aspire`
   - Run the application: `dotnet run --project ./sample/Pizzeria.AppHost/`
   - Access Aspire dashboard (typically https://localhost:17268) to monitor services
@@ -40,6 +45,10 @@ The sample pizzeria store application demonstrates Lewee framework usage:
 - **Architecture**: Uses .NET Aspire for service orchestration and PostgreSQL for data storage  
 - **Alternative**: Integration tests provide the best way to validate framework functionality
 - **CONTAINER NOTE**: Aspire manages containers automatically - no manual Docker setup required
+
+### Coding Style
+
+The coding styles are defined in the `.editorconfig` file and `dotnet format` should be run to ensure code formatting compliance.
 
 ## Validation Scenarios
 
@@ -50,12 +59,12 @@ The sample pizzeria store application demonstrates Lewee framework usage:
    - Check for no compilation warnings in framework code
 
 2. **Unit Test Validation**:
-   - Run unit tests: `dotnet test --filter "Category!=Integration"`
+   - Run unit tests: `dotnet test`
    - All unit tests must pass
    - No test failures or exceptions
 
 3. **Integration Test Validation** (uses .NET Aspire for containers):
-   - Run integration tests: `dotnet test --filter "Category=Integration"`
+   - Run integration tests: `dotnet test`
    - Tests validate database operations, API endpoints, and domain logic using PostgreSQL
    - **NOTE**: Aspire manages test containers automatically
 
