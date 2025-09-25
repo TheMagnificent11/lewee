@@ -155,12 +155,6 @@ namespace Pizzeria.Store.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
-
                     b.HasKey("Id");
 
                     b.ToTable("Orders", "sto");
@@ -244,12 +238,6 @@ namespace Pizzeria.Store.Data.Migrations
                     b.Property<decimal>("Price")
                         .HasPrecision(5, 2)
                         .HasColumnType("numeric(5,2)");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
 
                     b.HasKey("Id");
 

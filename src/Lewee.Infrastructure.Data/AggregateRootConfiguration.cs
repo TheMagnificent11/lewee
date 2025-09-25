@@ -1,8 +1,7 @@
 ﻿using Lewee.Domain;
-using Lewee.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Lewee.Infrastructure.PostgreSQL;
+namespace Lewee.Infrastructure.Data;
 
 /// <summary>
 /// Aggregate Root Configuration
@@ -15,9 +14,6 @@ public abstract class AggregateRootConfiguration<T> : EntityConfiguration<T>
     public override void Configure(EntityTypeBuilder<T> builder)
     {
         base.Configure(builder);
-
-        builder.Property(x => x.Version)
-            .IsRowVersion();
 
         builder.Ignore(x => x.DomainEvents);
     }

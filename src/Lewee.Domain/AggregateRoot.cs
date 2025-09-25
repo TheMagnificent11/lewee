@@ -23,11 +23,6 @@ public abstract class AggregateRoot : Entity
     }
 
     /// <summary>
-    /// Gets the version used for optimistic concurrency
-    /// </summary>
-    public uint Version { get; protected set; }
-
-    /// <summary>
     /// Gets the domain events collection
     /// </summary>
     public DomainEventsCollection DomainEvents { get; } = new DomainEventsCollection();

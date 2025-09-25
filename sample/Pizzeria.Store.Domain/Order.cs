@@ -55,7 +55,6 @@ public class Order : AggregateRoot
     public void AddPizza(Pizza pizza)
     {
         var existingOrderPizza = this.pizzas.FirstOrDefault(x => x.PizzaId == pizza.Id);
-
         if (existingOrderPizza is null)
         {
             this.pizzas.Add(OrderPizza.CreateForOrder(this, pizza));

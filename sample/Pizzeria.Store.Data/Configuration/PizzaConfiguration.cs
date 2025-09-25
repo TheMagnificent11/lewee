@@ -1,4 +1,4 @@
-﻿using Lewee.Infrastructure.PostgreSQL;
+﻿using Lewee.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Pizzeria.Store.Domain;
 
