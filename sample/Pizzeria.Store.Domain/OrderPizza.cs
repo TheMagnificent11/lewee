@@ -18,6 +18,7 @@ public class OrderPizza : Relationship
     {
         return new OrderPizza
         {
+            Id = Guid.NewGuid(),
             OrderId = order.Id,
             PizzaId = pizza.Id,
             Quantity = 1
