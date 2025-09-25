@@ -18,6 +18,9 @@ jobs:
         with:
           dotnet-version: 9.0.*
 
+      - name: Install Aspire Workload
+        run: dotnet workload install aspire
+
       - name: Install HTTPS development certificate
         run: dotnet dev-certs https --trust
   
