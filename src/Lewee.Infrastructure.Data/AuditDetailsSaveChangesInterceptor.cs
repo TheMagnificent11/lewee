@@ -50,11 +50,6 @@ internal sealed class AuditDetailsSaveChangesInterceptor : SaveChangesIntercepto
             {
                 entry.Entity.ApplyModificationTrackingData(this.authenticatedUserService.UserId);
             }
-
-            if (entry.State == EntityState.Unchanged && entry.IsAggregateRoot())
-            {
-                entry.Entity.ApplyModificationTrackingData(this.authenticatedUserService.UserId);
-            }
         }
     }
 }

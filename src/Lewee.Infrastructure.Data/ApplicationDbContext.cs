@@ -1,8 +1,7 @@
 ﻿using Lewee.Domain;
-using Lewee.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace Lewee.Infrastructure.PostgreSQL;
+namespace Lewee.Infrastructure.Data;
 
 /// <summary>
 /// Application Database Context

@@ -4,7 +4,7 @@ using Pizzeria.Store.Domain;
 
 namespace Pizzeria.Store.Data.Configuration;
 
-internal class OrderConfiguration : AggregateRootConfiguration<Order>
+internal sealed class OrderConfiguration : AggregateRootConfiguration<Order>
 {
     protected override void ConfigureEntity(EntityTypeBuilder<Order> builder)
     {

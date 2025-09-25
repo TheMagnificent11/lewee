@@ -105,7 +105,11 @@ public partial class PizzaOrder : Migration
                 Id = table.Column<Guid>(type: "uuid", nullable: false),
                 OrderId = table.Column<Guid>(type: "uuid", nullable: false),
                 PizzaId = table.Column<Guid>(type: "uuid", nullable: false),
-                Quantity = table.Column<int>(type: "integer", nullable: false)
+                Quantity = table.Column<int>(type: "integer", nullable: false),
+                CreatedBy = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                CreatedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                ModifiedBy = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                ModifiedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
             },
             constraints: table =>
             {

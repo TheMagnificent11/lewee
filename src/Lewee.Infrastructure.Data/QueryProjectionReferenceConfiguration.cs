@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Lewee.Infrastructure.PostgreSQL;
+namespace Lewee.Infrastructure.Data;
 
 internal class QueryProjectionReferenceConfiguration : IEntityTypeConfiguration<QueryProjectionReference>
 {

@@ -9,7 +9,7 @@ public abstract class Entity : AuditableRecord, ISoftDeleteEntity
     /// Initializes a new instance of the <see cref="Entity"/> class
     /// </summary>
     protected Entity()
-        : this(Guid.NewGuid())
+        : base()
     {
     }
 
@@ -18,15 +18,9 @@ public abstract class Entity : AuditableRecord, ISoftDeleteEntity
     /// </summary>
     /// <param name="id">ID</param>
     protected Entity(Guid id)
-        : base()
+        : base(id)
     {
-        this.Id = id;
     }
-
-    /// <summary>
-    /// Gets or sets the ID of the entity
-    /// </summary>
-    public Guid Id { get; protected set; }
 
     /// <inheritdoc />
     public bool IsDeleted { get; protected set; }

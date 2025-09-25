@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Lewee.Infrastructure.PostgreSQL;
+namespace Lewee.Infrastructure.Data;
 
 /// <summary>
 /// Entity Configuration
@@ -15,15 +15,7 @@ public abstract class EntityConfiguration<TEntity> : IEntityTypeConfiguration<TE
     public virtual void Configure(EntityTypeBuilder<TEntity> builder)
     {
         builder.HasKey(x => x.Id);
-
-        builder.Property(x => x.CreatedBy)
-            .IsRequired()
-            .HasMaxLength(255);
-
-        builder.Property(x => x.ModifiedBy)
-            .IsRequired()
-            .HasMaxLength(255);
-
+        builder.AddAuditUserProperties();
         builder.HasQueryFilter(x => !x.IsDeleted);
 
         this.ConfigureEntity(builder);

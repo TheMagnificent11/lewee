@@ -9,13 +9,29 @@ public abstract class AuditableRecord
     /// Initializes a new instance of the <see cref="AuditableRecord"/> class
     /// </summary>
     protected AuditableRecord()
+        : this(Guid.NewGuid())
+    { 
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AuditableRecord"/> class
+    /// </summary>
+    /// <param name="id">ID</param>
+    protected AuditableRecord(Guid id)
     {
+        this.Id = id;
+
         // Note audit fields should be populated by EF save changes interceptor
         this.CreatedBy = "System";
         this.ModifiedBy = "System";
         this.CreatedAtUtc = DateTime.UtcNow;
         this.ModifiedAtUtc = DateTime.UtcNow;
     }
+
+    /// <summary>
+    /// Gets or sets the ID of the entity
+    /// </summary>
+    public Guid Id { get; protected set; }
 
     /// <summary>
     /// Gets the username of the user that created the entity

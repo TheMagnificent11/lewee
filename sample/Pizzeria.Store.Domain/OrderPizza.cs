@@ -1,9 +1,9 @@
-﻿namespace Pizzeria.Store.Domain;
+﻿using Lewee.Domain;
 
-public class OrderPizza
+namespace Pizzeria.Store.Domain;
+
+public class OrderPizza : Relationship
 {
-    public Guid Id { get; internal set; }
-
     public Guid OrderId { get; internal set; }
 
     public Order Order { get; internal set; }

@@ -1,4 +1,5 @@
 ﻿using Lewee.Domain;
+using Lewee.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Lewee.Infrastructure.PostgreSQL;
