@@ -1,8 +1,7 @@
 ﻿using FluentAssertions;
-using Pizzeria.Store.Domain;
 using Xunit;
 
-namespace Pizzeria.Domain.Tests;
+namespace Pizzeria.Store.Domain.Tests;
 
 public sealed class OrderTests
 {
