@@ -23,23 +23,29 @@ public record AddPizzaToOrderCommand(Guid OrderId, Guid PizzaId, Guid Correlatio
 
     internal class Handler : IRequestHandler<AddPizzaToOrderCommand, CommandResult>
     {
-        private readonly IRepository<Order> repository;
+        private readonly IRepository<Order> orderRepository;
+        private readonly IRepository<Pizza> pizzaRepository;
         private readonly ILogger<Handler> logger;
-        public Handler(IRepository<Order> repository, ILogger<Handler> logger)
+
+        public Handler(
+            IRepository<Order> orderRepository,
+            IRepository<Pizza> pizzaRepository,
+            ILogger<Handler> logger)
         {
-            this.repository = repository;
+            this.orderRepository = orderRepository;
+            this.pizzaRepository = pizzaRepository;
             this.logger = logger;
         }
 
         public async Task<CommandResult> Handle(AddPizzaToOrderCommand request, CancellationToken cancellationToken)
         {
-            var pizza = Menu.Pizzas.FirstOrDefault(x => x.Id == request.PizzaId);
+            var pizza = await this.pizzaRepository.RetrieveByIdAsync(request.PizzaId, cancellationToken);
             if (pizza is null)
             {
                 return CommandResult.Fail(ResultStatus.NotFound, $"Pizza {request.PizzaId} not found");
             }
 
-            var order = await this.repository.QueryOneAsync(
+            var order = await this.orderRepository.QueryOneAsync(
                 new GetOrderQuerySpec(request.OrderId),
                 cancellationToken);
             if (order is null)
@@ -49,7 +55,7 @@ public record AddPizzaToOrderCommand(Guid OrderId, Guid PizzaId, Guid Correlatio
 
             order.AddPizza(pizza);
 
-            await this.repository.SaveChangesAsync(cancellationToken);
+            await this.orderRepository.SaveChangesAsync(cancellationToken);
 
             this.logger.LogInformation("Pizza {PizzaId} added to order", request.PizzaId);
 
