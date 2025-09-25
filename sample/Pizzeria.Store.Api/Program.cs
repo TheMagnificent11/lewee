@@ -33,6 +33,7 @@ var app = builder.Build();
 
 app.MapDefaultEndpoints();
 app.UseFastEndpoints();
+app.UseCorrelationIdMiddleware();
 
 if (app.Environment.IsDevelopment())
 {
