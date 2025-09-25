@@ -55,6 +55,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lewee.Infrastructure.Postgr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pizzeria.Tests.Integration", "sample-tests\Pizzeria.Tests.Integration\Pizzeria.Tests.Integration.csproj", "{99BE37A1-495F-47F9-9BF1-06118EE44810}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pizzeria.Store.Domain.Tests", "sample-tests\Pizzeria.Store.Domain.Tests\Pizzeria.Store.Domain.Tests.csproj", "{5F5FDE11-B167-0ACB-3A75-A80A7CF9BA55}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -141,6 +143,10 @@ Global
 		{99BE37A1-495F-47F9-9BF1-06118EE44810}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99BE37A1-495F-47F9-9BF1-06118EE44810}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{99BE37A1-495F-47F9-9BF1-06118EE44810}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F5FDE11-B167-0ACB-3A75-A80A7CF9BA55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F5FDE11-B167-0ACB-3A75-A80A7CF9BA55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F5FDE11-B167-0ACB-3A75-A80A7CF9BA55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F5FDE11-B167-0ACB-3A75-A80A7CF9BA55}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
