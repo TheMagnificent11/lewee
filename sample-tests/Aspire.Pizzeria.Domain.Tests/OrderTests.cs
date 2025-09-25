@@ -1,10 +1,17 @@
 ﻿using FluentAssertions;
+using Pizzeria.Store.Domain;
 using Xunit;
 
 namespace Aspire.Pizzeria.Domain.Tests;
 
+/// <summary>
+/// Tests for Order domain entity
+/// </summary>
 public sealed class OrderTests
 {
+    /// <summary>
+    /// Test submitting a pickup order
+    /// </summary>
     [Fact]
     public void SubmitPickupOrder()
     {
