@@ -2,10 +2,17 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch and Debug Standalone Blazor WebAssembly App",
-            "type": "blazorwasm",
+            "name": "Launch Pizzeria AppHost (.NET Aspire)",
+            "type": "coreclr",
             "request": "launch",
-            "cwd": "${workspaceFolder}/sample/Sample.Restaurant.Server"
+            "program": "${workspaceFolder}/sample/Pizzeria.AppHost/bin/Debug/net9.0/Pizzeria.AppHost.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/sample/Pizzeria.AppHost",
+            "stopAtEntry": false,
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "preLaunchTask": "build"
         }
     ]
 }
