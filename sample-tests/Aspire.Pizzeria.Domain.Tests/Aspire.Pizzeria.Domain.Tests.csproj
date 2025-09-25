@@ -1,5 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\sample\Pizzeria.Store.Domain\Pizzeria.Store.Domain.csproj" />
   </ItemGroup>
