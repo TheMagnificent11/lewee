@@ -15,7 +15,13 @@ public abstract class RelationshipConfiguration<T> : IEntityTypeConfiguration<T>
     public void Configure(EntityTypeBuilder<T> builder)
     {
         builder.HasKey(x => x.Id);
+
+        builder.Property(x => x.Id)
+            .ValueGeneratedNever();
+
         builder.AddAuditUserProperties();
+
+        this.ConfigureRelationship(builder);
     }
 
     /// <summary>
