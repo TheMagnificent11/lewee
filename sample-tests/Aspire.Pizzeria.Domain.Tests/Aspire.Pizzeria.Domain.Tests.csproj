@@ -5,7 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\sample\Pizzeria.Store.Domain\Pizzeria.Store.Domain.csproj" />
+    <ProjectReference Include="..\..\sample\Pizzeria.Store.Data\Pizzeria.Store.Data.csproj" />
   </ItemGroup>
 
 </Project>
