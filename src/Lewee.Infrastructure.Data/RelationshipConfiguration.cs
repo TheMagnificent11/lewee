@@ -16,8 +16,10 @@ public abstract class RelationshipConfiguration<T> : IEntityTypeConfiguration<T>
     {
         builder.HasKey(x => x.Id);
 
+        // Use ValueGeneratedOnAdd instead of ValueGeneratedNever for better EF Core tracking
+        // This allows EF Core to properly track new entities as Added rather than Modified
         builder.Property(x => x.Id)
-            .ValueGeneratedNever();
+            .ValueGeneratedOnAdd();
 
         builder.AddAuditUserProperties();
 
