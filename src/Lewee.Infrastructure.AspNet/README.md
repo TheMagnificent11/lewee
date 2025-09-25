@@ -40,6 +40,6 @@ Inject `IAuthenticatedUserService` into an services that need to obtain the `Use
 
 ### Client Events
 
-Publishing a [ClientEvent](../Lewee.Application/Mediation/Notifications/ClientEvent.cs) via `Mediatr` will ensure that it is handled by the by the [ClientEventHandler](./SignalR/ClientEventHandler.cs), which will send it to the appropriate `SignalR` clients (all if unauthenticated and the ones belonging to the authenticated user if authenticated).
+Publishing a [ClientEvent](../Lewee.Application/Mediation/Notifications/ClientEvent.cs) via `FreeMediator` will ensure that it is handled by the by the [ClientEventHandler](./SignalR/ClientEventHandler.cs), which will send it to the appropriate `SignalR` clients (all if unauthenticated and the ones belonging to the authenticated user if authenticated).
 
-[Sample code](../../sample/Sample.Restaurant.Application/TableDomainEventHandler.cs)
+*Note: The current Pizzeria sample application does not yet include ClientEvent examples. This functionality is available in the framework but not yet implemented in the sample application.*

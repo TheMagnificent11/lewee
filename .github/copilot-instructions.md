@@ -11,7 +11,7 @@ Always reference these instructions first and fallback to search or bash command
 - Install .NET 9.0: `curl -sSL https://dotnet.microsoft.com/download/dotnet/scripts/v1/dotnet-install.sh | bash /dev/stdin --channel 9.0 --install-dir ~/.dotnet`
 - Update PATH: `export PATH="~/.dotnet:$PATH"`
 - Verify installation: `dotnet --version` (should show 9.0.x)
-- Docker Desktop for running SQL Server and Seq logging (optional for framework development, required for sample app)
+- Install .NET Aspire workload: `dotnet workload install aspire`
 
 ### Build and Test Process
 - **NEVER CANCEL builds or long-running commands** - Wait for completion
@@ -21,24 +21,34 @@ Always reference these instructions first and fallback to search or bash command
   - **TIMING**: Takes ~12-20 seconds. NEVER CANCEL. Set timeout to 120+ seconds minimum.
 - Full rebuild: `dotnet build lewee.sln --configuration Release --no-incremental --nologo`
   - **TIMING**: Takes ~12 seconds. Set timeout to 120+ seconds minimum.
-- Run unit tests: `dotnet test lewee.sln --configuration Release --no-build --nologo --filter "Category!=Integration"`
+- Run unit tests: `dotnet test lewee.sln --configuration Release --no-build --nologo`
   - **TIMING**: Takes ~4 seconds. Set timeout to 60+ seconds.
-- Run integration tests: `dotnet test lewee.sln --configuration Release --no-build --nologo --filter "Category=Integration"`
-  - **TIMING**: Takes 5+ minutes with Docker containers. NEVER CANCEL. Set timeout to 600+ seconds minimum.
-  - **NOTE**: Integration tests use TestContainers and require Docker to be running
+- Run integration tests: `dotnet test lewee.sln --configuration Release --no-build --nologo`
+  - **TIMING**: Takes 5+ minutes with containers. NEVER CANCEL. Set timeout to 600+ seconds minimum.
+  - **NOTE**: Integration tests use TestContainers and .NET Aspire for PostgreSQL containers
 - Pack NuGet packages: `dotnet pack lewee.sln --configuration Release --nologo --no-build`
   - **TIMING**: Takes ~2 seconds. Set timeout to 60+ seconds.
 
 ### Sample Application
-The sample restaurant management application demonstrates Lewee framework usage:
+The sample pizzeria application demonstrates Lewee framework usage:
+
+Eventually other parts of the pizzeria will be added as services e.g. the pizzeria kitchen and pizzeria delivery.
+
+The idea is use RabbitMQ to publish messages to these other services to carry out operations to fullfil the `Order` created by by the Pizzeria Store.
 
 - **Prerequisites**: 
-  - Docker Compose must be running: `docker compose up -d`
-  - SQL Server will be available on localhost:5434
-  - Seq logging will be available on localhost:5341
-- **KNOWN ISSUE**: Sample application currently has Swagger configuration problems and may not start properly
+  - Docker Desktop for running containers
+  - .NET Aspire workload installed: `dotnet workload install aspire`
+  - Run the application: `dotnet run --project ./sample/Pizzeria.AppHost/`
+  - Access Aspire dashboard (typically https://localhost:17268) to monitor services
+  - PostgreSQL database is automatically managed by Aspire
+- **Architecture**: Uses .NET Aspire for service orchestration and PostgreSQL for data storage  
 - **Alternative**: Integration tests provide the best way to validate framework functionality
-- **DOCKER NOTE**: If Docker is not available in your environment, focus on unit tests and framework development rather than sample application or integration tests
+- **CONTAINER NOTE**: Aspire manages containers automatically - no manual Docker setup required
+
+### Coding Style
+
+The coding styles are defined in the `.editorconfig` file and `dotnet format` should be run to ensure code formatting compliance.
 
 ## Validation Scenarios
 
@@ -49,16 +59,14 @@ The sample restaurant management application demonstrates Lewee framework usage:
    - Check for no compilation warnings in framework code
 
 2. **Unit Test Validation**:
-   - Run unit tests: `dotnet test --filter "Category!=Integration"`
+   - Run unit tests: `dotnet test`
    - All unit tests must pass
    - No test failures or exceptions
 
-3. **Integration Test Validation** (if Docker is available):
-   - Start Docker services: `docker compose up -d` 
-   - Wait for containers to be ready (may take 1-2 minutes for SQL Server)
-   - Run integration tests: `dotnet test --filter "Category=Integration"`
-   - Tests validate database operations, API endpoints, and domain logic
-   - **NOTE**: Skip this if Docker is not available in your environment
+3. **Integration Test Validation** (uses .NET Aspire for containers):
+   - Run integration tests: `dotnet test`
+   - Tests validate database operations, API endpoints, and domain logic using PostgreSQL
+   - **NOTE**: Aspire manages test containers automatically
 
 4. **Package Validation**:
    - Run pack command: `dotnet pack lewee.sln --configuration Release --nologo`
@@ -73,36 +81,42 @@ src/                    # Lewee framework packages
 ├── Lewee.Application/  # Application layer utilities
 ├── Lewee.Shared/       # Shared utilities
 ├── Lewee.Contracts/    # Contract definitions
-├── Lewee.Infrastructure.Data/      # Entity Framework integration
-├── Lewee.Infrastructure.AspNet/    # ASP.NET Core integration
-├── Lewee.Infrastructure.AspNet.WebApi/  # Web API utilities
+├── Lewee.Infrastructure.Data/         # Entity Framework integration
+├── Lewee.Infrastructure.PostgreSQL/   # PostgreSQL-specific integrations
+├── Lewee.Infrastructure.AspNet/       # ASP.NET Core integration
+├── Lewee.Infrastructure.AspNet.WebApi/ # Web API utilities
 ├── Lewee.Blazor/       # Blazor component library
 └── Lewee.IntegrationTests/  # Integration testing helpers
 
-sample/                 # Sample restaurant application
-├── Sample.Restaurant.Domain/        # Domain models
-├── Sample.Restaurant.Application/   # Application services
-├── Sample.Restaurant.Infrastructure/ # Data layer
-├── Sample.Restaurant.Contracts/     # API contracts
-├── Sample.Restaurant.Client/        # Blazor WebAssembly UI
-└── Sample.Restaurant.Server/        # ASP.NET Core host
+sample/                 # Sample pizzeria application
+├── Pizzeria.AppHost/              # .NET Aspire orchestration host
+├── Pizzeria.ServiceDefaults/      # Shared Aspire service configurations
+├── Pizzeria.Common/               # Common utilities and constants
+├── Pizzeria.Store.Domain/         # Domain models
+├── Pizzeria.Store.Application/    # Application services
+├── Pizzeria.Store.Data/           # Data layer with PostgreSQL
+├── Pizzeria.Store.Contracts/      # API contracts
+└── Pizzeria.Store.Api/            # ASP.NET Core Web API
 
 tests/                  # Unit tests for framework
 sample-tests/           # Tests for sample application
+├── Pizzeria.Tests.Integration/    # Integration tests using Aspire
+└── Pizzeria.Store.Domain.Tests/   # Domain unit tests
 ```
 
 ### Key Files and Configuration
 - `lewee.sln` - Main solution file with all projects
 - `Directory.Build.props` - Global MSBuild properties (targets .NET 9.0)
-- `Directory.Packages.props` - Centralized package management
-- `docker-compose.yml` - SQL Server and Seq services
+- `Directory.Packages.props` - Centralized package management with Aspire dependencies
+- `sample/Pizzeria.AppHost/Program.cs` - Aspire orchestration configuration
 - `.github/workflows/ci.yml` - CI/CD pipeline configuration
 
 ### Frequently Used Commands
 - Clean build artifacts: `dotnet clean lewee.sln` (takes ~2 seconds)
 - Full rebuild: `dotnet build lewee.sln --configuration Release --no-incremental` (takes ~12 seconds)
 - Run specific test project: `dotnet test tests/Lewee.Domain.Tests.Unit/` (takes ~3 seconds)
-- Run specific integration test: `dotnet test sample-tests/Sample.Restaurant.Server.Tests.Integration/`
+- Run specific integration test: `dotnet test sample-tests/Pizzeria.Tests.Integration/`
+- Run sample application: `dotnet run --project sample/Pizzeria.AppHost/`
 - Check for outdated packages: `dotnet list package --outdated`
 - Pack packages: `dotnet pack lewee.sln --configuration Release --nologo`
 
@@ -125,14 +139,13 @@ sample-tests/           # Tests for sample application
 
 ## Troubleshooting
 - If build fails with "NETSDK1045" error, install .NET 9.0 SDK
-- If integration tests fail, ensure Docker is running and accessible
-- If Docker is not available, focus on unit tests - integration tests require Docker containers
-- If sample app fails to start, this is a known Swagger configuration issue
+- If integration tests fail, ensure .NET Aspire workload is installed: `dotnet workload install aspire`
+- If Aspire services fail to start, check that required ports are available
 - Clean solution if experiencing unexplained build errors: `dotnet clean lewee.sln`
 - If restore is slow, packages may be downloading - this is normal on first run
 
 ## Development Focus Areas
 - **Domain Layer**: Core business logic and abstractions in `Lewee.Domain`
 - **Application Layer**: CQRS, validation, and application services in `Lewee.Application`
-- **Infrastructure**: Entity Framework, ASP.NET Core, and Blazor integrations
-- **Sample App**: Demonstrates framework usage patterns and best practices
+- **Infrastructure**: Entity Framework, PostgreSQL, ASP.NET Core, and Blazor integrations
+- **Sample App**: Demonstrates framework usage patterns and best practices using Aspire orchestration
