@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Pizzeria.Store.Data;
 using Pizzeria.Store.Domain;
+using Testcontainers.PostgreSql;
 using Xunit;
 
 namespace Pizzeria.Domain.Tests;
@@ -123,5 +124,69 @@ public sealed class OrderTests
         // Verify we can save without concurrency exceptions
         var action = async () => await context.SaveChangesAsync();
         await action.Should().NotThrowAsync<DbUpdateConcurrencyException>();
+    }
+
+    [Fact]
+    public async Task Integration_Should_AddPizzaToOrder_Without_ConcurrencyException_With_PostgreSQL()
+    {
+        // This test validates the actual DbUpdateConcurrencyException fix using a real PostgreSQL database
+        await using var container = new PostgreSqlBuilder()
+            .WithDatabase("pizzeria_test")
+            .WithUsername("postgres")
+            .WithPassword("postgres")
+            .Build();
+
+        await container.StartAsync();
+
+        var connectionString = container.GetConnectionString();
+        var options = new DbContextOptionsBuilder<StoreDbContext>()
+            .UseNpgsql(connectionString)
+            .Options;
+
+        await using var context = new StoreDbContext(options);
+        
+        // Create database schema
+        await context.Database.EnsureCreatedAsync();
+
+        // Seed test data
+        var margherita = Menu.GetPizzaByName(Menu.PizzaNames.Margherita);
+        var quattroFormaggi = Menu.GetPizzaByName(Menu.PizzaNames.QuattroFormaggi);
+        
+        context.Pizzas.AddRange(margherita, quattroFormaggi);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+
+        // Act & Assert - This is the exact scenario that was failing with DbUpdateConcurrencyException
+        var userId = Guid.NewGuid().ToString();
+        var order = Order.StartNewOrder(userId);
+        
+        // Add the first pizza
+        order.AddPizza(margherita);
+        
+        context.Orders.Add(order);
+        await context.SaveChangesAsync(); // This should not throw DbUpdateConcurrencyException
+        
+        context.ChangeTracker.Clear();
+        
+        // Reload the order and add another pizza (this was the specific failing scenario)
+        var reloadedOrder = await context.Orders
+            .Include(o => o.Pizzas)
+            .FirstAsync(o => o.Id == order.Id);
+        
+        reloadedOrder.AddPizza(quattroFormaggi);
+        
+        // This was the line that threw DbUpdateConcurrencyException before the fix
+        var action = async () => await context.SaveChangesAsync();
+        await action.Should().NotThrowAsync<DbUpdateConcurrencyException>(
+            "The fix should prevent DbUpdateConcurrencyException when adding pizzas to orders");
+        
+        // Verify the result
+        var finalOrder = await context.Orders
+            .Include(o => o.Pizzas)
+            .FirstAsync(o => o.Id == order.Id);
+        
+        finalOrder.Pizzas.Should().HaveCount(2);
+        finalOrder.Pizzas.Should().Contain(p => p.PizzaId == margherita.Id);
+        finalOrder.Pizzas.Should().Contain(p => p.PizzaId == quattroFormaggi.Id);
     }
 }
