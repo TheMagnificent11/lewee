@@ -62,4 +62,51 @@ public sealed class OrderTests
         order.IsCompleted.Should().BeFalse();
         order.CompletedDateTime.Should().BeNull();
     }
+
+    /// <summary>
+    /// Test that OrderPizza entities have proper IDs when created
+    /// </summary>
+    [Fact]
+    public void OrderPizza_ShouldHaveUniqueId_WhenCreated()
+    {
+        // Arrange
+        var userId = Guid.NewGuid().ToString();
+        var margherita = Menu.GetPizzaByName(Menu.PizzaNames.Margherita);
+        var order = Order.StartNewOrder(userId);
+
+        // Act
+        order.AddPizza(margherita);
+
+        // Assert
+        order.Pizzas.Should().HaveCount(1);
+        var orderPizza = order.Pizzas.First();
+        orderPizza.Id.Should().NotBeEmpty();
+        orderPizza.Id.Should().NotBe(Guid.Empty);
+        orderPizza.OrderId.Should().Be(order.Id);
+        orderPizza.PizzaId.Should().Be(margherita.Id);
+        orderPizza.Quantity.Should().Be(1);
+    }
+
+    /// <summary>
+    /// Test that multiple OrderPizza entities have unique IDs
+    /// </summary>
+    [Fact]
+    public void OrderPizza_ShouldHaveUniqueIds_WhenMultipleCreated()
+    {
+        // Arrange
+        var userId = Guid.NewGuid().ToString();
+        var margherita = Menu.GetPizzaByName(Menu.PizzaNames.Margherita);
+        var marinara = Menu.GetPizzaByName(Menu.PizzaNames.Marinara);
+        var order = Order.StartNewOrder(userId);
+
+        // Act
+        order.AddPizza(margherita);
+        order.AddPizza(marinara);
+
+        // Assert
+        order.Pizzas.Should().HaveCount(2);
+        var pizzaIds = order.Pizzas.Select(p => p.Id).ToList();
+        pizzaIds.Should().OnlyHaveUniqueItems("each OrderPizza should have a unique ID");
+        pizzaIds.Should().AllSatisfy(id => id.Should().NotBeEmpty());
+    }
 }
