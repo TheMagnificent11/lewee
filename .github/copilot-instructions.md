@@ -25,7 +25,7 @@ Always reference these instructions first and fallback to search or bash command
   - **TIMING**: Takes ~4 seconds. Set timeout to 60+ seconds.
 - Run integration tests: `dotnet test lewee.sln --configuration Release --no-build --nologo`
   - **TIMING**: Takes 5+ minutes with containers. NEVER CANCEL. Set timeout to 600+ seconds minimum.
-  - **NOTE**: Integration tests use TestContainers and .NET Aspire for PostgreSQL containers
+  - **NOTE**: Integration tests use .NET Aspire for PostgreSQL containers
 - Pack NuGet packages: `dotnet pack lewee.sln --configuration Release --nologo --no-build`
   - **TIMING**: Takes ~2 seconds. Set timeout to 60+ seconds.
 
