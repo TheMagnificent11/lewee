@@ -74,9 +74,9 @@ public class QueryProjectionReference : ISoftDeleteEntity
     public bool IsDeleted { get; protected set; }
 
     /// <summary>
-    /// Gets or sets the timestamp
+    /// Gets the version used for optimistic concurrency
     /// </summary>
-    public byte[] Timestamp { get; protected set; } = default!;
+    public uint Version { get; protected set; }
 
     /// <summary>
     /// Converts this <see cref="QueryProjectionReference"/> to a <see cref="IQueryProjection"/>

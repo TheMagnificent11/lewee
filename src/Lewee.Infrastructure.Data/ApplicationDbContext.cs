@@ -1,5 +1,4 @@
-﻿using Lewee.Application.Data;
-using Lewee.Domain;
+﻿using Lewee.Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace Lewee.Infrastructure.Data;
@@ -13,29 +12,21 @@ namespace Lewee.Infrastructure.Data;
 public abstract class ApplicationDbContext<TContext> : DbContext, IApplicationDbContext
     where TContext : DbContext, IApplicationDbContext
 {
-    private readonly IAuthenticatedUserService authenticatedUserService;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="ApplicationDbContext{T}"/> class
     /// </summary>
     /// <param name="options">
     /// Database context options
     /// </param>
-    /// <param name="authenticatedUserService">
-    /// Authenticated user service
-    /// </param>
-    protected ApplicationDbContext(
-        DbContextOptions<TContext> options,
-        IAuthenticatedUserService authenticatedUserService)
+    protected ApplicationDbContext(DbContextOptions<TContext> options)
         : base(options)
     {
-        this.authenticatedUserService = authenticatedUserService;
     }
 
     /// <summary>
     /// Gets the database schema for the context
     /// </summary>
-    public virtual string Schema { get; } = "dbo";
+    public virtual string? Schema { get; }
 
     /// <inheritdoc/>
     public DbSet<DomainEventReference>? DomainEventReferences { get; internal set; }
@@ -48,28 +39,14 @@ public abstract class ApplicationDbContext<TContext> : DbContext, IApplicationDb
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.HasDefaultSchema(this.Schema);
+        if (!string.IsNullOrWhiteSpace(this.Schema))
+        {
+            modelBuilder.HasDefaultSchema(this.Schema);
+        }
 
         modelBuilder.ApplyConfiguration(new DomainEventReferenceConfiguration());
         modelBuilder.ApplyConfiguration(new QueryProjectionReferenceConfiguration());
 
-        this.ConfigureDatabaseModel(modelBuilder);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(TContext).Assembly);
     }
-
-    /// <inheritdoc />
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        base.OnConfiguring(optionsBuilder);
-
-        optionsBuilder.AddInterceptors(new AuditDetailsSaveChangesInterceptor(this.authenticatedUserService));
-        optionsBuilder.AddInterceptors(new DomainEventSaveChangesInterceptor<TContext>(this.authenticatedUserService));
-    }
-
-    /// <summary>
-    /// Configures the database model
-    /// </summary>
-    /// <param name="modelBuilder">
-    /// Database model builder
-    /// </param>
-    protected abstract void ConfigureDatabaseModel(ModelBuilder modelBuilder);
 }

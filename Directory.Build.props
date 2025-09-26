@@ -20,7 +20,7 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
-  <PropertyGroup Condition="!$(MSBuildProjectName.Contains('.Tests.')) AND !$(MSBuildProjectName.StartsWith('Sample.'))">
+  <PropertyGroup Condition="!$(MSBuildProjectName.Contains('.Tests.')) AND !$(MSBuildProjectName.StartsWith('Pizzeria.'))">
     <Nullable>enable</Nullable>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
@@ -38,7 +38,7 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
-  <ItemGroup Condition="!$(MSBuildProjectName.Contains('.Tests.')) AND !$(MSBuildProjectName.StartsWith('Sample.'))">
+  <ItemGroup Condition="!$(MSBuildProjectName.Contains('.Tests.')) AND !$(MSBuildProjectName.StartsWith('Pizzeria.'))">
     <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
@@ -48,7 +48,7 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup Condition="$(MSBuildProjectName.Contains('.Tests.'))">
+  <ItemGroup Condition="$(MSBuildProjectName.Contains('.Tests'))">
     <PackageReference Include="coverlet.collector">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -75,7 +75,7 @@
     <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
   </ItemGroup>
 
-  <ItemGroup Condition="$(MSBuildProjectName.StartsWith('Sample.')) AND !$(MSBuildProjectName.Contains('.Tests.'))">
+  <ItemGroup Condition="$(MSBuildProjectName.StartsWith('Pizzeria.')) AND !$(MSBuildProjectName.Contains('.Tests.'))">
     <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
   </ItemGroup>
 

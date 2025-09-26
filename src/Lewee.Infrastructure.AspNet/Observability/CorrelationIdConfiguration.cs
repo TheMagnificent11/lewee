@@ -18,7 +18,7 @@ public static class CorrelationIdConfiguration
     /// <returns>The updated services collection</returns>
     public static IServiceCollection AddCorrelationIdServices(this IServiceCollection services)
     {
-        services.AddCorrelate(options => options.RequestHeaders = new[] { RequestHeaders.CorrelationId });
+        services.AddCorrelate(options => options.RequestHeaders = [RequestHeaders.CorrelationId]);
 
         return services;
     }
