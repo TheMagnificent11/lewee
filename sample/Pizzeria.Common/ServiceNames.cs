@@ -10,9 +10,9 @@ public static class ServiceNames
 
     public const string PizzaStoreApi = "pizza-store-api";
 
-    public static string GetPizzaStoreDatabaseName(string environment)
+    public static string GetPizzaStoreDatabaseName()
     {
-        if (environment == Environments.IntegrationTesting)
+        if (Environments.IsIntegrationTest)
         {
             return PizzaStoreDatabaseIntegrationTesting;
         }

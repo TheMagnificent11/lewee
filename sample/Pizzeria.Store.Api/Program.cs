@@ -14,7 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
-var databaseName = ServiceNames.GetPizzaStoreDatabaseName(builder.Environment.EnvironmentName);
+var databaseName = ServiceNames.GetPizzaStoreDatabaseName();
 
 builder.Services
     .AddAuthenticatedUserService()

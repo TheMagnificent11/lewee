@@ -21,8 +21,8 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
     public async Task InitializeAsync()
     {
-        // Set the environment to IntegrationTesting for integration tests BEFORE creating the builder
-        Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", Environments.IntegrationTesting);
+        // Set the integration test flag BEFORE creating the builder
+        Environment.SetEnvironmentVariable("IS_INTEGRATION_TEST", "TRUE");
 
         // https://learn.microsoft.com/en-us/dotnet/aspire/testing/manage-app-host?pivots=xunit
         this.builder = await DistributedApplicationTestingBuilder.CreateAsync<Projects.Pizzeria_AppHost>();
@@ -40,7 +40,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
             .WaitForResourceAsync(ServiceNames.PizzaStoreApi, KnownResourceStates.Running)
             .WaitAsync(TimeSpan.FromMinutes(10)); // To allow Aspire to pull Docker images
 
-        var storeDbConnectionString = await this.app.GetConnectionStringAsync(ServiceNames.GetPizzaStoreDatabaseName(Environments.IntegrationTesting));
+        var storeDbConnectionString = await this.app.GetConnectionStringAsync(ServiceNames.GetPizzaStoreDatabaseName());
         var storeDbOptionsBuilder = new DbContextOptionsBuilder<StoreDbContext>();
         storeDbOptionsBuilder.UseNpgsql(storeDbConnectionString);
 

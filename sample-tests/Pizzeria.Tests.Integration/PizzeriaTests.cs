@@ -18,7 +18,7 @@ public abstract class PizzeriaTests : IAsyncLifetime
 
     public async Task InitializeAsync()
     {
-        var connectionString = await this.factory.GetConnectionStringAsync(ServiceNames.GetPizzaStoreDatabaseName(Environments.IntegrationTesting));
+        var connectionString = await this.factory.GetConnectionStringAsync(ServiceNames.GetPizzaStoreDatabaseName());
         
         await using var connection = new NpgsqlConnection(connectionString);
         await connection.OpenAsync();
