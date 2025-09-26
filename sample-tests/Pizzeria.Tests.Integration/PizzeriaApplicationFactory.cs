@@ -15,7 +15,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
     public const string CollectionName = "PizzeriaCollection";
 
     private IDistributedApplicationTestingBuilder builder;
-    internal DistributedApplication app;
+    private DistributedApplication app;
     private ResourceNotificationService resourceNotificationService;
     private StoreDbContext storeDbContext;
 
