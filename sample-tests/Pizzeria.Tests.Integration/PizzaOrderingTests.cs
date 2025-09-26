@@ -6,13 +6,11 @@ using Pizzeria.Store.Domain;
 namespace Pizzeria.Tests.Integration;
 
 [Collection(PizzeriaApplicationFactory.CollectionName)]
-public sealed class PizzaOrderingTests
+public sealed class PizzaOrderingTests : PizzeriaTests
 {
-    private readonly PizzeriaApplicationFactory factory;
-
     public PizzaOrderingTests(PizzeriaApplicationFactory factory)
+        : base(factory)
     {
-        this.factory = factory;
     }
 
     [Fact]

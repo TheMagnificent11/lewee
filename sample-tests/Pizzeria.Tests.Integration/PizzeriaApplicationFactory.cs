@@ -21,6 +21,8 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
     public async Task InitializeAsync()
     {
+        Environments.SetToIntegrationTesting();
+
         // https://learn.microsoft.com/en-us/dotnet/aspire/testing/manage-app-host?pivots=xunit
         this.builder = await DistributedApplicationTestingBuilder.CreateAsync<Projects.Pizzeria_AppHost>();
         this.builder.Services.ConfigureHttpClientDefaults(x =>
@@ -29,7 +31,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         });
 
         this.app = await this.builder.BuildAsync();
-        this.resourceNotificationService= this.app.Services.GetRequiredService<ResourceNotificationService>();
+        this.resourceNotificationService = this.app.Services.GetRequiredService<ResourceNotificationService>();
 
         await this.app.StartAsync();
 
@@ -37,8 +39,10 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
             .WaitForResourceAsync(ServiceNames.PizzaStoreApi, KnownResourceStates.Running)
             .WaitAsync(TimeSpan.FromMinutes(10)); // To allow Aspire to pull Docker images
 
-        var storeDbConnectionString = await this.app.GetConnectionStringAsync(ServiceNames.PizzaStoreDatabase);
+        var databaseName = ServiceNames.GetPizzaStoreDatabaseName();
+        var storeDbConnectionString = await this.app.GetConnectionStringAsync(databaseName);
         var storeDbOptionsBuilder = new DbContextOptionsBuilder<StoreDbContext>();
+
         storeDbOptionsBuilder.UseNpgsql(storeDbConnectionString);
 
         this.storeDbContext = new StoreDbContext(storeDbOptionsBuilder.Options);
@@ -73,6 +77,11 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
             .FirstOrDefaultAsync(x => x.Id == orderId);
 
         return order;
+    }
+
+    public async Task<string> GetConnectionStringAsync(string serviceName)
+    {
+        return await this.app.GetConnectionStringAsync(serviceName);
     }
 
     public async Task DisposeAsync()

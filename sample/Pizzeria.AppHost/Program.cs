@@ -2,12 +2,15 @@ using Pizzeria.Common;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-var databaseServer = builder.AddPostgres(ServiceNames.DatabaseServer)
-    .WithLifetime(ContainerLifetime.Persistent)
-    .WithDataVolume(isReadOnly: false)
-    .WithPgWeb();
+var databaseServer = Environments.IsIntegrationTesting
+    ? builder.AddPostgres(ServiceNames.DatabaseServer)
+    : builder.AddPostgres(ServiceNames.DatabaseServer)
+        .WithLifetime(ContainerLifetime.Persistent)
+        .WithDataVolume(isReadOnly: false)
+        .WithPgWeb();
 
-var pizzaStoreDatabase = databaseServer.AddDatabase(ServiceNames.PizzaStoreDatabase);
+var pizzaStoreDatabaseName = ServiceNames.GetPizzaStoreDatabaseName();
+var pizzaStoreDatabase = databaseServer.AddDatabase(pizzaStoreDatabaseName);
 
 builder.AddProject<Projects.Pizzeria_Store_Api>(ServiceNames.PizzaStoreApi)
     .WithReference(pizzaStoreDatabase)

@@ -9,5 +9,6 @@ Mediatr
 Postgre
 Postgres
 PostgreSQL
+respawner
 uuid
 xmin
