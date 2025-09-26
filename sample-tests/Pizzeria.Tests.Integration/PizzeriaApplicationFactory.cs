@@ -21,8 +21,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
     public async Task InitializeAsync()
     {
-        // Set the integration test flag BEFORE creating the builder
-        Environment.SetEnvironmentVariable("IS_INTEGRATION_TEST", "TRUE");
+        Environments.SetToIntegrationTesting();
 
         // https://learn.microsoft.com/en-us/dotnet/aspire/testing/manage-app-host?pivots=xunit
         this.builder = await DistributedApplicationTestingBuilder.CreateAsync<Projects.Pizzeria_AppHost>();
