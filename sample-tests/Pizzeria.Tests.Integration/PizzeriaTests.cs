@@ -1,5 +1,7 @@
-﻿using Npgsql;
+﻿using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using Pizzeria.Common;
+using Pizzeria.Store.Data;
 using Respawn;
 using Xunit;
 
@@ -23,6 +25,9 @@ public abstract class PizzeriaTests : IAsyncLifetime
         await using var connection = new NpgsqlConnection(connectionString);
         await connection.OpenAsync();
 
+        // Ensure database is migrated before using Respawn
+        await EnsureDatabaseMigrated(connectionString);
+
         this.respawner = await Respawner.CreateAsync(connection, new RespawnerOptions
         {
             DbAdapter = DbAdapter.Postgres,
@@ -30,6 +35,17 @@ public abstract class PizzeriaTests : IAsyncLifetime
         });
 
         await this.respawner.ResetAsync(connection);
+    }
+
+    private static async Task EnsureDatabaseMigrated(string connectionString)
+    {
+        var optionsBuilder = new DbContextOptionsBuilder<StoreDbContext>();
+        optionsBuilder.UseNpgsql(connectionString);
+        
+        await using var dbContext = new StoreDbContext(optionsBuilder.Options);
+        
+        // Apply any pending migrations
+        await dbContext.Database.MigrateAsync();
     }
 
     public Task DisposeAsync()
