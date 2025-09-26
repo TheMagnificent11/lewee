@@ -1,0 +1,61 @@
+﻿@page "/tables/{TableNumber:int}"
+
+@using Sample.Restaurant.Client.States.TableDetails
+
+@inherits FluxorComponent
+
+@inject IState<TableDetailsState> State
+@inject IDispatcher Dispatcher
+
+<PageTitle>Table @this.TableNumber</PageTitle>
+
+@if (this.State.Value.Data == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (this.State.Value.IsSaving)
+{
+    <p><em>Updating Order...</em></p>
+}
+else
+{
+    <MudSimpleTable Hover="true" FixedHeader="true">
+        <thead>
+            <tr>
+                <th>Item Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in this.State.Value.Data.Items)
+            {
+                <tr>
+                    <td>@item.MenuItem.Name</td>
+                    <td>@item.MenuItem.PriceLabel</td>
+                    <td>@item.Quantity</td>
+                    <td>
+                        <MudToolBar>
+                            <MudIconButton
+                                Icon="@Icons.Material.Outlined.Add"
+                                Variant="Variant.Filled"
+                                Color="Color.Primary"
+                                @onclick="@(() => AddToOrder(item.MenuItem.Id))" />
+                            @if (item.Quantity > 0)
+                            {
+                                <MudIconButton
+                                    Icon="@Icons.Material.Outlined.Remove"
+                                    Class="ml-1"
+                                    Variant="Variant.Filled"
+                                    Color="Color.Error"
+                                    @onclick="@(() => RemoveFromOrder(item.MenuItem.Id))" />
+                            }
+                        </MudToolBar>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </MudSimpleTable>
+}
