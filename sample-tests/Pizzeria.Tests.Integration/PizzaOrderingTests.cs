@@ -59,7 +59,7 @@ public sealed class PizzaOrderingTests
         order.Pizzas.Should().ContainSingle();
 
         var pizzaInOrder = order.Pizzas.First();
-        pizzaInOrder.Id.Should().Be(Menu.PizzaIds.QuattroFormaggi);
+        pizzaInOrder.PizzaId.Should().Be(Menu.PizzaIds.QuattroFormaggi);
         pizzaInOrder.Quantity.Should().Be(1);
     }
 }
