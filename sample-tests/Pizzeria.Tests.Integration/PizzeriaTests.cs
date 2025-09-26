@@ -7,11 +7,17 @@ using Xunit;
 
 namespace Pizzeria.Tests.Integration;
 
-[Collection(PizzeriaApplicationFactory.CollectionName)]
 public abstract class PizzeriaTests : IAsyncLifetime
 {
+    protected const string tableExistsSql = @"
+SELECT EXISTS
+(
+    SELECT 1
+    FROM information_schema.tables
+    WHERE table_schema NOT IN ('pg_catalog','information_schema')
+);";
+
     protected readonly PizzeriaApplicationFactory factory;
-    private Respawner respawner;
 
     protected PizzeriaTests(PizzeriaApplicationFactory factory)
     {
@@ -20,21 +26,25 @@ public abstract class PizzeriaTests : IAsyncLifetime
 
     public async Task InitializeAsync()
     {
-        var connectionString = await this.factory.GetConnectionStringAsync(ServiceNames.GetPizzaStoreDatabaseName());
-        
+        var databaseName = ServiceNames.GetPizzaStoreDatabaseName();
+        var connectionString = await this.factory.GetConnectionStringAsync(databaseName);
+
         await using var connection = new NpgsqlConnection(connectionString);
         await connection.OpenAsync();
 
-        // Ensure database is migrated before using Respawn
-        await EnsureDatabaseMigrated(connectionString);
+        var tablesExists = await TablesExistsAsync(connection);
+        if (!tablesExists)
+        {
+            return;
+        }
 
-        this.respawner = await Respawner.CreateAsync(connection, new RespawnerOptions
+        var respawner = await Respawner.CreateAsync(connection, new RespawnerOptions
         {
             DbAdapter = DbAdapter.Postgres,
             TablesToIgnore = ["Pizzas"] // Don't reset the Pizzas table as it contains seed data
         });
 
-        await this.respawner.ResetAsync(connection);
+        await respawner.ResetAsync(connection);
     }
 
     private static async Task EnsureDatabaseMigrated(string connectionString)
@@ -51,5 +61,14 @@ public abstract class PizzeriaTests : IAsyncLifetime
     public Task DisposeAsync()
     {
         return Task.CompletedTask;
+    }
+
+    private static async Task<bool> TablesExistsAsync(NpgsqlConnection connection)
+    {
+        await using var command = new NpgsqlCommand(tableExistsSql, connection);
+
+        var anyTablesExist = (bool)(await command.ExecuteScalarAsync())!;
+
+        return anyTablesExist;
     }
 }

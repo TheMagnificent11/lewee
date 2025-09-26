@@ -12,10 +12,11 @@ public static class ServiceNames
 
     public static string GetPizzaStoreDatabaseName()
     {
-        if (Environments.IsIntegrationTest)
+        if (Environments.IsIntegrationTesting)
         {
             return PizzaStoreDatabaseIntegrationTesting;
         }
+
         return PizzaStoreDatabase;
     }
 }

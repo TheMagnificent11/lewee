@@ -2,7 +2,7 @@ using Pizzeria.Common;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-var databaseServer = Environments.IsIntegrationTest
+var databaseServer = Environments.IsIntegrationTesting
     ? builder.AddPostgres(ServiceNames.DatabaseServer)
     : builder.AddPostgres(ServiceNames.DatabaseServer)
         .WithLifetime(ContainerLifetime.Persistent)

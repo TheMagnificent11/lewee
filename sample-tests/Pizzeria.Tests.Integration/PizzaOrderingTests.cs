@@ -5,6 +5,7 @@ using Pizzeria.Store.Domain;
 
 namespace Pizzeria.Tests.Integration;
 
+[Collection(PizzeriaApplicationFactory.CollectionName)]
 public sealed class PizzaOrderingTests : PizzeriaTests
 {
     public PizzaOrderingTests(PizzeriaApplicationFactory factory)
