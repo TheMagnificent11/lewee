@@ -89,6 +89,8 @@ public static class DatabaseConfiguration
         using (var serviceScope = serviceProvider.CreateScope())
         using (var dbContext = serviceScope.ServiceProvider.GetRequiredService<T>())
         {
+            var attempt = 0; // Used for exponential back-off
+
             while (!cancellationTokenSource.IsCancellationRequested)
             {
                 var canConnect = await dbContext.Database.CanConnectAsync(cancellationTokenSource.Token);
@@ -97,7 +99,9 @@ public static class DatabaseConfiguration
                     break;
                 }
 
-                await Task.Delay(TimeSpan.FromSeconds(5), cancellationTokenSource.Token);
+                var delayTimeSpan = CalculateExponentialBackoffDelay(attempt);
+                
+                await Task.Delay(delayTimeSpan, cancellationTokenSource.Token);
             }
 
             if (cancellationTokenSource.IsCancellationRequested)
@@ -121,4 +125,7 @@ public static class DatabaseConfiguration
             await seeder.RunAsync(cancellationTokenSource.Token);
         }
     }
+
+    private static TimeSpan CalculateExponentialBackoffDelay(int attempt) =>
+        TimeSpan.FromSeconds(Math.Min(Math.Pow(2, attempt), 10));
 }
