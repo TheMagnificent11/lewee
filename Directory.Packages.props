@@ -5,7 +5,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="CSharpFunctionalExtensions" Version="3.6.0" />
-    <PackageVersion Include="FastEndpoints" Version="5.35.0" />
+    <PackageVersion Include="FastEndpoints" Version="6.2.0" />
     <PackageVersion Include="Fluxor.Blazor.Web.ReduxDevTools" Version="6.8.0" />
     <PackageVersion Include="FreeMediator" Version="1.4.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
