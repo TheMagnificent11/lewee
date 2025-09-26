@@ -15,11 +15,9 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
     public const string CollectionName = "PizzeriaCollection";
 
     private IDistributedApplicationTestingBuilder builder;
-    private DistributedApplication _app;
+    internal DistributedApplication app;
     private ResourceNotificationService resourceNotificationService;
     private StoreDbContext storeDbContext;
-
-    internal DistributedApplication App => this._app;
 
     public async Task InitializeAsync()
     {
@@ -33,16 +31,16 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
             x.AddStandardResilienceHandler();
         });
 
-        this._app = await this.builder.BuildAsync();
-        this.resourceNotificationService= this._app.Services.GetRequiredService<ResourceNotificationService>();
+        this.app = await this.builder.BuildAsync();
+        this.resourceNotificationService= this.app.Services.GetRequiredService<ResourceNotificationService>();
 
-        await this._app.StartAsync();
+        await this.app.StartAsync();
 
         await this.resourceNotificationService
             .WaitForResourceAsync(ServiceNames.PizzaStoreApi, KnownResourceStates.Running)
             .WaitAsync(TimeSpan.FromMinutes(10)); // To allow Aspire to pull Docker images
 
-        var storeDbConnectionString = await this._app.GetConnectionStringAsync(ServiceNames.GetPizzaStoreDatabaseName(Environments.IntegrationTesting));
+        var storeDbConnectionString = await this.app.GetConnectionStringAsync(ServiceNames.GetPizzaStoreDatabaseName(Environments.IntegrationTesting));
         var storeDbOptionsBuilder = new DbContextOptionsBuilder<StoreDbContext>();
         storeDbOptionsBuilder.UseNpgsql(storeDbConnectionString);
 
@@ -51,7 +49,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
     public async Task<HttpClient> GetServiceClientAsync(string serviceName)
     {
-        var client = this._app.CreateHttpClient(serviceName);
+        var client = this.app.CreateHttpClient(serviceName);
 
         await this.resourceNotificationService
             .WaitForResourceAsync(serviceName, KnownResourceStates.Running)
@@ -82,7 +80,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
     public async Task<string> GetConnectionStringAsync(string serviceName)
     {
-        return await this._app.GetConnectionStringAsync(serviceName);
+        return await this.app.GetConnectionStringAsync(serviceName);
     }
 
     public async Task DisposeAsync()
@@ -92,10 +90,10 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
             await this.storeDbContext.DisposeAsync();
         }
 
-        if (this._app != null)
+        if (this.app != null)
         {
-            await this._app.StopAsync();
-            await this._app.DisposeAsync();
+            await this.app.StopAsync();
+            await this.app.DisposeAsync();
         }
 
         if (this.builder != null)
