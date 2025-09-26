@@ -15,12 +15,15 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
     public const string CollectionName = "PizzeriaCollection";
 
     private IDistributedApplicationTestingBuilder builder;
-    private DistributedApplication app;
+    internal DistributedApplication app;
     private ResourceNotificationService resourceNotificationService;
     private StoreDbContext storeDbContext;
 
     public async Task InitializeAsync()
     {
+        // Set the environment to IntegrationTesting for integration tests
+        Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", Environments.IntegrationTesting);
+
         // https://learn.microsoft.com/en-us/dotnet/aspire/testing/manage-app-host?pivots=xunit
         this.builder = await DistributedApplicationTestingBuilder.CreateAsync<Projects.Pizzeria_AppHost>();
         this.builder.Services.ConfigureHttpClientDefaults(x =>
@@ -37,7 +40,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
             .WaitForResourceAsync(ServiceNames.PizzaStoreApi, KnownResourceStates.Running)
             .WaitAsync(TimeSpan.FromMinutes(10)); // To allow Aspire to pull Docker images
 
-        var storeDbConnectionString = await this.app.GetConnectionStringAsync(ServiceNames.PizzaStoreDatabase);
+        var storeDbConnectionString = await this.app.GetConnectionStringAsync(ServiceNames.GetPizzaStoreDatabaseName(Environments.IntegrationTesting));
         var storeDbOptionsBuilder = new DbContextOptionsBuilder<StoreDbContext>();
         storeDbOptionsBuilder.UseNpgsql(storeDbConnectionString);
 
@@ -73,6 +76,11 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
             .FirstOrDefaultAsync(x => x.Id == orderId);
 
         return order;
+    }
+
+    public async Task<string> GetConnectionStringAsync(string serviceName)
+    {
+        return await this.app.GetConnectionStringAsync(serviceName);
     }
 
     public async Task DisposeAsync()
