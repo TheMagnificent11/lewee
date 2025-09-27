@@ -4,6 +4,7 @@ using FluentValidation;
 using FreeMediator;
 using Lewee.Application;
 using Lewee.Application.Mediation.Behaviors;
+using Lewee.Application.Mediation.Requests;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -20,7 +21,7 @@ public class ApplicationConfigurationTests
         // Arrange
         var services = new ServiceCollection();
         var applicationAssembly = typeof(TestCommand).Assembly;
-        var domainAssembly = typeof(Lewee.Domain.Entity<>).Assembly;
+        var domainAssembly = typeof(Lewee.Domain.Entity).Assembly;
 
         // Act
         services.AddApplication(applicationAssembly, domainAssembly);
@@ -37,7 +38,7 @@ public class ApplicationConfigurationTests
         // Arrange
         var services = new ServiceCollection();
         var applicationAssembly = typeof(TestCommand).Assembly;
-        var domainAssembly = typeof(Lewee.Domain.Entity<>).Assembly;
+        var domainAssembly = typeof(Lewee.Domain.Entity).Assembly;
 
         // Act
         var result = services.AddApplication(applicationAssembly, domainAssembly);
@@ -51,6 +52,7 @@ public class ApplicationConfigurationTests
     {
         // Arrange
         var services = new ServiceCollection();
+        services.AddLogging(); // Add logging services for behaviors
 
         // Act
         services.AddPipelineBehaviors();
@@ -72,6 +74,7 @@ public class ApplicationConfigurationTests
     {
         // Arrange
         var services = new ServiceCollection();
+        services.AddLogging(); // Add logging services for behaviors
         var additionalBehavior = typeof(TestCustomBehavior<,>);
 
         // Act

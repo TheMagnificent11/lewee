@@ -71,10 +71,9 @@ public class ResultTests
         // Assert
         result.IsSuccess.Should().BeFalse();
         result.Status.Should().Be(ResultStatus.BadRequest);
-        result.Errors.Should().ContainKey("Name");
-        result.Errors.Should().ContainKey("Email");
-        result.Errors["Name"].Should().Contain("Name is required");
-        result.Errors["Email"].Should().Contain("Invalid email format");
+        result.Errors.Should().HaveCount(2);
+        result.Errors.Should().Contain(e => e.PropertyName == "Name" && e.ErrorMessage == "Name is required");
+        result.Errors.Should().Contain(e => e.PropertyName == "Email" && e.ErrorMessage == "Invalid email format");
     }
 
     [Fact]
