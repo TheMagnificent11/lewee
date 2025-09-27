@@ -64,7 +64,7 @@ jobs:
         if: ${{ inputs.is-pr == true }}
         with:
           recreate: true
-          path: coverage-report/Summary.md
+          path: coverage-report/SummaryGithub.md
 
       - name: Simple Diff Coverage Check
         if: ${{ inputs.is-pr == true }}
