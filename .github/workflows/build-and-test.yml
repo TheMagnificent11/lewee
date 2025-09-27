@@ -46,15 +46,25 @@ jobs:
       - name: Test
         run: dotnet test ./lewee.sln --configuration Release --no-build --nologo --settings coverage.runsettings --results-directory ./coverage
 
-      - name: Code Coverage Report
-        uses: orgoro/coverage@v3.1
+      - name: Install ReportGenerator
+        if: ${{ inputs.is-pr == true }}
+        run: dotnet tool install --global dotnet-reportgenerator-globaltool
+
+      - name: Generate Coverage Report
+        if: ${{ inputs.is-pr == true }}
+        run: |
+          reportgenerator \
+            -reports:"coverage/**/coverage.cobertura.xml" \
+            -targetdir:"coverage-report" \
+            -reporttypes:"MarkdownSummary;Cobertura" \
+            -verbosity:"Warning"
+
+      - name: Add Coverage PR Comment
+        uses: marocchino/sticky-pull-request-comment@v2
         if: ${{ inputs.is-pr == true }}
         with:
-          coverageFile: coverage/**/coverage.cobertura.xml
-          token: ${{ secrets.GITHUB_TOKEN }}
-          thresholdAll: 0
-          thresholdNew: 90
-          thresholdModified: 90
+          recreate: true
+          path: coverage-report/Summary.md
 
       - name: Pack
         run: dotnet pack ./lewee.sln --configuration Release --nologo /p:PackageVersion=${{ steps.version.outputs.fullSemVer }} --output ./output
