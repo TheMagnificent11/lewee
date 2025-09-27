@@ -51,8 +51,8 @@ jobs:
         if: ${{ inputs.is-pr == true }}
         with:
           path: coverage/**/coverage.cobertura.xml
-          minimum_coverage: 0
-          fail_below_threshold: false
+          minimum_coverage: 90
+          fail_below_threshold: true
           show_missing: true
           show_branch: true
           show_class_names: true
