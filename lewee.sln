@@ -59,8 +59,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pizzeria.Tests.Integration"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pizzeria.Store.Domain.Tests", "sample-tests\Pizzeria.Store.Domain.Tests\Pizzeria.Store.Domain.Tests.csproj", "{5F5FDE11-B167-0ACB-3A75-A80A7CF9BA55}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0AB3BF05-4346-4AA6-1389-037BE0695223}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lewee.Application.Tests.Unit", "tests\Lewee.Application.Tests.Unit\Lewee.Application.Tests.Unit.csproj", "{652453D5-7AF1-400F-9A20-B487B8E46957}"
 EndProject
 Global
@@ -340,9 +338,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{652453D5-7AF1-400F-9A20-B487B8E46957} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A223C33D-6D37-4C0E-8755-BA46F9759CB1}
