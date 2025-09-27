@@ -47,16 +47,14 @@ jobs:
         run: dotnet test ./lewee.sln --configuration Release --no-build --nologo --settings coverage.runsettings --results-directory ./coverage
 
       - name: Code Coverage Report
-        uses: 5monkeys/cobertura-action@master
+        uses: orgoro/coverage@v3.1
         if: ${{ inputs.is-pr == true }}
         with:
-          path: coverage/**/coverage.cobertura.xml
-          minimum_coverage: 90
-          fail_below_threshold: true
-          show_missing: true
-          show_branch: true
-          show_class_names: true
-          only_changed_files: true
+          coverageFile: coverage/**/coverage.cobertura.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          thresholdAll: 0
+          thresholdNew: 90
+          thresholdModified: 90
 
       - name: Pack
         run: dotnet pack ./lewee.sln --configuration Release --nologo /p:PackageVersion=${{ steps.version.outputs.fullSemVer }} --output ./output
