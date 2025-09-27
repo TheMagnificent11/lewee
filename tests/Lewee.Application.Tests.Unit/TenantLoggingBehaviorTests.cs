@@ -52,7 +52,7 @@ public class TenantLoggingBehaviorTests
         logEntry.Level.Should().Be(LogLevel.Information);
         logEntry.Message.Should().Contain("Test log within tenant scope");
         
-        // Should have tenant ID added to logging scope (verified by having any scopes)
+        // Should have tenant ID added to logging scope
         logEntry.Scopes.Should().NotBeEmpty("because TenantLoggingBehavior should add tenant ID to logging scope");
     }
 
