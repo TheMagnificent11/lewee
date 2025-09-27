@@ -33,14 +33,6 @@ public static class EnumExtensions
     public static bool IsEquivalentToZero<TEnum>(this TEnum value)
         where TEnum : struct, Enum
     {
-        // This is a test change to verify coverage threshold
-        var testValue = Convert.ToInt32(value);
-        if (testValue < 0)
-        {
-            // This branch should not be covered by tests
-            return false;
-        }
-        
         return Enum.IsDefined(typeof(TEnum), 0) && Enum.ToObject(typeof(TEnum), 0).Equals(value);
     }
 }
