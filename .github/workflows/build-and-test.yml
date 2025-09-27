@@ -66,6 +66,18 @@ jobs:
           recreate: true
           path: coverage-report/Summary.md
 
+      - name: Check Diff Coverage (90% threshold)
+        if: ${{ inputs.is-pr == true }}
+        uses: 5monkeys/cobertura-action@master
+        with:
+          path: coverage/**/coverage.cobertura.xml
+          minimum_coverage: 90
+          fail_below_threshold: true
+          show_missing: false
+          show_branch: false
+          show_class_names: false
+          only_changed_files: true
+
       - name: Pack
         run: dotnet pack ./lewee.sln --configuration Release --nologo /p:PackageVersion=${{ steps.version.outputs.fullSemVer }} --output ./output
 
