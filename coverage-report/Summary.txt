@@ -1,0 +1,59 @@
+Summary
+  Generated on: 09/27/2025 - 04:55:40
+  Coverage date: 09/27/2025 - 04:54:17 - 09/27/2025 - 04:54:38
+  Parser: MultiReport (4x Cobertura)
+  Assemblies: 4
+  Classes: 31
+  Files: 31
+  Line coverage: 21.8%
+  Covered lines: 102
+  Uncovered lines: 365
+  Coverable lines: 467
+  Total lines: 1601
+  Branch coverage: 17.1% (23 of 134)
+  Covered branches: 23
+  Total branches: 134
+  Method coverage: 37.3% (40 of 107)
+  Full method coverage: 32.7% (35 of 107)
+  Covered methods: 40
+  Fully covered methods: 35
+  Total methods: 107
+
+Lewee.Domain                                                               57.7%
+  Lewee.Domain.AggregateRoot                                                100%
+  Lewee.Domain.AuditableRecord                                             66.6%
+  Lewee.Domain.DomainEvent                                                  100%
+  Lewee.Domain.DomainEventReference                                        65.1%
+  Lewee.Domain.DomainEventsCollection                                      54.5%
+  Lewee.Domain.DomainException                                                0%
+  Lewee.Domain.Entity                                                      86.3%
+  Lewee.Domain.EnumEntity<T>                                                100%
+  Lewee.Domain.ObjectExtensions                                            77.7%
+  Lewee.Domain.QueryProjectionReference                                       0%
+  Lewee.Domain.Relationship                                                 100%
+  Lewee.Domain.ValueObject<T>                                              66.6%
+
+Lewee.Infrastructure.Data                                                     0%
+  Lewee.Infrastructure.Data.AggregateRootConfiguration<T>                     0%
+  Lewee.Infrastructure.Data.ApplicationDbContext<T>                           0%
+  Lewee.Infrastructure.Data.ApplicationDbContextOptionsBuilderExtensions      0%
+  Lewee.Infrastructure.Data.AuditDetailsSaveChangesInterceptor                0%
+  Lewee.Infrastructure.Data.DatabaseConfiguration                             0%
+  Lewee.Infrastructure.Data.DomainEventDispatcher<T>                          0%
+  Lewee.Infrastructure.Data.DomainEventDispatcherService<T>                   0%
+  Lewee.Infrastructure.Data.DomainEventReferenceConfiguration                 0%
+  Lewee.Infrastructure.Data.DomainEventSaveChangesInterceptor<T>              0%
+  Lewee.Infrastructure.Data.EntityConfiguration<T>                            0%
+  Lewee.Infrastructure.Data.EntityEntryExtensions                             0%
+  Lewee.Infrastructure.Data.EntityTypeBuilderExtensions                       0%
+  Lewee.Infrastructure.Data.EnumEntityConfiguration<T>                        0%
+  Lewee.Infrastructure.Data.QueryProjectionReferenceConfiguration             0%
+  Lewee.Infrastructure.Data.QueryProjectionService<T>                         0%
+  Lewee.Infrastructure.Data.RelationshipConfiguration<T>                      0%
+  Lewee.Infrastructure.Data.Repository<T1, T2>                                0%
+
+Lewee.Infrastructure.PostgreSQL                                               0%
+  Lewee.Infrastructure.PostgreSQL.PostgreSqlConfiguration                     0%
+
+Lewee.Shared                                                               83.3%
+  Lewee.Shared.EnumExtensions                                              83.3%
