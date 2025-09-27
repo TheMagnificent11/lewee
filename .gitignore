@@ -38,3 +38,9 @@ Obj/
 
 # Dotnet Pack Location
 /output
+
+# Additional coverage report files
+./coverage-report
+./coverage-output
+code-coverage-results.md
+test-coverage-results.md

@@ -29,8 +29,18 @@ runs:
       id: coverage
       shell: bash
       run: |
+        set -e
+        
         # Create output directory
         mkdir -p coverage-output
+        
+        # Check if coverage files exist
+        if ! ls ${{ inputs.coverage-reports }} 1> /dev/null 2>&1; then
+          echo "❌ No coverage files found matching pattern: ${{ inputs.coverage-reports }}"
+          exit 1
+        fi
+        
+        echo "📊 Generating coverage report from: ${{ inputs.coverage-reports }}"
         
         # Generate markdown summary using reportgenerator
         reportgenerator \
@@ -60,6 +70,11 @@ runs:
         COVERED_LINES=$(grep "Covered lines:" coverage-output/Summary.md | sed 's/.*| \([0-9]*\) |/\1/')
         TOTAL_LINES=$(grep "Coverable lines:" coverage-output/Summary.md | sed 's/.*| \([0-9]*\) |/\1/')
         BRANCH_COVERAGE=$(grep "Branch coverage:" coverage-output/Summary.md | sed 's/.*| \([0-9.]*\)% .*/\1/')
+        
+        echo "- **Line Coverage:** ${COVERAGE_PERCENT}% (${COVERED_LINES}/${TOTAL_LINES} lines)" >> "${{ inputs.output-file }}"
+        echo "- **Branch Coverage:** ${BRANCH_COVERAGE}%" >> "${{ inputs.output-file }}"
+        
+        echo "✅ Generated coverage report with ${COVERAGE_PERCENT}% line coverage"
         
         echo "- **Line Coverage:** ${COVERAGE_PERCENT}% (${COVERED_LINES}/${TOTAL_LINES} lines)" >> "${{ inputs.output-file }}"
         echo "- **Branch Coverage:** ${BRANCH_COVERAGE}%" >> "${{ inputs.output-file }}"
