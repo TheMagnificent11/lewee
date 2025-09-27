@@ -2,8 +2,10 @@ using FluentAssertions;
 using FreeMediator;
 using Lewee.Application.Mediation.Behaviors;
 using Lewee.Application.Mediation.Requests;
+using Lewee.Shared;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Testing;
 using Xunit;
 
 namespace Lewee.Application.Tests.Unit;
@@ -18,9 +20,10 @@ public class CorrelationIdLoggingBehaviorTests
     {
         // Arrange
         var services = new ServiceCollection();
-        services.AddLogging();
+        services.AddFakeLogging();
         var serviceProvider = services.BuildServiceProvider();
         var logger = serviceProvider.GetRequiredService<ILogger<CorrelationIdLoggingBehavior<TestCommand, CommandResult>>>();
+        var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
         
         var behavior = new CorrelationIdLoggingBehavior<TestCommand, CommandResult>(logger);
         var correlationId = Guid.NewGuid();
@@ -30,6 +33,8 @@ public class CorrelationIdLoggingBehaviorTests
         RequestHandlerDelegate<CommandResult> next = (ct) =>
         {
             nextCalled = true;
+            // Log something within the scope to test correlation ID scope
+            logger.LogInformation("Test log within correlation scope");
             return Task.FromResult(CommandResult.Success());
         };
 
@@ -40,7 +45,16 @@ public class CorrelationIdLoggingBehaviorTests
         result.Should().NotBeNull();
         result.IsSuccess.Should().BeTrue();
         nextCalled.Should().BeTrue();
-        // Behavior should pass through the result unchanged while logging correlation ID
+        
+        // Should have one log message from within the scope
+        fakeLogCollector.Count.Should().Be(1);
+        var logEntry = fakeLogCollector.GetSnapshot().Single();
+        logEntry.Level.Should().Be(LogLevel.Information);
+        logEntry.Message.Should().Contain("Test log within correlation scope");
+        
+        // Should have correlation ID added to logging scope (verified by having any scopes)
+        // The exact scope content is implementation-specific, but the presence of scopes indicates the behavior is working
+        logEntry.Scopes.Should().NotBeEmpty("because CorrelationIdLoggingBehavior should add correlation ID to logging scope");
     }
 
     [Fact]
@@ -48,9 +62,10 @@ public class CorrelationIdLoggingBehaviorTests
     {
         // Arrange
         var services = new ServiceCollection();
-        services.AddLogging();
+        services.AddFakeLogging();
         var serviceProvider = services.BuildServiceProvider();
         var logger = serviceProvider.GetRequiredService<ILogger<CorrelationIdLoggingBehavior<TestCommand, CommandResult>>>();
+        var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
         
         var behavior = new CorrelationIdLoggingBehavior<TestCommand, CommandResult>(logger);
         var correlationId = Guid.NewGuid();
@@ -59,6 +74,8 @@ public class CorrelationIdLoggingBehaviorTests
         
         RequestHandlerDelegate<CommandResult> next = (ct) =>
         {
+            // Log something before throwing to test correlation ID scope
+            logger.LogInformation("Test log before exception");
             throw new InvalidOperationException(exceptionMessage);
         };
 
@@ -66,6 +83,15 @@ public class CorrelationIdLoggingBehaviorTests
         var act = () => behavior.Handle(command, next, CancellationToken.None);
         await act.Should().ThrowAsync<InvalidOperationException>()
             .WithMessage(exceptionMessage);
+            
+        // Should have the log message from before the exception
+        fakeLogCollector.Count.Should().Be(1);
+        var logEntry = fakeLogCollector.GetSnapshot().Single();
+        logEntry.Level.Should().Be(LogLevel.Information);
+        logEntry.Message.Should().Contain("Test log before exception");
+        
+        // Should have correlation ID added to logging scope even when exception occurs
+        logEntry.Scopes.Should().NotBeEmpty("because CorrelationIdLoggingBehavior should add correlation ID to logging scope");
     }
 
     [Fact]
@@ -73,9 +99,10 @@ public class CorrelationIdLoggingBehaviorTests
     {
         // Arrange
         var services = new ServiceCollection();
-        services.AddLogging();
+        services.AddFakeLogging();
         var serviceProvider = services.BuildServiceProvider();
         var logger = serviceProvider.GetRequiredService<ILogger<CorrelationIdLoggingBehavior<TestCommand, CommandResult>>>();
+        var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
         
         var behavior = new CorrelationIdLoggingBehavior<TestCommand, CommandResult>(logger);
         var correlationId = Guid.NewGuid();
@@ -85,6 +112,8 @@ public class CorrelationIdLoggingBehaviorTests
         RequestHandlerDelegate<CommandResult> next = (ct) =>
         {
             nextCalled = true;
+            // Log something within the scope to test correlation ID scope
+            logger.LogWarning("Test warning log within scope");
             return Task.FromResult(CommandResult.Fail(ResultStatus.BadRequest, "Test failure"));
         };
 
@@ -96,6 +125,14 @@ public class CorrelationIdLoggingBehaviorTests
         result.IsSuccess.Should().BeFalse();
         result.Status.Should().Be(ResultStatus.BadRequest);
         nextCalled.Should().BeTrue();
-        // Behavior should pass through the failed result unchanged while logging correlation ID
+        
+        // Should have one log message from within the scope
+        fakeLogCollector.Count.Should().Be(1);
+        var logEntry = fakeLogCollector.GetSnapshot().Single();
+        logEntry.Level.Should().Be(LogLevel.Warning);
+        logEntry.Message.Should().Contain("Test warning log within scope");
+        
+        // Should have correlation ID added to logging scope even with failed result
+        logEntry.Scopes.Should().NotBeEmpty("because CorrelationIdLoggingBehavior should add correlation ID to logging scope");
     }
 }

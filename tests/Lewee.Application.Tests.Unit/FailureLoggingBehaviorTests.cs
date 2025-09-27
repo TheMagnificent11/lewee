@@ -4,6 +4,7 @@ using Lewee.Application.Mediation.Behaviors;
 using Lewee.Application.Mediation.Requests;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Testing;
 using Xunit;
 
 namespace Lewee.Application.Tests.Unit;
@@ -18,9 +19,10 @@ public class FailureLoggingBehaviorTests
     {
         // Arrange
         var services = new ServiceCollection();
-        services.AddLogging();
+        services.AddFakeLogging();
         var serviceProvider = services.BuildServiceProvider();
         var logger = serviceProvider.GetRequiredService<ILogger<FailureLoggingBehavior<TestCommand, CommandResult>>>();
+        var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
         
         var behavior = new FailureLoggingBehavior<TestCommand, CommandResult>(logger);
         var command = new TestCommand("Test", Guid.NewGuid());
@@ -39,6 +41,9 @@ public class FailureLoggingBehaviorTests
         result.Should().NotBeNull();
         result.IsSuccess.Should().BeTrue();
         nextCalled.Should().BeTrue();
+        
+        // Should not log anything for successful execution
+        fakeLogCollector.Count.Should().Be(0);
     }
 
     [Fact]  
@@ -46,9 +51,10 @@ public class FailureLoggingBehaviorTests
     {
         // Arrange
         var services = new ServiceCollection();
-        services.AddLogging();
+        services.AddFakeLogging();
         var serviceProvider = services.BuildServiceProvider();
         var logger = serviceProvider.GetRequiredService<ILogger<FailureLoggingBehavior<TestCommand, CommandResult>>>();
+        var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
         
         var behavior = new FailureLoggingBehavior<TestCommand, CommandResult>(logger);
         var command = new TestCommand("Test", Guid.NewGuid());
@@ -68,6 +74,12 @@ public class FailureLoggingBehaviorTests
         result.IsSuccess.Should().BeFalse();
         result.Status.Should().Be(ResultStatus.BadRequest);
         nextCalled.Should().BeTrue();
+        
+        // Should log Information for BadRequest (status < 500)
+        fakeLogCollector.Count.Should().Be(1);
+        var logEntry = fakeLogCollector.GetSnapshot().Single();
+        logEntry.Level.Should().Be(LogLevel.Information);
+        logEntry.Message.Should().Contain("Bad request");
     }
 
     [Fact]
@@ -75,9 +87,10 @@ public class FailureLoggingBehaviorTests
     {
         // Arrange
         var services = new ServiceCollection();
-        services.AddLogging();
+        services.AddFakeLogging();
         var serviceProvider = services.BuildServiceProvider();
         var logger = serviceProvider.GetRequiredService<ILogger<FailureLoggingBehavior<TestCommand, CommandResult>>>();
+        var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
         
         var behavior = new FailureLoggingBehavior<TestCommand, CommandResult>(logger);
         var command = new TestCommand("Test", Guid.NewGuid());
@@ -92,5 +105,45 @@ public class FailureLoggingBehaviorTests
         var act = () => behavior.Handle(command, next, CancellationToken.None);
         await act.Should().ThrowAsync<InvalidOperationException>()
             .WithMessage(exceptionMessage);
+            
+        // Should not log anything when exception is thrown (exception handling is done by UnhandledExceptionBehavior)
+        fakeLogCollector.Count.Should().Be(0);
+    }
+
+    [Fact]
+    public async Task FailureLoggingBehavior_WithServerErrorResult_ShouldLogAsError()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+        services.AddFakeLogging();
+        var serviceProvider = services.BuildServiceProvider();
+        var logger = serviceProvider.GetRequiredService<ILogger<FailureLoggingBehavior<TestCommand, CommandResult>>>();
+        var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
+        
+        var behavior = new FailureLoggingBehavior<TestCommand, CommandResult>(logger);
+        var command = new TestCommand("Test", Guid.NewGuid());
+        var nextCalled = false;
+        
+        RequestHandlerDelegate<CommandResult> next = (ct) =>
+        {
+            nextCalled = true;
+            // Create a result with status >= 500 to trigger error logging
+            var serverErrorStatus = (ResultStatus)500;
+            return Task.FromResult(CommandResult.Fail(serverErrorStatus, "Server error"));
+        };
+
+        // Act
+        var result = await behavior.Handle(command, next, CancellationToken.None);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.IsSuccess.Should().BeFalse();
+        nextCalled.Should().BeTrue();
+        
+        // Should log Error for status >= 500
+        fakeLogCollector.Count.Should().Be(1);
+        var logEntry = fakeLogCollector.GetSnapshot().Single();
+        logEntry.Level.Should().Be(LogLevel.Error);
+        logEntry.Message.Should().Contain("Unexpected error occurred");
     }
 }

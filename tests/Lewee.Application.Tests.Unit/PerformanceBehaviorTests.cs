@@ -4,6 +4,7 @@ using Lewee.Application.Mediation.Behaviors;
 using Lewee.Application.Mediation.Requests;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Testing;
 using Xunit;
 
 namespace Lewee.Application.Tests.Unit;
@@ -18,9 +19,10 @@ public class PerformanceBehaviorTests
     {
         // Arrange
         var services = new ServiceCollection();
-        services.AddLogging();
+        services.AddFakeLogging();
         var serviceProvider = services.BuildServiceProvider();
         var logger = serviceProvider.GetRequiredService<ILogger<PerformanceBehavior<TestCommand, CommandResult>>>();
+        var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
         
         var behavior = new PerformanceBehavior<TestCommand, CommandResult>(logger);
         var command = new TestCommand("Test", Guid.NewGuid());
@@ -39,6 +41,19 @@ public class PerformanceBehaviorTests
         result.Should().NotBeNull();
         result.IsSuccess.Should().BeTrue();
         nextCalled.Should().BeTrue();
+        
+        // Should log beginning and completion messages
+        fakeLogCollector.Count.Should().Be(2);
+        var logEntries = fakeLogCollector.GetSnapshot().ToList();
+        
+        logEntries[0].Level.Should().Be(LogLevel.Information);
+        logEntries[0].Message.Should().Contain("Beginning operation");
+        logEntries[0].Message.Should().Contain("TestCommand Handler");
+        
+        logEntries[1].Level.Should().Be(LogLevel.Information);
+        logEntries[1].Message.Should().Contain("Completed operation");
+        logEntries[1].Message.Should().Contain("TestCommand Handler");
+        logEntries[1].Message.Should().Contain("ms");
     }
 
     [Fact]
@@ -46,9 +61,10 @@ public class PerformanceBehaviorTests
     {
         // Arrange
         var services = new ServiceCollection();
-        services.AddLogging();
+        services.AddFakeLogging();
         var serviceProvider = services.BuildServiceProvider();
         var logger = serviceProvider.GetRequiredService<ILogger<PerformanceBehavior<TestCommand, CommandResult>>>();
+        var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
         
         var behavior = new PerformanceBehavior<TestCommand, CommandResult>(logger);
         var command = new TestCommand("Test", Guid.NewGuid());
@@ -68,6 +84,20 @@ public class PerformanceBehaviorTests
         result.Should().NotBeNull();
         result.IsSuccess.Should().BeTrue();
         nextCalled.Should().BeTrue();
+        
+        // Should log beginning and completion messages with timing
+        fakeLogCollector.Count.Should().Be(2);
+        var logEntries = fakeLogCollector.GetSnapshot().ToList();
+        
+        logEntries[0].Level.Should().Be(LogLevel.Information);
+        logEntries[0].Message.Should().Contain("Beginning operation");
+        
+        logEntries[1].Level.Should().Be(LogLevel.Information);
+        logEntries[1].Message.Should().Contain("Completed operation");
+        logEntries[1].Message.Should().Contain("ms");
+        
+        // The exact timing is hard to parse from formatted logs, but we know it took at least 10ms
+        // The important part is that timing messages are logged correctly
     }
 
     [Fact]
@@ -75,9 +105,10 @@ public class PerformanceBehaviorTests
     {
         // Arrange
         var services = new ServiceCollection();
-        services.AddLogging();
+        services.AddFakeLogging();
         var serviceProvider = services.BuildServiceProvider();
         var logger = serviceProvider.GetRequiredService<ILogger<PerformanceBehavior<TestCommand, CommandResult>>>();
+        var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
         
         var behavior = new PerformanceBehavior<TestCommand, CommandResult>(logger);
         var command = new TestCommand("Test", Guid.NewGuid());
@@ -92,5 +123,16 @@ public class PerformanceBehaviorTests
         var act = () => behavior.Handle(command, next, CancellationToken.None);
         await act.Should().ThrowAsync<InvalidOperationException>()
             .WithMessage(exceptionMessage);
+            
+        // Should log beginning and completion messages even when exception occurs
+        fakeLogCollector.Count.Should().Be(2);
+        var logEntries = fakeLogCollector.GetSnapshot().ToList();
+        
+        logEntries[0].Level.Should().Be(LogLevel.Information);
+        logEntries[0].Message.Should().Contain("Beginning operation");
+        
+        logEntries[1].Level.Should().Be(LogLevel.Information);
+        logEntries[1].Message.Should().Contain("Completed operation");
+        logEntries[1].Message.Should().Contain("ms");
     }
 }

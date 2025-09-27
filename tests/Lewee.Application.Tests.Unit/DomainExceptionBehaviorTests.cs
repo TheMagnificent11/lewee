@@ -5,6 +5,7 @@ using Lewee.Application.Mediation.Requests;
 using Lewee.Domain;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Testing;
 using Xunit;
 
 namespace Lewee.Application.Tests.Unit;
@@ -19,9 +20,10 @@ public class DomainExceptionBehaviorTests
     {
         // Arrange
         var services = new ServiceCollection();
-        services.AddLogging();
+        services.AddFakeLogging();
         var serviceProvider = services.BuildServiceProvider();
         var logger = serviceProvider.GetRequiredService<ILogger<DomainExceptionBehavior<TestCommand, CommandResult>>>();
+        var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
         
         var behavior = new DomainExceptionBehavior<TestCommand, CommandResult>(logger);
         var command = new TestCommand("Test", Guid.NewGuid());
@@ -40,6 +42,9 @@ public class DomainExceptionBehaviorTests
         result.Should().NotBeNull();
         result.IsSuccess.Should().BeTrue();
         nextCalled.Should().BeTrue();
+        
+        // Should not log anything for successful execution
+        fakeLogCollector.Count.Should().Be(0);
     }
 
     [Fact]
@@ -47,9 +52,10 @@ public class DomainExceptionBehaviorTests
     {
         // Arrange
         var services = new ServiceCollection();
-        services.AddLogging();
+        services.AddFakeLogging();
         var serviceProvider = services.BuildServiceProvider();
         var logger = serviceProvider.GetRequiredService<ILogger<DomainExceptionBehavior<TestCommand, CommandResult>>>();
+        var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
         
         var behavior = new DomainExceptionBehavior<TestCommand, CommandResult>(logger);
         var command = new TestCommand("Test", Guid.NewGuid());
@@ -69,6 +75,14 @@ public class DomainExceptionBehaviorTests
         result.Status.Should().Be(ResultStatus.BadRequest);
         result.Errors.Should().NotBeEmpty();
         result.Errors[0].ErrorMessage.Should().Be(exceptionMessage);
+        
+        // Should log Information message when domain exception is caught
+        fakeLogCollector.Count.Should().Be(1);
+        var logEntry = fakeLogCollector.GetSnapshot().Single();
+        logEntry.Level.Should().Be(LogLevel.Information);
+        logEntry.Message.Should().Contain("Domain exception caught");
+        logEntry.Exception.Should().BeOfType<DomainException>();
+        logEntry.Exception!.Message.Should().Be(exceptionMessage);
     }
 
     [Fact]
@@ -76,9 +90,10 @@ public class DomainExceptionBehaviorTests
     {
         // Arrange
         var services = new ServiceCollection();
-        services.AddLogging();
+        services.AddFakeLogging();
         var serviceProvider = services.BuildServiceProvider();
         var logger = serviceProvider.GetRequiredService<ILogger<DomainExceptionBehavior<TestCommand, CommandResult>>>();
+        var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
         
         var behavior = new DomainExceptionBehavior<TestCommand, CommandResult>(logger);
         var command = new TestCommand("Test", Guid.NewGuid());
@@ -93,5 +108,8 @@ public class DomainExceptionBehaviorTests
         var act = () => behavior.Handle(command, next, CancellationToken.None);
         await act.Should().ThrowAsync<InvalidOperationException>()
             .WithMessage(exceptionMessage);
+            
+        // Should not log anything for non-domain exceptions (they pass through)
+        fakeLogCollector.Count.Should().Be(0);
     }
 }
