@@ -46,20 +46,16 @@ jobs:
       - name: Test
         run: dotnet test ./lewee.sln --configuration Release --no-build --nologo --settings coverage.runsettings --results-directory ./coverage
 
-      - name: Generate Enhanced Code Coverage Report
-        uses: ./.github/actions/enhanced-coverage
+      - name: Code Coverage Report
+        uses: 5monkeys/cobertura-action@master
         if: ${{ inputs.is-pr == true }}
         with:
-          coverage-reports: coverage/**/coverage.cobertura.xml
-          output-file: code-coverage-results.md
-          fail-under: 0
-
-      - name: Add Coverage PR Comment
-        uses: marocchino/sticky-pull-request-comment@v2
-        if: ${{ inputs.is-pr == true }}
-        with:
-          recreate: true
-          path: code-coverage-results.md
+          path: coverage/**/coverage.cobertura.xml
+          minimum_coverage: 0
+          fail_below_threshold: false
+          show_missing: true
+          show_branch: true
+          show_class_names: true
 
       - name: Pack
         run: dotnet pack ./lewee.sln --configuration Release --nologo /p:PackageVersion=${{ steps.version.outputs.fullSemVer }} --output ./output
