@@ -1,1 +1,1 @@
-# Lewee.Infrastructure.Shared
+# Lewee.Shared
