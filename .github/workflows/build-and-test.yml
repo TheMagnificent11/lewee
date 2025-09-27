@@ -56,7 +56,7 @@ jobs:
           reportgenerator \
             -reports:"coverage/**/coverage.cobertura.xml" \
             -targetdir:"coverage-report" \
-            -reporttypes:"MarkdownSummary;Cobertura" \
+            -reporttypes:"MarkdownSummaryGithub;Cobertura" \
             -verbosity:"Warning"
 
       - name: Add Coverage PR Comment
