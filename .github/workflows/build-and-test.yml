@@ -50,7 +50,7 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release --no-restore --nologo
 
-      - name: Test (Unit Tests Only for Coverage)
+      - name: Test
         run: dotnet-coverage collect "dotnet test --no-restore --nologo" --settings coverage.xml -f cobertura -o ./coverage/coverage.cobertura.xml
 
       - name: Generate Coverage Report
