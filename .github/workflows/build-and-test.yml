@@ -50,7 +50,7 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release --no-restore --nologo
 
-      - name: Test (Unit Tests Only for Coverage)
+      - name: Test
         run: dotnet-coverage collect "dotnet test --no-restore --nologo" --settings coverage.xml -f cobertura -o ./coverage/coverage.cobertura.xml
 
       - name: Generate Coverage Report
@@ -69,23 +69,14 @@ jobs:
           recreate: true
           path: coverage-report/SummaryGithub.md
 
-      - name: Simple Diff Coverage Check
+      - name: Check Diff Coverage (90% threshold)
         if: ${{ inputs.is-pr == true }}
-        run: |
-          # Get list of changed .cs files
-          CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep '\.cs$' | grep '^src/' || true)
-
-          if [ -z "$CHANGED_FILES" ]; then
-            echo "No source code files changed. Coverage check passed."
-            exit 0
-          else
-            echo "Source code files changed:"
-            echo "$CHANGED_FILES"
-            echo "⚠️ Note: Diff coverage threshold checking is not yet implemented."
-            echo "Please ensure your changes have adequate test coverage."
-            # For now, we don't fail the build - just provide guidance
-            exit 0
-          fi
+        uses: ./.github/actions/diff-coverage-check
+        with:
+          coverage-file: coverage/coverage.cobertura.xml
+          threshold: 90
+          base-sha: ${{ github.event.pull_request.base.sha }}
+          head-sha: ${{ github.sha }}
 
       - name: Pack
         run: dotnet pack --configuration Release --nologo /p:PackageVersion=${{ steps.version.outputs.fullSemVer }} --output ./output
