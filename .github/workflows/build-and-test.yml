@@ -47,7 +47,7 @@ jobs:
         run: dotnet build ./lewee.sln --configuration Release --no-restore --nologo
 
       - name: Test
-        run: dotnet-coverage collect "dotnet test ./lewee.sln --configuration Release --no-build --nologo" -f cobertura -o ./coverage/coverage.cobertura.xml
+        run: dotnet-coverage collect "dotnet test ./lewee.sln --configuration Release --no-build --nologo" --include-files "src/Lewee.*/bin/Release/net9.0/Lewee.*.dll" -f cobertura -o ./coverage/coverage.cobertura.xml
 
       - name: Install ReportGenerator
         if: ${{ inputs.is-pr == true }}
