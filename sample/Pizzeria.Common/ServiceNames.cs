@@ -10,6 +10,8 @@ public static class ServiceNames
 
     public const string PizzaStoreApi = "pizza-store-api";
 
+    public const string PizzaStoreWebClient = "pizza-store-web-client";
+
     public static string GetPizzaStoreDatabaseName()
     {
         if (Environments.IsIntegrationTesting)
