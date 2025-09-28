@@ -1,8 +1,6 @@
 using FluentAssertions;
-using FreeMediator;
 using Lewee.Application.Mediation.Behaviors;
 using Lewee.Application.Mediation.Requests;
-using Lewee.Shared;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Testing;
@@ -29,14 +27,14 @@ public class CorrelationIdLoggingBehaviorTests
         var correlationId = Guid.NewGuid();
         var command = new TestCommand("Test", correlationId);
         var nextCalled = false;
-        
-        RequestHandlerDelegate<CommandResult> next = (ct) =>
+
+        Task<CommandResult> next(CancellationToken ct = default)
         {
             nextCalled = true;
             // Log something within the scope to test correlation ID scope
             logger.LogInformation("Test log within correlation scope");
             return Task.FromResult(CommandResult.Success());
-        };
+        }
 
         // Act
         var result = await behavior.Handle(command, next, CancellationToken.None);
@@ -72,13 +70,13 @@ public class CorrelationIdLoggingBehaviorTests
         var correlationId = Guid.NewGuid();
         var command = new TestCommand("Test", correlationId);
         var exceptionMessage = "Test exception";
-        
-        RequestHandlerDelegate<CommandResult> next = (ct) =>
+
+        Task<CommandResult> next(CancellationToken ct = default)
         {
             // Log something before throwing to test correlation ID scope
             logger.LogInformation("Test log before exception");
             throw new InvalidOperationException(exceptionMessage);
-        };
+        }
 
         // Act & Assert
         var act = () => behavior.Handle(command, next, CancellationToken.None);
@@ -109,14 +107,14 @@ public class CorrelationIdLoggingBehaviorTests
         var correlationId = Guid.NewGuid();
         var command = new TestCommand("Test", correlationId);
         var nextCalled = false;
-        
-        RequestHandlerDelegate<CommandResult> next = (ct) =>
+
+        Task<CommandResult> next(CancellationToken ct = default)
         {
             nextCalled = true;
             // Log something within the scope to test correlation ID scope
             logger.LogWarning("Test warning log within scope");
             return Task.FromResult(CommandResult.Fail(ResultStatus.BadRequest, "Test failure"));
-        };
+        }
 
         // Act
         var result = await behavior.Handle(command, next, CancellationToken.None);
