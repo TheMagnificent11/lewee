@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CoverageReport scope="Lewee.Infrastructure.Data.EntityEntryExtensions">
+  <Summary>
+    <Class>Lewee.Infrastructure.Data.EntityEntryExtensions</Class>
+    <Assembly>Lewee.Infrastructure.Data</Assembly>
+    <Files>
+      <File>/home/runner/work/lewee/lewee/src/Lewee.Infrastructure.Data/EntityEntryExtensions.cs</File>
+    </Files>
+    <Coveredlines>0</Coveredlines>
+    <Uncoveredlines>4</Uncoveredlines>
+    <Coverablelines>4</Coverablelines>
+    <Totallines>13</Totallines>
+    <Linecoverage>0</Linecoverage>
+    <Coveredbranches>0</Coveredbranches>
+    <Totalbranches>8</Totalbranches>
+    <Branchcoverage>0</Branchcoverage>
+    <Coveredmethods>0</Coveredmethods>
+    <Fullcoveredmethods>0</Fullcoveredmethods>
+    <Totalmethods>1</Totalmethods>
+    <Methodcoverage>0</Methodcoverage>
+    <Fullmethodcoverage>0</Fullmethodcoverage>
+  </Summary>
+  <Metrics>
+    <Element name="HasChangedOwnedEntities">
+      <CrapScore>6</CrapScore>
+      <Cyclomaticcomplexity>2</Cyclomaticcomplexity>
+      <Linecoverage>0</Linecoverage>
+      <Branchcoverage>0</Branchcoverage>
+    </Element>
+  </Metrics>
+  <Files>
+    <File name="/home/runner/work/lewee/lewee/src/Lewee.Infrastructure.Data/EntityEntryExtensions.cs">
+      <LineAnalysis line="1" visits="-1" coverage="NotCoverable" coveredbranches="" totalbranches="" content="using Microsoft.EntityFrameworkCore;" />
+      <LineAnalysis line="2" visits="-1" coverage="NotCoverable" coveredbranches="" totalbranches="" content="using Microsoft.EntityFrameworkCore.ChangeTracking;" />
+      <LineAnalysis line="3" visits="-1" coverage="NotCoverable" coveredbranches="" totalbranches="" content="" />
+      <LineAnalysis line="4" visits="-1" coverage="NotCoverable" coveredbranches="" totalbranches="" content="namespace Lewee.Infrastructure.Data;" />
+      <LineAnalysis line="5" visits="-1" coverage="NotCoverable" coveredbranches="" totalbranches="" content="" />
+      <LineAnalysis line="6" visits="-1" coverage="NotCoverable" coveredbranches="" totalbranches="" content="internal static class EntityEntryExtensions" />
+      <LineAnalysis line="7" visits="-1" coverage="NotCoverable" coveredbranches="" totalbranches="" content="{" />
+      <LineAnalysis line="8" visits="-1" coverage="NotCoverable" coveredbranches="" totalbranches="" content="    public static bool HasChangedOwnedEntities(this EntityEntry entry) =&gt;" />
+      <LineAnalysis line="9" visits="0" coverage="NotCovered" coveredbranches="0" totalbranches="2" content="        entry.References.Any(r =&gt;" />
+      <LineAnalysis line="10" visits="0" coverage="NotCovered" coveredbranches="0" totalbranches="6" content="            r.TargetEntry != null &amp;&amp;" />
+      <LineAnalysis line="11" visits="0" coverage="NotCovered" coveredbranches="" totalbranches="" content="            r.TargetEntry.Metadata.IsOwned() &amp;&amp;" />
+      <LineAnalysis line="12" visits="0" coverage="NotCovered" coveredbranches="" totalbranches="" content="            (r.TargetEntry.State == EntityState.Added || r.TargetEntry.State == EntityState.Modified));" />
+      <LineAnalysis line="13" visits="-1" coverage="NotCoverable" coveredbranches="" totalbranches="" content="}" />
+    </File>
+  </Files>
+</CoverageReport>
