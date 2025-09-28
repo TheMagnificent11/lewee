@@ -34,6 +34,7 @@ builder.Services
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
+app.MapHub<ClientEventHub>("/events");
 app.UseFastEndpoints();
 app.UseCorrelationIdMiddleware();
 
