@@ -24,9 +24,13 @@ jobs:
       - name: Install dotnet-coverage tool
         run: dotnet tool install --global dotnet-coverage
 
+      - name: Install ReportGenerator
+        if: ${{ inputs.is-pr == true }}
+        run: dotnet tool install --global dotnet-reportgenerator-globaltool
+
       - name: Install HTTPS development certificate
         run: dotnet dev-certs https --trust
-  
+
       - name: Install GitVersion
         uses: gittools/actions/gitversion/setup@v3.1.11
         with:
@@ -41,48 +45,13 @@ jobs:
           useConfigFile: true
 
       - name: Install Dependencies
-        run: dotnet restore ./lewee.sln --nologo
+        run: dotnet restore --nologo
 
       - name: Build
-        run: dotnet build ./lewee.sln --configuration Release --no-restore --nologo
+        run: dotnet build --configuration Release --no-restore --nologo
 
       - name: Test (Unit Tests Only for Coverage)
-        run: |
-          # Create coverage directory
-          mkdir -p ./coverage
-          
-          # Dynamically find unit test projects (exclude integration tests)
-          UNIT_TEST_PROJECTS=$(find tests/ sample-tests/ -name "*.csproj" | grep -E "(Tests\.Unit|Domain\.Tests)" | grep -v Integration | sort)
-          
-          # Run coverage collection for each unit test project
-          counter=1
-          for project in $UNIT_TEST_PROJECTS; do
-            echo "Running coverage for: $project"
-            project_name=$(basename "$project" .csproj)
-            dotnet-coverage collect "dotnet test $project --configuration Release --no-build --nologo" \
-              --include-files "src/Lewee.*/bin/Release/net9.0/Lewee.*.dll" \
-              -f cobertura \
-              -o "./coverage/coverage-${counter}.cobertura.xml"
-            counter=$((counter + 1))
-          done
-          
-          # Merge coverage files if any were created
-          if ls ./coverage/coverage-*.cobertura.xml 1> /dev/null 2>&1; then
-            dotnet-coverage merge "./coverage/coverage-*.cobertura.xml" -f cobertura -o ./coverage/coverage.cobertura.xml
-          else
-            echo "No coverage files found to merge"
-          fi
-          
-          # Run integration tests separately without coverage to verify they work (allowed to fail)
-          INTEGRATION_TEST_PROJECTS=$(find sample-tests/ -name "*.csproj" | grep Integration | sort)
-          for project in $INTEGRATION_TEST_PROJECTS; do
-            echo "Running integration test: $project"
-            dotnet test $project --configuration Release --no-build --nologo || true
-          done
-
-      - name: Install ReportGenerator
-        if: ${{ inputs.is-pr == true }}
-        run: dotnet tool install --global dotnet-reportgenerator-globaltool
+        run: dotnet-coverage collect "dotnet test --no-restore --nologo" --settings coverage.xml -f cobertura -o ./coverage/coverage.cobertura.xml
 
       - name: Generate Coverage Report
         if: ${{ inputs.is-pr == true }}
@@ -105,7 +74,7 @@ jobs:
         run: |
           # Get list of changed .cs files
           CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep '\.cs$' | grep '^src/' || true)
-          
+
           if [ -z "$CHANGED_FILES" ]; then
             echo "No source code files changed. Coverage check passed."
             exit 0
@@ -119,7 +88,7 @@ jobs:
           fi
 
       - name: Pack
-        run: dotnet pack ./lewee.sln --configuration Release --nologo /p:PackageVersion=${{ steps.version.outputs.fullSemVer }} --output ./output
+        run: dotnet pack --configuration Release --nologo /p:PackageVersion=${{ steps.version.outputs.fullSemVer }} --output ./output
 
       - name: Publish to NuGet
         run: dotnet nuget push ./output/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate

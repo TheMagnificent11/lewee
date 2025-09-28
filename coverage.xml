@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Configuration>
+  <CodeCoverage>
+    <ModulePaths>
+      <Include>
+        <ModulePath>.*Lewee\..*\.dll$</ModulePath>
+      </Include>
+      <Exclude>
+        <ModulePath>.*System\..*\.dll$</ModulePath>
+        <ModulePath>.*Aspire\..*\.dll$</ModulePath>
+        <ModulePath>.*FluentValidation.*\.dll$</ModulePath>
+        <ModulePath>.*Microsoft\..*\.dll$</ModulePath>
+        <ModulePath>.*Newtonsoft\..*\.dll$</ModulePath>
+        <ModulePath>.*EntityFramework.*\.dll$</ModulePath>
+        <ModulePath>.*xunit.*\.dll$</ModulePath>
+        <ModulePath>.*testhost.*\.dll$</ModulePath>
+      </Exclude>
+    </ModulePaths>
+    <Sources>
+      <Exclude>
+        <Source>.*\\packages\\.*</Source>
+        <Source>.*\\ref\\.*</Source>
+        <Source>.*\\.nuget\\.*</Source>
+      </Exclude>
+    </Sources>
+  </CodeCoverage>
+</Configuration>
