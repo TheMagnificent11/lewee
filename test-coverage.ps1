@@ -10,5 +10,8 @@ if (Test-Path -Path .\coverage-report) {
   Remove-Item .\coverage-report -Recurse -Force
 }
 
-dotnet test .\lewee.sln --settings coverage.runsettings --results-directory .\coverage
-reportgenerator -reports:"./coverage/**/coverage.cobertura.xml" -targetdir:"coverage-report" -reporttypes:"html"
+Remove-Item .\coverage\coverage-*.cobertura.xml -ErrorAction SilentlyContinue
+
+dotnet-coverage collect "dotnet test --no-restore --nologo" --settings coverage.xml -f cobertura -o .\coverage\coverage.cobertura.xml
+
+reportgenerator -reports:".\coverage\coverage.cobertura.xml" -targetdir:"coverage-report" -reporttypes:"html"

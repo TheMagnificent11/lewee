@@ -21,9 +21,16 @@ jobs:
       - name: Install Aspire Workload
         run: dotnet workload install aspire
 
+      - name: Install dotnet-coverage tool
+        run: dotnet tool install --global dotnet-coverage
+
+      - name: Install ReportGenerator
+        if: ${{ inputs.is-pr == true }}
+        run: dotnet tool install --global dotnet-reportgenerator-globaltool
+
       - name: Install HTTPS development certificate
         run: dotnet dev-certs https --trust
-  
+
       - name: Install GitVersion
         uses: gittools/actions/gitversion/setup@v3.1.11
         with:
@@ -38,23 +45,19 @@ jobs:
           useConfigFile: true
 
       - name: Install Dependencies
-        run: dotnet restore ./lewee.sln --nologo
+        run: dotnet restore --nologo
 
       - name: Build
-        run: dotnet build ./lewee.sln --configuration Release --no-restore --nologo
+        run: dotnet build --configuration Release --no-restore --nologo
 
-      - name: Test
-        run: dotnet test ./lewee.sln --configuration Release --no-build --nologo --settings coverage.runsettings --results-directory ./coverage
-
-      - name: Install ReportGenerator
-        if: ${{ inputs.is-pr == true }}
-        run: dotnet tool install --global dotnet-reportgenerator-globaltool
+      - name: Test (Unit Tests Only for Coverage)
+        run: dotnet-coverage collect "dotnet test --no-restore --nologo" --settings coverage.xml -f cobertura -o ./coverage/coverage.cobertura.xml
 
       - name: Generate Coverage Report
         if: ${{ inputs.is-pr == true }}
         run: |
           reportgenerator \
-            -reports:"coverage/**/coverage.cobertura.xml" \
+            -reports:"coverage/coverage.cobertura.xml" \
             -targetdir:"coverage-report" \
             -reporttypes:"MarkdownSummaryGithub;Cobertura" \
             -verbosity:"Warning"
@@ -71,7 +74,7 @@ jobs:
         run: |
           # Get list of changed .cs files
           CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep '\.cs$' | grep '^src/' || true)
-          
+
           if [ -z "$CHANGED_FILES" ]; then
             echo "No source code files changed. Coverage check passed."
             exit 0
@@ -85,7 +88,7 @@ jobs:
           fi
 
       - name: Pack
-        run: dotnet pack ./lewee.sln --configuration Release --nologo /p:PackageVersion=${{ steps.version.outputs.fullSemVer }} --output ./output
+        run: dotnet pack --configuration Release --nologo /p:PackageVersion=${{ steps.version.outputs.fullSemVer }} --output ./output
 
       - name: Publish to NuGet
         run: dotnet nuget push ./output/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate

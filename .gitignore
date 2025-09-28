@@ -30,7 +30,7 @@ Obj/
 # Test Coverage
 /coverage
 /coverage-logs
-/coverage-Report
+/coverage-report
 
 # Docker Volumes
 /data
@@ -38,4 +38,3 @@ Obj/
 
 # Dotnet Pack Location
 /output
-
