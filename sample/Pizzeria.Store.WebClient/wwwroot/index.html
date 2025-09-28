@@ -8,23 +8,20 @@
     <base href="/" />
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
     <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="css/app.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
     <link href="Pizzeria.Store.WebClient.styles.css" rel="stylesheet" />
 </head>
 
 <body>
     <div id="app">
-        <div style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column;">
-            <div style="width: 80px; height: 80px; border: 4px solid #f3f3f3; border-top: 4px solid #594ae2; border-radius: 50%; animation: spin 1s linear infinite;"></div>
-            <div style="margin-top: 20px; font-family: 'Roboto', sans-serif; color: #594ae2;">Loading Pizzeria Store...</div>
+        <div class="d-flex justify-center align-center" style="height: 100vh; flex-direction: column;">
+            <div class="mud-progress-circular mud-progress-circular-indeterminate mud-progress-primary" style="width: 60px; height: 60px;">
+                <svg viewBox="22 22 44 44">
+                    <circle cx="44" cy="44" r="20.2" fill="none" stroke="currentColor" stroke-width="3.6" stroke-dasharray="31.416" stroke-dashoffset="31.416" stroke-linecap="round"></circle>
+                </svg>
+            </div>
+            <div style="margin-top: 16px; font-family: 'Roboto', sans-serif;">Loading Pizzeria Store...</div>
         </div>
-        <style>
-            @keyframes spin {
-                0% { transform: rotate(0deg); }
-                100% { transform: rotate(360deg); }
-            }
-        </style>
     </div>
 
     <div id="blazor-error-ui">
