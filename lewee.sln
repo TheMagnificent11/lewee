@@ -61,6 +61,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pizzeria.Store.Domain.Tests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lewee.Application.Tests.Unit", "tests\Lewee.Application.Tests.Unit\Lewee.Application.Tests.Unit.csproj", "{652453D5-7AF1-400F-9A20-B487B8E46957}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lewee.Tests.Common", "tests\Lewee.Tests.Common\Lewee.Tests.Common.csproj", "{96031690-C4D3-7143-DEC8-46C447026E2C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -335,6 +337,18 @@ Global
 		{652453D5-7AF1-400F-9A20-B487B8E46957}.Release|x64.Build.0 = Release|Any CPU
 		{652453D5-7AF1-400F-9A20-B487B8E46957}.Release|x86.ActiveCfg = Release|Any CPU
 		{652453D5-7AF1-400F-9A20-B487B8E46957}.Release|x86.Build.0 = Release|Any CPU
+		{96031690-C4D3-7143-DEC8-46C447026E2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96031690-C4D3-7143-DEC8-46C447026E2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96031690-C4D3-7143-DEC8-46C447026E2C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{96031690-C4D3-7143-DEC8-46C447026E2C}.Debug|x64.Build.0 = Debug|Any CPU
+		{96031690-C4D3-7143-DEC8-46C447026E2C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{96031690-C4D3-7143-DEC8-46C447026E2C}.Debug|x86.Build.0 = Debug|Any CPU
+		{96031690-C4D3-7143-DEC8-46C447026E2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96031690-C4D3-7143-DEC8-46C447026E2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96031690-C4D3-7143-DEC8-46C447026E2C}.Release|x64.ActiveCfg = Release|Any CPU
+		{96031690-C4D3-7143-DEC8-46C447026E2C}.Release|x64.Build.0 = Release|Any CPU
+		{96031690-C4D3-7143-DEC8-46C447026E2C}.Release|x86.ActiveCfg = Release|Any CPU
+		{96031690-C4D3-7143-DEC8-46C447026E2C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
