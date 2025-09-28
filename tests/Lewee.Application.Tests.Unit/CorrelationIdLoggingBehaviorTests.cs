@@ -1,6 +1,7 @@
 using FluentAssertions;
 using Lewee.Application.Mediation.Behaviors;
 using Lewee.Application.Mediation.Requests;
+using Lewee.Shared;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Testing;
@@ -52,8 +53,13 @@ public class CorrelationIdLoggingBehaviorTests
         
         // Should have correlation ID added to logging scope
         logEntry.Scopes.Should().NotBeEmpty("because CorrelationIdLoggingBehavior should add correlation ID to logging scope");
-        // Note: Exact scope structure is implementation-specific, but we can verify the behavior worked
-        // by checking that scopes were added and contains the expected correlation context
+        
+        // Assert that the correlation ID value is correctly set in the scope
+        var scopeDict = logEntry.Scopes.Cast<IEnumerable<KeyValuePair<string, object>>>().FirstOrDefault();
+        scopeDict.Should().NotBeNull();
+        var correlationIdScope = scopeDict.FirstOrDefault(kvp => kvp.Key == LoggingConsts.CorrelationId);
+        correlationIdScope.Should().NotBeNull();
+        correlationIdScope.Value.ToString().Should().Be(correlationId.ToString());
     }
 
     [Fact]
@@ -91,6 +97,13 @@ public class CorrelationIdLoggingBehaviorTests
         
         // Should have correlation ID added to logging scope even when exception occurs
         logEntry.Scopes.Should().NotBeEmpty("because CorrelationIdLoggingBehavior should add correlation ID to logging scope");
+        
+        // Assert that the correlation ID value is correctly set in the scope
+        var scopeDict = logEntry.Scopes.Cast<IEnumerable<KeyValuePair<string, object>>>().FirstOrDefault();
+        scopeDict.Should().NotBeNull();
+        var correlationIdScope = scopeDict.FirstOrDefault(kvp => kvp.Key == LoggingConsts.CorrelationId);
+        correlationIdScope.Should().NotBeNull();
+        correlationIdScope.Value.ToString().Should().Be(correlationId.ToString());
     }
 
     [Fact]
@@ -133,5 +146,12 @@ public class CorrelationIdLoggingBehaviorTests
         
         // Should have correlation ID added to logging scope even with failed result
         logEntry.Scopes.Should().NotBeEmpty("because CorrelationIdLoggingBehavior should add correlation ID to logging scope");
+        
+        // Assert that the correlation ID value is correctly set in the scope
+        var scopeDict = logEntry.Scopes.Cast<IEnumerable<KeyValuePair<string, object>>>().FirstOrDefault();
+        scopeDict.Should().NotBeNull();
+        var correlationIdScope = scopeDict.FirstOrDefault(kvp => kvp.Key == LoggingConsts.CorrelationId);
+        correlationIdScope.Should().NotBeNull();
+        correlationIdScope.Value.ToString().Should().Be(correlationId.ToString());
     }
 }

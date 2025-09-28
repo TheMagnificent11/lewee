@@ -54,6 +54,13 @@ public class TenantLoggingBehaviorTests
         
         // Should have tenant ID added to logging scope
         logEntry.Scopes.Should().NotBeEmpty("because TenantLoggingBehavior should add tenant ID to logging scope");
+        
+        // Assert that the tenant ID value is correctly set in the scope
+        var scopeDict = logEntry.Scopes.Cast<IEnumerable<KeyValuePair<string, object>>>().FirstOrDefault();
+        scopeDict.Should().NotBeNull();
+        var tenantIdScope = scopeDict.FirstOrDefault(kvp => kvp.Key == LoggingConsts.TenantId);
+        tenantIdScope.Should().NotBeNull();
+        tenantIdScope.Value.ToString().Should().Be(tenantId.ToString());
     }
 
     [Fact]
@@ -91,6 +98,13 @@ public class TenantLoggingBehaviorTests
         
         // Should have tenant ID added to logging scope even when exception occurs
         logEntry.Scopes.Should().NotBeEmpty("because TenantLoggingBehavior should add tenant ID to logging scope");
+        
+        // Assert that the tenant ID value is correctly set in the scope
+        var scopeDict = logEntry.Scopes.Cast<IEnumerable<KeyValuePair<string, object>>>().FirstOrDefault();
+        scopeDict.Should().NotBeNull();
+        var tenantIdScope = scopeDict.FirstOrDefault(kvp => kvp.Key == LoggingConsts.TenantId);
+        tenantIdScope.Should().NotBeNull();
+        tenantIdScope.Value.ToString().Should().Be(tenantId.ToString());
     }
 
     [Fact]
@@ -133,5 +147,12 @@ public class TenantLoggingBehaviorTests
         
         // Should have tenant ID added to logging scope even with failed result
         logEntry.Scopes.Should().NotBeEmpty("because TenantLoggingBehavior should add tenant ID to logging scope");
+        
+        // Assert that the tenant ID value is correctly set in the scope
+        var scopeDict = logEntry.Scopes.Cast<IEnumerable<KeyValuePair<string, object>>>().FirstOrDefault();
+        scopeDict.Should().NotBeNull();
+        var tenantIdScope = scopeDict.FirstOrDefault(kvp => kvp.Key == LoggingConsts.TenantId);
+        tenantIdScope.Should().NotBeNull();
+        tenantIdScope.Value.ToString().Should().Be(tenantId.ToString());
     }
 }
