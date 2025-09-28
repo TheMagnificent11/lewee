@@ -21,6 +21,9 @@ jobs:
       - name: Install Aspire Workload
         run: dotnet workload install aspire
 
+      - name: Install dotnet-coverage tool
+        run: dotnet tool install --global dotnet-coverage
+
       - name: Install HTTPS development certificate
         run: dotnet dev-certs https --trust
   
@@ -44,7 +47,7 @@ jobs:
         run: dotnet build ./lewee.sln --configuration Release --no-restore --nologo
 
       - name: Test
-        run: dotnet test ./lewee.sln --configuration Release --no-build --nologo --settings coverage.runsettings --results-directory ./coverage
+        run: dotnet-coverage collect "dotnet test ./lewee.sln --configuration Release --no-build --nologo" -f cobertura -o ./coverage/coverage.cobertura.xml
 
       - name: Install ReportGenerator
         if: ${{ inputs.is-pr == true }}
@@ -54,7 +57,7 @@ jobs:
         if: ${{ inputs.is-pr == true }}
         run: |
           reportgenerator \
-            -reports:"coverage/**/coverage.cobertura.xml" \
+            -reports:"coverage/coverage.cobertura.xml" \
             -targetdir:"coverage-report" \
             -reporttypes:"MarkdownSummaryGithub;Cobertura" \
             -verbosity:"Warning"
