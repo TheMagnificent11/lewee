@@ -11,10 +11,10 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-// Use Aspire service discovery for API base URL
-var apiBaseUrl = builder.Configuration["services:pizza-store-api:https:0"] 
-    ?? builder.Configuration["services:pizza-store-api:http:0"] 
-    ?? "https://localhost:7062"; // fallback for local development
+// Get API base URL from configuration (injected by Aspire AppHost)
+var apiBaseUrl = builder.Configuration["ApiBaseUrl"] ?? "https://localhost:7062";
+
+Console.WriteLine($"Using API Base URL: {apiBaseUrl}");
 
 // Configure Lewee.Blazor with proper SignalR URL
 builder.Services
