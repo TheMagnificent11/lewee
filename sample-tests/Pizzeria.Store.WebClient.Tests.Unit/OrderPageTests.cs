@@ -1,8 +1,8 @@
 using Bunit;
 using Fluxor;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using MudBlazor.Services;
-using NSubstitute;
 using Pizzeria.Store.Contracts;
 using Pizzeria.Store.WebClient.Pages;
 using Pizzeria.Store.WebClient.Services;
@@ -17,8 +17,8 @@ public class OrderPageTests : TestContext
     public void Order_WhenNoCurrentOrder_RedirectsToHome()
     {
         // Arrange
-        var mockApiClient = Substitute.For<IPizzeriaApiClient>();
-        Services.AddSingleton(mockApiClient);
+        var mockApiClient = new Mock<IPizzeriaApiClient>();
+        Services.AddSingleton(mockApiClient.Object);
         Services.AddMudServices();
         Services.AddFluxor(o => o.ScanAssemblies(typeof(OrdersState).Assembly));
 
@@ -32,8 +32,8 @@ public class OrderPageTests : TestContext
     public void Order_WhenPizzasLoading_ShowsSkeletonLoader()
     {
         // Arrange
-        var mockApiClient = Substitute.For<IPizzeriaApiClient>();
-        Services.AddSingleton(mockApiClient);
+        var mockApiClient = new Mock<IPizzeriaApiClient>();
+        Services.AddSingleton(mockApiClient.Object);
         Services.AddMudServices();
         
         // Set up Fluxor with initial state that has an active order
@@ -54,16 +54,16 @@ public class OrderPageTests : TestContext
     public void Order_WhenPizzasAvailable_ShowsPizzaCards()
     {
         // Arrange
-        var mockApiClient = Substitute.For<IPizzeriaApiClient>();
+        var mockApiClient = new Mock<IPizzeriaApiClient>();
         var testPizzas = new[]
         {
             new PizzaDto(Guid.NewGuid(), "Margherita", "Classic tomato and mozzarella", 12.99m),
             new PizzaDto(Guid.NewGuid(), "Pepperoni", "Pepperoni and cheese", 14.99m)
         };
         
-        mockApiClient.GetPizzasAsync(Arg.Any<CancellationToken>()).Returns(testPizzas);
+        mockApiClient.Setup(x => x.GetPizzasAsync(It.IsAny<CancellationToken>())).ReturnsAsync(testPizzas);
         
-        Services.AddSingleton(mockApiClient);
+        Services.AddSingleton(mockApiClient.Object);
         Services.AddMudServices();
         Services.AddFluxor(o => o.ScanAssemblies(typeof(OrdersState).Assembly));
 

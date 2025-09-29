@@ -16,32 +16,31 @@ public class OrdersEffects
     [EffectMethod]
     public async Task OnStartOrder(StartOrderAction _, IDispatcher dispatcher)
     {
-        var result = await this.apiClient.StartOrderAsync();
-
-        if (result.IsSuccess)
+        try
         {
+            await this.apiClient.StartOrderAsync();
+            
             // For demo purposes, generate a random order ID since the API doesn't return one
             var orderId = Guid.NewGuid();
             dispatcher.Dispatch(new StartOrderSuccessAction(orderId));
         }
-        else
+        catch (Exception ex)
         {
-            dispatcher.Dispatch(new StartOrderFailureAction(result.ErrorMessage ?? "Unknown error occurred"));
+            dispatcher.Dispatch(new StartOrderFailureAction($"Failed to start order: {ex.Message}"));
         }
     }
 
     [EffectMethod]
     public async Task OnAddPizzaToOrder(AddPizzaToOrderAction action, IDispatcher dispatcher)
     {
-        var result = await this.apiClient.AddPizzaToOrderAsync(action.OrderId, action.PizzaId);
-
-        if (result.IsSuccess)
+        try
         {
+            await this.apiClient.AddPizzaToOrderAsync(action.OrderId, action.PizzaId);
             dispatcher.Dispatch(new AddPizzaToOrderSuccessAction(action.PizzaId));
         }
-        else
+        catch (Exception ex)
         {
-            dispatcher.Dispatch(new AddPizzaToOrderFailureAction(action.PizzaId, result.ErrorMessage ?? "Unknown error occurred"));
+            dispatcher.Dispatch(new AddPizzaToOrderFailureAction(action.PizzaId, $"Failed to add pizza: {ex.Message}"));
         }
     }
 }

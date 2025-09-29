@@ -13,6 +13,7 @@
     <PackageReference Include="MudBlazor" />
     <PackageReference Include="Fluxor.Blazor.Web" />
     <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" />
+    <PackageReference Include="Refit.HttpClientFactory" />
   </ItemGroup>
 
   <ItemGroup>

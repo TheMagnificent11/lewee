@@ -1,17 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="bunit" />
     <PackageReference Include="bunit.web" />
     <PackageReference Include="MudBlazor" />
-    <PackageReference Include="NSubstitute" />
+    <PackageReference Include="Moq" />
   </ItemGroup>
 
   <ItemGroup>

@@ -7,7 +7,7 @@
 <PageTitle>Pizzeria Store</PageTitle>
 
 <MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true">
-    Welcome to Pizzeria Store
+    Welcome to Lewee Pizzeria
 </MudText>
 
 @if (OrdersState.Value.CurrentOrderId == null)
@@ -64,28 +64,4 @@ else
               CloseIconClicked="ClearError">
         @OrdersState.Value.ErrorMessage
     </MudAlert>
-}
-
-@code {
-    [Inject] private IState<OrdersState> OrdersState { get; set; } = null!;
-    [Inject] private IDispatcher Dispatcher { get; set; } = null!;
-    [Inject] private NavigationManager Navigation { get; set; } = null!;
-
-    private void StartNewOrder()
-    {
-        Dispatcher.Dispatch(new StartOrderAction());
-    }
-
-    private void ClearError()
-    {
-        Dispatcher.Dispatch(new ClearOrderErrorAction());
-    }
-
-    protected override void OnAfterRender(bool firstRender)
-    {
-        if (firstRender && OrdersState.Value.CurrentOrderId != null)
-        {
-            Navigation.NavigateTo("/order");
-        }
-    }
 }

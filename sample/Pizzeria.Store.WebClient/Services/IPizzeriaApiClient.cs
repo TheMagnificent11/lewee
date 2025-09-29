@@ -1,12 +1,16 @@
 using Pizzeria.Store.Contracts;
+using Refit;
 
 namespace Pizzeria.Store.WebClient.Services;
 
 public interface IPizzeriaApiClient
 {
+    [Get("/pizzas")]
     Task<PizzaDto[]> GetPizzasAsync(CancellationToken cancellationToken = default);
-    Task<ApiResponse> StartOrderAsync(CancellationToken cancellationToken = default);
-    Task<ApiResponse> AddPizzaToOrderAsync(Guid orderId, Guid pizzaId, CancellationToken cancellationToken = default);
-}
 
-public record ApiResponse(bool IsSuccess, string? ErrorMessage = null);
+    [Post("/orders")]
+    Task StartOrderAsync(CancellationToken cancellationToken = default);
+
+    [Put("/orders/{orderId}/pizzas/{pizzaId}")]
+    Task AddPizzaToOrderAsync(Guid orderId, Guid pizzaId, CancellationToken cancellationToken = default);
+}

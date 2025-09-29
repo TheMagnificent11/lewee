@@ -1,8 +1,8 @@
 ﻿using Bunit;
 using Fluxor;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using MudBlazor.Services;
-using NSubstitute;
 using Pizzeria.Store.WebClient.Pages;
 using Pizzeria.Store.WebClient.Services;
 using Pizzeria.Store.WebClient.States.Orders;
@@ -16,8 +16,8 @@ public class HomePageTests : TestContext
     public void Home_WhenNoCurrentOrder_ShowsStartNewOrderButton()
     {
         // Arrange
-        var mockApiClient = Substitute.For<IPizzeriaApiClient>();
-        Services.AddSingleton(mockApiClient);
+        var mockApiClient = new Mock<IPizzeriaApiClient>();
+        Services.AddSingleton(mockApiClient.Object);
         Services.AddMudServices();
         Services.AddFluxor(o => o.ScanAssemblies(typeof(OrdersState).Assembly));
 
@@ -33,8 +33,8 @@ public class HomePageTests : TestContext
     public void Home_WhenStartNewOrderButtonClicked_ShowsLoadingState()
     {
         // Arrange
-        var mockApiClient = Substitute.For<IPizzeriaApiClient>();
-        Services.AddSingleton(mockApiClient);
+        var mockApiClient = new Mock<IPizzeriaApiClient>();
+        Services.AddSingleton(mockApiClient.Object);
         Services.AddMudServices();
         Services.AddFluxor(o => o.ScanAssemblies(typeof(OrdersState).Assembly));
 
