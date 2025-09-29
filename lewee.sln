@@ -63,11 +63,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lewee.Application.Tests.Uni
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lewee.Tests.Common", "tests\Lewee.Tests.Common\Lewee.Tests.Common.csproj", "{96031690-C4D3-7143-DEC8-46C447026E2C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{4F9DEAE5-078F-E77A-2E4A-FEB6FFE226FF}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pizzeria.Store.WebClient", "sample\Pizzeria.Store.WebClient\Pizzeria.Store.WebClient.csproj", "{4A6DA9D4-0558-4B77-9A05-DB7EA79CC416}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample-tests", "sample-tests", "{60E95AAC-17FD-CBE2-AA3D-0EAB179FD02F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pizzeria.Store.WebClient.Tests.Unit", "sample-tests\Pizzeria.Store.WebClient.Tests.Unit\Pizzeria.Store.WebClient.Tests.Unit.csproj", "{B676172D-7CDA-4F10-8B40-CA3D260A29D9}"
 EndProject
@@ -384,10 +380,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{4A6DA9D4-0558-4B77-9A05-DB7EA79CC416} = {4F9DEAE5-078F-E77A-2E4A-FEB6FFE226FF}
-		{B676172D-7CDA-4F10-8B40-CA3D260A29D9} = {60E95AAC-17FD-CBE2-AA3D-0EAB179FD02F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A223C33D-6D37-4C0E-8755-BA46F9759CB1}
