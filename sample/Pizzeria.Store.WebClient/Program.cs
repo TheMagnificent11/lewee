@@ -10,15 +10,20 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
+// Use the API server URL for SignalR and HTTP client
+var apiBaseUrl = builder.Configuration["services:pizza-store-api:https:0"] 
+    ?? builder.Configuration["services:pizza-store-api:http:0"] 
+    ?? "https://localhost:7062"; // fallback for local development
+
 builder.Services
     .ConfigureLeweeBlazor<MessageToActionMapper>(
-        builder.HostEnvironment.BaseAddress,
+        apiBaseUrl,
         builder.HostEnvironment.IsDevelopment())
     .AddScoped<IPizzeriaApiClient>(provider =>
     {
-        return new PizzeriaApiClient(builder.HostEnvironment.BaseAddress, provider.GetService<HttpClient>());
+        return new PizzeriaApiClient(apiBaseUrl, provider.GetService<HttpClient>());
     })
-    .AddHttpClient<PizzeriaApiClient>(sp => sp.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
+    .AddHttpClient<PizzeriaApiClient>(sp => sp.BaseAddress = new Uri(apiBaseUrl))
     .ConfigureCorrelationIdDelegation();
 
 builder.Services.AddMudServices();
