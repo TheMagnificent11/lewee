@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using System.Collections.Concurrent;
+using Lewee.Infrastructure.AspNet.SignalR;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,6 +17,8 @@ public sealed class TestServerFixture : IDisposable
 
     private bool disposedValue;
 
+    public static readonly ConcurrentDictionary<Guid, PizzaOrder> Orders = new();
+
     public TestServerFixture()
     {
         var builder = new WebHostBuilder()
@@ -21,6 +27,9 @@ public sealed class TestServerFixture : IDisposable
                 services
                     .AddFakeLogging()
                     .AddRouting()
+                    .AddSignalR();
+                
+                services
                     .AddLeweeBlazor<MessageToActionMapper>(new Uri("http://localhost"), useReduxDevTools: false)
                     .AddHealthChecks();
             })
@@ -30,6 +39,33 @@ public sealed class TestServerFixture : IDisposable
                 app.UseEndpoints(endpoints =>
                 {
                     endpoints.MapHealthChecks("/health");
+                    endpoints.MapHub<ClientEventHub>("/events");
+                    
+                    endpoints.MapPost("/api/orders", async (CreateOrderRequest request, IHubContext<ClientEventHub> hubContext) =>
+                    {
+                        var order = new PizzaOrder
+                        {
+                            Id = Guid.NewGuid(),
+                            CustomerName = request.CustomerName,
+                            PizzaType = request.PizzaType,
+                            Quantity = request.Quantity,
+                            CreatedAt = DateTime.UtcNow
+                        };
+                        
+                        Orders.TryAdd(order.Id, order);
+                        
+                        // Send SignalR message to all connected clients
+                        await hubContext.Clients.All.SendAsync("OrderCreated", order);
+                        
+                        return Results.Ok(order);
+                    });
+                    
+                    endpoints.MapGet("/api/orders/{id}", (Guid id) =>
+                    {
+                        return Orders.TryGetValue(id, out var order) 
+                            ? Results.Ok(order) 
+                            : Results.NotFound();
+                    });
                 });
             });
 
@@ -59,4 +95,15 @@ public sealed class TestServerFixture : IDisposable
 
         this.disposedValue = true;
     }
+}
+
+public record CreateOrderRequest(string CustomerName, string PizzaType, int Quantity);
+
+public record PizzaOrder
+{
+    public Guid Id { get; init; }
+    public string CustomerName { get; init; } = string.Empty;
+    public string PizzaType { get; init; } = string.Empty;
+    public int Quantity { get; init; }
+    public DateTime CreatedAt { get; init; }
 }

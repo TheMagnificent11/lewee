@@ -7,7 +7,12 @@ public class MessageToActionMapper : IMessageToActionMapper
 {
     public IMessageReceivedAction Map(object message, Guid correlationId)
     {
-        // TODO: Add SignalR message mapping when needed
-        return null;
+        return message switch
+        {
+            PizzaOrder order => new OrderCreatedAction(order, correlationId),
+            _ => null
+        };
     }
 }
+
+public record OrderCreatedAction(PizzaOrder Order, Guid CorrelationId) : IMessageReceivedAction;
