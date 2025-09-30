@@ -20,32 +20,11 @@ namespace Lewee.Application.Tests.Unit;
 /// </summary>
 public class PipelineBehaviorTests
 {
-    private static TestServer CreateTestServer(Action<IEndpointRouteBuilder> configureEndpoints)
-    {
-        var builder = new WebHostBuilder()
-            .ConfigureServices(services =>
-            {
-                services.AddRouting(); // Required for UseRouting()
-                services.AddFakeLogging();
-                var applicationAssembly = typeof(TestCommand).Assembly;
-                var domainAssembly = typeof(Lewee.Domain.Entity).Assembly;
-                services.AddApplication(applicationAssembly, domainAssembly);
-                services.AddPipelineBehaviors();
-            })
-            .Configure(app =>
-            {
-                app.UseRouting();
-                app.UseEndpoints(configureEndpoints);
-            });
-        
-        return new TestServer(builder);
-    }
-
     [Fact]
     public async Task ValidationBehavior_WithInvalidCommand_ShouldReturnBadRequest()
     {
         // Arrange
-        var testServer = CreateTestServer(endpoints =>
+        using var testServer = CreateTestServer(endpoints =>
         {
             endpoints.MapPost("/test-command", async (TestCommand command, IMediator mediator, CancellationToken ct) =>
             {
@@ -54,12 +33,12 @@ public class PipelineBehaviorTests
             });
         });
 
-        var client = testServer.CreateClient();
+        using var client = testServer.CreateClient();
         var logCollector = testServer.Services.GetRequiredService<FakeLogCollector>();
         var invalidCommand = new TestCommand("", Guid.NewGuid()); // Empty name should fail validation
 
         // Act
-        var response = await client.PostAsJsonAsync("/test-command", invalidCommand);
+        using var response = await client.PostAsJsonAsync("/test-command", invalidCommand);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -74,7 +53,7 @@ public class PipelineBehaviorTests
     public async Task ValidationBehavior_WithValidCommand_ShouldReturnOk()
     {
         // Arrange
-        var testServer = CreateTestServer(endpoints =>
+        using var testServer = CreateTestServer(endpoints =>
         {
             endpoints.MapPost("/test-command", async (TestCommand command, IMediator mediator, CancellationToken ct) =>
             {
@@ -83,12 +62,12 @@ public class PipelineBehaviorTests
             });
         });
 
-        var client = testServer.CreateClient();
+        using var client = testServer.CreateClient();
         var logCollector = testServer.Services.GetRequiredService<FakeLogCollector>();
         var validCommand = new TestCommand("Valid Name", Guid.NewGuid());
 
         // Act
-        var response = await client.PostAsJsonAsync("/test-command", validCommand);
+        using var response = await client.PostAsJsonAsync("/test-command", validCommand);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -103,7 +82,7 @@ public class PipelineBehaviorTests
     public async Task DomainExceptionBehavior_WithDomainException_ShouldReturnBadRequest()
     {
         // Arrange
-        var testServer = CreateTestServer(endpoints =>
+        using var testServer = CreateTestServer(endpoints =>
         {
             endpoints.MapPost("/test-domain-exception", async (TestDomainExceptionCommand command, IMediator mediator, CancellationToken ct) =>
             {
@@ -112,12 +91,12 @@ public class PipelineBehaviorTests
             });
         });
 
-        var client = testServer.CreateClient();
+        using var client = testServer.CreateClient();
         var logCollector = testServer.Services.GetRequiredService<FakeLogCollector>();
         var command = new TestDomainExceptionCommand(Guid.NewGuid());
 
         // Act
-        var response = await client.PostAsJsonAsync("/test-domain-exception", command);
+        using var response = await client.PostAsJsonAsync("/test-domain-exception", command);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -132,7 +111,7 @@ public class PipelineBehaviorTests
     public async Task PerformanceBehavior_ShouldLogTiming()
     {
         // Arrange
-        var testServer = CreateTestServer(endpoints =>
+        using var testServer = CreateTestServer(endpoints =>
         {
             endpoints.MapPost("/test-command", async (TestCommand command, IMediator mediator, CancellationToken ct) =>
             {
@@ -141,12 +120,12 @@ public class PipelineBehaviorTests
             });
         });
 
-        var client = testServer.CreateClient();
+        using var client = testServer.CreateClient();
         var logCollector = testServer.Services.GetRequiredService<FakeLogCollector>();
         var command = new TestCommand("Valid Name", Guid.NewGuid());
 
         // Act
-        var response = await client.PostAsJsonAsync("/test-command", command);
+        using var response = await client.PostAsJsonAsync("/test-command", command);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -162,7 +141,7 @@ public class PipelineBehaviorTests
     public async Task FailureLoggingBehavior_WithFailure_ShouldLogFailure()
     {
         // Arrange
-        var testServer = new TestServer(new WebHostBuilder()
+        using var testServer = new TestServer(new WebHostBuilder()
             .ConfigureServices(services =>
             {
                 services.AddRouting(); // Required for UseRouting()
@@ -185,12 +164,12 @@ public class PipelineBehaviorTests
                 });
             }));
 
-        var client = testServer.CreateClient();
+        using var client = testServer.CreateClient();
         var logCollector = testServer.Services.GetRequiredService<FakeLogCollector>();
         var command = new TestBadRequestCommand(Guid.NewGuid());
 
         // Act
-        var response = await client.PostAsJsonAsync("/test-bad-request", command);
+        using var response = await client.PostAsJsonAsync("/test-bad-request", command);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -205,7 +184,7 @@ public class PipelineBehaviorTests
     public async Task Query_ShouldReturnSuccessResult()
     {
         // Arrange
-        var testServer = CreateTestServer(endpoints =>
+        using var testServer = CreateTestServer(endpoints =>
         {
             endpoints.MapGet("/test-query", async (IMediator mediator, CancellationToken ct) =>
             {
@@ -215,11 +194,11 @@ public class PipelineBehaviorTests
             });
         });
 
-        var client = testServer.CreateClient();
+        using var client = testServer.CreateClient();
         var logCollector = testServer.Services.GetRequiredService<FakeLogCollector>();
 
         // Act
-        var response = await client.GetAsync("/test-query");
+        using var response = await client.GetAsync("/test-query");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -300,5 +279,26 @@ public class PipelineBehaviorTests
         // Verify logging infrastructure is available
         var logCollector = serviceProvider.GetService<FakeLogCollector>();
         logCollector.Should().NotBeNull();
+    }
+
+    private static TestServer CreateTestServer(Action<IEndpointRouteBuilder> configureEndpoints)
+    {
+        var builder = new WebHostBuilder()
+            .ConfigureServices(services =>
+            {
+                services.AddRouting(); // Required for UseRouting()
+                services.AddFakeLogging();
+                var applicationAssembly = typeof(TestCommand).Assembly;
+                var domainAssembly = typeof(Lewee.Domain.Entity).Assembly;
+                services.AddApplication(applicationAssembly, domainAssembly);
+                services.AddPipelineBehaviors();
+            })
+            .Configure(app =>
+            {
+                app.UseRouting();
+                app.UseEndpoints(configureEndpoints);
+            });
+
+        return new TestServer(builder);
     }
 }

@@ -19,14 +19,14 @@ builder.Services.AddServerSideBlazor();
 builder.Services
     .AddRefitClient<IPizzeriaApiClient>()
     .ConfigureHttpClient(c => c.BaseAddress = new Uri($"https://{ServiceNames.PizzaStoreApi}"))
-    .ConfigureCorrelationIdDelegation();
+    .AddCorrelationIdDelegationHandler();
 
 // Configure Lewee.Blazor with proper SignalR URL using service discovery
 var apiBaseUri = new Uri($"https://{ServiceNames.PizzaStoreApi}");
 
 Console.WriteLine($"Using API Base URL: {apiBaseUri}");
 
-builder.Services.ConfigureLeweeBlazor<MessageToActionMapper>(
+builder.Services.AddLeweeBlazor<MessageToActionMapper>(
     apiBaseUri,
     builder.Environment.IsDevelopment());
 

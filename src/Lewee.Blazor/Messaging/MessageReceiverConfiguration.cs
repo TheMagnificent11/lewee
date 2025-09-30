@@ -17,7 +17,7 @@ public static class MessageReceiverConfiguration
     /// <param name="services">Services collection</param>
     /// <param name="serverBaseAddress">Server base address</param>
     /// <returns>Updated services collection</returns>
-    public static IServiceCollection ConfigureMessageReceiver<TMapper>(
+    public static IServiceCollection AddMessageReceiver<TMapper>(
         this IServiceCollection services,
         Uri serverBaseAddress)
         where TMapper : class, IMessageToActionMapper

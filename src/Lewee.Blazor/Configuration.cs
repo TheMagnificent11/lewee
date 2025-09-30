@@ -11,14 +11,14 @@ namespace Lewee.Blazor;
 public static class Configuration
 {
     /// <summary>
-    /// Configures Lewee Blazor
+    /// Adds and configures Blazor with a Fluxor and SignalR message handling
     /// </summary>
     /// <typeparam name="TMapper">Mapper type</typeparam>
     /// <param name="services">Service collection</param>
     /// <param name="serverBaseAddress">Server base address</param>
     /// <param name="useReduxDevTools">Whether to use Redux Dev Tools</param>
     /// <returns>The updated service collection</returns>
-    public static IServiceCollection ConfigureLeweeBlazor<TMapper>(
+    public static IServiceCollection AddLeweeBlazor<TMapper>(
         this IServiceCollection services,
         Uri serverBaseAddress,
         bool useReduxDevTools)
@@ -26,8 +26,8 @@ public static class Configuration
     {
         return services
             .AddTransient<CorrelationIdDelegatingHandler>()
-            .ConfigureMessageReceiver<TMapper>(serverBaseAddress)
-            .ConfigureFluxor(useReduxDevTools);
+            .AddMessageReceiver<TMapper>(serverBaseAddress)
+            .AddFluxor(useReduxDevTools);
     }
 
     /// <summary>
@@ -35,7 +35,7 @@ public static class Configuration
     /// </summary>
     /// <param name="builder">HTTP client builder</param>
     /// <returns>The updated HTTP client builder</returns>
-    public static IHttpClientBuilder ConfigureCorrelationIdDelegation(this IHttpClientBuilder builder)
+    public static IHttpClientBuilder AddCorrelationIdDelegationHandler(this IHttpClientBuilder builder)
     {
         return builder
             .AddHttpMessageHandler<CorrelationIdDelegatingHandler>();
