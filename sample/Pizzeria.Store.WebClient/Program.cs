@@ -1,32 +1,54 @@
 using Lewee.Blazor;
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.Hosting;
 using MudBlazor.Services;
 using Pizzeria.Common;
-using Pizzeria.Store.WebClient;
+using Pizzeria.ServiceDefaults;
 using Pizzeria.Store.WebClient.Services;
 using Pizzeria.Store.WebClient.States;
 using Refit;
 
-var builder = WebAssemblyHostBuilder.CreateDefault(args);
+var builder = WebApplication.CreateBuilder(args);
 
+// Add Aspire service defaults (now works with server-side Blazor!)
 builder.AddServiceDefaults();
 
-builder.RootComponents.Add<App>("#app");
-builder.RootComponents.Add<HeadOutlet>("head::after");
+// Add services to the container
+builder.Services.AddRazorPages();
+builder.Services.AddServerSideBlazor();
 
-var apiBasAddress = new Uri($"https+http://{ServiceNames.PizzaStoreApi}");
-
-builder.Services.ConfigureLeweeBlazor<MessageToActionMapper>(
-    apiBasAddress,
-    builder.HostEnvironment.IsDevelopment());
-
+// Configure Refit HTTP client for API using Aspire service discovery
 builder.Services
     .AddRefitClient<IPizzeriaApiClient>()
-    .ConfigureHttpClient(c => c.BaseAddress = apiBasAddress)
+    .ConfigureHttpClient(c => c.BaseAddress = new Uri($"https://{ServiceNames.PizzaStoreApi}"))
     .ConfigureCorrelationIdDelegation();
+
+// Configure Lewee.Blazor with proper SignalR URL using service discovery
+var apiBaseUri = new Uri($"https://{ServiceNames.PizzaStoreApi}");
+
+Console.WriteLine($"Using API Base URL: {apiBaseUri}");
+
+builder.Services.ConfigureLeweeBlazor<MessageToActionMapper>(
+    apiBaseUri,
+    builder.Environment.IsDevelopment());
 
 builder.Services.AddMudServices();
 
-await builder.Build().RunAsync();
+var app = builder.Build();
+
+// Configure the HTTP request pipeline
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Error");
+    app.UseHsts();
+}
+
+app.MapDefaultEndpoints();
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+
+app.MapRazorPages();
+app.MapBlazorHub();
+app.MapFallbackToPage("/_Host");
+
+await app.RunAsync();
