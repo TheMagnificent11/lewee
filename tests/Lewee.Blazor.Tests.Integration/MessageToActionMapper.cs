@@ -15,7 +15,10 @@ public class MessageToActionMapper : IMessageToActionMapper
 
     public IMessageReceivedAction Map(object message, Guid correlationId)
     {
-        this.logger.LogInformation("SignalR message received: {MessageType}, CorrelationId: {CorrelationId}", message.GetType().Name, correlationId);
+        this.logger.LogInformation(
+            "SignalR message received: {MessageType}, CorrelationId: {CorrelationId}",
+            message.GetType().Name,
+            correlationId);
         
         return message switch
         {

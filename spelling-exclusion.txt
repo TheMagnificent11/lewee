@@ -2,6 +2,7 @@ Lewee
 
 Ardalis
 bigint
+deserializer
 Fluxor
 FreeMediator
 Gitflow

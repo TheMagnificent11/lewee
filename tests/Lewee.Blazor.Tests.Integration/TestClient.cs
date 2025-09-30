@@ -1,61 +1,102 @@
-using Fluxor;
-using Lewee.Blazor.Fluxor;
 using Lewee.Blazor.Messaging;
+using Lewee.Contracts;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Testing;
 
 namespace Lewee.Blazor.Tests.Integration;
 
-/// <summary>
-/// Test client that connects to the test server and receives SignalR messages
-/// </summary>
 public sealed class TestClient : IDisposable
 {
     private readonly ServiceProvider serviceProvider;
-    private readonly IMessageReceiver messageReceiver;
     private readonly ILogger<TestClient> logger;
+    private readonly FakeLogCollector fakeLogCollector;
+    private readonly HubConnection hub;
+    private readonly TestHttpClient httpClient;
 
-    public TestClient(string serverBaseUrl, ILoggerFactory loggerFactory)
+    public TestClient(Uri serverBaseAddress)
     {
         var services = new ServiceCollection();
-        
-        // Configure Lewee Blazor with the test server URL
-        services.ConfigureLeweeBlazor<MessageToActionMapper>(serverBaseUrl, useReduxDevTools: false);
-        
-        // Add logger factory
-        services.AddSingleton(loggerFactory);
-        services.AddLogging();
-        
-        // Configure Fluxor
-        services.AddFluxor(options => options
-            .ScanAssemblies(typeof(TestClient).Assembly));
-        
-        serviceProvider = services.BuildServiceProvider();
-        
-        // Get required services
-        messageReceiver = serviceProvider.GetRequiredService<IMessageReceiver>();
-        logger = serviceProvider.GetRequiredService<ILogger<TestClient>>();
-        
-        logger.LogInformation("Test client created with server URL: {ServerUrl}", serverBaseUrl);
+
+        services
+            .AddFakeLogging()
+            .AddLeweeBlazor<MessageToActionMapper>(serverBaseAddress, useReduxDevTools: false);
+
+        services.AddHttpClient<TestHttpClient>(client =>
+        {
+            client.BaseAddress = serverBaseAddress;
+        });
+
+        this.serviceProvider = services.BuildServiceProvider();
+
+        this.logger = this.serviceProvider.GetRequiredService<ILogger<TestClient>>();
+        this.fakeLogCollector = this.serviceProvider.GetRequiredService<FakeLogCollector>();
+        this.hub = this.serviceProvider.GetRequiredService<HubConnection>();
+        this.httpClient = this.serviceProvider.GetRequiredService<TestHttpClient>();
+
+        var messageDeserializer = this.serviceProvider.GetRequiredService<MessageDeserializer>();
+        var messageToActionMapper = this.serviceProvider.GetRequiredService<IMessageToActionMapper>();
+
+        this.hub.On<ClientMessage>(nameof(ClientMessage), message =>
+        {
+            var (messageBody, correlationId) = messageDeserializer.Deserialize(message);
+            if (messageBody == null)
+            {
+                return;
+            }
+
+            var action = messageToActionMapper.Map(messageBody, correlationId ?? Guid.Empty);
+            if (action == null)
+            {
+                this.logger.LogInformation("No action mapped to {@MessageBody}", messageBody);
+                return;
+            }
+
+            this.logger.LogInformation(
+                "Action Type {Action} dispatched (Message Body: {@MessageBody})",
+                action.GetType().Name,
+                messageBody);
+        });
+
+        this.logger.LogInformation("Test client created with server URL: {ServerUrl}", serverBaseAddress.AbsolutePath);
     }
 
     public async Task ConnectAsync()
     {
-        logger.LogInformation("Connecting test client to server...");
-        await messageReceiver.StartAsync();
-        logger.LogInformation("Test client connected successfully");
+        this.logger.LogInformation("Connecting test client to server...");
+
+        await this.hub.StartAsync();
+
+        this.logger.LogInformation("Test client connected successfully");
     }
 
     public async Task DisconnectAsync()
     {
-        logger.LogInformation("Disconnecting test client from server...");
-        await messageReceiver.StopAsync();
-        logger.LogInformation("Test client disconnected");
+        this.logger.LogInformation("Disconnecting test client from server...");
+
+        await this.hub.StopAsync();
+
+        this.logger.LogInformation("Test client disconnected");
+    }
+
+    public async Task<bool> GetHealthAsync()
+    {
+        return await this.httpClient.GetHealthAsync();
+    }
+
+    public async Task<bool> CreatePizzaOrderAsync()
+    {
+        return await this.httpClient.CreatePizzaOrder();
+    }
+
+    public IReadOnlyList<FakeLogRecord> GetLogs()
+    {
+        return this.fakeLogCollector.GetSnapshot();
     }
 
     public void Dispose()
-    {
-        messageReceiver?.StopAsync().GetAwaiter().GetResult();
-        serviceProvider?.Dispose();
+    {        
+        this.serviceProvider?.Dispose();
     }
 }

@@ -47,7 +47,7 @@ public static class ApplicationConfiguration
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(DomainExceptionBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
-        if (additionalBehaviors != null && additionalBehaviors.Any())
+        if (additionalBehaviors != null && additionalBehaviors.Length > 0)
         {
             foreach (var item in additionalBehaviors)
             {

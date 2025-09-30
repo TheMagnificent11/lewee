@@ -26,7 +26,7 @@ builder.Services
     .AddLeweeDatabaseSeeder<StoreDbContext, StoreSeeder>()
     .AddPizzaStoreApplication()
     .AddCorrelationIdServices()
-    .ConfigureSignalR()
+    .AddLeweeSignalR()
     .AddFastEndpoints()
     .AddEndpointsApiExplorer()
     .AddSwaggerGen();

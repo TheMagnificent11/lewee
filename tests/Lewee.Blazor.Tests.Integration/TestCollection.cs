@@ -2,7 +2,7 @@
 
 namespace Lewee.Blazor.Tests.Integration;
 
-[CollectionDefinition(TestServerFixture.CollectionName)]
-public sealed class TestCollection : ICollectionFixture<TestServerFixture>
+[CollectionDefinition(TestFixture.CollectionName)]
+public sealed class TestCollection : ICollectionFixture<TestFixture>
 {
 }

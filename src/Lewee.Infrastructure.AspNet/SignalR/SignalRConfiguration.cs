@@ -15,7 +15,7 @@ public static class SignalRConfiguration
     /// </summary>
     /// <param name="services">Services collection</param>
     /// <returns>The updated services collection</returns>
-    public static IServiceCollection ConfigureSignalR(this IServiceCollection services)
+    public static IServiceCollection AddLeweeSignalR(this IServiceCollection services)
     {
         services.AddSignalR();
         services.AddResponseCompression(opts =>
