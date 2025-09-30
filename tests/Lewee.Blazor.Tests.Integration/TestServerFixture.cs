@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Testing;
 
 namespace Lewee.Blazor.Tests.Integration;
 
@@ -14,6 +16,7 @@ public sealed class TestServerFixture : IDisposable
     public const string CollectionName = "TestServerCollection";
 
     private readonly TestServer server;
+    private readonly FakeLogCollector logCollector;
 
     private bool disposedValue;
 
@@ -70,6 +73,9 @@ public sealed class TestServerFixture : IDisposable
             });
 
         this.server = new TestServer(builder);
+        
+        // Get the log collector from the service provider
+        this.logCollector = this.server.Services.GetRequiredService<FakeLogCollector>();
     }
 
     public void Dispose()
@@ -80,6 +86,11 @@ public sealed class TestServerFixture : IDisposable
     }
 
     public HttpClient CreateClient() => this.server.CreateClient();
+
+    public IReadOnlyList<FakeLogRecord> GetLogs() => this.logCollector.GetSnapshot();
+
+    public IEnumerable<FakeLogRecord> GetLogs(LogLevel logLevel) 
+        => this.logCollector.GetSnapshot().Where(l => l.Level == logLevel);
 
     private void Dispose(bool disposing)
     {
