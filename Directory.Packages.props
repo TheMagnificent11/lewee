@@ -6,6 +6,7 @@
   <ItemGroup>
     <PackageVersion Include="CSharpFunctionalExtensions" Version="3.6.0" />
     <PackageVersion Include="FastEndpoints" Version="6.2.0" />
+    <PackageVersion Include="Flurl" Version="4.0.0" />
     <PackageVersion Include="Fluxor" Version="6.8.0" />
     <PackageVersion Include="Fluxor.Blazor.Web" Version="6.8.0" />
     <PackageVersion Include="Fluxor.Blazor.Web.ReduxDevTools" Version="6.8.0" />
@@ -55,7 +56,6 @@
     <PackageVersion Include="Correlate.AspNetCore" Version="6.0.0" />
     <PackageVersion Include="Correlate.DependencyInjection" Version="6.0.0" />
   </ItemGroup>
-
   <ItemGroup Label="FluentAssertions">
     <PackageVersion Include="FluentAssertions" Version="8.7.0" />
     <PackageVersion Include="FluentAssertions.Analyzers" Version="0.34.1" />

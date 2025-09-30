@@ -20,13 +20,10 @@ public static class Configuration
     /// <returns>The updated service collection</returns>
     public static IServiceCollection ConfigureLeweeBlazor<TMapper>(
         this IServiceCollection services,
-        string serverBaseAddress,
+        Uri serverBaseAddress,
         bool useReduxDevTools)
         where TMapper : class, IMessageToActionMapper
     {
-        // TODO: https://github.com/TheMagnificent11/lewee/issues/15
-        // LoggingConfiguration.ConfigureLogging(serverBaseAddress);
-
         return services
             .AddTransient<CorrelationIdDelegatingHandler>()
             .ConfigureMessageReceiver<TMapper>(serverBaseAddress)

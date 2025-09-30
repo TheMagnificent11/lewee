@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Correlate.DependencyInjection" />
+    <PackageReference Include="Flurl" />
     <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" />
   </ItemGroup>

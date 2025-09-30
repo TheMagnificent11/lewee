@@ -1,4 +1,5 @@
-﻿using Lewee.Blazor.Messaging.Health;
+﻿using Flurl;
+using Lewee.Blazor.Messaging.Health;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,12 +19,12 @@ public static class MessageReceiverConfiguration
     /// <returns>Updated services collection</returns>
     public static IServiceCollection ConfigureMessageReceiver<TMapper>(
         this IServiceCollection services,
-        string serverBaseAddress)
+        Uri serverBaseAddress)
         where TMapper : class, IMessageToActionMapper
     {
-        var hubUrl = serverBaseAddress.EndsWith('/') ? $"{serverBaseAddress}events" : $"{serverBaseAddress}/events";
+        var hubUri = serverBaseAddress.AppendPathSegment("events");
         var hubConnection = new HubConnectionBuilder()
-            .WithUrl(hubUrl)
+            .WithUrl(hubUri.ToString())
             .WithAutomaticReconnect()
             .Build();
 
@@ -31,7 +32,7 @@ public static class MessageReceiverConfiguration
             .AddSingleton(hubConnection)
             .AddTransient<IMessageToActionMapper, TMapper>()
             .AddTransient<MessageDeserializer>()
-            .AddHttpClient<HealthCheckService>(sp => sp.BaseAddress = new Uri(serverBaseAddress));
+            .AddHttpClient<HealthCheckService>(sp => sp.BaseAddress = serverBaseAddress);
 
         return services;
     }

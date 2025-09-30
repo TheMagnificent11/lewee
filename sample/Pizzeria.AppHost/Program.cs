@@ -18,7 +18,6 @@ var pizzaStoreApi = builder.AddProject<Projects.Pizzeria_Store_Api>(ServiceNames
 
 builder.AddProject<Projects.Pizzeria_Store_WebClient>(ServiceNames.PizzaStoreWebClient)
     .WithReference(pizzaStoreApi)
-    .WithEnvironment("ApiBaseUrl", pizzaStoreApi.GetEndpoint("https"))
     .WaitFor(pizzaStoreApi);
 
 var app = builder.Build();
