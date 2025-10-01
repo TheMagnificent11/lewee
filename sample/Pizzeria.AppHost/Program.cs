@@ -12,9 +12,13 @@ var databaseServer = Environments.IsIntegrationTesting
 var pizzaStoreDatabaseName = ServiceNames.GetPizzaStoreDatabaseName();
 var pizzaStoreDatabase = databaseServer.AddDatabase(pizzaStoreDatabaseName);
 
-builder.AddProject<Projects.Pizzeria_Store_Api>(ServiceNames.PizzaStoreApi)
+var pizzaStoreApi = builder.AddProject<Projects.Pizzeria_Store_Api>(ServiceNames.PizzaStoreApi)
     .WithReference(pizzaStoreDatabase)
     .WaitFor(pizzaStoreDatabase);
+
+builder.AddProject<Projects.Pizzeria_Store_WebClient>(ServiceNames.PizzaStoreWebClient)
+    .WithReference(pizzaStoreApi)
+    .WaitFor(pizzaStoreApi);
 
 var app = builder.Build();
 

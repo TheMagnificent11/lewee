@@ -1,0 +1,46 @@
+using Fluxor;
+using Pizzeria.Store.WebClient.Services;
+using Pizzeria.Store.WebClient.States.Orders.Actions;
+
+namespace Pizzeria.Store.WebClient.States.Orders;
+
+public class OrdersEffects
+{
+    private readonly IPizzeriaApiClient apiClient;
+
+    public OrdersEffects(IPizzeriaApiClient apiClient)
+    {
+        this.apiClient = apiClient;
+    }
+
+    [EffectMethod]
+    public async Task OnStartOrder(StartOrderAction _, IDispatcher dispatcher)
+    {
+        try
+        {
+            await this.apiClient.StartOrderAsync();
+            
+            // For demo purposes, generate a random order ID since the API doesn't return one
+            var orderId = Guid.NewGuid();
+            dispatcher.Dispatch(new StartOrderSuccessAction(orderId));
+        }
+        catch (Exception ex)
+        {
+            dispatcher.Dispatch(new StartOrderFailureAction($"Failed to start order: {ex.Message}"));
+        }
+    }
+
+    [EffectMethod]
+    public async Task OnAddPizzaToOrder(AddPizzaToOrderAction action, IDispatcher dispatcher)
+    {
+        try
+        {
+            await this.apiClient.AddPizzaToOrderAsync(action.OrderId, action.PizzaId);
+            dispatcher.Dispatch(new AddPizzaToOrderSuccessAction(action.PizzaId));
+        }
+        catch (Exception ex)
+        {
+            dispatcher.Dispatch(new AddPizzaToOrderFailureAction(action.PizzaId, $"Failed to add pizza: {ex.Message}"));
+        }
+    }
+}

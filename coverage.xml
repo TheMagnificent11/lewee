@@ -9,6 +9,8 @@
         <ModulePath>.*System\..*\.dll$</ModulePath>
         <ModulePath>.*Aspire\..*\.dll$</ModulePath>
         <ModulePath>.*FluentValidation.*\.dll$</ModulePath>
+        <ModulePath>.*Fluxor\..*\.dll$</ModulePath>
+        <ModulePath>.*Fluxor.*\..*\.dll$</ModulePath>
         <ModulePath>.*Microsoft\..*\.dll$</ModulePath>
         <ModulePath>.*Newtonsoft\..*\.dll$</ModulePath>
         <ModulePath>.*EntityFramework.*\.dll$</ModulePath>

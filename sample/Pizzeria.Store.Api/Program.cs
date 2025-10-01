@@ -26,7 +26,7 @@ builder.Services
     .AddLeweeDatabaseSeeder<StoreDbContext, StoreSeeder>()
     .AddPizzaStoreApplication()
     .AddCorrelationIdServices()
-    .ConfigureSignalR()
+    .AddLeweeSignalR()
     .AddFastEndpoints()
     .AddEndpointsApiExplorer()
     .AddSwaggerGen();
@@ -34,6 +34,7 @@ builder.Services
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
+app.MapHub<ClientEventHub>("/events");
 app.UseFastEndpoints();
 app.UseCorrelationIdMiddleware();
 

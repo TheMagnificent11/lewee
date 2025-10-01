@@ -11,26 +11,45 @@ namespace Lewee.Blazor;
 public static class Configuration
 {
     /// <summary>
-    /// Configures Lewee Blazor
+    /// Adds and configures Blazor with a Fluxor and SignalR message handling
     /// </summary>
     /// <typeparam name="TMapper">Mapper type</typeparam>
     /// <param name="services">Service collection</param>
     /// <param name="serverBaseAddress">Server base address</param>
     /// <param name="useReduxDevTools">Whether to use Redux Dev Tools</param>
+    /// <param name="httpMessageHandler">Optional HTTP message handler for testing scenarios</param>
     /// <returns>The updated service collection</returns>
-    public static IServiceCollection ConfigureLeweeBlazor<TMapper>(
+    public static IServiceCollection AddLeweeBlazor<TMapper>(
         this IServiceCollection services,
-        string serverBaseAddress,
+        Uri serverBaseAddress,
+        bool useReduxDevTools,
+        HttpMessageHandler? httpMessageHandler)
+        where TMapper : class, IMessageToActionMapper
+    {
+        return services
+            .AddTransient<CorrelationIdDelegatingHandler>()
+            .AddMessageReceiver<TMapper>(serverBaseAddress, httpMessageHandler)
+            .AddFluxor(useReduxDevTools);
+    }
+
+    /// <summary>
+    /// Adds and configures Blazor with a Fluxor and SignalR message handling using service discovery
+    /// </summary>
+    /// <typeparam name="TMapper">Mapper type</typeparam>
+    /// <param name="services">Service collection</param>
+    /// <param name="httpClientName">Name of the HttpClient configured with service discovery</param>
+    /// <param name="useReduxDevTools">Whether to use Redux Dev Tools</param>
+    /// <returns>The updated service collection</returns>
+    public static IServiceCollection AddLeweeBlazor<TMapper>(
+        this IServiceCollection services,
+        string httpClientName,
         bool useReduxDevTools)
         where TMapper : class, IMessageToActionMapper
     {
-        // TODO: https://github.com/TheMagnificent11/lewee/issues/15
-        // LoggingConfiguration.ConfigureLogging(serverBaseAddress);
-
         return services
             .AddTransient<CorrelationIdDelegatingHandler>()
-            .ConfigureMessageReceiver<TMapper>(serverBaseAddress)
-            .ConfigureFluxor(useReduxDevTools);
+            .AddMessageReceiverWithServiceDiscovery<TMapper>(httpClientName)
+            .AddFluxor(useReduxDevTools);
     }
 
     /// <summary>
@@ -38,7 +57,7 @@ public static class Configuration
     /// </summary>
     /// <param name="builder">HTTP client builder</param>
     /// <returns>The updated HTTP client builder</returns>
-    public static IHttpClientBuilder ConfigureCorrelationIdDelegation(this IHttpClientBuilder builder)
+    public static IHttpClientBuilder AddCorrelationIdDelegationHandler(this IHttpClientBuilder builder)
     {
         return builder
             .AddHttpMessageHandler<CorrelationIdDelegatingHandler>();

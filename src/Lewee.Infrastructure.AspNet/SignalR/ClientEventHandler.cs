@@ -22,6 +22,7 @@ internal class ClientEventHandler : INotificationHandler<ClientEvent>
 
     public async Task Handle(ClientEvent notification, CancellationToken cancellationToken)
     {
+        // TODO: using notification behavior to enrich log context
         using (this.logger.BeginScope(new Dictionary<string, object>
         {
             { LoggingConsts.CorrelationId, notification.CorrelationId }
