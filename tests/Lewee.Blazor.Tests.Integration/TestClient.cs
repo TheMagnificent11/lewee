@@ -15,25 +15,21 @@ public sealed class TestClient : IDisposable
     private readonly HubConnection hub;
     private readonly TestHttpClient httpClient;
 
-    public TestClient(Uri serverBaseAddress)
+    public TestClient(HttpClient httpClient)
     {
+        this.httpClient = new TestHttpClient(httpClient);
+
         var services = new ServiceCollection();
 
         services
             .AddFakeLogging()
-            .AddLeweeBlazor<MessageToActionMapper>(serverBaseAddress, useReduxDevTools: false);
-
-        services.AddHttpClient<TestHttpClient>(client =>
-        {
-            client.BaseAddress = serverBaseAddress;
-        });
+            .AddLeweeBlazor<MessageToActionMapper>(httpClient.BaseAddress, useReduxDevTools: false);
 
         this.serviceProvider = services.BuildServiceProvider();
 
         this.logger = this.serviceProvider.GetRequiredService<ILogger<TestClient>>();
         this.fakeLogCollector = this.serviceProvider.GetRequiredService<FakeLogCollector>();
         this.hub = this.serviceProvider.GetRequiredService<HubConnection>();
-        this.httpClient = this.serviceProvider.GetRequiredService<TestHttpClient>();
 
         var messageDeserializer = this.serviceProvider.GetRequiredService<MessageDeserializer>();
         var messageToActionMapper = this.serviceProvider.GetRequiredService<IMessageToActionMapper>();
@@ -59,7 +55,9 @@ public sealed class TestClient : IDisposable
                 messageBody);
         });
 
-        this.logger.LogInformation("Test client created with server URL: {ServerUrl}", serverBaseAddress.AbsolutePath);
+        this.logger.LogInformation(
+            "Test client created with server URL: {ServerUrl}",
+            httpClient.BaseAddress.AbsolutePath);
     }
 
     public async Task ConnectAsync()

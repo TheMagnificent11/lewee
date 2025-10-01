@@ -27,5 +27,3 @@ public class MessageToActionMapper : IMessageToActionMapper
         };
     }
 }
-
-public record OrderCreatedAction(PizzaOrder Order, Guid CorrelationId) : IMessageReceivedAction;

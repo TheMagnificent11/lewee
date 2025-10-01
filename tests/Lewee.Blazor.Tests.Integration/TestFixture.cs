@@ -20,6 +20,7 @@ public sealed class TestFixture : IAsyncLifetime
     public static readonly ConcurrentDictionary<Guid, PizzaOrder> Orders = new();
     private readonly TestServer server;
     private readonly TestClient client;
+    private readonly HttpClient httpClient;
     private readonly FakeLogCollector serverLogCollector;
 
     public TestFixture()
@@ -49,9 +50,7 @@ public sealed class TestFixture : IAsyncLifetime
                         var order = new PizzaOrder
                         {
                             Id = Guid.NewGuid(),
-                            CustomerName = request.CustomerName,
-                            PizzaType = request.PizzaType,
-                            Quantity = request.Quantity,
+                            CustomerName = "Test User",
                             CreatedAt = DateTime.UtcNow
                         };
                         
@@ -72,7 +71,8 @@ public sealed class TestFixture : IAsyncLifetime
             });
 
         this.server = new TestServer(builder);
-        this.client = new TestClient(this.server.BaseAddress);
+        this.httpClient = this.server.CreateClient();
+        this.client = new TestClient(this.httpClient);
         this.serverLogCollector = this.server.Services.GetRequiredService<FakeLogCollector>();
     }
 
@@ -85,6 +85,7 @@ public sealed class TestFixture : IAsyncLifetime
     {
         await this.client.DisconnectAsync();
         this.client.Dispose();
+        this.httpClient.Dispose();
         this.server.Dispose();
     }
 
