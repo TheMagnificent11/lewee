@@ -16,18 +16,19 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
 // Configure Refit HTTP client for API using Aspire service discovery
+const string ApiClientName = "PizzeriaApi";
 builder.Services
     .AddRefitClient<IPizzeriaApiClient>()
     .ConfigureHttpClient(c => c.BaseAddress = new Uri($"https://{ServiceNames.PizzaStoreApi}"))
     .AddCorrelationIdDelegationHandler();
 
-// Configure Lewee.Blazor with proper SignalR URL using service discovery
-var apiBaseUri = new Uri($"https://{ServiceNames.PizzaStoreApi}");
+// Register the same HttpClient configuration for SignalR service discovery
+builder.Services
+    .AddHttpClient(ApiClientName, c => c.BaseAddress = new Uri($"https://{ServiceNames.PizzaStoreApi}"));
 
-Console.WriteLine($"Using API Base URL: {apiBaseUri}");
-
+// Configure Lewee.Blazor to use service discovery for SignalR connections
 builder.Services.AddLeweeBlazor<MessageToActionMapper>(
-    apiBaseUri,
+    ApiClientName,
     builder.Environment.IsDevelopment());
 
 builder.Services.AddMudServices();

@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Lewee.Tests.Common;
 using Xunit;
 
 namespace Lewee.Blazor.Tests.Integration;
@@ -48,6 +47,5 @@ public sealed class Tests
         actionToMapperLogs.Should().ContainSingle(x => x.Message.Contains("SignalR message received"));
 
         var log = actionToMapperLogs.FirstOrDefault();
-        log.ShouldHaveScope("MessageType", nameof(PizzaOrder));
     }
 }

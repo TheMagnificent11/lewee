@@ -1,4 +1,5 @@
 using Lewee.Blazor.Messaging;
+using Lewee.Blazor.Testing;
 using Lewee.Contracts;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,7 +24,7 @@ public sealed class TestClient : IDisposable
 
         services
             .AddFakeLogging()
-            .AddLeweeBlazor<MessageToActionMapper>(httpClient.BaseAddress, useReduxDevTools: false);
+            .AddLeweeBlazorForTesting<MessageToActionMapper>(httpClient);
 
         this.serviceProvider = services.BuildServiceProvider();
 
@@ -57,7 +58,7 @@ public sealed class TestClient : IDisposable
 
         this.logger.LogInformation(
             "Test client created with server URL: {ServerUrl}",
-            httpClient.BaseAddress.AbsolutePath);
+            httpClient.BaseAddress!.AbsolutePath);
     }
 
     public async Task ConnectAsync()
