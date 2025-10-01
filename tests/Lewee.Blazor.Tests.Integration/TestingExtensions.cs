@@ -1,7 +1,7 @@
 using Lewee.Blazor.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Lewee.Blazor.Testing;
+namespace Lewee.Blazor.Tests.Integration;
 
 /// <summary>
 /// Extensions for testing Lewee Blazor components

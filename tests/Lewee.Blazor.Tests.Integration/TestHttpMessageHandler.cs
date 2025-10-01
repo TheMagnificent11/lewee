@@ -1,4 +1,4 @@
-namespace Lewee.Blazor.Testing;
+namespace Lewee.Blazor.Tests.Integration;
 
 /// <summary>
 /// HTTP message handler wrapper for integration testing with TestServer
@@ -44,7 +44,7 @@ public sealed class TestHttpMessageHandler : HttpMessageHandler
         // Copy properties
         foreach (var property in request.Options)
         {
-            newRequest.Options.Set(new HttpRequestOptionsKey<object?>(property.Key), property.Value);
+            newRequest.Options.Set(new HttpRequestOptionsKey<object>(property.Key), property.Value);
         }
         
         // Forward the new request through the HttpClient which uses the TestServer's message handler
