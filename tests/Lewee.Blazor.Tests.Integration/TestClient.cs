@@ -1,5 +1,4 @@
 using Lewee.Blazor.Messaging;
-using Lewee.Blazor.Testing;
 using Lewee.Contracts;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
