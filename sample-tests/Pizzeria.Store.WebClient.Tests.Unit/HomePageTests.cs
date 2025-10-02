@@ -1,6 +1,9 @@
 ﻿using Bunit;
+using Correlate;
 using Fluxor;
+using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Moq;
 using MudBlazor.Services;
 using Pizzeria.Store.WebClient.Pages;
@@ -17,7 +20,12 @@ public class HomePageTests : TestContext
     {
         // Arrange
         var mockApiClient = new Mock<IPizzeriaApiClient>();
+        var mockCorrelationContextAccessor = new Mock<ICorrelationContextAccessor>();
+        var mockLogger = new Mock<ILogger<OrdersEffects>>();
+
         this.Services.AddSingleton(mockApiClient.Object);
+        this.Services.AddSingleton(mockCorrelationContextAccessor.Object);
+        this.Services.AddSingleton(mockLogger.Object);
         this.Services.AddMudServices();
         this.Services.AddFluxor(o => o.ScanAssemblies(typeof(OrdersState).Assembly));
 
@@ -34,7 +42,12 @@ public class HomePageTests : TestContext
     {
         // Arrange
         var mockApiClient = new Mock<IPizzeriaApiClient>();
+        var mockCorrelationContextAccessor = new Mock<ICorrelationContextAccessor>();
+        var mockLogger = new Mock<ILogger<OrdersEffects>>();
+
         this.Services.AddSingleton(mockApiClient.Object);
+        this.Services.AddSingleton(mockCorrelationContextAccessor.Object);
+        this.Services.AddSingleton(mockLogger.Object);
         this.Services.AddMudServices();
         this.Services.AddFluxor(o => o.ScanAssemblies(typeof(OrdersState).Assembly));
 
