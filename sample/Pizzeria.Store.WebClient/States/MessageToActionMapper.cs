@@ -11,7 +11,7 @@ public class MessageToActionMapper : IMessageToActionMapper
     {
         return message switch
         {
-            OrderStartedEventDto orderStarted => new StartOrderCompletedAction(orderStarted.OrderId, correlationId),
+            OrderDto order => new StartOrderCompletedAction(order, correlationId),
             _ => null
         };
     }

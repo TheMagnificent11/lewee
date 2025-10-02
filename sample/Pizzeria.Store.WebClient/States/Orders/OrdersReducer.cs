@@ -45,20 +45,17 @@ public static class OrdersReducer
     {
         return state with
         {
-            CurrentOrderId = action.OrderId,
+            CurrentOrderId = action.Order.Id,
             CorrelationId = action.CorrelationId
         };
     }
 
     [ReducerMethod]
-    public static OrdersState OnAddPizzaToOrderSuccess(OrdersState state, AddPizzaToOrderSuccessAction action)
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1313:Parameter '_' should begin with lower-case letter", Justification = "Underscore is the standard discard pattern for unused parameters")]
+    public static OrdersState OnAddPizzaToOrderSuccess(OrdersState state, AddPizzaToOrderSuccessAction _)
     {
-        var newQuantities = new Dictionary<Guid, int>(state.PizzaQuantities);
-        newQuantities[action.PizzaId] = newQuantities.GetValueOrDefault(action.PizzaId, 0) + 1;
-
         return state with
         {
-            PizzaQuantities = newQuantities,
             ErrorMessage = null
         };
     }

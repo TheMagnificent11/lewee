@@ -9,6 +9,7 @@ internal sealed class GetOrderQuerySpec : QuerySpecification<Order>
     public GetOrderQuerySpec(Guid orderId)
     {
         this.Query.Where(x => x.Id == orderId)
-            .Include(x => x.Pizzas);
+            .Include(x => x.Pizzas)
+            .ThenInclude(x => x.Pizza);
     }
 }

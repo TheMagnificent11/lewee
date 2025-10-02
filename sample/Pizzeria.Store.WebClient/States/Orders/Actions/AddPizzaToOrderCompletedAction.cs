@@ -3,9 +3,9 @@ using Pizzeria.Store.Contracts;
 
 namespace Pizzeria.Store.WebClient.States.Orders.Actions;
 
-public record StartOrderCompletedAction : IMessageReceivedAction
+public record AddPizzaToOrderCompletedAction : IMessageReceivedAction
 {
-    public StartOrderCompletedAction(OrderDto order, Guid correlationId)
+    public AddPizzaToOrderCompletedAction(OrderDto order, Guid correlationId)
     {
         this.Order = order;
         this.CorrelationId = correlationId;

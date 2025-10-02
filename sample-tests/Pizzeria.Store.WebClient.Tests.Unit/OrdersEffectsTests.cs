@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Pizzeria.Store.Contracts;
 using Pizzeria.Store.WebClient.Services;
 using Pizzeria.Store.WebClient.States.Orders;
 using Pizzeria.Store.WebClient.States.Orders.Actions;
@@ -38,7 +39,15 @@ public class OrdersEffectsTests : TestContext
 
         var orderId = Guid.NewGuid();
         var correlationId = Guid.NewGuid();
-        var action = new StartOrderCompletedAction(orderId, correlationId);
+        var order = new OrderDto
+        {
+            Id = orderId,
+            UserId = "test-user",
+            StartedDateTime = DateTime.UtcNow,
+            Pizzas = [],
+            TotalCost = 0
+        };
+        var action = new StartOrderCompletedAction(order, correlationId);
 
         // Act
         await effects.OnStartOrderCompletedAsync(action, mockDispatcher.Object);

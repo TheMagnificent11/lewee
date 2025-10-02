@@ -18,4 +18,6 @@ public sealed class StoreDbContext : ApplicationDbContext<StoreDbContext>
     public DbSet<Pizza> Pizzas { get; set; }
 
     public DbSet<Order> Orders { get; set; }
+
+    public DbSet<OrderQueryProjection> OrderQueryProjections { get; set; }
 }

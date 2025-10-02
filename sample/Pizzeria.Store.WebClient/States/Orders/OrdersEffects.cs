@@ -41,7 +41,7 @@ public class OrdersEffects : RequestEffects<OrdersState, StartOrderAction, Start
         try
         {
             await this.apiClient.AddPizzaToOrderAsync(action.OrderId, action.PizzaId);
-            dispatcher.Dispatch(new AddPizzaToOrderSuccessAction(action.PizzaId));
+            dispatcher.Dispatch(new AddPizzaToOrderSuccessAction());
         }
         catch (Exception ex)
         {

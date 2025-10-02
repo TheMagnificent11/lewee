@@ -7,17 +7,19 @@ namespace Pizzeria.Store.WebClient.Tests.Unit;
 public class MessageToActionMapperTests
 {
     [Fact]
-    public void Map_OrderStartedEventDto_ReturnsStartOrderCompletedAction()
+    public void Map_OrderDto_ReturnsStartOrderCompletedAction()
     {
         // Arrange
         var mapper = new MessageToActionMapper();
         var orderId = Guid.NewGuid();
         var correlationId = Guid.NewGuid();
-        var message = new OrderStartedEventDto
+        var message = new OrderDto
         {
-            OrderId = orderId,
+            Id = orderId,
             UserId = "test-user",
-            StartedDateTime = DateTime.UtcNow
+            StartedDateTime = DateTime.UtcNow,
+            Pizzas = [],
+            TotalCost = 0
         };
 
         // Act
@@ -27,7 +29,7 @@ public class MessageToActionMapperTests
         Assert.NotNull(action);
         Assert.IsType<StartOrderCompletedAction>(action);
         var completedAction = (StartOrderCompletedAction)action;
-        Assert.Equal(orderId, completedAction.OrderId);
+        Assert.Equal(orderId, completedAction.Order.Id);
         Assert.Equal(correlationId, completedAction.CorrelationId);
     }
 

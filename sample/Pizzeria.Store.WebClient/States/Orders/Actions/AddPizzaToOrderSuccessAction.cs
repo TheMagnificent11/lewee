@@ -1,3 +1,3 @@
 namespace Pizzeria.Store.WebClient.States.Orders.Actions;
 
-public record AddPizzaToOrderSuccessAction(Guid PizzaId);
+public record AddPizzaToOrderSuccessAction;
