@@ -1,0 +1,96 @@
+type: collection.insomnia.rest/5.0
+name: lewee-pizzeria-store-api
+meta:
+  id: wrk_e5b942932c5e45eeb1c6fbaff717f31f
+  created: 1746775035247
+  modified: 1747516328052
+collection:
+  - url: "{{ _.base_url }}/pizzas"
+    name: /pizzas
+    meta:
+      id: req_738e55d79c244ef1aaff636fa739945a
+      created: 1746775925798
+      modified: 1746775925798
+      isPrivate: false
+      sortKey: -1746775925798
+    method: GET
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/orders/{{ _.orderId }}/pizzas/{{ _.pizzaId }}"
+    name: /orders/{orderId}/pizzas/{pizzaId}
+    meta:
+      id: req_d37ed06ddf7b46da9d1c338e4e54ff9b
+      created: 1746775925809
+      modified: 1746775925809
+      isPrivate: false
+      sortKey: -1746775925809
+    method: PUT
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.base_url }}/orders"
+    name: /orders
+    meta:
+      id: req_3ec79528146541a897eb506d3aa455d1
+      created: 1746775925823
+      modified: 1746775925823
+      isPrivate: false
+      sortKey: -1746775925823
+    method: POST
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_9a8e190b2f5d5ca486105926807e9f64d2a9cd90
+    created: 1746775035255
+    modified: 1746775035255
+environments:
+  name: Base Environment
+  meta:
+    id: env_9a8e190b2f5d5ca486105926807e9f64d2a9cd90
+    created: 1746775035252
+    modified: 1746776098470
+    isPrivate: false
+  data:
+    base_url: https://localhost:7025
+    orderId: "{% prompt 'Order ID', '', '', '', false, true %}"
+    pizzaId: "{% prompt 'Pizza ID', '', '', '', false, true %}"
+  subEnvironments:
+    - name: OpenAPI env example.com
+      meta:
+        id: env_24caaa6fd4d648219baf5e0e7cda659d
+        created: 1746775088256
+        modified: 1746775088256
+        isPrivate: false
+        sortKey: 1746775088256
+      data:
+        scheme: http
+        host: example.com
+    - name: OpenAPI env example.com
+      meta:
+        id: env_32993358e7d54c3ea570fdd936c8addf
+        created: 1746775925792
+        modified: 1746775925792
+        isPrivate: false
+        sortKey: 1746775925792
+      data:
+        scheme: http
+        host: example.com

@@ -1,5 +1,5 @@
-﻿using MediatR;
-using Serilog;
+﻿using FreeMediator;
+using Microsoft.Extensions.Logging;
 
 namespace Lewee.Application.Mediation.Behaviors;
 
@@ -14,9 +14,9 @@ internal class PerformanceBehavior<TRequest, TResponse> : IPipelineBehavior<TReq
     /// <param name="logger">
     /// Logger
     /// </param>
-    public PerformanceBehavior(ILogger logger)
+    public PerformanceBehavior(ILogger<PerformanceBehavior<TRequest, TResponse>> logger)
     {
-        this.logger = logger.ForContext<PerformanceBehavior<TRequest, TResponse>>();
+        this.logger = logger;
     }
 
     /// <summary>
@@ -34,11 +34,11 @@ internal class PerformanceBehavior<TRequest, TResponse> : IPipelineBehavior<TReq
     /// <returns>
     /// Asynchronous task contain a <typeparamref name="TResponse"/>
     /// </returns>
-    public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         using (this.logger.BeginTimedOperation($"{typeof(TRequest).FullName} Handler"))
         {
-            return next();
+            return await next(cancellationToken);
         }
     }
 }

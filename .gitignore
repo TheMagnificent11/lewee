@@ -30,7 +30,8 @@ Obj/
 # Test Coverage
 /coverage
 /coverage-logs
-/coverage-Report
+/coverage-report
+/coverage-analysis
 
 # Docker Volumes
 /data

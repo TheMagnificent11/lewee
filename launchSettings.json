@@ -1,15 +1,13 @@
 {
   "profiles": {
-    "Docker Compose": {
-      "commandName": "DockerCompose",
-      "commandVersion": "1.0",
-      "composeLaunchAction": "LaunchBrowser",
-      "composeLaunchServiceName": "sample.restaurant.server",
-      "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}",
-      "serviceActions": {
-        "database": "StartWithoutDebugging",
-        "seq": "StartWithoutDebugging",
-        "sample.restaurant.server": "StartDebugging"
+    "Aspire AppHost": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "commandLineArgs": "--project sample/Pizzeria.AppHost/Pizzeria.AppHost.csproj",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DOTNET_ENVIRONMENT": "Development"
       }
     }
   }

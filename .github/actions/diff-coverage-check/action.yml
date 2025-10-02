@@ -1,0 +1,48 @@
+name: 'Diff Coverage Check'
+description: 'Check that code coverage on changed source files meets the specified threshold'
+inputs:
+  coverage-file:
+    description: 'Path to the Cobertura coverage XML file'
+    required: true
+    default: 'coverage/coverage.cobertura.xml'
+  threshold:
+    description: 'Minimum coverage percentage threshold (0-100)'
+    required: true
+    default: '90'
+  base-sha:
+    description: 'Base commit SHA to compare against'
+    required: true
+  head-sha:
+    description: 'Head commit SHA to compare'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - name: Check Diff Coverage
+      shell: bash
+      run: |
+        echo "🔍 Checking diff coverage for changed source files..."
+        
+        # Get list of changed .cs files in src/ directory
+        CHANGED_FILES=$(git diff --name-only ${{ inputs.base-sha }} ${{ inputs.head-sha }} | grep '\.cs$' | grep '^src/' || true)
+        
+        if [ -z "$CHANGED_FILES" ]; then
+          echo "✅ No source code files changed. Coverage check passed."
+          exit 0
+        fi
+        
+        echo "📋 Changed source files:"
+        echo "$CHANGED_FILES"
+        
+        # Check if coverage report exists
+        if [ ! -f "${{ inputs.coverage-file }}" ]; then
+          echo "❌ Coverage report not found at ${{ inputs.coverage-file }}."
+          echo "This might indicate that no tests were run or coverage collection failed."
+          exit 1
+        fi
+        
+        # Run the Python coverage analysis script
+        python3 ${{ github.action_path }}/diff-coverage-check.py \
+          --coverage-file "${{ inputs.coverage-file }}" \
+          --threshold "${{ inputs.threshold }}" \
+          --changed-files "$CHANGED_FILES"

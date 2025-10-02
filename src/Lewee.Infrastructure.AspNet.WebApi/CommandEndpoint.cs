@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Correlate;
 using FastEndpoints;
+using FreeMediator;
 using Lewee.Application.Mediation.Requests;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -102,7 +102,7 @@ public abstract class CommandEndpoint<TRequest> : Endpoint<TRequest, EmptyRespon
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>An asynchronous task</returns>
     /// <exception cref="NotSupportedException">Thrown when result status is not valid for this type of request</exception>
-    protected async Task ToResponse(CommandResult result, CancellationToken cancellationToken)
+    protected async Task ToResponseAsync(CommandResult result, CancellationToken cancellationToken)
     {
         switch (result.Status)
         {

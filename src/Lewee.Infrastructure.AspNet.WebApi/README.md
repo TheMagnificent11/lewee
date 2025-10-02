@@ -15,9 +15,4 @@ This package assists with configuring and developing for ASP.Net Web API project
 
 `services` in the code examples below are `Microsoft.Extensions.DependencyInjection.ServicesCollection`.
 
-### CORS Configuration
-
-```cs
-services.ConfigureCorsDefaultPolicy("https://allowed-orgin1.com;https://allowed-origin2.com");
-```
 

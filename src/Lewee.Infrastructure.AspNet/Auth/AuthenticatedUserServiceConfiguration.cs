@@ -13,7 +13,7 @@ public static class AuthenticatedUserServiceConfiguration
     /// </summary>
     /// <param name="services">Services collection</param>
     /// <returns>Services collection for chaining</returns>
-    public static IServiceCollection ConfigureAuthenticatedUserService(this IServiceCollection services)
+    public static IServiceCollection AddAuthenticatedUserService(this IServiceCollection services)
     {
         services.AddHttpContextAccessor();
         services.AddSingleton<IAuthenticatedUserService, AuthenticatedUserService>();

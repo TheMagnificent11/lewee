@@ -1,10 +1,9 @@
-﻿using Lewee.Application.Data;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 
 namespace Lewee.Infrastructure.Data;
 
-internal class DomainEventDispatcherService<TContext> : BackgroundService
+internal sealed class DomainEventDispatcherService<TContext> : BackgroundService
     where TContext : DbContext, IApplicationDbContext
 {
     public DomainEventDispatcherService(DomainEventDispatcher<TContext> domainEventDispatcher)
@@ -18,7 +17,7 @@ internal class DomainEventDispatcherService<TContext> : BackgroundService
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            await this.DomainEventDispatcher.DispatchEvents(stoppingToken);
+            await this.DomainEventDispatcher.DispatchEventsAsync(stoppingToken);
 
             await Task.Delay(2500, stoppingToken);
         }

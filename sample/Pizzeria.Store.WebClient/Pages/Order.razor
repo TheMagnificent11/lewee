@@ -1,0 +1,94 @@
+@page "/order"
+@inherits FluxorComponent
+
+<PageTitle>Order - Pizzeria Store</PageTitle>
+
+<MudText Typo="Typo.h4" GutterBottom="true">
+    Pizza Menu
+</MudText>
+
+@if (OrdersState.Value.CurrentOrderId == null)
+{
+    <MudAlert Severity="Severity.Warning" Class="mb-4">
+        <MudText>No active order found. <MudLink Href="/" Color="Color.Primary">Start a new order</MudLink></MudText>
+    </MudAlert>
+}
+else if (PizzasState.Value.IsLoading)
+{
+    <MudGrid>
+        @for (int i = 0; i < 6; i++)
+        {
+            <MudItem xs="12" sm="6" md="4">
+                <MudCard>
+                    <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="200px" />
+                    <MudCardContent>
+                        <MudSkeleton SkeletonType="SkeletonType.Text" />
+                        <MudSkeleton SkeletonType="SkeletonType.Text" Width="60%" />
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+        }
+    </MudGrid>
+}
+else if (PizzasState.Value.Pizzas.Length == 0)
+{
+    <MudAlert Severity="Severity.Info">
+        <MudText>No pizzas available at the moment.</MudText>
+    </MudAlert>
+}
+else
+{
+    <MudGrid>
+        @foreach (var pizza in PizzasState.Value.Pizzas)
+        {
+            var quantity = OrdersState.Value.PizzaQuantities.GetValueOrDefault(pizza.Id, 0);
+            
+            <MudItem xs="12" sm="6" md="4">
+                <MudCard>
+                    <MudCardContent>
+                        <MudText Typo="Typo.h6" GutterBottom="true">
+                            @pizza.Name
+                        </MudText>
+                        <MudText Typo="Typo.body2" Class="mb-2">
+                            @pizza.Description
+                        </MudText>
+                        <MudText Typo="Typo.h6" Color="Color.Primary">
+                            $@pizza.Price.ToString("F2")
+                        </MudText>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButtonGroup Variant="Variant.Outlined" Size="Size.Large" Class="flex-grow-1">
+                            <MudButton OnClick="() => RemovePizza(pizza.Id)" 
+                                       Disabled="quantity == 0"
+                                       StartIcon="Icons.Material.Filled.Remove">
+                            </MudButton>
+                            <MudButton Style="min-width: 80px;" Disabled="true">
+                                @quantity
+                            </MudButton>
+                            <MudButton OnClick="() => AddPizza(pizza.Id)" 
+                                       StartIcon="Icons.Material.Filled.Add">
+                            </MudButton>
+                        </MudButtonGroup>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+        }
+    </MudGrid>
+}
+
+@if (!string.IsNullOrEmpty(OrdersState.Value.ErrorMessage))
+{
+    <MudAlert Severity="Severity.Error" 
+              Class="mt-4" 
+              ShowCloseIcon="true" 
+              CloseIconClicked="ClearError">
+        @OrdersState.Value.ErrorMessage
+    </MudAlert>
+}
+
+@if (!string.IsNullOrEmpty(PizzasState.Value.ErrorMessage))
+{
+    <MudAlert Severity="Severity.Error" Class="mt-4">
+        @PizzasState.Value.ErrorMessage
+    </MudAlert>
+}

@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Sdk Name="Aspire.AppHost.Sdk" Version="9.5.0" />
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsAspireHost>true</IsAspireHost>
+    <UserSecretsId>8b64ec13-a446-472c-929b-b427e166aafd</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.AppHost" />
+    <PackageReference Include="Aspire.Hosting.PostgreSQL" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Pizzeria.Common\Pizzeria.Common.csproj" IsAspireProjectResource="false" />
+    <ProjectReference Include="..\Pizzeria.Store.Api\Pizzeria.Store.Api.csproj" />
+    <ProjectReference Include="..\Pizzeria.Store.WebClient\Pizzeria.Store.WebClient.csproj" />
+  </ItemGroup>
+
+</Project>

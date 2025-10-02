@@ -56,7 +56,7 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
     /// <param name="dispatcher">Dispatcher</param>
     /// <returns>Asynchronous task</returns>
     [EffectMethod]
-    public virtual async Task Request(TRequestAction action, IDispatcher dispatcher)
+    public virtual async Task RequestAsync(TRequestAction action, IDispatcher dispatcher)
     {
         this.correlationContextAccessor.CorrelationContext = new CorrelationContext
         {
@@ -67,7 +67,7 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
         {
             this.Logger.LogDebug("Executing query request...");
 
-            await this.ExecuteRequest(action, dispatcher);
+            await this.ExecuteRequestAsync(action, dispatcher);
         }
     }
 
@@ -78,7 +78,7 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
     /// <param name="dispatcher">Dispatcher</param>
     /// <returns>Asynchronous task</returns>
     [EffectMethod]
-    public virtual Task RequestSuccess(TRequestSuccessAction action, IDispatcher dispatcher)
+    public virtual Task RequestSuccessAsync(TRequestSuccessAction action, IDispatcher dispatcher)
     {
         using (this.Logger.BeginCorrelationIdScope(action.CorrelationId))
         {
@@ -94,7 +94,7 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
     /// <param name="dispatcher">Dispatcher</param>
     /// <returns>Asynchronous task</returns>
     [EffectMethod]
-    public virtual Task RequestError(TRequestErrorAction action, IDispatcher dispatcher)
+    public virtual Task RequestErrorAsync(TRequestErrorAction action, IDispatcher dispatcher)
     {
         using (this.Logger.BeginCorrelationIdScope(action.CorrelationId))
         {
@@ -111,5 +111,5 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
     /// <param name="action">Request action</param>
     /// <param name="dispatcher">Dispatcher</param>
     /// <returns>Asynchronous task</returns>
-    protected abstract Task ExecuteRequest(TRequestAction action, IDispatcher dispatcher);
+    protected abstract Task ExecuteRequestAsync(TRequestAction action, IDispatcher dispatcher);
 }

@@ -16,20 +16,20 @@ public class Repository<TAggregate, TContext> : RepositoryBase<TAggregate>, IRep
     /// <summary>
     /// Initializes a new instance of the <see cref="Repository{TAggregate, TContext}"/> class
     /// </summary>
-    /// <param name="dbContextFactory">Database context factory</param>
-    public Repository(IDbContextFactory<TContext> dbContextFactory)
-        : base(dbContextFactory.CreateDbContext())
+    /// <param name="context">Database context</param>
+    public Repository(TContext context)
+        : base(context)
     {
     }
 
     /// <inheritdoc />
-    public async Task<List<TAggregate>> All(CancellationToken cancellationToken = default)
+    public async Task<List<TAggregate>> AllAsync(CancellationToken cancellationToken = default)
     {
         return await this.ListAsync(cancellationToken);
     }
 
     /// <inheritdoc />
-    public async Task<List<TAggregate>> Query(
+    public async Task<List<TAggregate>> QueryAsync(
         QuerySpecification<TAggregate> querySpecification,
         CancellationToken cancellationToken = default)
     {
@@ -37,7 +37,7 @@ public class Repository<TAggregate, TContext> : RepositoryBase<TAggregate>, IRep
     }
 
     /// <inheritdoc />
-    public async Task<TAggregate?> QueryOne(
+    public async Task<TAggregate?> QueryOneAsync(
         QuerySpecification<TAggregate> querySpecification,
         CancellationToken cancellationToken = default)
     {
@@ -45,20 +45,13 @@ public class Repository<TAggregate, TContext> : RepositoryBase<TAggregate>, IRep
     }
 
     /// <inheritdoc />
-    public async Task<TAggregate?> RetrieveById(Guid id, CancellationToken cancellationToken = default)
+    public async Task<TAggregate?> RetrieveByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await this.GetByIdAsync(id, cancellationToken);
     }
 
-    /// <inheritdoc />
-    public void Add(TAggregate entity)
+    async Task IRepository<TAggregate>.AddAsync(TAggregate entity, CancellationToken cancellationToken)
     {
-        this.AddAsync(entity);
-    }
-
-    /// <inheritdoc />
-    public async Task<int> SaveChanges(CancellationToken cancellationToken = default)
-    {
-        return await this.SaveChangesAsync(cancellationToken);
+        await this.AddAsync(entity, cancellationToken);
     }
 }

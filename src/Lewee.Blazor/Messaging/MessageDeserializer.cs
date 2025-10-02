@@ -18,7 +18,7 @@ internal class MessageDeserializer
         this.logger = logger;
     }
 
-    public (object? messageBody, Guid? correlationId) Deserialize(ClientMessage clientMessage)
+    public (object? MessageBody, Guid? CorrelationId) Deserialize(ClientMessage clientMessage)
     {
         try
         {

@@ -4,9 +4,9 @@ This package assists with building the application layer of an application using
 
 ## Dependencies
 
-- [FluentValidation](https://github.com/jbogard/MediatR)
-- [Mediatr](https://github.com/jbogard/MediatR)
-- [Serilog](https://github.com/serilog)
+- [FluentValidation](https://docs.fluentvalidation.net/en/latest)
+- [FreeMediator](https://github.com/khellang/FreeMediator)
+- [Serilog](https://serilog.net)
 - [Lewee.Domain](../Lewee.Domain/README.md)
 - [Lewee.Contracts](../Lewee.Contracts/README.md)
 
@@ -19,17 +19,17 @@ services.AddApplication(typeof(ApplicationLayerClass).Assembly, typeof(DomainLay
 services.AddPipelineBehaviors();
 ```
 
-The assembly parameters of `AddApplication` are used to configure `Mediatr` (it will scan these assemblies for request and notification classes/handlers).  In addition to this, the application layer assembly will by used to configure `FluentValidation` (it will use this assembly to scan for validators).
+The assembly parameters of `AddApplication` are used to configure `FreeMediator` (it will scan these assemblies for request and notification classes/handlers).  In addition to this, the application layer assembly will by used to configure `FluentValidation` (it will use this assembly to scan for validators).
 
-`AddPipelineBehaviors` adds the `Mediatr` request pipelines behaviors listed in the [Pipeline Behaviors](#pipeline-behaviors) section.  This only needs to be added once per application/solution; not for once each project that uses this package.
+`AddPipelineBehaviors` adds the `FreeMediator` request pipelines behaviors listed in the [Pipeline Behaviors](#pipeline-behaviors) section.  This only needs to be added once per application/solution; not for once each project that uses this package.
 
 Additional behaviors can be added as parameters to `AddPipelineBehaviors`.
 
 ## Mediation
 
-`Mediatr` is used to assist with mediation, which allows the presentation layer of the application to have less dependencies e.g. API controller classes only need to inject the `IMediator` interface to handle web requests.
+`FreeMediator` is used to assist with mediation, which allows the presentation layer of the application to have less dependencies e.g. API controller classes only need to inject the `IMediator` interface to handle web requests.
 
-There a several interfaces that add a further layer of [command-query responsibility separation (CQRS)](https://learn.microsoft.com/en-us/azure/architecture/patterns/cqrs) on top of the `IRequest` interface in `Mediatr`.
+There a several interfaces that add a further layer of [command-query responsibility separation (CQRS)](https://learn.microsoft.com/en-us/azure/architecture/patterns/cqrs) on top of the `IRequest` interface in `FreeMediator`.
 
 - [IQuery](./Mediation/Requests/IQuery.cs)
 - [ICommand](./Mediation/Requests/ICommand.cs)
@@ -39,7 +39,7 @@ There a several interfaces that add a further layer of [command-query responsibi
 
 Both `IQuery` and `ICommand` implement [IApplicationRequest](./Mediation/Requests/IApplicationRequest.cs), which has a `CorrelationId` `Guid` property.
 
-As mentioned in the [Pipeline Behaviors](#pipeline-behaviors) section, the `CorrelationId` property is used in the `CorelationIdLoggingBehavior` to decorate the logs with the correlation ID for every `Mediatr` request that implements `IApplicationRequest`.
+As mentioned in the [Pipeline Behaviors](#pipeline-behaviors) section, the `CorrelationId` property is used in the `CorelationIdLoggingBehavior` to decorate the logs with the correlation ID for every `FreeMediator` request that implements `IApplicationRequest`.
 
 Query handlers that handle `IQuery` input types are required to have [QueryResult](./Mediation/Requests/QueryResult.cs) as the return type.  `QueryResult` has a type parameter that is used to specify the query data type.
 
@@ -56,15 +56,15 @@ Both `QueryResult` and `CommandResult` inherit from [Result](./Mediation/Request
 
 #### Sample Code
 
-[Query](../../sample/Sample.Restaurant.Application/GetTablesQuery.cs)
+[Query](../../sample/Pizzeria.Store.Application/Pizzas/GetPizzasQuery.cs)
 
-[Command](../../sample/Sample.Restaurant.Application/UseTableCommand.cs)
+[Command](../../sample/Pizzeria.Store.Application/Orders/StartOrderCommand.cs)
 
 ### ITenantRequest
 
 `ITenantedRequest` has a `TenantId` `Guid` property used to specify the tenant ID for multi-tenanted applications.
 
-As mentioned in the [Pipeline Behaviors](#pipeline-behaviors) section, the `TenantId` property is used in the `TenantLoggingBehavior` to decorate the logs with tenant ID for every `Mediatr` request that implements `ITenantedRequest`.
+As mentioned in the [Pipeline Behaviors](#pipeline-behaviors) section, the `TenantId` property is used in the `TenantLoggingBehavior` to decorate the logs with tenant ID for every `FreeMediator` request that implements `ITenantedRequest`.
 
 ### Pipeline Behaviors
 
@@ -85,8 +85,8 @@ As mentioned in the [Pipeline Behaviors](#pipeline-behaviors) section, the `Tena
 
 ### ClientEvent Notification
 
-The [ClientEvent](./Mediation/Notifications/ClientEvent.cs) can be published via `Mediatr.IMediator.Publish` to send a `SignalR` event to the a client application.
+The [ClientEvent](./Mediation/Notifications/ClientEvent.cs) can be published via `FreeMediator.IMediator.Publish` to send a `SignalR` event to the a client application.
 
 #### Sample
 
-[Client Event](../../sample/Sample.Restaurant.Application/TableDomainEventHandler.cs).
+*Note: The current Pizzeria sample application does not yet include ClientEvent examples. This functionality is available in the framework but not yet implemented in the sample application.*

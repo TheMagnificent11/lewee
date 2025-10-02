@@ -77,6 +77,6 @@ public class QueryResult<T> : Result
         return new QueryResult<T>(
             null,
             status,
-            errors.Select(x => new ValidationFailure(x.Key, x.Value.First())).ToList());
+            errors.Select(x => new ValidationFailure(x.Key, x.Value[0])).ToList());
     }
 }

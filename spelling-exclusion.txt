@@ -1,7 +1,16 @@
 Lewee
 
 Ardalis
+bigint
+consts
+deserializer
 Fluxor
+FreeMediator
 Gitflow
 Mediatr
-Serilog
+Postgre
+Postgres
+PostgreSQL
+respawner
+uuid
+xmin

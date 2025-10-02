@@ -25,7 +25,7 @@ public partial class ApiException : Exception
         : base(
             message + "\n\nStatus: "
                 + statusCode + "\nResponse: \n"
-                + (response == null ? "(null)" : response.Substring(0, response.Length >= 512 ? 512 : response.Length)),
+                + GetResponsePreview(response),
             innerException)
     {
         this.StatusCode = statusCode;
@@ -52,6 +52,17 @@ public partial class ApiException : Exception
     public override string ToString()
     {
         return string.Format("HTTP Response: \n\n{0}\n\n{1}", this.Response, base.ToString());
+    }
+
+    private static string GetResponsePreview(string response)
+    {
+        if (response == null)
+        {
+            return "(null)";
+        }
+
+        var maxLength = response.Length >= 512 ? 512 : response.Length;
+        return response.Substring(0, maxLength);
     }
 }
 

@@ -1,5 +1,4 @@
-﻿using Lewee.Application.Data;
-using Lewee.Domain;
+﻿using Lewee.Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace Lewee.Infrastructure.Data;
@@ -14,12 +13,12 @@ internal class QueryProjectionService<TContext> : IQueryProjectionService
         this.dbContextFactory = dbContextFactory;
     }
 
-    public async Task<T?> RetrieveByKey<T>(string key, CancellationToken cancellationToken)
+    public async Task<T?> RetrieveByKeyAsync<T>(string key, CancellationToken cancellationToken)
         where T : class, IQueryProjection
     {
         using (var context = this.dbContextFactory.CreateDbContext())
         {
-            var exisiting = await Retrieve<T>(key, context, cancellationToken);
+            var exisiting = await RetrieveAsync<T>(key, context, cancellationToken);
             if (exisiting == null)
             {
                 return null;
@@ -29,16 +28,16 @@ internal class QueryProjectionService<TContext> : IQueryProjectionService
         }
     }
 
-    public async Task AddOrUpdate<T>(T readModel, string key, CancellationToken cancellationToken)
+    public async Task AddOrUpdateAsync<T>(T queryProjection, string key, CancellationToken cancellationToken)
         where T : class, IQueryProjection
     {
         using (var context = this.dbContextFactory.CreateDbContext())
         {
-            var existing = await Retrieve<T>(key, context, cancellationToken);
+            var existing = await RetrieveAsync<T>(key, context, cancellationToken);
 
             if (existing == null)
             {
-                var newReference = new QueryProjectionReference(readModel, key);
+                var newReference = new QueryProjectionReference(queryProjection, key);
                 context.QueryProjectionReferences?.Add(newReference);
 
                 await context.SaveChangesAsync(cancellationToken);
@@ -46,13 +45,13 @@ internal class QueryProjectionService<TContext> : IQueryProjectionService
                 return;
             }
 
-            existing.UpdateJson(readModel);
+            existing.UpdateJson(queryProjection);
 
             await context.SaveChangesAsync(cancellationToken);
         }
     }
 
-    private static async Task<QueryProjectionReference?> Retrieve<T>(string key, TContext context, CancellationToken cancellationToken)
+    private static async Task<QueryProjectionReference?> RetrieveAsync<T>(string key, TContext context, CancellationToken cancellationToken)
         where T : class, IQueryProjection
     {
         var type = typeof(T);

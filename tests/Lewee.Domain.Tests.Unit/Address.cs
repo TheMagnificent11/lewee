@@ -17,6 +17,21 @@ public class Address : ValueObject<Address>
     public string State { get; }
     public string Postcode { get; }
 
+    public override bool Equals(object obj)
+    {
+        return obj is Address address && this.Equals(address);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(
+            this.StreetNumber,
+            this.StreetName,
+            this.Suburb,
+            this.State,
+            this.Postcode);
+    }
+
     protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return this.StreetNumber;

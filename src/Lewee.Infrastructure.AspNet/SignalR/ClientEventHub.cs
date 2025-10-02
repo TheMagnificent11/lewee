@@ -1,12 +1,14 @@
 ﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace Lewee.Infrastructure.AspNet.SignalR;
 
 /// <summary>
 /// Client Event Hub
 /// </summary>
+[AllowAnonymous]
 public class ClientEventHub : Hub
 {
     private readonly ILogger logger;
@@ -15,7 +17,7 @@ public class ClientEventHub : Hub
     /// Initializes a new instance of the <see cref="ClientEventHub"/> class
     /// </summary>
     /// <param name="logger">Logger</param>
-    public ClientEventHub(ILogger logger)
+    public ClientEventHub(ILogger<ClientEventHub> logger)
     {
         this.logger = logger;
     }
@@ -23,14 +25,18 @@ public class ClientEventHub : Hub
     /// <inheritdoc />
     public override async Task OnConnectedAsync()
     {
-        this.logger.Debug("Client connected");
+        this.logger.LogDebug("Client connected");
 
         var userId = this.Context.User?.FindFirstValue(ClaimTypes.NameIdentifier);
 
         if (!string.IsNullOrWhiteSpace(userId))
         {
             await this.Groups.AddToGroupAsync(this.Context.ConnectionId, userId);
-            this.logger.Debug("Client added to SignalR group");
+            this.logger.LogDebug("Client added to SignalR group for user {UserId}", userId);
+        }
+        else
+        {
+            this.logger.LogDebug("Anonymous client connected to SignalR hub");
         }
 
         await base.OnConnectedAsync();

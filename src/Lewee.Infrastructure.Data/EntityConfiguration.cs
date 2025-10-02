@@ -7,9 +7,7 @@ namespace Lewee.Infrastructure.Data;
 /// <summary>
 /// Entity Configuration
 /// </summary>
-/// <typeparam name="TEntity">
-/// Entity type to be configured
-/// </typeparam>
+/// <typeparam name="TEntity">Entity type</typeparam>
 public abstract class EntityConfiguration<TEntity> : IEntityTypeConfiguration<TEntity>
     where TEntity : Entity
 {
@@ -17,18 +15,7 @@ public abstract class EntityConfiguration<TEntity> : IEntityTypeConfiguration<TE
     public virtual void Configure(EntityTypeBuilder<TEntity> builder)
     {
         builder.HasKey(x => x.Id);
-
-        builder.Property(x => x.CreatedBy)
-            .IsRequired()
-            .HasMaxLength(255);
-
-        builder.Property(x => x.ModifiedBy)
-            .IsRequired()
-            .HasMaxLength(255);
-
-        builder.Property(x => x.Timestamp)
-            .IsRowVersion();
-
+        builder.AddAuditUserProperties();
         builder.HasQueryFilter(x => !x.IsDeleted);
 
         this.ConfigureEntity(builder);

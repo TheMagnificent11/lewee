@@ -2,7 +2,7 @@
 
   <ItemGroup>
     <PackageReference Include="Ardalis.Specification" />
-    <PackageReference Include="MediatR" />
+    <PackageReference Include="FreeMediator" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,10 +1,8 @@
 ﻿using System.Reflection;
 using FluentValidation;
+using FreeMediator;
 using Lewee.Application.Mediation.Behaviors;
-using MediatR;
-using MediatR.Pipeline;
 using Microsoft.Extensions.DependencyInjection;
-
 namespace Lewee.Application;
 
 /// <summary>
@@ -24,7 +22,7 @@ public static class ApplicationConfiguration
         Assembly applicationAssembly,
         Assembly domainAssembly)
     {
-        services.AddMediatR(config => config.RegisterServicesFromAssemblies(applicationAssembly, domainAssembly));
+        services.AddMediator(config => config.RegisterServicesFromAssemblies(applicationAssembly, domainAssembly));
         services.AddValidatorsFromAssembly(applicationAssembly, includeInternalTypes: true);
 
         return services;
@@ -40,7 +38,7 @@ public static class ApplicationConfiguration
         this IServiceCollection services,
         params Type[] additionalBehaviors)
     {
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
+        // services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CorrelationIdLoggingBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TenantLoggingBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehavior<,>));
@@ -49,7 +47,7 @@ public static class ApplicationConfiguration
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(DomainExceptionBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
-        if (additionalBehaviors != null && additionalBehaviors.Any())
+        if (additionalBehaviors != null && additionalBehaviors.Length > 0)
         {
             foreach (var item in additionalBehaviors)
             {
@@ -57,7 +55,7 @@ public static class ApplicationConfiguration
             }
         }
 
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPostProcessorBehavior<,>));
+        // services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPostProcessorBehavior<,>));
 
         return services;
     }

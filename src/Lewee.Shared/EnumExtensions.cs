@@ -25,7 +25,7 @@ public static class EnumExtensions
     }
 
     /// <summary>
-    /// Determines whether the enum value is equvialent to zero
+    /// Determines whether the enum value is equivalent to zero
     /// </summary>
     /// <typeparam name="TEnum">Enum type</typeparam>
     /// <param name="value">Enum value</param>
