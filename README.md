@@ -13,7 +13,6 @@ Below is summary of the dependencies used by Lewee. Note that this isn't a list 
 - [.NET 9](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
 - [.NET Aspire](https://learn.microsoft.com/en-us/dotnet/aspire/get-started/aspire-overview)
 - [PostgreSQL](https://www.postgresql.org/) with [Npgsql](https://www.npgsql.org/)
-- [Serilog](https://serilog.net)
 - [Entity Framework](https://learn.microsoft.com/en-us/ef)
 - [FreeMediator](https://github.com/khellang/FreeMediator)
 - [FastEndpoints](https://fast-endpoints.com)
