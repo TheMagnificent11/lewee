@@ -25,7 +25,7 @@ public class OrderPageTests : TestContext
         // Act & Assert
         // Since we don't have an active order, this should show a warning about no active order
         var component = RenderComponent<Order>();
-        Assert.Contains("No active order found", component.Markup);
+        Assert.Contains("No active order found", component.Markup, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -71,6 +71,6 @@ public class OrderPageTests : TestContext
         var component = RenderComponent<Order>();
 
         // Assert - basic component structure
-        Assert.Contains("Pizza Menu", component.Markup);
+        Assert.Contains("Pizza Menu", component.Markup, StringComparison.Ordinal);
     }
 }

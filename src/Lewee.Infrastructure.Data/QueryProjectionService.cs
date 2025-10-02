@@ -28,7 +28,7 @@ internal class QueryProjectionService<TContext> : IQueryProjectionService
         }
     }
 
-    public async Task AddOrUpdate<T>(T readModel, string key, CancellationToken cancellationToken)
+    public async Task AddOrUpdate<T>(T queryProjection, string key, CancellationToken cancellationToken)
         where T : class, IQueryProjection
     {
         using (var context = this.dbContextFactory.CreateDbContext())
@@ -37,7 +37,7 @@ internal class QueryProjectionService<TContext> : IQueryProjectionService
 
             if (existing == null)
             {
-                var newReference = new QueryProjectionReference(readModel, key);
+                var newReference = new QueryProjectionReference(queryProjection, key);
                 context.QueryProjectionReferences?.Add(newReference);
 
                 await context.SaveChangesAsync(cancellationToken);
@@ -45,7 +45,7 @@ internal class QueryProjectionService<TContext> : IQueryProjectionService
                 return;
             }
 
-            existing.UpdateJson(readModel);
+            existing.UpdateJson(queryProjection);
 
             await context.SaveChangesAsync(cancellationToken);
         }

@@ -25,12 +25,23 @@ public partial class ApiException : Exception
         : base(
             message + "\n\nStatus: "
                 + statusCode + "\nResponse: \n"
-                + (response == null ? "(null)" : response.Substring(0, response.Length >= 512 ? 512 : response.Length)),
+                + GetResponsePreview(response),
             innerException)
     {
         this.StatusCode = statusCode;
         this.Response = response ?? string.Empty;
         this.Headers = headers;
+    }
+
+    private static string GetResponsePreview(string response)
+    {
+        if (response == null)
+        {
+            return "(null)";
+        }
+
+        var maxLength = response.Length >= 512 ? 512 : response.Length;
+        return response.Substring(0, maxLength);
     }
 
     /// <summary>

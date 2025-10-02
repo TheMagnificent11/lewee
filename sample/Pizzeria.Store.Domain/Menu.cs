@@ -104,6 +104,6 @@ public static class Menu
 
     public static Pizza GetPizzaByName(string name)
     {
-        return Pizzas.Single(x => x.Name == name);
+        return Pizzas.Single(x => string.Equals(x.Name, name, StringComparison.Ordinal));
     }
 }

@@ -15,17 +15,17 @@ internal class TenantLoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TR
         this.logger = logger;
     }
 
-    public Task<TResponse> Handle(
+    public async Task<TResponse> Handle(
         TRequest request,
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
-        using (this.logger.BeginScope(new Dictionary<string, object>()
+        using (this.logger.BeginScope(new Dictionary<string, object>(StringComparer.Ordinal)
         {
             { LoggingConsts.TenantId, request.TenantId }
         }))
         {
-            return next(cancellationToken);
+            return await next(cancellationToken);
         }
     }
 }

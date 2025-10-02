@@ -34,11 +34,11 @@ internal class PerformanceBehavior<TRequest, TResponse> : IPipelineBehavior<TReq
     /// <returns>
     /// Asynchronous task contain a <typeparamref name="TResponse"/>
     /// </returns>
-    public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         using (this.logger.BeginTimedOperation($"{typeof(TRequest).FullName} Handler"))
         {
-            return next(cancellationToken);
+            return await next(cancellationToken);
         }
     }
 }

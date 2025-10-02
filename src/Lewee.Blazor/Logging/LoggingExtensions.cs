@@ -16,7 +16,7 @@ public static class LoggingExtensions
     /// <returns><see cref="IDisposable"/></returns>
     public static IDisposable? BeginCorrelationIdScope(this ILogger logger, Guid correlationId)
     {
-        var loggingProps = new Dictionary<string, object>
+        var loggingProps = new Dictionary<string, object>(StringComparer.Ordinal)
         {
             {
                 LoggingConsts.CorrelationId,
