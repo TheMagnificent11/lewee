@@ -1,0 +1,120 @@
+using System.Diagnostics.CodeAnalysis;
+using Bunit;
+using Correlate;
+using Fluxor;
+using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Moq;
+using Pizzeria.Store.WebClient.Services;
+using Pizzeria.Store.WebClient.States.Orders;
+using Pizzeria.Store.WebClient.States.Orders.Actions;
+
+[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Test helper class", Scope = "namespaceanddescendants", Target = "~N:Pizzeria.Store.WebClient.Tests.Unit")]
+[assembly: SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "Test helper class", Scope = "type", Target = "~T:Pizzeria.Store.WebClient.Tests.Unit.TestNavigationManager")]
+
+namespace Pizzeria.Store.WebClient.Tests.Unit;
+
+public class OrdersEffectsTests : TestContext
+{
+    [Fact]
+    public async Task OnStartOrderCompletedAsync_NavigatesToOrderPage()
+    {
+        // Arrange
+        var mockState = new Mock<IState<OrdersState>>();
+        mockState.Setup(s => s.Value).Returns(new OrdersState());
+
+        var mockCorrelationContextAccessor = new Mock<ICorrelationContextAccessor>();
+        var mockLogger = new Mock<ILogger<OrdersEffects>>();
+        var mockApiClient = new Mock<IPizzeriaApiClient>();
+        var mockDispatcher = new Mock<IDispatcher>();
+
+        var effects = new OrdersEffects(
+            mockState.Object,
+            mockCorrelationContextAccessor.Object,
+            mockLogger.Object,
+            mockApiClient.Object,
+            this.Services.GetRequiredService<NavigationManager>());
+
+        var orderId = Guid.NewGuid();
+        var correlationId = Guid.NewGuid();
+        var action = new StartOrderCompletedAction(orderId, correlationId);
+
+        // Act
+        await effects.OnStartOrderCompletedAsync(action, mockDispatcher.Object);
+
+        // Assert
+        var navMan = this.Services.GetRequiredService<NavigationManager>();
+        Assert.Contains("/order", navMan.Uri, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task ExecuteRequestAsync_Success_DispatchesSuccessAction()
+    {
+        // Arrange
+        var mockState = new Mock<IState<OrdersState>>();
+        mockState.Setup(s => s.Value).Returns(new OrdersState());
+
+        var mockCorrelationContextAccessor = new Mock<ICorrelationContextAccessor>();
+        var mockLogger = new Mock<ILogger<OrdersEffects>>();
+        var mockApiClient = new Mock<IPizzeriaApiClient>();
+        mockApiClient.Setup(c => c.StartOrderAsync(It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+
+        var mockDispatcher = new Mock<IDispatcher>();
+
+        var effects = new OrdersEffects(
+            mockState.Object,
+            mockCorrelationContextAccessor.Object,
+            mockLogger.Object,
+            mockApiClient.Object,
+            this.Services.GetRequiredService<NavigationManager>());
+
+        var correlationId = Guid.NewGuid();
+        var action = new StartOrderAction { CorrelationId = correlationId };
+
+        // Act
+        await effects.RequestAsync(action, mockDispatcher.Object);
+
+        // Assert
+        mockDispatcher.Verify(
+            d => d.Dispatch(It.Is<StartOrderSuccessAction>(a => a.CorrelationId == correlationId)),
+            Times.Once);
+    }
+
+    [Fact]
+    public async Task ExecuteRequestAsync_Failure_DispatchesFailureAction()
+    {
+        // Arrange
+        var mockState = new Mock<IState<OrdersState>>();
+        mockState.Setup(s => s.Value).Returns(new OrdersState());
+
+        var mockCorrelationContextAccessor = new Mock<ICorrelationContextAccessor>();
+        var mockLogger = new Mock<ILogger<OrdersEffects>>();
+        var mockApiClient = new Mock<IPizzeriaApiClient>();
+        mockApiClient.Setup(c => c.StartOrderAsync(It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new Exception("API error"));
+
+        var mockDispatcher = new Mock<IDispatcher>();
+
+        var effects = new OrdersEffects(
+            mockState.Object,
+            mockCorrelationContextAccessor.Object,
+            mockLogger.Object,
+            mockApiClient.Object,
+            this.Services.GetRequiredService<NavigationManager>());
+
+        var correlationId = Guid.NewGuid();
+        var action = new StartOrderAction { CorrelationId = correlationId };
+
+        // Act
+        await effects.RequestAsync(action, mockDispatcher.Object);
+
+        // Assert
+        mockDispatcher.Verify(
+            d => d.Dispatch(It.Is<StartOrderFailureAction>(a =>
+                a.CorrelationId == correlationId &&
+                a.ErrorMessage.Contains("API error", StringComparison.Ordinal))),
+            Times.Once);
+    }
+}
