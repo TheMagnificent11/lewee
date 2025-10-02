@@ -1,10 +1,10 @@
 using Lewee.Blazor.Fluxor;
+using Pizzeria.Store.Contracts;
 
 namespace Pizzeria.Store.WebClient.States.Orders;
 
 public record OrdersState : RequestState
 {
-    public Guid? CurrentOrderId { get; init; }
+    public OrderDto? CurrentOrder { get; init; }
     public bool IsStartingOrder { get; init; } = false;
-    public Dictionary<Guid, int> PizzaQuantities { get; init; } = new();
 }

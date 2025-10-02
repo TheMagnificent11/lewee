@@ -7,7 +7,7 @@
     Pizza Menu
 </MudText>
 
-@if (OrdersState.Value.CurrentOrderId == null)
+@if (OrdersState.Value.CurrentOrder == null)
 {
     <MudAlert Severity="Severity.Warning" Class="mb-4">
         <MudText>No active order found. <MudLink Href="/" Color="Color.Primary">Start a new order</MudLink></MudText>
@@ -41,7 +41,7 @@ else
     <MudGrid>
         @foreach (var pizza in PizzasState.Value.Pizzas)
         {
-            var quantity = OrdersState.Value.PizzaQuantities.GetValueOrDefault(pizza.Id, 0);
+            var quantity = OrdersState.Value.CurrentOrder?.Pizzas.FirstOrDefault(p => p.PizzaId == pizza.Id)?.Quantity ?? 0;
             
             <MudItem xs="12" sm="6" md="4">
                 <MudCard>

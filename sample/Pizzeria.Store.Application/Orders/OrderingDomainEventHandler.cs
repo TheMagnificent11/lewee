@@ -1,4 +1,3 @@
-using System.Text.Json;
 using FreeMediator;
 using Lewee.Application.Mediation.Notifications;
 using Lewee.Domain;
@@ -39,43 +38,26 @@ public class OrderingDomainEventHandler : INotificationHandler<OrderStartedEvent
 
         if (order is null)
         {
-            this.logger.LogWarning(
-                "Order {OrderId} not found when handling OrderStartedEvent",
+            this.logger.LogError(
+                "Order {OrderId} not found when handling OrderStartedEvent - this indicates a critical system error",
                 notification.OrderId);
-            return;
+            throw new InvalidOperationException($"Order {notification.OrderId} not found when handling OrderStartedEvent");
         }
 
         // Build the pizza DTOs with joined data
-        var pizzaDtos = order.Pizzas.Select(op => new OrderPizzaDto
-        {
-            Id = op.Id,
-            PizzaId = op.PizzaId,
-            PizzaName = op.Pizza.Name,
-            PizzaPrice = op.Pizza.Price,
-            Quantity = op.Quantity,
-            LineTotal = op.Pizza.Price * op.Quantity
-        }).ToArray();
+        var pizzaDtos = order.Pizzas
+            .Select(op => new OrderPizzaDto
+            {
+                Id = op.Id,
+                PizzaId = op.PizzaId,
+                PizzaName = op.Pizza.Name,
+                PizzaPrice = op.Pizza.Price,
+                Quantity = op.Quantity,
+                LineTotal = op.Pizza.Price * op.Quantity
+            })
+            .ToArray();
 
         var totalCost = pizzaDtos.Sum(p => p.LineTotal);
-
-        // Create or update the query projection
-        var queryProjection = new OrderQueryProjection
-        {
-            CorrelationId = notification.CorrelationId,
-            UserId = order.UserId,
-            StartedDateTime = order.StartedDateTime,
-            SubmittedDateTime = order.SubmittedDateTime,
-            PreparedDateTime = order.PreparedDateTime,
-            CompletedDateTime = order.CompletedDateTime,
-            DeliveryAddress = order.DeliveryAddress,
-            PizzasJson = JsonSerializer.Serialize(pizzaDtos),
-            TotalCost = totalCost
-        };
-
-        await this.queryProjectionService.AddOrUpdateAsync(
-            queryProjection,
-            order.Id.ToString(),
-            cancellationToken);
 
         // Create the DTO for SignalR
         var dto = new OrderDto
@@ -90,6 +72,18 @@ public class OrderingDomainEventHandler : INotificationHandler<OrderStartedEvent
             Pizzas = pizzaDtos,
             TotalCost = totalCost
         };
+
+        // Create or update the query projection
+        var queryProjection = new OrderQueryProjection
+        {
+            CorrelationId = notification.CorrelationId,
+            Order = dto
+        };
+
+        await this.queryProjectionService.AddOrUpdateAsync(
+            queryProjection,
+            order.Id.ToString(),
+            cancellationToken);
 
         var clientEvent = new ClientEvent(notification.CorrelationId, notification.UserId, dto);
 

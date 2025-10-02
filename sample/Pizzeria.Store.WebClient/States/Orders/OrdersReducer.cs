@@ -45,7 +45,7 @@ public static class OrdersReducer
     {
         return state with
         {
-            CurrentOrderId = action.Order.Id,
+            CurrentOrder = action.Order,
             CorrelationId = action.CorrelationId
         };
     }

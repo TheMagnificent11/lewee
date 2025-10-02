@@ -31,7 +31,7 @@ public class OrdersEffects : RequestEffects<OrdersState, StartOrderAction, Start
     [SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1202:'public' members should come before 'protected' members", Justification = "Fluxor EffectMethod must be public")]
     public Task OnStartOrderCompletedAsync(StartOrderCompletedAction _, IDispatcher __)
     {
-        this.navigationManager.NavigateTo("/order");
+        this.navigationManager.NavigateTo(Routes.Order);
         return Task.CompletedTask;
     }
 

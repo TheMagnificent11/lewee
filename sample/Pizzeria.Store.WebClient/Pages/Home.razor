@@ -7,7 +7,7 @@
     Welcome to Lewee Pizzeria
 </MudText>
 
-@if (OrdersState.Value.CurrentOrderId == null)
+@if (OrdersState.Value.CurrentOrder == null)
 {
     <MudGrid Justify="Justify.Center">
         <MudItem xs="12" sm="6" md="4">
@@ -48,7 +48,7 @@ else
     <MudAlert Severity="Severity.Success" Class="mb-4">
         <MudText Typo="Typo.body1">
             Order started successfully! 
-            <MudLink Href="/order" Color="Color.Primary">Continue to menu</MudLink>
+            <MudLink Href="@Routes.Order" Color="Color.Primary">Continue to menu</MudLink>
         </MudText>
     </MudAlert>
 }
