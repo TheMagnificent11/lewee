@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Fluxor;
 using Fluxor.Blazor.Web.Components;
 using Microsoft.AspNetCore.Components;
@@ -8,25 +9,29 @@ namespace Pizzeria.Store.WebClient.Pages;
 
 public partial class Home : FluxorComponent
 {
-    [Inject] private IState<OrdersState> OrdersState { get; set; } = null!;
-    [Inject] private IDispatcher Dispatcher { get; set; } = null!;
-    [Inject] private NavigationManager Navigation { get; set; } = null!;
+    [Inject]
+    private IState<OrdersState> OrdersState { get; set; } = null!;
+    [Inject]
+    private IDispatcher Dispatcher { get; set; } = null!;
+    [Inject]
+    private NavigationManager Navigation { get; set; } = null!;
 
     private void StartNewOrder()
     {
-        Dispatcher.Dispatch(new StartOrderAction());
+        this.Dispatcher.Dispatch(new StartOrderAction());
     }
 
     private void ClearError()
     {
-        Dispatcher.Dispatch(new ClearOrderErrorAction());
+        this.Dispatcher.Dispatch(new ClearOrderErrorAction());
     }
 
+    [SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1202:'protected' members should come before 'private' members", Justification = "Blazor component lifecycle methods are more readable when placed after component logic")]
     protected override void OnAfterRender(bool firstRender)
     {
-        if (firstRender && OrdersState.Value.CurrentOrderId != null)
+        if (firstRender && this.OrdersState.Value.CurrentOrderId != null)
         {
-            Navigation.NavigateTo("/order");
+            this.Navigation.NavigateTo("/order");
         }
     }
 }

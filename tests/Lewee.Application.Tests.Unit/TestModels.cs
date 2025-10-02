@@ -1,7 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
 using FluentValidation;
 using FreeMediator;
 using Lewee.Application.Mediation.Requests;
 using Lewee.Domain;
+
+[assembly: SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "Test models file contains multiple related test classes for testing purposes", Scope = "type", Target = "~T:Lewee.Application.Tests.Unit.TestCommand")]
 
 namespace Lewee.Application.Tests.Unit;
 
@@ -14,7 +17,7 @@ public record TestCommand(string Name, Guid CorrelationId) : ICommand
     {
         public Validator()
         {
-            RuleFor(x => x.Name).NotEmpty().WithMessage("Name is required");
+            this.RuleFor(x => x.Name).NotEmpty().WithMessage("Name is required");
         }
     }
 
@@ -27,6 +30,7 @@ public record TestCommand(string Name, Guid CorrelationId) : ICommand
     }
 }
 
+[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Test model classes are grouped together for easier test maintenance")]
 /// <summary>
 /// Test command that throws a domain exception
 /// </summary>
@@ -41,6 +45,7 @@ public record TestDomainExceptionCommand(Guid CorrelationId) : ICommand
     }
 }
 
+[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Test model classes are grouped together for easier test maintenance")]
 /// <summary>
 /// Test command that throws an unhandled exception
 /// </summary>
@@ -55,6 +60,7 @@ public record TestUnhandledExceptionCommand(Guid CorrelationId) : ICommand
     }
 }
 
+[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Test model classes are grouped together for easier test maintenance")]
 /// <summary>
 /// Test query for testing pipeline behaviors
 /// </summary>
@@ -70,11 +76,13 @@ public record TestQuery(Guid CorrelationId) : IQuery<TestData>
     }
 }
 
+[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Test model classes are grouped together for easier test maintenance")]
 /// <summary>
 /// Test data class for query responses
 /// </summary>
 public record TestData(string Value);
 
+[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Test model classes are grouped together for easier test maintenance")]
 /// <summary>
 /// Test tenant command for testing tenant-specific behaviors
 /// </summary>
@@ -89,6 +97,7 @@ public record TestTenantCommand(Guid TenantId, string Name, Guid CorrelationId) 
     }
 }
 
+[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Test model classes are grouped together for easier test maintenance")]
 /// <summary>
 /// Test command that returns a server error for testing failure logging
 /// </summary>
@@ -105,6 +114,7 @@ public record TestServerErrorCommand(Guid CorrelationId) : ICommand
     }
 }
 
+[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Test model classes are grouped together for easier test maintenance")]
 /// <summary>
 /// Test command that returns a bad request for testing failure logging
 /// </summary>

@@ -42,7 +42,7 @@ public static class PostgreSqlConfiguration
                     options.UseNpgsql(
                         connectionString,
                         x => x.MigrationsHistoryTable(HistoryRepository.DefaultTableName, schema));
-                }  
+                }
 
                 options.AddAuditInterceptor(authenticatedUserService);
                 options.AddDomainEventInterceptor<T>(authenticatedUserService);

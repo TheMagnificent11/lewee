@@ -18,7 +18,7 @@ public static class LogEntryExtensions
     {
         var scopeDict = logEntry.Scopes.Cast<IEnumerable<KeyValuePair<string, object>>>().FirstOrDefault();
         scopeDict.Should().NotBeNull();
-        
+
         var scope = scopeDict.FirstOrDefault(kvp => string.Equals(kvp.Key, scopeName, StringComparison.Ordinal));
         scope.Should().NotBeNull();
         scope.Value.ToString().Should().Be(scopeValue.ToString());

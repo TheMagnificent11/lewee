@@ -13,7 +13,7 @@ public static class ApplicationDbContextOptionsBuilderExtensions
     /// </summary>
     /// <param name="optionsBuilder">DB context options builder</param>
     /// <param name="authenticatedUserService">Authentication service interface</param>
-    /// <returns></returns>
+    /// <returns>The updated DB context options builder</returns>
     public static DbContextOptionsBuilder AddAuditInterceptor(
         this DbContextOptionsBuilder optionsBuilder,
         IAuthenticatedUserService authenticatedUserService)
@@ -29,7 +29,7 @@ public static class ApplicationDbContextOptionsBuilderExtensions
     /// <typeparam name="TContext">DB context type</typeparam>
     /// <param name="optionsBuilder">DB context options builder</param>
     /// <param name="authenticatedUserService">Authentication service interface</param>
-    /// <returns></returns>
+    /// <returns>The updated DB context options builder</returns>
     public static DbContextOptionsBuilder AddDomainEventInterceptor<TContext>(
         this DbContextOptionsBuilder optionsBuilder,
         IAuthenticatedUserService authenticatedUserService)

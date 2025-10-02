@@ -42,7 +42,8 @@ public interface IRepository<T>
     /// Adds an entity
     /// </summary>
     /// <param name="entity">Entity to add</param>
-    /// <param name="cancellationToken"></param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>A task representing the asynchronous operation</returns>
     Task AddAsync(T entity, CancellationToken cancellationToken = default);
 
     /// <summary>

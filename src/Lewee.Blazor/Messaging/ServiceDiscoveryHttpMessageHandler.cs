@@ -1,24 +1,24 @@
-namespace Lewee.Blazor.Tests.Integration;
+namespace Lewee.Blazor.Messaging;
 
 /// <summary>
-/// HTTP message handler wrapper for integration testing with TestServer
+/// HTTP message handler that uses service discovery through a named HttpClient
 /// </summary>
-public sealed class TestHttpMessageHandler : HttpMessageHandler
+internal sealed class ServiceDiscoveryHttpMessageHandler : HttpMessageHandler
 {
-    private readonly HttpClient httpClient;
+    private readonly IHttpClientFactory httpClientFactory;
+    private readonly string httpClientName;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="TestHttpMessageHandler"/> class
-    /// </summary>
-    /// <param name="httpClient">The HttpClient to wrap</param>
-    public TestHttpMessageHandler(HttpClient httpClient)
+    public ServiceDiscoveryHttpMessageHandler(IHttpClientFactory httpClientFactory, string httpClientName)
     {
-        this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+        this.httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
+        this.httpClientName = httpClientName ?? throw new ArgumentNullException(nameof(httpClientName));
     }
 
-    /// <inheritdoc />
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
+        // Create a new HttpClient instance for each request to ensure proper service discovery
+        using var httpClient = this.httpClientFactory.CreateClient(this.httpClientName);
+
         // Create a new request message to avoid "request already sent" errors
         using var newRequest = new HttpRequestMessage(request.Method, request.RequestUri);
 
@@ -44,17 +44,10 @@ public sealed class TestHttpMessageHandler : HttpMessageHandler
         // Copy properties
         foreach (var property in request.Options)
         {
-            newRequest.Options.Set(new HttpRequestOptionsKey<object>(property.Key), property.Value);
+            newRequest.Options.Set(new HttpRequestOptionsKey<object?>(property.Key), property.Value);
         }
 
-        // Forward the new request through the HttpClient which uses the TestServer's message handler
-        return await this.httpClient.SendAsync(newRequest, cancellationToken);
-    }
-
-    /// <inheritdoc />
-    protected override void Dispose(bool disposing)
-    {
-        // Don't dispose the HttpClient as it's managed externally
-        base.Dispose(disposing);
+        // Forward the request through the named HttpClient which uses service discovery
+        return await httpClient.SendAsync(newRequest, cancellationToken);
     }
 }

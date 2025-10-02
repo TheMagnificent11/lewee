@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Fluxor;
 using Pizzeria.Store.WebClient.Services;
 using Pizzeria.Store.WebClient.States.Orders.Actions;
@@ -14,12 +15,13 @@ public class OrdersEffects
     }
 
     [EffectMethod]
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1313:Parameter '_' should begin with lower-case letter", Justification = "Underscore is the standard discard pattern for unused parameters")]
     public async Task OnStartOrderAsync(StartOrderAction _, IDispatcher dispatcher)
     {
         try
         {
             await this.apiClient.StartOrderAsync();
-            
+
             // For demo purposes, generate a random order ID since the API doesn't return one
             var orderId = Guid.NewGuid();
             dispatcher.Dispatch(new StartOrderSuccessAction(orderId));

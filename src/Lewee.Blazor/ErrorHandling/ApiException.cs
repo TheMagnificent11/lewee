@@ -33,17 +33,6 @@ public partial class ApiException : Exception
         this.Headers = headers;
     }
 
-    private static string GetResponsePreview(string response)
-    {
-        if (response == null)
-        {
-            return "(null)";
-        }
-
-        var maxLength = response.Length >= 512 ? 512 : response.Length;
-        return response.Substring(0, maxLength);
-    }
-
     /// <summary>
     /// Gets the HTTP status code
     /// </summary>
@@ -63,6 +52,17 @@ public partial class ApiException : Exception
     public override string ToString()
     {
         return string.Format("HTTP Response: \n\n{0}\n\n{1}", this.Response, base.ToString());
+    }
+
+    private static string GetResponsePreview(string response)
+    {
+        if (response == null)
+        {
+            return "(null)";
+        }
+
+        var maxLength = response.Length >= 512 ? 512 : response.Length;
+        return response.Substring(0, maxLength);
     }
 }
 

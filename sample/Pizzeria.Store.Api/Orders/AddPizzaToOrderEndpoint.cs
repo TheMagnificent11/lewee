@@ -7,7 +7,7 @@ namespace Pizzeria.Store.Api.Orders;
 
 public sealed class AddPizzaToOrderEndpoint : CommandEndpoint<EmptyRequest>
 {
-    protected override string Route => Endpoints.StoreApi.AddPizzaToOrder; 
+    protected override string Route => Endpoints.StoreApi.AddPizzaToOrder;
 
     protected override CommandType CommandType => CommandType.Put;
 

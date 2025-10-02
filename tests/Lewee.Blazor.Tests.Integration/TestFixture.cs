@@ -53,18 +53,18 @@ public sealed class TestFixture : IAsyncLifetime
                             CustomerName = "Test User",
                             CreatedAt = DateTime.UtcNow
                         };
-                        
+
                         Orders.TryAdd(order.Id, order);
-                        
+
                         await mediator.Publish(new ClientEvent(Guid.NewGuid(), userId: null, order));
 
                         return Results.Ok();
                     });
-                    
+
                     endpoints.MapGet("/api/orders/{id}", (Guid id) =>
                     {
-                        return Orders.TryGetValue(id, out var order) 
-                            ? Results.Ok(order) 
+                        return Orders.TryGetValue(id, out var order)
+                            ? Results.Ok(order)
                             : Results.NotFound();
                     });
                 });

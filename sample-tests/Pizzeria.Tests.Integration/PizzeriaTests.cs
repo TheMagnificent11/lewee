@@ -9,7 +9,7 @@ namespace Pizzeria.Tests.Integration;
 
 public abstract class PizzeriaTests : IAsyncLifetime
 {
-    protected const string tableExistsSql = @"
+    protected const string TableExistsSql = @"
 SELECT EXISTS
 (
     SELECT 1
@@ -17,7 +17,9 @@ SELECT EXISTS
     WHERE table_schema NOT IN ('pg_catalog','information_schema')
 );";
 
+#pragma warning disable SA1401 // Field should be private - This field must be protected to be accessible by derived test classes
     protected readonly PizzeriaApplicationFactory factory;
+#pragma warning restore SA1401
 
     protected PizzeriaTests(PizzeriaApplicationFactory factory)
     {
@@ -47,25 +49,25 @@ SELECT EXISTS
         await respawner.ResetAsync(connection);
     }
 
-    private static async Task EnsureDatabaseMigratedAsync(string connectionString)
-    {
-        var optionsBuilder = new DbContextOptionsBuilder<StoreDbContext>();
-        optionsBuilder.UseNpgsql(connectionString);
-        
-        await using var dbContext = new StoreDbContext(optionsBuilder.Options);
-        
-        // Apply any pending migrations
-        await dbContext.Database.MigrateAsync();
-    }
-
     public Task DisposeAsync()
     {
         return Task.CompletedTask;
     }
 
+    private static async Task EnsureDatabaseMigratedAsync(string connectionString)
+    {
+        var optionsBuilder = new DbContextOptionsBuilder<StoreDbContext>();
+        optionsBuilder.UseNpgsql(connectionString);
+
+        await using var dbContext = new StoreDbContext(optionsBuilder.Options);
+
+        // Apply any pending migrations
+        await dbContext.Database.MigrateAsync();
+    }
+
     private static async Task<bool> TablesExistsAsync(NpgsqlConnection connection)
     {
-        await using var command = new NpgsqlCommand(tableExistsSql, connection);
+        await using var command = new NpgsqlCommand(TableExistsSql, connection);
 
         var anyTablesExist = (bool)(await command.ExecuteScalarAsync())!;
 

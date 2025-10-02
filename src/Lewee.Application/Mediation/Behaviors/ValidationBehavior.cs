@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
-using Lewee.Application.Mediation.Requests;
 using FreeMediator;
+using Lewee.Application.Mediation.Requests;
 
 namespace Lewee.Application.Mediation.Behaviors;
 

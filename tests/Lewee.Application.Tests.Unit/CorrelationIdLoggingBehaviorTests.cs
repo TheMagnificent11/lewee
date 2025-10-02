@@ -15,7 +15,7 @@ namespace Lewee.Application.Tests.Unit;
 public class CorrelationIdLoggingBehaviorTests
 {
     [Fact]
-    public async Task CorrelationIdLoggingBehavior_WithNormalExecution_ShouldCallNextAndLogCorrelationId()
+    public async Task CorrelationIdLoggingBehavior_WithNormalExecution_ShouldCallNextAndLogCorrelationIdAsync()
     {
         // Arrange
         var services = new ServiceCollection();
@@ -23,7 +23,7 @@ public class CorrelationIdLoggingBehaviorTests
         var serviceProvider = services.BuildServiceProvider();
         var logger = serviceProvider.GetRequiredService<ILogger<CorrelationIdLoggingBehavior<TestCommand, CommandResult>>>();
         var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
-        
+
         var behavior = new CorrelationIdLoggingBehavior<TestCommand, CommandResult>(logger);
         var correlationId = Guid.NewGuid();
         var command = new TestCommand("Test", correlationId);
@@ -44,16 +44,16 @@ public class CorrelationIdLoggingBehaviorTests
         result.Should().NotBeNull();
         result.IsSuccess.Should().BeTrue();
         nextCalled.Should().BeTrue();
-        
+
         // Should have one log message from within the scope
         fakeLogCollector.Count.Should().Be(1);
         var logEntry = fakeLogCollector.GetSnapshot().Single();
         logEntry.Level.Should().Be(LogLevel.Information);
         logEntry.Message.Should().Contain("Test log within correlation scope");
-        
+
         // Should have correlation ID added to logging scope
         logEntry.Scopes.Should().NotBeEmpty("because CorrelationIdLoggingBehavior should add correlation ID to logging scope");
-        
+
         // Assert that the correlation ID value is correctly set in the scope
         var scopeDict = logEntry.Scopes.Cast<IEnumerable<KeyValuePair<string, object>>>().FirstOrDefault();
         scopeDict.Should().NotBeNull();
@@ -63,7 +63,7 @@ public class CorrelationIdLoggingBehaviorTests
     }
 
     [Fact]
-    public async Task CorrelationIdLoggingBehavior_WithException_ShouldStillLogCorrelationIdAndRethrow()
+    public async Task CorrelationIdLoggingBehavior_WithException_ShouldStillLogCorrelationIdAndRethrowAsync()
     {
         // Arrange
         var services = new ServiceCollection();
@@ -71,7 +71,7 @@ public class CorrelationIdLoggingBehaviorTests
         var serviceProvider = services.BuildServiceProvider();
         var logger = serviceProvider.GetRequiredService<ILogger<CorrelationIdLoggingBehavior<TestCommand, CommandResult>>>();
         var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
-        
+
         var behavior = new CorrelationIdLoggingBehavior<TestCommand, CommandResult>(logger);
         var correlationId = Guid.NewGuid();
         var command = new TestCommand("Test", correlationId);
@@ -88,16 +88,16 @@ public class CorrelationIdLoggingBehaviorTests
         var act = () => behavior.Handle(command, NextAsync, CancellationToken.None);
         await act.Should().ThrowAsync<InvalidOperationException>()
             .WithMessage(exceptionMessage);
-            
+
         // Should have the log message from before the exception
         fakeLogCollector.Count.Should().Be(1);
         var logEntry = fakeLogCollector.GetSnapshot().Single();
         logEntry.Level.Should().Be(LogLevel.Information);
         logEntry.Message.Should().Contain("Test log before exception");
-        
+
         // Should have correlation ID added to logging scope even when exception occurs
         logEntry.Scopes.Should().NotBeEmpty("because CorrelationIdLoggingBehavior should add correlation ID to logging scope");
-        
+
         // Assert that the correlation ID value is correctly set in the scope
         var scopeDict = logEntry.Scopes.Cast<IEnumerable<KeyValuePair<string, object>>>().FirstOrDefault();
         scopeDict.Should().NotBeNull();
@@ -107,7 +107,7 @@ public class CorrelationIdLoggingBehaviorTests
     }
 
     [Fact]
-    public async Task CorrelationIdLoggingBehavior_WithFailedResult_ShouldCallNextAndLogCorrelationId()
+    public async Task CorrelationIdLoggingBehavior_WithFailedResult_ShouldCallNextAndLogCorrelationIdAsync()
     {
         // Arrange
         var services = new ServiceCollection();
@@ -115,7 +115,7 @@ public class CorrelationIdLoggingBehaviorTests
         var serviceProvider = services.BuildServiceProvider();
         var logger = serviceProvider.GetRequiredService<ILogger<CorrelationIdLoggingBehavior<TestCommand, CommandResult>>>();
         var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
-        
+
         var behavior = new CorrelationIdLoggingBehavior<TestCommand, CommandResult>(logger);
         var correlationId = Guid.NewGuid();
         var command = new TestCommand("Test", correlationId);
@@ -137,16 +137,16 @@ public class CorrelationIdLoggingBehaviorTests
         result.IsSuccess.Should().BeFalse();
         result.Status.Should().Be(ResultStatus.BadRequest);
         nextCalled.Should().BeTrue();
-        
+
         // Should have one log message from within the scope
         fakeLogCollector.Count.Should().Be(1);
         var logEntry = fakeLogCollector.GetSnapshot().Single();
         logEntry.Level.Should().Be(LogLevel.Warning);
         logEntry.Message.Should().Contain("Test warning log within scope");
-        
+
         // Should have correlation ID added to logging scope even with failed result
         logEntry.Scopes.Should().NotBeEmpty("because CorrelationIdLoggingBehavior should add correlation ID to logging scope");
-        
+
         // Assert that the correlation ID value is correctly set in the scope
         var scopeDict = logEntry.Scopes.Cast<IEnumerable<KeyValuePair<string, object>>>().FirstOrDefault();
         scopeDict.Should().NotBeNull();

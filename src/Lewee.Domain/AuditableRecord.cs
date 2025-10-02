@@ -10,7 +10,7 @@ public abstract class AuditableRecord
     /// </summary>
     protected AuditableRecord()
         : this(Guid.NewGuid())
-    { 
+    {
     }
 
     /// <summary>
