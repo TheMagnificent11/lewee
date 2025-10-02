@@ -26,7 +26,7 @@ public sealed class PizzaOrderingTests : PizzeriaTests
         // Assert
         response.EnsureSuccessStatusCode();
 
-        var order = await this.factory.GetLatestOrder();
+        var order = await this.factory.GetLatestOrderAsync();
         order.Should().NotBeNull();
     }
 
@@ -39,7 +39,7 @@ public sealed class PizzaOrderingTests : PizzeriaTests
         using var createOrderResponse = await httpClient.SendAsync(createOrderRequest);
 
         createOrderResponse.EnsureSuccessStatusCode();
-        var order = await this.factory.GetLatestOrder();
+        var order = await this.factory.GetLatestOrderAsync();
         order.Should().NotBeNull();
         using var addPizzaRequest = new HttpRequestMessage(
             HttpMethod.Put,
@@ -51,7 +51,7 @@ public sealed class PizzaOrderingTests : PizzeriaTests
         // Assert
         addPizzaResponse.EnsureSuccessStatusCode();
 
-        order = await this.factory.GetOrder(order.Id);
+        order = await this.factory.GetOrderAsync(order.Id);
         order.Should().NotBeNull();
         order.Pizzas.Should().NotBeNull();
         order.Pizzas.Should().ContainSingle();

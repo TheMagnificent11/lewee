@@ -59,7 +59,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         return client;
     }
 
-    public async Task<Order> GetLatestOrder()
+    public async Task<Order> GetLatestOrderAsync()
     {
         var order = await this.storeDbContext
             .Orders
@@ -69,7 +69,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         return order;
     }
 
-    public async Task<Order> GetOrder(Guid orderId)
+    public async Task<Order> GetOrderAsync(Guid orderId)
     {
         var order = await this.storeDbContext
             .Orders

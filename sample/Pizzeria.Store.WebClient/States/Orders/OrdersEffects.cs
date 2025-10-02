@@ -14,7 +14,7 @@ public class OrdersEffects
     }
 
     [EffectMethod]
-    public async Task OnStartOrder(StartOrderAction _, IDispatcher dispatcher)
+    public async Task OnStartOrderAsync(StartOrderAction _, IDispatcher dispatcher)
     {
         try
         {
@@ -31,7 +31,7 @@ public class OrdersEffects
     }
 
     [EffectMethod]
-    public async Task OnAddPizzaToOrder(AddPizzaToOrderAction action, IDispatcher dispatcher)
+    public async Task OnAddPizzaToOrderAsync(AddPizzaToOrderAction action, IDispatcher dispatcher)
     {
         try
         {

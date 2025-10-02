@@ -85,7 +85,7 @@ public sealed class TestClient : IDisposable
 
     public async Task<bool> CreatePizzaOrderAsync()
     {
-        return await this.httpClient.CreatePizzaOrder();
+        return await this.httpClient.CreatePizzaOrderAsync();
     }
 
     public IReadOnlyList<FakeLogRecord> GetLogs()

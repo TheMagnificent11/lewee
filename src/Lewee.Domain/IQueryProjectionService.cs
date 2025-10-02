@@ -12,7 +12,7 @@ public interface IQueryProjectionService
     /// <param name="key">Read modek key</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>The query projection if it exists, otherwise null</returns>
-    Task<T?> RetrieveByKey<T>(string key, CancellationToken cancellationToken)
+    Task<T?> RetrieveByKeyAsync<T>(string key, CancellationToken cancellationToken)
         where T : class, IQueryProjection;
 
     /// <summary>
@@ -23,6 +23,6 @@ public interface IQueryProjectionService
     /// <param name="key">Query projection key</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>An asynchronous task</returns>
-    Task AddOrUpdate<T>(T queryProjection, string key, CancellationToken cancellationToken)
+    Task AddOrUpdateAsync<T>(T queryProjection, string key, CancellationToken cancellationToken)
         where T : class, IQueryProjection;
 }

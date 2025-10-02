@@ -14,7 +14,7 @@ public class PizzasEffects
     }
 
     [EffectMethod]
-    public async Task OnLoadPizzas(LoadPizzasAction _, IDispatcher dispatcher)
+    public async Task OnLoadPizzasAsync(LoadPizzasAction _, IDispatcher dispatcher)
     {
         try
         {

@@ -193,9 +193,6 @@ dotnet_diagnostic.MA0047.severity = none
 dotnet_diagnostic.MA0051.severity = none
 dotnet_diagnostic.MA0006.severity = none
 
-# Microsoft.VisualStudio.Threading.Analyzers
-dotnet_diagnostic.VSTHRD200.severity = none
-
 # SonarAnalyzer.CSharp
 dotnet_diagnostic.S2094.severity = none
 dotnet_diagnostic.S3246.severity = none

@@ -23,6 +23,6 @@ public sealed class AddPizzaToOrderEndpoint : CommandEndpoint<EmptyRequest>
         var command = new AddPizzaToOrderCommand(orderId, pizzaId, this.CorrelationId);
         var result = await this.Mediator.Send(command, ct);
 
-        await this.ToResponse(result, ct);
+        await this.ToResponseAsync(result, ct);
     }
 }

@@ -80,7 +80,7 @@ public abstract class QueryEndpoint<T> : EndpointWithoutRequest<T>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>An asynchronous task</returns>
     /// <exception cref="NotSupportedException">Thrown when result status is not valid for this type of request</exception>
-    protected async Task ToResponse(QueryResult<T> result, CancellationToken cancellationToken)
+    protected async Task ToResponseAsync(QueryResult<T> result, CancellationToken cancellationToken)
     {
         switch (result.Status)
         {

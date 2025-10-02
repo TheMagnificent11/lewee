@@ -20,6 +20,6 @@ public sealed class StartOrderEndpoint : CommandEndpoint<EmptyRequest>
         var command = new StartOrderCommand(Guid.NewGuid().ToString(), this.CorrelationId);
         var result = await this.Mediator.Send(command, ct);
 
-        await this.ToResponse(result, ct);
+        await this.ToResponseAsync(result, ct);
     }
 }
