@@ -29,7 +29,7 @@ public class CorrelationIdLoggingBehaviorTests
         var command = new TestCommand("Test", correlationId);
         var nextCalled = false;
 
-        Task<CommandResult> next(CancellationToken ct = default)
+        Task<CommandResult> NextAsync(CancellationToken ct = default)
         {
             nextCalled = true;
             // Log something within the scope to test correlation ID scope
@@ -38,7 +38,7 @@ public class CorrelationIdLoggingBehaviorTests
         }
 
         // Act
-        var result = await behavior.Handle(command, next, CancellationToken.None);
+        var result = await behavior.Handle(command, NextAsync, CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();
@@ -77,7 +77,7 @@ public class CorrelationIdLoggingBehaviorTests
         var command = new TestCommand("Test", correlationId);
         var exceptionMessage = "Test exception";
 
-        Task<CommandResult> next(CancellationToken ct = default)
+        Task<CommandResult> NextAsync(CancellationToken ct = default)
         {
             // Log something before throwing to test correlation ID scope
             logger.LogInformation("Test log before exception");
@@ -85,7 +85,7 @@ public class CorrelationIdLoggingBehaviorTests
         }
 
         // Act & Assert
-        var act = () => behavior.Handle(command, next, CancellationToken.None);
+        var act = () => behavior.Handle(command, NextAsync, CancellationToken.None);
         await act.Should().ThrowAsync<InvalidOperationException>()
             .WithMessage(exceptionMessage);
             
@@ -121,7 +121,7 @@ public class CorrelationIdLoggingBehaviorTests
         var command = new TestCommand("Test", correlationId);
         var nextCalled = false;
 
-        Task<CommandResult> next(CancellationToken ct = default)
+        Task<CommandResult> NextAsync(CancellationToken ct = default)
         {
             nextCalled = true;
             // Log something within the scope to test correlation ID scope
@@ -130,7 +130,7 @@ public class CorrelationIdLoggingBehaviorTests
         }
 
         // Act
-        var result = await behavior.Handle(command, next, CancellationToken.None);
+        var result = await behavior.Handle(command, NextAsync, CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();

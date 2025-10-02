@@ -16,7 +16,7 @@ public sealed class TestHttpClient
         return response.IsSuccessStatusCode;
     }
 
-    public async Task<bool> CreatePizzaOrder()
+    public async Task<bool> CreatePizzaOrderAsync()
     {
         using var request = new HttpRequestMessage(HttpMethod.Post, "/api/orders");
         using var response = await this.httpClient.SendAsync(request);

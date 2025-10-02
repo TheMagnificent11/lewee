@@ -15,7 +15,7 @@ internal class CorrelationIdLoggingBehavior<TRequest, TResponse> : IPipelineBeha
         this.logger = logger;
     }
 
-    public Task<TResponse> Handle(
+    public async Task<TResponse> Handle(
         TRequest request,
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
@@ -24,12 +24,12 @@ internal class CorrelationIdLoggingBehavior<TRequest, TResponse> : IPipelineBeha
             ? applicationRequest.CorrelationId
             : Guid.NewGuid();
 
-        using (this.logger.BeginScope(new Dictionary<string, object>
+        using (this.logger.BeginScope(new Dictionary<string, object>(StringComparer.Ordinal)
         {
             { LoggingConsts.CorrelationId, correlationId }
         }))
         {
-            return next();
+            return await next();
         }
     }
 }

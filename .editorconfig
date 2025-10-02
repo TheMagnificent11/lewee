@@ -182,3 +182,30 @@ dotnet_diagnostic.IDE0090.severity = warning
 
 # IDE0290: Use primary constructor
 dotnet_diagnostic.IDE0290.severity = none
+
+# Meziantou.Analyzer
+dotnet_diagnostic.MA0004.severity = none
+dotnet_diagnostic.MA0016.severity = none
+dotnet_diagnostic.MA0026.severity = none
+dotnet_diagnostic.MA0048.severity = none
+dotnet_diagnostic.MA0158.severity = none
+dotnet_diagnostic.MA0047.severity = none
+dotnet_diagnostic.MA0051.severity = none
+dotnet_diagnostic.MA0006.severity = none
+
+# SonarAnalyzer.CSharp
+dotnet_diagnostic.S2094.severity = none
+dotnet_diagnostic.S3246.severity = none
+dotnet_diagnostic.S4035.severity = none
+dotnet_diagnostic.S1135.severity = none
+dotnet_diagnostic.S125.severity = none
+dotnet_diagnostic.S2326.severity = none
+dotnet_diagnostic.S4201.severity = none
+dotnet_diagnostic.S2344.severity = none
+dotnet_diagnostic.S3903.severity = none
+dotnet_diagnostic.S3881.severity = none
+dotnet_diagnostic.S2139.severity = none
+dotnet_diagnostic.S1144.severity = none
+dotnet_diagnostic.S3887.severity = none
+dotnet_diagnostic.S1185.severity = none
+dotnet_diagnostic.S1481.severity = none

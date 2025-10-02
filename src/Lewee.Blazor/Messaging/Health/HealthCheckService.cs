@@ -13,7 +13,7 @@ internal class HealthCheckService
         this.logger = logger;
     }
 
-    public async Task<bool> IsServerHealthy(CancellationToken cancellationToken = default)
+    public async Task<bool> IsServerHealthyAsync(CancellationToken cancellationToken = default)
     {
         this.logger.LogDebug("Checking server health {ServerBaseAddress}", this.httpClient.BaseAddress);
 

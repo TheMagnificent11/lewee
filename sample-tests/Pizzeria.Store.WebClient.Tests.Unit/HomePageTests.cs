@@ -25,8 +25,8 @@ public class HomePageTests : TestContext
         var component = RenderComponent<Home>();
 
         // Assert
-        Assert.Contains("Start New Order", component.Markup);
-        Assert.Contains("Ready to Order?", component.Markup);
+        Assert.Contains("Start New Order", component.Markup, StringComparison.Ordinal);
+        Assert.Contains("Ready to Order?", component.Markup, StringComparison.Ordinal);
     }
 
     [Fact]

@@ -47,7 +47,7 @@ SELECT EXISTS
         await respawner.ResetAsync(connection);
     }
 
-    private static async Task EnsureDatabaseMigrated(string connectionString)
+    private static async Task EnsureDatabaseMigratedAsync(string connectionString)
     {
         var optionsBuilder = new DbContextOptionsBuilder<StoreDbContext>();
         optionsBuilder.UseNpgsql(connectionString);

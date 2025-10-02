@@ -23,11 +23,18 @@ internal class UnhandledExceptionBehavior<TRequest, TResponse> : IPipelineBehavi
         {
             var requestName = typeof(TRequest).Name;
 
-            this.logger.LogError(
-                ex,
-                "Request: Unhandled Exception for Request {Name} {@Request}",
-                requestName,
-                request);
+            using (this.logger.BeginScope(new Dictionary<string, object>(StringComparer.Ordinal)
+            {
+                { "RequestName", requestName },
+                { "Request", request! }
+            }))
+            {
+                this.logger.LogError(
+                    ex,
+                    "Request: Unhandled Exception for Request {Name} {@Request}",
+                    requestName,
+                    request);
+            }
 
             // TODO: instead of re-throwing, return `Result`
             throw;

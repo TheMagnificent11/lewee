@@ -17,7 +17,7 @@ internal sealed class DomainEventDispatcherService<TContext> : BackgroundService
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            await this.DomainEventDispatcher.DispatchEvents(stoppingToken);
+            await this.DomainEventDispatcher.DispatchEventsAsync(stoppingToken);
 
             await Task.Delay(2500, stoppingToken);
         }

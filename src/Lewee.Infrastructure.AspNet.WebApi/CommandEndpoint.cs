@@ -102,7 +102,7 @@ public abstract class CommandEndpoint<TRequest> : Endpoint<TRequest, EmptyRespon
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>An asynchronous task</returns>
     /// <exception cref="NotSupportedException">Thrown when result status is not valid for this type of request</exception>
-    protected async Task ToResponse(CommandResult result, CancellationToken cancellationToken)
+    protected async Task ToResponseAsync(CommandResult result, CancellationToken cancellationToken)
     {
         switch (result.Status)
         {

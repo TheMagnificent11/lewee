@@ -18,6 +18,6 @@ public sealed class GetPizzasEndpoint : QueryEndpoint<PizzaDto[]>
         var query = new GetPizzasQuery(this.CorrelationId);
         var result = await this.Mediator.Send(query, ct);
 
-        await this.ToResponse(result, ct);
+        await this.ToResponseAsync(result, ct);
     }
 }

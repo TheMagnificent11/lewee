@@ -49,8 +49,7 @@ public abstract class Entity : AuditableRecord, ISoftDeleteEntity
     /// <inheritdoc />
     public override int GetHashCode()
     {
-        return (this.GetType().ToString() + this.Id.ToString())
-            .GetHashCode();
+        return StringComparer.Ordinal.GetHashCode(this.GetType().ToString() + this.Id.ToString());
     }
 
     /// <summary>

@@ -29,19 +29,19 @@ internal class DomainEventDispatcher<TContext>
         this.logger = logger;
     }
 
-    public async Task DispatchEvents(CancellationToken cancellationToken)
+    public async Task DispatchEventsAsync(CancellationToken cancellationToken)
     {
-        var eventsToDispatch = await this.ThereAreEventsToDispatch(cancellationToken);
+        var eventsToDispatch = await this.ThereAreEventsToDispatchAsync(cancellationToken);
 
         while (eventsToDispatch && !cancellationToken.IsCancellationRequested)
         {
-            await this.DispatchBatch(cancellationToken);
+            await this.DispatchBatchAsync(cancellationToken);
 
-            eventsToDispatch = await this.ThereAreEventsToDispatch(cancellationToken);
+            eventsToDispatch = await this.ThereAreEventsToDispatchAsync(cancellationToken);
         }
     }
 
-    private async Task<bool> ThereAreEventsToDispatch(CancellationToken token)
+    private async Task<bool> ThereAreEventsToDispatchAsync(CancellationToken token)
     {
         using (var scope = this.dbContextFactory.CreateDbContext())
         {
@@ -59,7 +59,7 @@ internal class DomainEventDispatcher<TContext>
         }
     }
 
-    private async Task DispatchBatch(CancellationToken token)
+    private async Task DispatchBatchAsync(CancellationToken token)
     {
         using (var scope = this.dbContextFactory.CreateDbContext())
         {

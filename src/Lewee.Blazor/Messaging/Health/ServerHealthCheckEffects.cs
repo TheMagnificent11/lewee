@@ -26,13 +26,13 @@ internal class ServerHealthCheckEffects
 
 #pragma warning disable IDE0060 // Remove unused parameter
     [EffectMethod]
-    public async Task CheckHealth(HealthCheckAction action, IDispatcher dispatcher)
+    public async Task CheckHealthAsync(HealthCheckAction action, IDispatcher dispatcher)
     {
         this.logger.LogDebug("Checking server health...");
 
         try
         {
-            var isHealthy = await this.healthCheckService.IsServerHealthy();
+            var isHealthy = await this.healthCheckService.IsServerHealthyAsync();
 
             if (isHealthy)
             {
@@ -50,7 +50,7 @@ internal class ServerHealthCheckEffects
     }
 
     [EffectMethod]
-    public async Task HealthSuccess(HealthCheckAction action, IDispatcher dispatcher)
+    public async Task HealthSuccessAsync(HealthCheckAction action, IDispatcher dispatcher)
     {
         this.logger.LogDebug("Checking server health...success");
 
@@ -58,7 +58,7 @@ internal class ServerHealthCheckEffects
     }
 
     [EffectMethod]
-    public async Task HealthFailed(HealthCheckFailedAction action, IDispatcher dispatcher)
+    public async Task HealthFailedAsync(HealthCheckFailedAction action, IDispatcher dispatcher)
     {
         this.logger.LogDebug("Checking server health...failed");
 
