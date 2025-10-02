@@ -49,20 +49,20 @@ SELECT EXISTS
         await respawner.ResetAsync(connection);
     }
 
+    public Task DisposeAsync()
+    {
+        return Task.CompletedTask;
+    }
+
     private static async Task EnsureDatabaseMigratedAsync(string connectionString)
     {
         var optionsBuilder = new DbContextOptionsBuilder<StoreDbContext>();
         optionsBuilder.UseNpgsql(connectionString);
-        
+
         await using var dbContext = new StoreDbContext(optionsBuilder.Options);
-        
+
         // Apply any pending migrations
         await dbContext.Database.MigrateAsync();
-    }
-
-    public Task DisposeAsync()
-    {
-        return Task.CompletedTask;
     }
 
     private static async Task<bool> TablesExistsAsync(NpgsqlConnection connection)

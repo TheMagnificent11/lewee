@@ -17,12 +17,12 @@ public class HomePageTests : TestContext
     {
         // Arrange
         var mockApiClient = new Mock<IPizzeriaApiClient>();
-        Services.AddSingleton(mockApiClient.Object);
-        Services.AddMudServices();
-        Services.AddFluxor(o => o.ScanAssemblies(typeof(OrdersState).Assembly));
+        this.Services.AddSingleton(mockApiClient.Object);
+        this.Services.AddMudServices();
+        this.Services.AddFluxor(o => o.ScanAssemblies(typeof(OrdersState).Assembly));
 
         // Act
-        var component = RenderComponent<Home>();
+        var component = this.RenderComponent<Home>();
 
         // Assert
         Assert.Contains("Start New Order", component.Markup, StringComparison.Ordinal);
@@ -34,11 +34,11 @@ public class HomePageTests : TestContext
     {
         // Arrange
         var mockApiClient = new Mock<IPizzeriaApiClient>();
-        Services.AddSingleton(mockApiClient.Object);
-        Services.AddMudServices();
-        Services.AddFluxor(o => o.ScanAssemblies(typeof(OrdersState).Assembly));
+        this.Services.AddSingleton(mockApiClient.Object);
+        this.Services.AddMudServices();
+        this.Services.AddFluxor(o => o.ScanAssemblies(typeof(OrdersState).Assembly));
 
-        var component = RenderComponent<Home>();
+        var component = this.RenderComponent<Home>();
 
         // Act
         var button = component.Find("button");

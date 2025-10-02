@@ -16,7 +16,7 @@ namespace Lewee.Application.Tests.Unit;
 public class TenantLoggingBehaviorTests
 {
     [Fact]
-    public async Task TenantLoggingBehavior_WithTenantedRequest_ShouldCallNextAndLogTenantId()
+    public async Task TenantLoggingBehavior_WithTenantedRequest_ShouldCallNextAndLogTenantIdAsync()
     {
         // Arrange
         var services = new ServiceCollection();
@@ -24,12 +24,12 @@ public class TenantLoggingBehaviorTests
         var serviceProvider = services.BuildServiceProvider();
         var logger = serviceProvider.GetRequiredService<ILogger<TenantLoggingBehavior<TestTenantCommand, CommandResult>>>();
         var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
-        
+
         var behavior = new TenantLoggingBehavior<TestTenantCommand, CommandResult>(logger);
         var tenantId = Guid.NewGuid();
         var command = new TestTenantCommand(tenantId, "Test", Guid.NewGuid());
         var nextCalled = false;
-        
+
         RequestHandlerDelegate<CommandResult> next = (ct) =>
         {
             nextCalled = true;
@@ -45,16 +45,16 @@ public class TenantLoggingBehaviorTests
         result.Should().NotBeNull();
         result.IsSuccess.Should().BeTrue();
         nextCalled.Should().BeTrue();
-        
+
         // Should have one log message from within the scope
         fakeLogCollector.Count.Should().Be(1);
         var logEntry = fakeLogCollector.GetSnapshot().Single();
         logEntry.Level.Should().Be(LogLevel.Information);
         logEntry.Message.Should().Contain("Test log within tenant scope");
-        
+
         // Should have tenant ID added to logging scope
         logEntry.Scopes.Should().NotBeEmpty("because TenantLoggingBehavior should add tenant ID to logging scope");
-        
+
         // Assert that the tenant ID value is correctly set in the scope
         var scopeDict = logEntry.Scopes.Cast<IEnumerable<KeyValuePair<string, object>>>().FirstOrDefault();
         scopeDict.Should().NotBeNull();
@@ -64,7 +64,7 @@ public class TenantLoggingBehaviorTests
     }
 
     [Fact]
-    public async Task TenantLoggingBehavior_WithException_ShouldStillLogTenantIdAndRethrow()
+    public async Task TenantLoggingBehavior_WithException_ShouldStillLogTenantIdAndRethrowAsync()
     {
         // Arrange
         var services = new ServiceCollection();
@@ -72,12 +72,12 @@ public class TenantLoggingBehaviorTests
         var serviceProvider = services.BuildServiceProvider();
         var logger = serviceProvider.GetRequiredService<ILogger<TenantLoggingBehavior<TestTenantCommand, CommandResult>>>();
         var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
-        
+
         var behavior = new TenantLoggingBehavior<TestTenantCommand, CommandResult>(logger);
         var tenantId = Guid.NewGuid();
         var command = new TestTenantCommand(tenantId, "Test", Guid.NewGuid());
         var exceptionMessage = "Test exception";
-        
+
         RequestHandlerDelegate<CommandResult> next = (ct) =>
         {
             // Log something before throwing to test tenant ID scope
@@ -89,16 +89,16 @@ public class TenantLoggingBehaviorTests
         var act = () => behavior.Handle(command, next, CancellationToken.None);
         await act.Should().ThrowAsync<InvalidOperationException>()
             .WithMessage(exceptionMessage);
-            
+
         // Should have the log message from before the exception
         fakeLogCollector.Count.Should().Be(1);
         var logEntry = fakeLogCollector.GetSnapshot().Single();
         logEntry.Level.Should().Be(LogLevel.Error);
         logEntry.Message.Should().Contain("Test error log before exception");
-        
+
         // Should have tenant ID added to logging scope even when exception occurs
         logEntry.Scopes.Should().NotBeEmpty("because TenantLoggingBehavior should add tenant ID to logging scope");
-        
+
         // Assert that the tenant ID value is correctly set in the scope
         var scopeDict = logEntry.Scopes.Cast<IEnumerable<KeyValuePair<string, object>>>().FirstOrDefault();
         scopeDict.Should().NotBeNull();
@@ -108,7 +108,7 @@ public class TenantLoggingBehaviorTests
     }
 
     [Fact]
-    public async Task TenantLoggingBehavior_WithFailedResult_ShouldCallNextAndLogTenantId()
+    public async Task TenantLoggingBehavior_WithFailedResult_ShouldCallNextAndLogTenantIdAsync()
     {
         // Arrange
         var services = new ServiceCollection();
@@ -116,12 +116,12 @@ public class TenantLoggingBehaviorTests
         var serviceProvider = services.BuildServiceProvider();
         var logger = serviceProvider.GetRequiredService<ILogger<TenantLoggingBehavior<TestTenantCommand, CommandResult>>>();
         var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
-        
+
         var behavior = new TenantLoggingBehavior<TestTenantCommand, CommandResult>(logger);
         var tenantId = Guid.NewGuid();
         var command = new TestTenantCommand(tenantId, "Test", Guid.NewGuid());
         var nextCalled = false;
-        
+
         RequestHandlerDelegate<CommandResult> next = (ct) =>
         {
             nextCalled = true;
@@ -138,16 +138,16 @@ public class TenantLoggingBehaviorTests
         result.IsSuccess.Should().BeFalse();
         result.Status.Should().Be(ResultStatus.BadRequest);
         nextCalled.Should().BeTrue();
-        
+
         // Should have one log message from within the scope
         fakeLogCollector.Count.Should().Be(1);
         var logEntry = fakeLogCollector.GetSnapshot().Single();
         logEntry.Level.Should().Be(LogLevel.Warning);
         logEntry.Message.Should().Contain("Test warning log within tenant scope");
-        
+
         // Should have tenant ID added to logging scope even with failed result
         logEntry.Scopes.Should().NotBeEmpty("because TenantLoggingBehavior should add tenant ID to logging scope");
-        
+
         // Assert that the tenant ID value is correctly set in the scope
         var scopeDict = logEntry.Scopes.Cast<IEnumerable<KeyValuePair<string, object>>>().FirstOrDefault();
         scopeDict.Should().NotBeNull();

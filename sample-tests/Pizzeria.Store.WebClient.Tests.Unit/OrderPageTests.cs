@@ -18,13 +18,13 @@ public class OrderPageTests : TestContext
     {
         // Arrange
         var mockApiClient = new Mock<IPizzeriaApiClient>();
-        Services.AddSingleton(mockApiClient.Object);
-        Services.AddMudServices();
-        Services.AddFluxor(o => o.ScanAssemblies(typeof(OrdersState).Assembly));
+        this.Services.AddSingleton(mockApiClient.Object);
+        this.Services.AddMudServices();
+        this.Services.AddFluxor(o => o.ScanAssemblies(typeof(OrdersState).Assembly));
 
         // Act & Assert
         // Since we don't have an active order, this should show a warning about no active order
-        var component = RenderComponent<Order>();
+        var component = this.RenderComponent<Order>();
         Assert.Contains("No active order found", component.Markup, StringComparison.Ordinal);
     }
 
@@ -33,19 +33,19 @@ public class OrderPageTests : TestContext
     {
         // Arrange
         var mockApiClient = new Mock<IPizzeriaApiClient>();
-        Services.AddSingleton(mockApiClient.Object);
-        Services.AddMudServices();
-        
+        this.Services.AddSingleton(mockApiClient.Object);
+        this.Services.AddMudServices();
+
         // Set up Fluxor with initial state that has an active order
-        Services.AddFluxor(o => 
+        this.Services.AddFluxor(o =>
         {
             o.ScanAssemblies(typeof(OrdersState).Assembly);
         });
 
         // This test would be more effective with proper state setup
         // For now, we'll test the basic structure
-        var component = RenderComponent<Order>();
-        
+        var component = this.RenderComponent<Order>();
+
         // Assert - the component should render without throwing
         Assert.NotNull(component);
     }
@@ -60,15 +60,15 @@ public class OrderPageTests : TestContext
             new PizzaDto(Guid.NewGuid(), "Margherita", "Classic tomato and mozzarella", 12.99m),
             new PizzaDto(Guid.NewGuid(), "Pepperoni", "Pepperoni and cheese", 14.99m)
         };
-        
+
         mockApiClient.Setup(x => x.GetPizzasAsync(It.IsAny<CancellationToken>())).ReturnsAsync(testPizzas);
-        
-        Services.AddSingleton(mockApiClient.Object);
-        Services.AddMudServices();
-        Services.AddFluxor(o => o.ScanAssemblies(typeof(OrdersState).Assembly));
+
+        this.Services.AddSingleton(mockApiClient.Object);
+        this.Services.AddMudServices();
+        this.Services.AddFluxor(o => o.ScanAssemblies(typeof(OrdersState).Assembly));
 
         // Act
-        var component = RenderComponent<Order>();
+        var component = this.RenderComponent<Order>();
 
         // Assert - basic component structure
         Assert.Contains("Pizza Menu", component.Markup, StringComparison.Ordinal);

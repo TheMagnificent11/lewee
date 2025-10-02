@@ -21,7 +21,7 @@ namespace Lewee.Application.Tests.Unit;
 public class PipelineBehaviorTests
 {
     [Fact]
-    public async Task ValidationBehavior_WithInvalidCommand_ShouldReturnBadRequest()
+    public async Task ValidationBehavior_WithInvalidCommand_ShouldReturnBadRequestAsync()
     {
         // Arrange
         using var testServer = CreateTestServer(endpoints =>
@@ -35,14 +35,14 @@ public class PipelineBehaviorTests
 
         using var client = testServer.CreateClient();
         var logCollector = testServer.Services.GetRequiredService<FakeLogCollector>();
-        var invalidCommand = new TestCommand("", Guid.NewGuid()); // Empty name should fail validation
+        var invalidCommand = new TestCommand(string.Empty, Guid.NewGuid()); // Empty name should fail validation
 
         // Act
         using var response = await client.PostAsJsonAsync("/test-command", invalidCommand);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        
+
         // Assert logs - ValidationBehavior should not log directly, but failure logging might occur
         var logs = logCollector.GetSnapshot();
         // The behavior validation happens and returns BadRequest without throwing exceptions
@@ -50,7 +50,7 @@ public class PipelineBehaviorTests
     }
 
     [Fact]
-    public async Task ValidationBehavior_WithValidCommand_ShouldReturnOk()
+    public async Task ValidationBehavior_WithValidCommand_ShouldReturnOkAsync()
     {
         // Arrange
         using var testServer = CreateTestServer(endpoints =>
@@ -71,7 +71,7 @@ public class PipelineBehaviorTests
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        
+
         // Assert logs - Should contain performance and correlation logging
         var logs = logCollector.GetSnapshot();
         logs.Should().Contain(log => log.Message.Contains("Beginning operation")); // Performance behavior
@@ -79,7 +79,7 @@ public class PipelineBehaviorTests
     }
 
     [Fact]
-    public async Task DomainExceptionBehavior_WithDomainException_ShouldReturnBadRequest()
+    public async Task DomainExceptionBehavior_WithDomainException_ShouldReturnBadRequestAsync()
     {
         // Arrange
         using var testServer = CreateTestServer(endpoints =>
@@ -100,15 +100,15 @@ public class PipelineBehaviorTests
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        
+
         // Assert logs - DomainExceptionBehavior should log Information level when catching domain exceptions
         var logs = logCollector.GetSnapshot();
-        logs.Should().Contain(log => log.Level == LogLevel.Information && 
+        logs.Should().Contain(log => log.Level == LogLevel.Information &&
                                     log.Message.Contains("Domain exception caught"));
     }
 
     [Fact]
-    public async Task PerformanceBehavior_ShouldLogTiming()
+    public async Task PerformanceBehavior_ShouldLogTimingAsync()
     {
         // Arrange
         using var testServer = CreateTestServer(endpoints =>
@@ -129,16 +129,16 @@ public class PipelineBehaviorTests
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        
+
         // Assert performance logs
         var logs = logCollector.GetSnapshot();
         logs.Should().Contain(log => log.Message.Contains("Beginning operation Lewee.Application.Tests.Unit.TestCommand Handler"));
-        logs.Should().Contain(log => log.Message.Contains("Completed operation Lewee.Application.Tests.Unit.TestCommand Handler") && 
+        logs.Should().Contain(log => log.Message.Contains("Completed operation Lewee.Application.Tests.Unit.TestCommand Handler") &&
                                     log.Message.Contains("ms"));
     }
 
     [Fact]
-    public async Task FailureLoggingBehavior_WithFailure_ShouldLogFailure()
+    public async Task FailureLoggingBehavior_WithFailure_ShouldLogFailureAsync()
     {
         // Arrange
         using var testServer = new TestServer(new WebHostBuilder()
@@ -173,7 +173,7 @@ public class PipelineBehaviorTests
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        
+
         // Assert failure logs - Should log Information level for BadRequest (< 500 status)
         var logs = logCollector.GetSnapshot();
         logs.Should().Contain(log => log.Level == LogLevel.Information &&
@@ -181,7 +181,7 @@ public class PipelineBehaviorTests
     }
 
     [Fact]
-    public async Task Query_ShouldReturnSuccessResult()
+    public async Task Query_ShouldReturnSuccessResultAsync()
     {
         // Arrange
         using var testServer = CreateTestServer(endpoints =>
@@ -202,11 +202,11 @@ public class PipelineBehaviorTests
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        
+
         // Verify response content
         var jsonContent = await response.Content.ReadAsStringAsync();
         jsonContent.Should().Contain("Test Data");
-        
+
         // Assert correlation and performance logs
         var logs = logCollector.GetSnapshot();
         logs.Should().Contain(log => log.Message.Contains("Beginning operation"));
@@ -219,13 +219,13 @@ public class PipelineBehaviorTests
         // Arrange
         var services = new ServiceCollection();
         services.AddFakeLogging();
-        
+
         var applicationAssembly = typeof(TestCommand).Assembly;
         var domainAssembly = typeof(Lewee.Domain.Entity).Assembly;
-        
+
         services.AddApplication(applicationAssembly, domainAssembly);
         services.AddPipelineBehaviors();
-        
+
         var serviceProvider = services.BuildServiceProvider();
 
         // Act & Assert
@@ -240,19 +240,19 @@ public class PipelineBehaviorTests
         // Arrange
         var services = new ServiceCollection();
         services.AddFakeLogging();
-        
+
         var applicationAssembly = typeof(TestCommand).Assembly;
         var domainAssembly = typeof(Lewee.Domain.Entity).Assembly;
-        
+
         services.AddApplication(applicationAssembly, domainAssembly);
         services.AddPipelineBehaviors();
-        
+
         var serviceProvider = services.BuildServiceProvider();
 
         // Act & Assert
         var behaviors = serviceProvider.GetServices<IPipelineBehavior<TestCommand, CommandResult>>();
         behaviors.Should().NotBeEmpty();
-        
+
         // Verify log collector is available for behavior tests
         var logCollector = serviceProvider.GetService<FakeLogCollector>();
         logCollector.Should().NotBeNull();
@@ -264,18 +264,18 @@ public class PipelineBehaviorTests
         // Arrange
         var services = new ServiceCollection();
         services.AddFakeLogging();
-        
+
         var applicationAssembly = typeof(TestCommand).Assembly;
         var domainAssembly = typeof(Lewee.Domain.Entity).Assembly;
-        
+
         services.AddApplication(applicationAssembly, domainAssembly);
-        
+
         var serviceProvider = services.BuildServiceProvider();
 
         // Act & Assert
         var handler = serviceProvider.GetService<IRequestHandler<TestQuery, QueryResult<TestData>>>();
         handler.Should().NotBeNull();
-        
+
         // Verify logging infrastructure is available
         var logCollector = serviceProvider.GetService<FakeLogCollector>();
         logCollector.Should().NotBeNull();

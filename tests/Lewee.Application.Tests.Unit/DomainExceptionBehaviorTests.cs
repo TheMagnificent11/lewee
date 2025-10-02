@@ -16,7 +16,7 @@ namespace Lewee.Application.Tests.Unit;
 public class DomainExceptionBehaviorTests
 {
     [Fact]
-    public async Task DomainExceptionBehavior_WithNormalExecution_ShouldCallNext()
+    public async Task DomainExceptionBehavior_WithNormalExecution_ShouldCallNextAsync()
     {
         // Arrange
         var services = new ServiceCollection();
@@ -24,11 +24,11 @@ public class DomainExceptionBehaviorTests
         var serviceProvider = services.BuildServiceProvider();
         var logger = serviceProvider.GetRequiredService<ILogger<DomainExceptionBehavior<TestCommand, CommandResult>>>();
         var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
-        
+
         var behavior = new DomainExceptionBehavior<TestCommand, CommandResult>(logger);
         var command = new TestCommand("Test", Guid.NewGuid());
         var nextCalled = false;
-        
+
         RequestHandlerDelegate<CommandResult> next = (ct) =>
         {
             nextCalled = true;
@@ -42,13 +42,13 @@ public class DomainExceptionBehaviorTests
         result.Should().NotBeNull();
         result.IsSuccess.Should().BeTrue();
         nextCalled.Should().BeTrue();
-        
+
         // Should not log anything for successful execution
         fakeLogCollector.Count.Should().Be(0);
     }
 
     [Fact]
-    public async Task DomainExceptionBehavior_WithDomainException_ShouldCatchAndReturnBadRequest()
+    public async Task DomainExceptionBehavior_WithDomainException_ShouldCatchAndReturnBadRequestAsync()
     {
         // Arrange
         var services = new ServiceCollection();
@@ -56,11 +56,11 @@ public class DomainExceptionBehaviorTests
         var serviceProvider = services.BuildServiceProvider();
         var logger = serviceProvider.GetRequiredService<ILogger<DomainExceptionBehavior<TestCommand, CommandResult>>>();
         var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
-        
+
         var behavior = new DomainExceptionBehavior<TestCommand, CommandResult>(logger);
         var command = new TestCommand("Test", Guid.NewGuid());
         var exceptionMessage = "Test domain exception";
-        
+
         RequestHandlerDelegate<CommandResult> next = (ct) =>
         {
             throw new DomainException(exceptionMessage);
@@ -75,7 +75,7 @@ public class DomainExceptionBehaviorTests
         result.Status.Should().Be(ResultStatus.BadRequest);
         result.Errors.Should().NotBeEmpty();
         result.Errors[0].ErrorMessage.Should().Be(exceptionMessage);
-        
+
         // Should log Information message when domain exception is caught
         fakeLogCollector.Count.Should().Be(1);
         var logEntry = fakeLogCollector.GetSnapshot().Single();
@@ -86,7 +86,7 @@ public class DomainExceptionBehaviorTests
     }
 
     [Fact]
-    public async Task DomainExceptionBehavior_WithNonDomainException_ShouldRethrow()
+    public async Task DomainExceptionBehavior_WithNonDomainException_ShouldRethrowAsync()
     {
         // Arrange
         var services = new ServiceCollection();
@@ -94,11 +94,11 @@ public class DomainExceptionBehaviorTests
         var serviceProvider = services.BuildServiceProvider();
         var logger = serviceProvider.GetRequiredService<ILogger<DomainExceptionBehavior<TestCommand, CommandResult>>>();
         var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
-        
+
         var behavior = new DomainExceptionBehavior<TestCommand, CommandResult>(logger);
         var command = new TestCommand("Test", Guid.NewGuid());
         var exceptionMessage = "Test regular exception";
-        
+
         RequestHandlerDelegate<CommandResult> next = (ct) =>
         {
             throw new InvalidOperationException(exceptionMessage);
@@ -108,7 +108,7 @@ public class DomainExceptionBehaviorTests
         var act = () => behavior.Handle(command, next, CancellationToken.None);
         await act.Should().ThrowAsync<InvalidOperationException>()
             .WithMessage(exceptionMessage);
-            
+
         // Should not log anything for non-domain exceptions (they pass through)
         fakeLogCollector.Count.Should().Be(0);
     }

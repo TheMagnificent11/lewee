@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using FluentValidation;
-using Lewee.Application.Mediation.Behaviors;
 using FreeMediator;
+using Lewee.Application.Mediation.Behaviors;
 using Microsoft.Extensions.DependencyInjection;
 namespace Lewee.Application;
 

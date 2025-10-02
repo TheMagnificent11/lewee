@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using FluentAssertions;
 using FluentValidation;
@@ -60,7 +61,7 @@ public class ApplicationConfigurationTests
 
         // Assert
         var behaviors = serviceProvider.GetServices<IPipelineBehavior<TestCommand, CommandResult>>().ToList();
-        
+
         behaviors.Should().Contain(b => b.GetType().Name.Contains("CorrelationIdLoggingBehavior"));
         behaviors.Should().Contain(b => b.GetType().Name.Contains("PerformanceBehavior"));
         behaviors.Should().Contain(b => b.GetType().Name.Contains("FailureLoggingBehavior"));
@@ -125,6 +126,7 @@ public class ApplicationConfigurationTests
 /// <summary>
 /// Test custom behavior for testing additional behaviors registration
 /// </summary>
+[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Test helper class grouped with test class for convenience")]
 public class TestCustomBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {

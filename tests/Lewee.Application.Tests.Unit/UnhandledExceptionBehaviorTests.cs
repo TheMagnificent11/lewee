@@ -15,7 +15,7 @@ namespace Lewee.Application.Tests.Unit;
 public class UnhandledExceptionBehaviorTests
 {
     [Fact]
-    public async Task UnhandledExceptionBehavior_WithNormalExecution_ShouldCallNext()
+    public async Task UnhandledExceptionBehavior_WithNormalExecution_ShouldCallNextAsync()
     {
         // Arrange
         var services = new ServiceCollection();
@@ -23,11 +23,11 @@ public class UnhandledExceptionBehaviorTests
         var serviceProvider = services.BuildServiceProvider();
         var logger = serviceProvider.GetRequiredService<ILogger<UnhandledExceptionBehavior<TestCommand, CommandResult>>>();
         var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
-        
+
         var behavior = new UnhandledExceptionBehavior<TestCommand, CommandResult>(logger);
         var command = new TestCommand("Test", Guid.NewGuid());
         var nextCalled = false;
-        
+
         RequestHandlerDelegate<CommandResult> next = (ct) =>
         {
             nextCalled = true;
@@ -41,13 +41,13 @@ public class UnhandledExceptionBehaviorTests
         result.Should().NotBeNull();
         result.IsSuccess.Should().BeTrue();
         nextCalled.Should().BeTrue();
-        
+
         // Should not log anything for successful execution
         fakeLogCollector.Count.Should().Be(0);
     }
 
     [Fact]
-    public async Task UnhandledExceptionBehavior_WithException_ShouldLogErrorAndRethrow()
+    public async Task UnhandledExceptionBehavior_WithException_ShouldLogErrorAndRethrowAsync()
     {
         // Arrange
         var services = new ServiceCollection();
@@ -55,11 +55,11 @@ public class UnhandledExceptionBehaviorTests
         var serviceProvider = services.BuildServiceProvider();
         var logger = serviceProvider.GetRequiredService<ILogger<UnhandledExceptionBehavior<TestCommand, CommandResult>>>();
         var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
-        
+
         var behavior = new UnhandledExceptionBehavior<TestCommand, CommandResult>(logger);
         var command = new TestCommand("Test", Guid.NewGuid());
         var exceptionMessage = "Test unhandled exception";
-        
+
         RequestHandlerDelegate<CommandResult> next = (ct) =>
         {
             throw new InvalidOperationException(exceptionMessage);
@@ -70,7 +70,7 @@ public class UnhandledExceptionBehaviorTests
         var act = () => behavior.Handle(command, next, CancellationToken.None);
         await act.Should().ThrowAsync<InvalidOperationException>()
             .WithMessage(exceptionMessage);
-            
+
         // Should log error message when exception occurs
         fakeLogCollector.Count.Should().Be(1);
         var logEntry = fakeLogCollector.GetSnapshot().Single();

@@ -94,7 +94,7 @@ public sealed class TestClient : IDisposable
     }
 
     public void Dispose()
-    {        
+    {
         this.serviceProvider?.Dispose();
     }
 }

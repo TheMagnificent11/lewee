@@ -100,7 +100,7 @@ public static class DatabaseConfiguration
                 }
 
                 var delayTimeSpan = CalculateExponentialBackoffDelay(attempt);
-                
+
                 await Task.Delay(delayTimeSpan, cancellationTokenSource.Token);
             }
 

@@ -52,6 +52,6 @@ public class Repository<TAggregate, TContext> : RepositoryBase<TAggregate>, IRep
 
     async Task IRepository<TAggregate>.AddAsync(TAggregate entity, CancellationToken cancellationToken)
     {
-        await base.AddAsync(entity, cancellationToken);
+        await this.AddAsync(entity, cancellationToken);
     }
 }

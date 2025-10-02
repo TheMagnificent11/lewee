@@ -15,7 +15,7 @@ namespace Lewee.Application.Tests.Unit;
 public class FailureLoggingBehaviorTests
 {
     [Fact]
-    public async Task FailureLoggingBehavior_WithSuccessfulExecution_ShouldCallNextAndNotLog()
+    public async Task FailureLoggingBehavior_WithSuccessfulExecution_ShouldCallNextAndNotLogAsync()
     {
         // Arrange
         var services = new ServiceCollection();
@@ -23,11 +23,11 @@ public class FailureLoggingBehaviorTests
         var serviceProvider = services.BuildServiceProvider();
         var logger = serviceProvider.GetRequiredService<ILogger<FailureLoggingBehavior<TestCommand, CommandResult>>>();
         var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
-        
+
         var behavior = new FailureLoggingBehavior<TestCommand, CommandResult>(logger);
         var command = new TestCommand("Test", Guid.NewGuid());
         var nextCalled = false;
-        
+
         RequestHandlerDelegate<CommandResult> next = (ct) =>
         {
             nextCalled = true;
@@ -41,13 +41,13 @@ public class FailureLoggingBehaviorTests
         result.Should().NotBeNull();
         result.IsSuccess.Should().BeTrue();
         nextCalled.Should().BeTrue();
-        
+
         // Should not log anything for successful execution
         fakeLogCollector.Count.Should().Be(0);
     }
 
-    [Fact]  
-    public async Task FailureLoggingBehavior_WithFailedResult_ShouldCallNextAndLogFailure()
+    [Fact]
+    public async Task FailureLoggingBehavior_WithFailedResult_ShouldCallNextAndLogFailureAsync()
     {
         // Arrange
         var services = new ServiceCollection();
@@ -55,11 +55,11 @@ public class FailureLoggingBehaviorTests
         var serviceProvider = services.BuildServiceProvider();
         var logger = serviceProvider.GetRequiredService<ILogger<FailureLoggingBehavior<TestCommand, CommandResult>>>();
         var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
-        
+
         var behavior = new FailureLoggingBehavior<TestCommand, CommandResult>(logger);
         var command = new TestCommand("Test", Guid.NewGuid());
         var nextCalled = false;
-        
+
         RequestHandlerDelegate<CommandResult> next = (ct) =>
         {
             nextCalled = true;
@@ -74,7 +74,7 @@ public class FailureLoggingBehaviorTests
         result.IsSuccess.Should().BeFalse();
         result.Status.Should().Be(ResultStatus.BadRequest);
         nextCalled.Should().BeTrue();
-        
+
         // Should log Information for BadRequest (status < 500)
         fakeLogCollector.Count.Should().Be(1);
         var logEntry = fakeLogCollector.GetSnapshot().Single();
@@ -83,7 +83,7 @@ public class FailureLoggingBehaviorTests
     }
 
     [Fact]
-    public async Task FailureLoggingBehavior_WithException_ShouldRethrow()
+    public async Task FailureLoggingBehavior_WithException_ShouldRethrowAsync()
     {
         // Arrange
         var services = new ServiceCollection();
@@ -91,11 +91,11 @@ public class FailureLoggingBehaviorTests
         var serviceProvider = services.BuildServiceProvider();
         var logger = serviceProvider.GetRequiredService<ILogger<FailureLoggingBehavior<TestCommand, CommandResult>>>();
         var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
-        
+
         var behavior = new FailureLoggingBehavior<TestCommand, CommandResult>(logger);
         var command = new TestCommand("Test", Guid.NewGuid());
         var exceptionMessage = "Test exception";
-        
+
         RequestHandlerDelegate<CommandResult> next = (ct) =>
         {
             throw new InvalidOperationException(exceptionMessage);
@@ -105,13 +105,13 @@ public class FailureLoggingBehaviorTests
         var act = () => behavior.Handle(command, next, CancellationToken.None);
         await act.Should().ThrowAsync<InvalidOperationException>()
             .WithMessage(exceptionMessage);
-            
+
         // Should not log anything when exception is thrown (exception handling is done by UnhandledExceptionBehavior)
         fakeLogCollector.Count.Should().Be(0);
     }
 
     [Fact]
-    public async Task FailureLoggingBehavior_WithServerErrorResult_ShouldLogAsError()
+    public async Task FailureLoggingBehavior_WithServerErrorResult_ShouldLogAsErrorAsync()
     {
         // Arrange
         var services = new ServiceCollection();
@@ -119,11 +119,11 @@ public class FailureLoggingBehaviorTests
         var serviceProvider = services.BuildServiceProvider();
         var logger = serviceProvider.GetRequiredService<ILogger<FailureLoggingBehavior<TestCommand, CommandResult>>>();
         var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
-        
+
         var behavior = new FailureLoggingBehavior<TestCommand, CommandResult>(logger);
         var command = new TestCommand("Test", Guid.NewGuid());
         var nextCalled = false;
-        
+
         RequestHandlerDelegate<CommandResult> next = (ct) =>
         {
             nextCalled = true;
@@ -139,7 +139,7 @@ public class FailureLoggingBehaviorTests
         result.Should().NotBeNull();
         result.IsSuccess.Should().BeFalse();
         nextCalled.Should().BeTrue();
-        
+
         // Should log Error for status >= 500
         fakeLogCollector.Count.Should().Be(1);
         var logEntry = fakeLogCollector.GetSnapshot().Single();

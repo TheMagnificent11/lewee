@@ -19,7 +19,7 @@ public class MessageToActionMapper : IMessageToActionMapper
             "SignalR message received: {MessageType}, CorrelationId: {CorrelationId}",
             message.GetType().Name,
             correlationId);
-        
+
         return message switch
         {
             PizzaOrder order => new OrderCreatedAction(order, correlationId),

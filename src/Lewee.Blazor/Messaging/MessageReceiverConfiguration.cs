@@ -80,14 +80,14 @@ public static class MessageReceiverConfiguration
         {
             var httpClientFactory = serviceProvider.GetRequiredService<IHttpClientFactory>();
             var httpClient = httpClientFactory.CreateClient(httpClientName);
-            
+
             if (httpClient.BaseAddress == null)
             {
                 throw new InvalidOperationException($"HttpClient '{httpClientName}' must have a BaseAddress configured for service discovery");
             }
 
             var hubUri = httpClient.BaseAddress.AppendPathSegment("events");
-            
+
             return new HubConnectionBuilder()
                 .WithUrl(hubUri.ToString(), options =>
                 {

@@ -15,20 +15,20 @@ namespace Lewee.Application.Tests.Unit;
 public class ValidationBehaviorTests
 {
     [Fact]
-    public async Task ValidationBehavior_WithValidCommand_ShouldCallNext()
+    public async Task ValidationBehavior_WithValidCommand_ShouldCallNextAsync()
     {
         // Arrange
         var services = new ServiceCollection();
         services.AddLogging();
         services.AddTransient<IValidator<TestCommand>, TestCommand.Validator>();
-        
+
         var serviceProvider = services.BuildServiceProvider();
         var validators = serviceProvider.GetServices<IValidator<TestCommand>>();
-        
+
         var behavior = new ValidationBehavior<TestCommand, CommandResult>(validators);
         var validCommand = new TestCommand("Valid Name", Guid.NewGuid());
         var nextCalled = false;
-        
+
         RequestHandlerDelegate<CommandResult> next = (ct) =>
         {
             nextCalled = true;
@@ -45,20 +45,20 @@ public class ValidationBehaviorTests
     }
 
     [Fact]
-    public async Task ValidationBehavior_WithInvalidCommand_ShouldReturnValidationErrors()
+    public async Task ValidationBehavior_WithInvalidCommand_ShouldReturnValidationErrorsAsync()
     {
         // Arrange
         var services = new ServiceCollection();
         services.AddLogging();
         services.AddTransient<IValidator<TestCommand>, TestCommand.Validator>();
-        
+
         var serviceProvider = services.BuildServiceProvider();
         var validators = serviceProvider.GetServices<IValidator<TestCommand>>();
-        
+
         var behavior = new ValidationBehavior<TestCommand, CommandResult>(validators);
-        var invalidCommand = new TestCommand("", Guid.NewGuid()); // Empty name should fail validation
+        var invalidCommand = new TestCommand(string.Empty, Guid.NewGuid()); // Empty name should fail validation
         var nextCalled = false;
-        
+
         RequestHandlerDelegate<CommandResult> next = (ct) =>
         {
             nextCalled = true;
@@ -78,13 +78,13 @@ public class ValidationBehaviorTests
     }
 
     [Fact]
-    public async Task ValidationBehavior_WithNoValidators_ShouldCallNext()
+    public async Task ValidationBehavior_WithNoValidators_ShouldCallNextAsync()
     {
         // Arrange
         var behavior = new ValidationBehavior<TestCommand, CommandResult>(Enumerable.Empty<IValidator<TestCommand>>());
         var command = new TestCommand("Test", Guid.NewGuid());
         var nextCalled = false;
-        
+
         RequestHandlerDelegate<CommandResult> next = (ct) =>
         {
             nextCalled = true;

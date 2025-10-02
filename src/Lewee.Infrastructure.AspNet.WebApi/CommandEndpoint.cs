@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Correlate;
 using FastEndpoints;
-using Lewee.Application.Mediation.Requests;
 using FreeMediator;
+using Lewee.Application.Mediation.Requests;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;

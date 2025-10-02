@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
-using Lewee.Contracts;
 using FreeMediator;
+using Lewee.Contracts;
 
 namespace Lewee.Application.Mediation.Notifications;
 

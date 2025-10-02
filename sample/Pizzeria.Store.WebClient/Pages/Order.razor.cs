@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Fluxor;
 using Fluxor.Blazor.Web.Components;
 using Microsoft.AspNetCore.Components;
@@ -10,35 +11,41 @@ namespace Pizzeria.Store.WebClient.Pages;
 
 public partial class Order : FluxorComponent
 {
-    [Inject] private IState<OrdersState> OrdersState { get; set; } = null!;
-    [Inject] private IState<PizzasState> PizzasState { get; set; } = null!;
-    [Inject] private IDispatcher Dispatcher { get; set; } = null!;
-    [Inject] private NavigationManager Navigation { get; set; } = null!;
+    [Inject]
+    private IState<OrdersState> OrdersState { get; set; } = null!;
+    [Inject]
+    private IState<PizzasState> PizzasState { get; set; } = null!;
+    [Inject]
+    private IDispatcher Dispatcher { get; set; } = null!;
+    [Inject]
+    private NavigationManager Navigation { get; set; } = null!;
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        
-        if (OrdersState.Value.CurrentOrderId == null)
+
+        if (this.OrdersState.Value.CurrentOrderId == null)
         {
-            Navigation.NavigateTo("/");
+            this.Navigation.NavigateTo("/");
             return;
         }
 
-        if (PizzasState.Value.Pizzas.Length == 0 && !PizzasState.Value.IsLoading)
+        if (this.PizzasState.Value.Pizzas.Length == 0 && !this.PizzasState.Value.IsLoading)
         {
-            Dispatcher.Dispatch(new LoadPizzasAction());
+            this.Dispatcher.Dispatch(new LoadPizzasAction());
         }
     }
 
     private void AddPizza(Guid pizzaId)
     {
-        if (OrdersState.Value.CurrentOrderId != null)
+        if (this.OrdersState.Value.CurrentOrderId != null)
         {
-            Dispatcher.Dispatch(new AddPizzaToOrderAction(OrdersState.Value.CurrentOrderId.Value, pizzaId));
+            this.Dispatcher.Dispatch(new AddPizzaToOrderAction(this.OrdersState.Value.CurrentOrderId.Value, pizzaId));
         }
     }
 
+    [SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1204:Static members should appear before non-static members", Justification = "Helper method is more readable when placed near its usage context")]
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1313:Parameter '_' should begin with lower-case letter", Justification = "Underscore is the standard discard pattern for unused parameters")]
     private static void RemovePizza(Guid _)
     {
         // For this demo, we'll implement decreasing quantity as a future enhancement
@@ -47,6 +54,6 @@ public partial class Order : FluxorComponent
 
     private void ClearError()
     {
-        Dispatcher.Dispatch(new ClearOrderErrorAction());
+        this.Dispatcher.Dispatch(new ClearOrderErrorAction());
     }
 }

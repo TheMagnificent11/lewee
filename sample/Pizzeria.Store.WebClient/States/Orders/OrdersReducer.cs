@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Fluxor;
 using Pizzeria.Store.WebClient.States.Orders.Actions;
 
@@ -6,6 +7,7 @@ namespace Pizzeria.Store.WebClient.States.Orders;
 public static class OrdersReducer
 {
     [ReducerMethod]
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1313:Parameter '_' should begin with lower-case letter", Justification = "Underscore is the standard discard pattern for unused parameters")]
     public static OrdersState OnStartOrder(OrdersState state, StartOrderAction _)
     {
         return state with
@@ -59,6 +61,7 @@ public static class OrdersReducer
     }
 
     [ReducerMethod]
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1313:Parameter '_' should begin with lower-case letter", Justification = "Underscore is the standard discard pattern for unused parameters")]
     public static OrdersState OnClearOrderError(OrdersState state, ClearOrderErrorAction _)
     {
         return state with

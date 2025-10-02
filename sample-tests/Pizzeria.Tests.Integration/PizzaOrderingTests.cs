@@ -1,7 +1,7 @@
-﻿using Pizzeria.Common;
-using FluentAssertions;
-using Xunit;
+﻿using FluentAssertions;
+using Pizzeria.Common;
 using Pizzeria.Store.Domain;
+using Xunit;
 
 namespace Pizzeria.Tests.Integration;
 
@@ -14,7 +14,7 @@ public sealed class PizzaOrderingTests : PizzeriaTests
     }
 
     [Fact]
-    public async Task Should_CreateOrder_When_OrderIsPlaced()
+    public async Task Should_CreateOrder_When_OrderIsPlacedAsync()
     {
         // Arrange
         using var httpClient = await this.factory.GetServiceClientAsync(ServiceNames.PizzaStoreApi);
@@ -31,7 +31,7 @@ public sealed class PizzaOrderingTests : PizzeriaTests
     }
 
     [Fact]
-    public async Task Should_AddPizzaToOrder_When_PizzaIsAdded()
+    public async Task Should_AddPizzaToOrder_When_PizzaIsAddedAsync()
     {
         // Arrange
         using var httpClient = await this.factory.GetServiceClientAsync(ServiceNames.PizzaStoreApi);

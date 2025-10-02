@@ -1,4 +1,6 @@
-﻿namespace Pizzeria.Store.Domain;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Pizzeria.Store.Domain;
 
 public static class Menu
 {
@@ -39,6 +41,7 @@ public static class Menu
         public const string Montanara = nameof(Montanara);
     }
 
+    [SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1201:A field should not follow a class", Justification = "Pizzas array is logically grouped after its related constant classes for better readability")]
     public static readonly Pizza[] Pizzas =
     [
         new(

@@ -48,6 +48,12 @@ public partial class ApiException : Exception
     /// </summary>
     public IReadOnlyDictionary<string, IEnumerable<string>> Headers { get; }
 
+    /// <inheritdoc />
+    public override string ToString()
+    {
+        return string.Format("HTTP Response: \n\n{0}\n\n{1}", this.Response, base.ToString());
+    }
+
     private static string GetResponsePreview(string response)
     {
         if (response == null)
@@ -57,12 +63,6 @@ public partial class ApiException : Exception
 
         var maxLength = response.Length >= 512 ? 512 : response.Length;
         return response.Substring(0, maxLength);
-    }
-
-    /// <inheritdoc />
-    public override string ToString()
-    {
-        return string.Format("HTTP Response: \n\n{0}\n\n{1}", this.Response, base.ToString());
     }
 }
 

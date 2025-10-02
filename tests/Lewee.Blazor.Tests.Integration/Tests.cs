@@ -4,7 +4,7 @@ using Xunit;
 namespace Lewee.Blazor.Tests.Integration;
 
 [Collection(TestFixture.CollectionName)]
-public sealed class Tests 
+public sealed class Tests
 {
     private readonly TestFixture fixture;
 
@@ -14,7 +14,7 @@ public sealed class Tests
     }
 
     [Fact]
-    public async Task Should_ReceiveHttpOk_When_CallingHealthEndpoint()
+    public async Task Should_ReceiveHttpOk_When_CallingHealthEndpointAsync()
     {
         // Act
         var result = await this.fixture.TestServerHealthAsync();
@@ -22,9 +22,9 @@ public sealed class Tests
         // Assert
         result.Should().BeTrue();
     }
-    
+
     [Fact]
-    public async Task Should_ReceivesSignalRMessage_When_PostIsSuccessful()
+    public async Task Should_ReceivesSignalRMessage_When_PostIsSuccessfulAsync()
     {
         // Act
         var result = await this.fixture.TestCreatePizzaOrderAsync();
