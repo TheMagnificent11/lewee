@@ -74,7 +74,7 @@ public class QueryProjectionReference : ISoftDeleteEntity
     public bool IsDeleted { get; protected set; }
 
     /// <summary>
-    /// Gets the version used for optimistic concurrency
+    /// Gets or sets the version used for optimistic concurrency
     /// </summary>
     public uint Version { get; protected set; }
 

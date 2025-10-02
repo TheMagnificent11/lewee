@@ -33,17 +33,6 @@ public partial class ApiException : Exception
         this.Headers = headers;
     }
 
-    private static string GetResponsePreview(string response)
-    {
-        if (response == null)
-        {
-            return "(null)";
-        }
-
-        var maxLength = response.Length >= 512 ? 512 : response.Length;
-        return response.Substring(0, maxLength);
-    }
-
     /// <summary>
     /// Gets the HTTP status code
     /// </summary>
@@ -58,6 +47,17 @@ public partial class ApiException : Exception
     /// Gets the headers
     /// </summary>
     public IReadOnlyDictionary<string, IEnumerable<string>> Headers { get; }
+
+    private static string GetResponsePreview(string response)
+    {
+        if (response == null)
+        {
+            return "(null)";
+        }
+
+        var maxLength = response.Length >= 512 ? 512 : response.Length;
+        return response.Substring(0, maxLength);
+    }
 
     /// <inheritdoc />
     public override string ToString()
