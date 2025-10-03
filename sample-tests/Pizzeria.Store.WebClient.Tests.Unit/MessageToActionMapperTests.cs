@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+using Moq;
 using Pizzeria.Store.Contracts;
 using Pizzeria.Store.WebClient.States;
 using Pizzeria.Store.WebClient.States.Orders.Actions;
@@ -10,7 +12,7 @@ public class MessageToActionMapperTests
     public void Map_OrderDto_ReturnsStartOrderCompletedAction()
     {
         // Arrange
-        var mapper = new MessageToActionMapper();
+        var mapper = new MessageToActionMapper(Mock.Of<ILogger<MessageToActionMapper>>();
         var orderId = Guid.NewGuid();
         var correlationId = Guid.NewGuid();
         var message = new OrderDto
@@ -37,7 +39,8 @@ public class MessageToActionMapperTests
     public void Map_UnknownMessageType_ReturnsNull()
     {
         // Arrange
-        var mapper = new MessageToActionMapper();
+        var logger = new Mock<ILogger<MessageToActionMapper>>();
+        var mapper = new MessageToActionMapper(logger.Object);
         var message = new { SomeProperty = "value" };
         var correlationId = Guid.NewGuid();
 
@@ -52,7 +55,8 @@ public class MessageToActionMapperTests
     public void Map_NullMessage_ReturnsNull()
     {
         // Arrange
-        var mapper = new MessageToActionMapper();
+        var logger = new Mock<ILogger<MessageToActionMapper>>();
+        var mapper = new MessageToActionMapper(logger.Object);
         var correlationId = Guid.NewGuid();
 
         // Act
