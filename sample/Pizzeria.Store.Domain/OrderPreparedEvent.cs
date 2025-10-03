@@ -12,6 +12,11 @@ public sealed class OrderPreparedEvent : DomainEvent
         this.EventDateTime = eventDateTime;
     }
 
-    public Guid OrderId { get; }
-    public DateTime EventDateTime { get; }
+    // Private parameterless constructor for JSON deserialization
+    private OrderPreparedEvent()
+    {
+    }
+
+    public Guid OrderId { get; init; }
+    public DateTime EventDateTime { get; init; }
 }

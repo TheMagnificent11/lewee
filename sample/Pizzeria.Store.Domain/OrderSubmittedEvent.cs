@@ -12,6 +12,11 @@ public abstract class OrderSubmittedEvent : DomainEvent
         this.EventDateTime = eventDateTime;
     }
 
-    public Guid OrderId { get; }
-    public DateTime EventDateTime { get; }
+    // Protected parameterless constructor for JSON deserialization
+    protected OrderSubmittedEvent()
+    {
+    }
+
+    public Guid OrderId { get; init; }
+    public DateTime EventDateTime { get; init; }
 }

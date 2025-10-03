@@ -12,5 +12,10 @@ public sealed class DeliveryOrderSubmittedEvent : OrderSubmittedEvent
         this.DeliveryAddress = deliveryAddress;
     }
 
-    public string DeliveryAddress { get; }
+    // Private parameterless constructor for JSON deserialization
+    private DeliveryOrderSubmittedEvent()
+    {
+    }
+
+    public string DeliveryAddress { get; init; } = string.Empty;
 }

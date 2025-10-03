@@ -6,4 +6,9 @@ public class PickupOrderSubmittedEvent : OrderSubmittedEvent
         : base(orderId, userId, eventDateTime)
     {
     }
+
+    // Private parameterless constructor for JSON deserialization
+    private PickupOrderSubmittedEvent()
+    {
+    }
 }
