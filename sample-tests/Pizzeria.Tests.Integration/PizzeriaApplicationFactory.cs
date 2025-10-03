@@ -1,6 +1,8 @@
 ﻿using Aspire.Hosting;
 using Aspire.Hosting.ApplicationModel;
 using Aspire.Hosting.Testing;
+using Lewee.Domain;
+using Lewee.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Pizzeria.Common;
@@ -18,6 +20,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
     private DistributedApplication app;
     private ResourceNotificationService resourceNotificationService;
     private StoreDbContext storeDbContext;
+    private QueryProjectionService<StoreDbContext> storeDbQueryProjectionService;
 
     public async Task InitializeAsync()
     {
@@ -46,6 +49,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         storeDbOptionsBuilder.UseNpgsql(storeDbConnectionString);
 
         this.storeDbContext = new StoreDbContext(storeDbOptionsBuilder.Options);
+        this.storeDbQueryProjectionService = new QueryProjectionService<StoreDbContext>(this.storeDbContext);
     }
 
     public async Task<HttpClient> GetServiceClientAsync(string serviceName)
@@ -82,6 +86,12 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
     public async Task<string> GetConnectionStringAsync(string serviceName)
     {
         return await this.app.GetConnectionStringAsync(serviceName);
+    }
+
+    public async Task<T> GetQueryProjectionAsync<T>(string key)
+        where T : class, IQueryProjection
+    {
+        return await this.storeDbQueryProjectionService.RetrieveByKeyAsync<T>(key, CancellationToken.None);
     }
 
     public async Task DisposeAsync()

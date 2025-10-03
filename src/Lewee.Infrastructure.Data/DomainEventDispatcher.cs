@@ -43,7 +43,7 @@ internal class DomainEventDispatcher<TContext>
 
     private async Task<bool> ThereAreEventsToDispatchAsync(CancellationToken token)
     {
-        using (var scope = this.dbContextFactory.CreateDbContext())
+        using (var scope = await this.dbContextFactory.CreateDbContextAsync(token))
         {
             var dbSet = scope.Set<DomainEventReference>();
 
