@@ -12,7 +12,7 @@ public class MessageToActionMapperTests
     public void Map_OrderDto_ReturnsStartOrderCompletedAction()
     {
         // Arrange
-        var mapper = new MessageToActionMapper(Mock.Of<ILogger<MessageToActionMapper>>();
+        var mapper = new MessageToActionMapper(Mock.Of<ILogger<MessageToActionMapper>>());
         var orderId = Guid.NewGuid();
         var correlationId = Guid.NewGuid();
         var message = new OrderDto
