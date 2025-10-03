@@ -1,5 +1,5 @@
-﻿using FreeMediator;
-using Lewee.Domain;
+﻿using Lewee.Domain;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

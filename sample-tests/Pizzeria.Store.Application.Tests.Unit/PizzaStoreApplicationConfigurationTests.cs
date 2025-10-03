@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
-using FreeMediator;
 using Lewee.Application.Mediation.Requests;
 using Lewee.Domain;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Pizzeria.Store.Application.Orders;

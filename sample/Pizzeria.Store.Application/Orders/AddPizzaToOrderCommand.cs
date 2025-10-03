@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using FreeMediator;
 using Lewee.Application.Mediation.Requests;
 using Lewee.Domain;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using Pizzeria.Store.Domain;
 

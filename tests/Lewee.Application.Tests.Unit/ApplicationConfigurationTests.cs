@@ -1,8 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using FluentValidation;
-using FreeMediator;
 using Lewee.Application.Mediation.Requests;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 

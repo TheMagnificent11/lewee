@@ -1,4 +1,4 @@
-﻿using FreeMediator;
+﻿using MediatR;
 
 namespace Lewee.Domain;
 

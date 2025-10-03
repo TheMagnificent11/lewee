@@ -1,7 +1,7 @@
-﻿using FreeMediator;
-using Lewee.Application.Mediation.Notifications;
+﻿using Lewee.Application.Mediation.Notifications;
 using Lewee.Contracts;
 using Lewee.Shared;
+using MediatR;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 

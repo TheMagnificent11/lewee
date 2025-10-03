@@ -1,5 +1,5 @@
-﻿using FreeMediator;
-using Lewee.Application.Mediation.Requests;
+﻿using Lewee.Application.Mediation.Requests;
+using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace Lewee.Application.Mediation.Behaviors;
