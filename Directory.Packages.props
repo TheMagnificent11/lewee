@@ -6,6 +6,7 @@
   <ItemGroup>
     <PackageVersion Include="Ardalis.Specification" Version="9.3.1" />
     <PackageVersion Include="Ardalis.Specification.EntityFrameworkCore" Version="9.3.1" />
+    <PackageVersion Include="Azure.Identity" Version="1.11.4" />
     <PackageVersion Include="Correlate.AspNetCore" Version="6.0.0" />
     <PackageVersion Include="Correlate.DependencyInjection" Version="6.0.0" />
     <PackageVersion Include="CSharpFunctionalExtensions" Version="3.6.0" />
