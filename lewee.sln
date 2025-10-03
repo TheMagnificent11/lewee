@@ -72,8 +72,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lewee.Blazor.Tests.Integrat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pizzeria.Store.Application.Tests.Unit", "sample-tests\Pizzeria.Store.Application.Tests.Unit\Pizzeria.Store.Application.Tests.Unit.csproj", "{F1CB65AD-EDDB-4576-93D6-08D443CEA466}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeMediator", "..\FreeMediator\src\FreeMediator\FreeMediator.csproj", "{06198A34-411B-A3C2-93B3-1A04E6FD1320}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -408,18 +406,6 @@ Global
 		{F1CB65AD-EDDB-4576-93D6-08D443CEA466}.Release|x64.Build.0 = Release|Any CPU
 		{F1CB65AD-EDDB-4576-93D6-08D443CEA466}.Release|x86.ActiveCfg = Release|Any CPU
 		{F1CB65AD-EDDB-4576-93D6-08D443CEA466}.Release|x86.Build.0 = Release|Any CPU
-		{06198A34-411B-A3C2-93B3-1A04E6FD1320}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{06198A34-411B-A3C2-93B3-1A04E6FD1320}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{06198A34-411B-A3C2-93B3-1A04E6FD1320}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{06198A34-411B-A3C2-93B3-1A04E6FD1320}.Debug|x64.Build.0 = Debug|Any CPU
-		{06198A34-411B-A3C2-93B3-1A04E6FD1320}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{06198A34-411B-A3C2-93B3-1A04E6FD1320}.Debug|x86.Build.0 = Debug|Any CPU
-		{06198A34-411B-A3C2-93B3-1A04E6FD1320}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{06198A34-411B-A3C2-93B3-1A04E6FD1320}.Release|Any CPU.Build.0 = Release|Any CPU
-		{06198A34-411B-A3C2-93B3-1A04E6FD1320}.Release|x64.ActiveCfg = Release|Any CPU
-		{06198A34-411B-A3C2-93B3-1A04E6FD1320}.Release|x64.Build.0 = Release|Any CPU
-		{06198A34-411B-A3C2-93B3-1A04E6FD1320}.Release|x86.ActiveCfg = Release|Any CPU
-		{06198A34-411B-A3C2-93B3-1A04E6FD1320}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
