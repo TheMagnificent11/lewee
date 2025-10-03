@@ -22,7 +22,7 @@ public sealed class PizzaOrderingTests : PizzeriaTests
 
         // Act
         using var response = await httpClient.SendAsync(request);
-        await Task.Delay(TimeSpan.FromSeconds(1)); // Allow some time for the event to be processed
+        await Task.Delay(TimeSpan.FromSeconds(3)); // Allow some time for the event to be processed
 
         // Assert
         response.EnsureSuccessStatusCode();

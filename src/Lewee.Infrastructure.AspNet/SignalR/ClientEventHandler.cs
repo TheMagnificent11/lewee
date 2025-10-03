@@ -25,7 +25,7 @@ internal class ClientEventHandler : INotificationHandler<ClientEvent>
         // TODO: using notification behavior to enrich log context
         using (this.logger.BeginScope(new Dictionary<string, object>(StringComparer.Ordinal)
         {
-            { LoggingConsts.CorrelationId, notification.CorrelationId }
+            { LoggingConsts.CorrelationId, notification.CorrelationId },
         }))
         {
             var clientMessage = notification.ToClientMessage();

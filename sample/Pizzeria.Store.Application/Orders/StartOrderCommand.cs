@@ -32,7 +32,7 @@ public record StartOrderCommand(string UserId, Guid CorrelationId) : ICommand
 
         public async Task<CommandResult> Handle(StartOrderCommand request, CancellationToken cancellationToken)
         {
-            var order = Order.StartNewOrder(request.UserId);
+            var order = Order.StartNewOrder(request.UserId, request.CorrelationId);
 
             await this.repository.AddAsync(order, cancellationToken);
             await this.repository.SaveChangesAsync(cancellationToken);

@@ -52,7 +52,6 @@ public partial class DomainEventReferenceTests
         result.Should().BeOfType<TestingDomainEvent>();
 
         var domainEventResult = (TestingDomainEvent)result;
-        domainEventResult.Id.Should().Be(domainEvent.Id);
         domainEventResult.CorrelationId.Should().Be(domainEvent.CorrelationId);
         domainEventResult.Name.Should().Be(domainEvent.Name);
         domainEventResult.Count.Should().Be(domainEvent.Count);

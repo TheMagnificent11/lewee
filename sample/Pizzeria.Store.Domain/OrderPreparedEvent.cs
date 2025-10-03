@@ -4,17 +4,16 @@ namespace Pizzeria.Store.Domain;
 
 public sealed class OrderPreparedEvent : DomainEvent
 {
-    public OrderPreparedEvent(Guid orderId, string userId, DateTime eventDateTime)
-        : base()
+    public OrderPreparedEvent(
+        Guid orderId,
+        string userId,
+        DateTime eventDateTime,
+        Guid correlationId)
+        : base(correlationId)
     {
         this.OrderId = orderId;
         this.UserId = userId;
         this.EventDateTime = eventDateTime;
-    }
-
-    // Private parameterless constructor for JSON deserialization
-    private OrderPreparedEvent()
-    {
     }
 
     public Guid OrderId { get; init; }

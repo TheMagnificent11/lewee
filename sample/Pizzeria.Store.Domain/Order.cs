@@ -8,14 +8,18 @@ public class Order : AggregateRoot
 {
     private readonly List<OrderPizza> pizzas;
 
-    internal Order(string userId)
+    internal Order(string userId, Guid correlationId)
         : base()
     {
         this.pizzas = [];
         this.UserId = userId;
         this.StartedDateTime = DateTime.UtcNow;
 
-        this.DomainEvents.Raise(new OrderStartedEvent(this.Id, this.UserId, this.StartedDateTime));
+        this.DomainEvents.Raise(new OrderStartedEvent(
+            this.Id,
+            this.UserId,
+            this.StartedDateTime,
+            correlationId));
     }
 
     [ExcludeFromCodeCoverage(Justification = "Only used by EF")]
@@ -47,9 +51,9 @@ public class Order : AggregateRoot
 
     public bool IsCompleted => this.CompletedDateTime is not null;
 
-    public static Order StartNewOrder(string userId)
+    public static Order StartNewOrder(string userId, Guid correlationId)
     {
-        return new Order(userId);
+        return new Order(userId, correlationId);
     }
 
     public void AddPizza(Pizza pizza)
@@ -64,15 +68,19 @@ public class Order : AggregateRoot
         existingOrderPizza.IncreaseQuantity();
     }
 
-    public void SubmitPickupOrder()
+    public void SubmitPickupOrder(Guid correlationId)
     {
         this.DeliveryAddress = null;
         this.SubmittedDateTime = DateTime.UtcNow;
 
-        this.DomainEvents.Raise(new PickupOrderSubmittedEvent(this.Id, this.UserId, this.SubmittedDateTime.Value));
+        this.DomainEvents.Raise(new PickupOrderSubmittedEvent(
+            this.Id,
+            this.UserId,
+            this.SubmittedDateTime.Value,
+            correlationId));
     }
 
-    public Result SubmitDeliveryOrder(string deliveryAddress)
+    public Result SubmitDeliveryOrder(string deliveryAddress, Guid correlationId)
     {
         if (string.IsNullOrWhiteSpace(deliveryAddress))
         {
@@ -86,12 +94,13 @@ public class Order : AggregateRoot
             this.Id,
             this.UserId,
             this.SubmittedDateTime.Value,
-            this.DeliveryAddress));
+            this.DeliveryAddress,
+            correlationId));
 
         return Result.Success();
     }
 
-    public Result PizzasPrepared()
+    public Result PizzasPrepared(Guid correlationId)
     {
         if (!this.IsSubmitted)
         {
@@ -105,7 +114,11 @@ public class Order : AggregateRoot
 
         this.PreparedDateTime = DateTime.UtcNow;
 
-        this.DomainEvents.Raise(new OrderPreparedEvent(this.Id, this.UserId, this.PreparedDateTime.Value));
+        this.DomainEvents.Raise(new OrderPreparedEvent(
+            this.Id,
+            this.UserId,
+            this.PreparedDateTime.Value,
+            correlationId));
 
         return Result.Success();
     }
