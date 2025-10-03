@@ -41,7 +41,7 @@ public class OrderingDomainEventHandler : INotificationHandler<OrderStartedEvent
             this.logger.LogError(
                 "Order {OrderId} not found when handling OrderStartedEvent - this indicates a critical system error",
                 notification.OrderId);
-            throw new InvalidOperationException($"Order {notification.OrderId} not found when handling OrderStartedEvent");
+            return;
         }
 
         // Build the pizza DTOs with joined data
@@ -85,7 +85,9 @@ public class OrderingDomainEventHandler : INotificationHandler<OrderStartedEvent
             order.Id.ToString(),
             cancellationToken);
 
-        var clientEvent = new ClientEvent(notification.CorrelationId, notification.UserId, dto);
+        // For anonymous users (demo app), send to all clients by passing null userId
+        // In production with authentication, pass the actual order.UserId
+        var clientEvent = new ClientEvent(notification.CorrelationId, userId: null, dto);
 
         await this.mediator.Publish(clientEvent, cancellationToken);
 
