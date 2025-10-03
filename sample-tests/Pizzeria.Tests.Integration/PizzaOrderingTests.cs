@@ -22,12 +22,19 @@ public sealed class PizzaOrderingTests : PizzeriaTests
 
         // Act
         using var response = await httpClient.SendAsync(request);
+        await Task.Delay(TimeSpan.FromSeconds(5)); // Allow some time for the event to be processed
 
         // Assert
         response.EnsureSuccessStatusCode();
 
         var order = await this.factory.GetLatestOrderAsync();
         order.Should().NotBeNull();
+
+        var orderProjection = await this.factory.GetQueryProjectionAsync<OrderQueryProjection>(order.Id.ToString());
+
+        orderProjection.Should().NotBeNull();
+        orderProjection.Order.Should().NotBeNull();
+        orderProjection.Order.Id.Should().Be(order.Id);
     }
 
     [Fact]

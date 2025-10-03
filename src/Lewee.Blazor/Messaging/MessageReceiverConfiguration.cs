@@ -76,7 +76,7 @@ public static class MessageReceiverConfiguration
         where TMapper : class, IMessageToActionMapper
     {
         // Register HubConnection as a factory that uses the named HttpClient
-        services.AddSingleton<HubConnection>(serviceProvider =>
+        services.AddSingleton(serviceProvider =>
         {
             var httpClientFactory = serviceProvider.GetRequiredService<IHttpClientFactory>();
             var httpClient = httpClientFactory.CreateClient(httpClientName);

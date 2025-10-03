@@ -1,7 +1,7 @@
 using FluentAssertions;
-using FreeMediator;
 using Lewee.Application.Mediation.Behaviors;
 using Lewee.Application.Mediation.Requests;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Testing;

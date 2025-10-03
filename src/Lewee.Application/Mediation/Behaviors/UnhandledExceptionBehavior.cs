@@ -1,4 +1,4 @@
-﻿using FreeMediator;
+﻿using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace Lewee.Application.Mediation.Behaviors;

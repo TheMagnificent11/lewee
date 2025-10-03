@@ -24,9 +24,9 @@ public partial class Order : FluxorComponent
     {
         base.OnInitialized();
 
-        if (this.OrdersState.Value.CurrentOrderId == null)
+        if (this.OrdersState.Value.CurrentOrder == null)
         {
-            this.Navigation.NavigateTo("/");
+            this.Navigation.NavigateTo(Routes.Home);
             return;
         }
 
@@ -38,9 +38,9 @@ public partial class Order : FluxorComponent
 
     private void AddPizza(Guid pizzaId)
     {
-        if (this.OrdersState.Value.CurrentOrderId != null)
+        if (this.OrdersState.Value.CurrentOrder != null)
         {
-            this.Dispatcher.Dispatch(new AddPizzaToOrderAction(this.OrdersState.Value.CurrentOrderId.Value, pizzaId));
+            this.Dispatcher.Dispatch(new AddPizzaToOrderAction(this.OrdersState.Value.CurrentOrder.Id, pizzaId));
         }
     }
 

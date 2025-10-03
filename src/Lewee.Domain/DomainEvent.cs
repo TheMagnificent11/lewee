@@ -1,4 +1,4 @@
-﻿using FreeMediator;
+﻿using MediatR;
 
 namespace Lewee.Domain;
 
@@ -10,9 +10,10 @@ public abstract class DomainEvent : INotification
     /// <summary>
     /// Initializes a new instance of the <see cref="DomainEvent"/> class
     /// </summary>
-    protected DomainEvent()
+    /// <param name="correlationId">Correlation ID</param>
+    protected DomainEvent(Guid correlationId)
     {
-        this.CorrelationId = Guid.NewGuid();
+        this.CorrelationId = correlationId;
     }
 
     /// <summary>

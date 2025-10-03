@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using FluentValidation;
-using FreeMediator;
 using Lewee.Application.Mediation.Behaviors;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 namespace Lewee.Application;
 
@@ -22,8 +22,9 @@ public static class ApplicationConfiguration
         Assembly applicationAssembly,
         Assembly domainAssembly)
     {
-        services.AddMediator(config => config.RegisterServicesFromAssemblies(applicationAssembly, domainAssembly));
+        services.AddMediatR(config => config.RegisterServicesFromAssemblies(applicationAssembly, domainAssembly));
         services.AddValidatorsFromAssembly(applicationAssembly, includeInternalTypes: true);
+        services.AddPipelineBehaviors();
 
         return services;
     }
@@ -38,7 +39,6 @@ public static class ApplicationConfiguration
         this IServiceCollection services,
         params Type[] additionalBehaviors)
     {
-        // services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CorrelationIdLoggingBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TenantLoggingBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehavior<,>));
@@ -54,8 +54,6 @@ public static class ApplicationConfiguration
                 services.AddTransient(typeof(IPipelineBehavior<,>), item);
             }
         }
-
-        // services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPostProcessorBehavior<,>));
 
         return services;
     }

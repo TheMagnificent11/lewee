@@ -6,11 +6,12 @@ public sealed class DeliveryOrderSubmittedEvent : OrderSubmittedEvent
         Guid orderId,
         string userId,
         DateTime eventDateTime,
-        string deliveryAddress)
-        : base(orderId, userId, eventDateTime)
+        string deliveryAddress,
+        Guid correlationId)
+        : base(orderId, userId, eventDateTime, correlationId)
     {
         this.DeliveryAddress = deliveryAddress;
     }
 
-    public string DeliveryAddress { get; }
+    public string DeliveryAddress { get; init; }
 }

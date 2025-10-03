@@ -1,7 +1,7 @@
-﻿using FreeMediator;
-using Lewee.Application.Mediation.Notifications;
+﻿using Lewee.Application.Mediation.Notifications;
 using Lewee.Contracts;
 using Lewee.Shared;
+using MediatR;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 
@@ -25,7 +25,7 @@ internal class ClientEventHandler : INotificationHandler<ClientEvent>
         // TODO: using notification behavior to enrich log context
         using (this.logger.BeginScope(new Dictionary<string, object>(StringComparer.Ordinal)
         {
-            { LoggingConsts.CorrelationId, notification.CorrelationId }
+            { LoggingConsts.CorrelationId, notification.CorrelationId },
         }))
         {
             var clientMessage = notification.ToClientMessage();

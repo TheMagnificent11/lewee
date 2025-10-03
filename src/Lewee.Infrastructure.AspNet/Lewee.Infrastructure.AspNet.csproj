@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <PackageReference Include="Correlate.AspNetCore" />
-    <PackageReference Include="FreeMediator" />	
   </ItemGroup>
 
   <ItemGroup>

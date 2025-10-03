@@ -1,6 +1,6 @@
-﻿using FreeMediator;
-using Lewee.Application.Mediation.Requests;
+﻿using Lewee.Application.Mediation.Requests;
 using Lewee.Domain;
+using MediatR;
 using Pizzeria.Store.Contracts;
 using Pizzeria.Store.Domain;
 

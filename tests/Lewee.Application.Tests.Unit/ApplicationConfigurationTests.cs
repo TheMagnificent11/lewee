@@ -1,11 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
 using FluentAssertions;
 using FluentValidation;
-using FreeMediator;
-using Lewee.Application;
-using Lewee.Application.Mediation.Behaviors;
 using Lewee.Application.Mediation.Requests;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -123,9 +120,6 @@ public class ApplicationConfigurationTests
     }
 }
 
-/// <summary>
-/// Test custom behavior for testing additional behaviors registration
-/// </summary>
 [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Test helper class grouped with test class for convenience")]
 public class TestCustomBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>

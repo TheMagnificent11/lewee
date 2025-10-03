@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
-using FreeMediator;
 using Lewee.Application.Mediation.Notifications;
 using Lewee.Infrastructure.AspNet.SignalR;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -33,7 +33,7 @@ public sealed class TestFixture : IAsyncLifetime
                     .AddRouting()
                     .AddLeweeSignalR();
 
-                services.AddMediator(options => { });
+                services.AddMediatR(options => options.RegisterServicesFromAssembly(typeof(ClientEvent).Assembly));
                 services.AddHealthChecks();
             })
             .Configure(app =>
@@ -51,7 +51,7 @@ public sealed class TestFixture : IAsyncLifetime
                         {
                             Id = Guid.NewGuid(),
                             CustomerName = "Test User",
-                            CreatedAt = DateTime.UtcNow
+                            CreatedAt = DateTime.UtcNow,
                         };
 
                         Orders.TryAdd(order.Id, order);

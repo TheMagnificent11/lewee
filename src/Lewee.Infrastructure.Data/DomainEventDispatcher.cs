@@ -1,5 +1,5 @@
-﻿using FreeMediator;
-using Lewee.Domain;
+﻿using Lewee.Domain;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -43,7 +43,7 @@ internal class DomainEventDispatcher<TContext>
 
     private async Task<bool> ThereAreEventsToDispatchAsync(CancellationToken token)
     {
-        using (var scope = this.dbContextFactory.CreateDbContext())
+        using (var scope = await this.dbContextFactory.CreateDbContextAsync(token))
         {
             var dbSet = scope.Set<DomainEventReference>();
 
@@ -61,7 +61,7 @@ internal class DomainEventDispatcher<TContext>
 
     private async Task DispatchBatchAsync(CancellationToken token)
     {
-        using (var scope = this.dbContextFactory.CreateDbContext())
+        using (var scope = await this.dbContextFactory.CreateDbContextAsync(token))
         {
             var dbSet = scope.Set<DomainEventReference>();
             if (dbSet == null)

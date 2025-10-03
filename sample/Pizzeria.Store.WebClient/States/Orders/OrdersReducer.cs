@@ -8,12 +8,13 @@ public static class OrdersReducer
 {
     [ReducerMethod]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1313:Parameter '_' should begin with lower-case letter", Justification = "Underscore is the standard discard pattern for unused parameters")]
-    public static OrdersState OnStartOrder(OrdersState state, StartOrderAction _)
+    public static OrdersState OnStartOrder(OrdersState state, StartOrderAction action)
     {
         return state with
         {
             IsStartingOrder = true,
-            ErrorMessage = null
+            ErrorMessage = null,
+            CorrelationId = action.CorrelationId
         };
     }
 
@@ -22,9 +23,9 @@ public static class OrdersReducer
     {
         return state with
         {
-            CurrentOrderId = action.OrderId,
             IsStartingOrder = false,
-            ErrorMessage = null
+            ErrorMessage = null,
+            CorrelationId = action.CorrelationId
         };
     }
 
@@ -34,19 +35,27 @@ public static class OrdersReducer
         return state with
         {
             IsStartingOrder = false,
-            ErrorMessage = action.ErrorMessage
+            ErrorMessage = action.ErrorMessage,
+            CorrelationId = action.CorrelationId
         };
     }
 
     [ReducerMethod]
-    public static OrdersState OnAddPizzaToOrderSuccess(OrdersState state, AddPizzaToOrderSuccessAction action)
+    public static OrdersState OnStartOrderCompleted(OrdersState state, StartOrderCompletedAction action)
     {
-        var newQuantities = new Dictionary<Guid, int>(state.PizzaQuantities);
-        newQuantities[action.PizzaId] = newQuantities.GetValueOrDefault(action.PizzaId, 0) + 1;
-
         return state with
         {
-            PizzaQuantities = newQuantities,
+            CurrentOrder = action.Order,
+            CorrelationId = action.CorrelationId
+        };
+    }
+
+    [ReducerMethod]
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1313:Parameter '_' should begin with lower-case letter", Justification = "Underscore is the standard discard pattern for unused parameters")]
+    public static OrdersState OnAddPizzaToOrderSuccess(OrdersState state, AddPizzaToOrderSuccessAction _)
+    {
+        return state with
+        {
             ErrorMessage = null
         };
     }

@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using FreeMediator;
 using Lewee.Application.Mediation.Requests;
 using Lewee.Domain;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using Pizzeria.Store.Domain;
 
@@ -32,7 +32,7 @@ public record StartOrderCommand(string UserId, Guid CorrelationId) : ICommand
 
         public async Task<CommandResult> Handle(StartOrderCommand request, CancellationToken cancellationToken)
         {
-            var order = Order.StartNewOrder(request.UserId);
+            var order = Order.StartNewOrder(request.UserId, request.CorrelationId);
 
             await this.repository.AddAsync(order, cancellationToken);
             await this.repository.SaveChangesAsync(cancellationToken);

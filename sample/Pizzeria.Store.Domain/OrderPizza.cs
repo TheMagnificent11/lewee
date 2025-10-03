@@ -21,7 +21,7 @@ public class OrderPizza : Relationship
             Id = Guid.NewGuid(),
             OrderId = order.Id,
             PizzaId = pizza.Id,
-            Quantity = 1
+            Quantity = 1,
         };
     }
 

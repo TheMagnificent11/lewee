@@ -1,8 +1,8 @@
-﻿using FreeMediator;
-using Lewee.Application.Mediation.Notifications;
+﻿using Lewee.Application.Mediation.Notifications;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.DependencyInjection;
+
 namespace Lewee.Infrastructure.AspNet.SignalR;
 
 /// <summary>
@@ -22,7 +22,7 @@ public static class SignalRConfiguration
         {
             opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(["application/octet-stream"]);
         });
-        services.AddMediator(config => config.RegisterServicesFromAssemblies(
+        services.AddMediatR(config => config.RegisterServicesFromAssemblies(
             typeof(ClientEvent).Assembly,
             typeof(ClientEventHandler).Assembly));
 

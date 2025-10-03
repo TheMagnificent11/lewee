@@ -1,6 +1,9 @@
 using Bunit;
+using Correlate;
 using Fluxor;
+using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Moq;
 using MudBlazor.Services;
 using Pizzeria.Store.Contracts;
@@ -18,7 +21,13 @@ public class OrderPageTests : TestContext
     {
         // Arrange
         var mockApiClient = new Mock<IPizzeriaApiClient>();
+        var mockCorrelationContextAccessor = new Mock<ICorrelationContextAccessor>();
+        var mockNavigationManager = new Mock<NavigationManager>();
+        var mockLogger = new Mock<ILogger<OrdersEffects>>();
+
         this.Services.AddSingleton(mockApiClient.Object);
+        this.Services.AddSingleton(mockCorrelationContextAccessor.Object);
+        this.Services.AddSingleton(mockLogger.Object);
         this.Services.AddMudServices();
         this.Services.AddFluxor(o => o.ScanAssemblies(typeof(OrdersState).Assembly));
 
@@ -33,7 +42,13 @@ public class OrderPageTests : TestContext
     {
         // Arrange
         var mockApiClient = new Mock<IPizzeriaApiClient>();
+        var mockCorrelationContextAccessor = new Mock<ICorrelationContextAccessor>();
+        var mockNavigationManager = new Mock<NavigationManager>();
+        var mockLogger = new Mock<ILogger<OrdersEffects>>();
+
         this.Services.AddSingleton(mockApiClient.Object);
+        this.Services.AddSingleton(mockCorrelationContextAccessor.Object);
+        this.Services.AddSingleton(mockLogger.Object);
         this.Services.AddMudServices();
 
         // Set up Fluxor with initial state that has an active order
@@ -55,6 +70,10 @@ public class OrderPageTests : TestContext
     {
         // Arrange
         var mockApiClient = new Mock<IPizzeriaApiClient>();
+        var mockCorrelationContextAccessor = new Mock<ICorrelationContextAccessor>();
+        var mockNavigationManager = new Mock<NavigationManager>();
+        var mockLogger = new Mock<ILogger<OrdersEffects>>();
+
         var testPizzas = new[]
         {
             new PizzaDto(Guid.NewGuid(), "Margherita", "Classic tomato and mozzarella", 12.99m),
@@ -64,6 +83,8 @@ public class OrderPageTests : TestContext
         mockApiClient.Setup(x => x.GetPizzasAsync(It.IsAny<CancellationToken>())).ReturnsAsync(testPizzas);
 
         this.Services.AddSingleton(mockApiClient.Object);
+        this.Services.AddSingleton(mockCorrelationContextAccessor.Object);
+        this.Services.AddSingleton(mockLogger.Object);
         this.Services.AddMudServices();
         this.Services.AddFluxor(o => o.ScanAssemblies(typeof(OrdersState).Assembly));
 

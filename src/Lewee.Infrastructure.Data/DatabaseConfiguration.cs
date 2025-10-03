@@ -44,7 +44,7 @@ public static class DatabaseConfiguration
             services.AddTransient(repositoryInterfaceType, repositoryType);
         }
 
-        services.AddSingleton<DomainEventDispatcher<T>>();
+        services.AddScoped<DomainEventDispatcher<T>>();
         services.AddHostedService<DomainEventDispatcherService<T>>();
 
         services.AddTransient<IQueryProjectionService, QueryProjectionService<T>>();

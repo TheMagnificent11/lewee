@@ -1,8 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
 using FluentValidation;
-using FreeMediator;
 using Lewee.Application.Mediation.Requests;
 using Lewee.Domain;
+using MediatR;
 
 [assembly: SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "Test models file contains multiple related test classes for testing purposes", Scope = "type", Target = "~T:Lewee.Application.Tests.Unit.TestCommand")]
 
