@@ -50,20 +50,39 @@ internal class ServerHealthCheckEffects
     }
 
     [EffectMethod]
-    public async Task HealthSuccessAsync(HealthCheckAction action, IDispatcher dispatcher)
+    public async Task HealthSuccessAsync(HealthCheckSuccessAction action, IDispatcher dispatcher)
     {
-        this.logger.LogDebug("Checking server health...success");
+        this.logger.LogInformation("Server health check succeeded. Starting SignalR connection...");
 
-        await this.hubConnection.StartAsync();
+        try
+        {
+            if (this.hubConnection.State == HubConnectionState.Disconnected)
+            {
+                this.logger.LogInformation("SignalR connection state is Disconnected. Starting connection...");
+                await this.hubConnection.StartAsync();
+                this.logger.LogInformation("SignalR hub connection started successfully. State: {State}", this.hubConnection.State);
+            }
+            else
+            {
+                this.logger.LogInformation("SignalR hub connection already in state: {State}", this.hubConnection.State);
+            }
+        }
+        catch (Exception ex)
+        {
+            this.logger.LogError(ex, "Failed to start SignalR hub connection. Connection state: {State}", this.hubConnection.State);
+            // Retry health check if connection fails
+            dispatcher.Dispatch(new HealthCheckFailedAction());
+        }
     }
 
     [EffectMethod]
     public async Task HealthFailedAsync(HealthCheckFailedAction action, IDispatcher dispatcher)
     {
-        this.logger.LogDebug("Checking server health...failed");
+        this.logger.LogWarning("Server health check failed. Attempts: {Attempts}/{MaxAttempts}", this.state.Value.Attempts, ServerHealthState.MaxAttempts);
 
         if (this.state.Value.Failed)
         {
+            this.logger.LogError("Max health check attempts reached. Giving up.");
             return;
         }
 
