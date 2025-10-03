@@ -45,7 +45,7 @@ public class OrderingDomainEventHandler : INotificationHandler<OrderStartedEvent
         }
 
         // Build the pizza DTOs with joined data
-        var pizzaDtos = order.Pizzas
+        var orderLines = order.Pizzas
             .Select(op => new OrderPizzaDto
             {
                 Id = op.Id,
@@ -53,11 +53,11 @@ public class OrderingDomainEventHandler : INotificationHandler<OrderStartedEvent
                 PizzaName = op.Pizza.Name,
                 PizzaPrice = op.Pizza.Price,
                 Quantity = op.Quantity,
-                LineTotal = op.Pizza.Price * op.Quantity
+                LineTotal = op.Pizza.Price * op.Quantity,
             })
             .ToArray();
 
-        var totalCost = pizzaDtos.Sum(p => p.LineTotal);
+        var totalCost = orderLines.Sum(p => p.LineTotal);
 
         // Create the DTO for SignalR
         var dto = new OrderDto
@@ -69,15 +69,15 @@ public class OrderingDomainEventHandler : INotificationHandler<OrderStartedEvent
             PreparedDateTime = order.PreparedDateTime,
             CompletedDateTime = order.CompletedDateTime,
             DeliveryAddress = order.DeliveryAddress,
-            Pizzas = pizzaDtos,
-            TotalCost = totalCost
+            Pizzas = orderLines,
+            TotalCost = totalCost,
         };
 
         // Create or update the query projection
         var queryProjection = new OrderQueryProjection
         {
             CorrelationId = notification.CorrelationId,
-            Order = dto
+            Order = dto,
         };
 
         await this.queryProjectionService.AddOrUpdateAsync(

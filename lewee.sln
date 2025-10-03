@@ -70,9 +70,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pizzeria.Store.WebClient.Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lewee.Blazor.Tests.Integration", "tests\Lewee.Blazor.Tests.Integration\Lewee.Blazor.Tests.Integration.csproj", "{23733994-2B8B-40B6-8BB3-062E777CA4A0}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample-tests", "sample-tests", "{60E95AAC-17FD-CBE2-AA3D-0EAB179FD02F}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pizzeria.Store.Application.Tests.Unit", "sample-tests\Pizzeria.Store.Application.Tests.Unit\Pizzeria.Store.Application.Tests.Unit.csproj", "{F1CB65AD-EDDB-4576-93D6-08D443CEA466}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeMediator", "..\FreeMediator\src\FreeMediator\FreeMediator.csproj", "{06198A34-411B-A3C2-93B3-1A04E6FD1320}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -408,12 +408,21 @@ Global
 		{F1CB65AD-EDDB-4576-93D6-08D443CEA466}.Release|x64.Build.0 = Release|Any CPU
 		{F1CB65AD-EDDB-4576-93D6-08D443CEA466}.Release|x86.ActiveCfg = Release|Any CPU
 		{F1CB65AD-EDDB-4576-93D6-08D443CEA466}.Release|x86.Build.0 = Release|Any CPU
+		{06198A34-411B-A3C2-93B3-1A04E6FD1320}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06198A34-411B-A3C2-93B3-1A04E6FD1320}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06198A34-411B-A3C2-93B3-1A04E6FD1320}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{06198A34-411B-A3C2-93B3-1A04E6FD1320}.Debug|x64.Build.0 = Debug|Any CPU
+		{06198A34-411B-A3C2-93B3-1A04E6FD1320}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{06198A34-411B-A3C2-93B3-1A04E6FD1320}.Debug|x86.Build.0 = Debug|Any CPU
+		{06198A34-411B-A3C2-93B3-1A04E6FD1320}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06198A34-411B-A3C2-93B3-1A04E6FD1320}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06198A34-411B-A3C2-93B3-1A04E6FD1320}.Release|x64.ActiveCfg = Release|Any CPU
+		{06198A34-411B-A3C2-93B3-1A04E6FD1320}.Release|x64.Build.0 = Release|Any CPU
+		{06198A34-411B-A3C2-93B3-1A04E6FD1320}.Release|x86.ActiveCfg = Release|Any CPU
+		{06198A34-411B-A3C2-93B3-1A04E6FD1320}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{F1CB65AD-EDDB-4576-93D6-08D443CEA466} = {60E95AAC-17FD-CBE2-AA3D-0EAB179FD02F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A223C33D-6D37-4C0E-8755-BA46F9759CB1}
