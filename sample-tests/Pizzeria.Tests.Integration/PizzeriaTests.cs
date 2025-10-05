@@ -54,6 +54,28 @@ SELECT EXISTS
         return Task.CompletedTask;
     }
 
+    protected async Task WaitForDomainEventsToBeDispatchedAsync()
+    {
+        var timeout = TimeSpan.FromSeconds(30);
+        var delay = TimeSpan.FromSeconds(5);
+        var startTime = DateTime.UtcNow;
+
+        while (DateTime.UtcNow - startTime < timeout)
+        {
+            var undispatchedCount = await this.factory.GetUndispatchedDomainEventCountAsync();
+
+            if (undispatchedCount == 0)
+            {
+                return;
+            }
+
+            await Task.Delay(delay);
+        }
+
+        var finalCount = await this.factory.GetUndispatchedDomainEventCountAsync();
+        throw new TimeoutException($"Timed out waiting for domain events to be dispatched. {finalCount} events remain undispatched after {timeout.TotalSeconds} seconds.");
+    }
+
     private static async Task EnsureDatabaseMigratedAsync(string connectionString)
     {
         var optionsBuilder = new DbContextOptionsBuilder<StoreDbContext>();
