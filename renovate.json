@@ -71,6 +71,12 @@
     },
     {
       "matchPackagePatterns": [".*"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false,
+      "description": "Block major updates for all packages"
+    },
+    {
+      "matchPackagePatterns": [".*"],
       "matchUpdateTypes": ["minor", "patch"],
       "description": "Default rule: only allow minor and patch updates for all other packages"
     },
