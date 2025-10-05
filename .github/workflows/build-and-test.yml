@@ -60,7 +60,7 @@ jobs:
             -reports:"coverage/coverage.cobertura.xml" \
             -targetdir:"coverage-report" \
             -reporttypes:"MarkdownSummaryGithub;Cobertura" \
-            -classfilters:"-Lewee.Blazor.Fluxor*" \
+            -assemblyfilters:"-Fluxor*" \
             -verbosity:"Warning"
 
       - name: Add Coverage PR Comment
