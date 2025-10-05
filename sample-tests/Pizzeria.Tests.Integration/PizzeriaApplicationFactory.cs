@@ -94,6 +94,20 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         return await this.storeDbQueryProjectionService.RetrieveByKeyAsync<T>(key, CancellationToken.None);
     }
 
+    public async Task<int> GetUndispatchedDomainEventCountAsync()
+    {
+        if (this.storeDbContext.DomainEventReferences == null)
+        {
+            return 0;
+        }
+
+        var count = await this.storeDbContext.DomainEventReferences
+            .Where(x => !x.Dispatched)
+            .CountAsync();
+
+        return count;
+    }
+
     public async Task DisposeAsync()
     {
         if (this.storeDbContext != null)
