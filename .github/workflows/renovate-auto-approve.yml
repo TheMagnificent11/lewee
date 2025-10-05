@@ -23,8 +23,8 @@ jobs:
       contents: read
       pull-requests: write
     runs-on: ubuntu-latest
-    # Prevent Renovate Bot from approving its own PRs
-    if: github.actor != 'renovate[bot]'
+    # Restrict approval to PRs created by Renovate Bot
+    if: github.actor == 'renovate[bot]'
     steps:
       - name: Check for dependencies label
         id: check-label
