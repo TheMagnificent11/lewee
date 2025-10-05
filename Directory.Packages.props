@@ -5,10 +5,6 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="bunit.web" Version="1.40.0" />
-    <PackageVersion Include="coverlet.collector" Version="6.0.4">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageVersion>
     <PackageVersion Include="CSharpFunctionalExtensions" Version="3.6.0" />
     <PackageVersion Include="FastEndpoints" Version="6.2.0" />
     <PackageVersion Include="Flurl" Version="4.0.0" />
