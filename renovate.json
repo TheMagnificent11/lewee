@@ -76,11 +76,6 @@
       "description": "Block major updates for all packages"
     },
     {
-      "matchPackagePatterns": [".*"],
-      "matchUpdateTypes": ["minor", "patch"],
-      "description": "Default rule: only allow minor and patch updates for all other packages"
-    },
-    {
       "matchPackagePatterns": ["^FluentAssertions"],
       "enabled": false,
       "description": "FluentAssertions packages should not be upgraded"
