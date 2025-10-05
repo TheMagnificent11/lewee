@@ -28,9 +28,7 @@ public class OrderingDomainEventHandler : INotificationHandler<OrderStartedEvent
 
     public async Task Handle(OrderStartedEvent notification, CancellationToken cancellationToken)
     {
-        this.logger.LogInformation(
-            "Handling OrderStartedEvent for order {OrderId}",
-            notification.OrderId);
+        this.logger.LogHandlingOrderStartedEvent(notification.OrderId);
 
         // Get the order with its pizzas to create the query projection
         var spec = new GetOrderQuerySpec(notification.OrderId);
@@ -38,9 +36,7 @@ public class OrderingDomainEventHandler : INotificationHandler<OrderStartedEvent
 
         if (order is null)
         {
-            this.logger.LogError(
-                "Order {OrderId} not found when handling OrderStartedEvent - this indicates a critical system error",
-                notification.OrderId);
+            this.logger.LogOrderNotFound(notification.OrderId);
             return;
         }
 
@@ -91,8 +87,6 @@ public class OrderingDomainEventHandler : INotificationHandler<OrderStartedEvent
 
         await this.mediator.Publish(clientEvent, cancellationToken);
 
-        this.logger.LogInformation(
-            "Published OrderDto to SignalR for order {OrderId}",
-            notification.OrderId);
+        this.logger.LogPublishedOrderDto(notification.OrderId);
     }
 }

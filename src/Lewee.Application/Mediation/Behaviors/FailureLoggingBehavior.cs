@@ -31,11 +31,11 @@ internal class FailureLoggingBehavior<TRequest, TResponse> : IPipelineBehavior<T
 
         if (statusId >= 500)
         {
-            this.logger.LogError("Unexpected error occurred {@Errors}", result.Errors);
+            this.logger.LogUnexpectedError(result.Errors);
         }
         else
         {
-            this.logger.LogInformation("Bad request {@Errors}", result.Errors);
+            this.logger.LogBadRequest(result.Errors);
         }
 
         return result;

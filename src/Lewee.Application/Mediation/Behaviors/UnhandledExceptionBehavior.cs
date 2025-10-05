@@ -29,11 +29,10 @@ internal class UnhandledExceptionBehavior<TRequest, TResponse> : IPipelineBehavi
                 { "Request", request! }
             }))
             {
-                this.logger.LogError(
+                this.logger.LogUnhandledException(
                     ex,
-                    "Request: Unhandled Exception for Request {Name} {@Request}",
                     requestName,
-                    request);
+                    request!);
             }
 
             // TODO: instead of re-throwing, return `Result`

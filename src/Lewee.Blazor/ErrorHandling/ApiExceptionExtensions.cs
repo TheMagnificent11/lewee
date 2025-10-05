@@ -16,15 +16,14 @@ public static class ApiExceptionExtensions
     {
         if (exception.StatusCode < 400)
         {
-            logger.LogWarning(exception, "Unexpected response status (Status Code: {StatusCode})", exception.StatusCode);
+            logger.LogUnexpectedResponseStatus(exception, exception.StatusCode);
             return;
         }
 
         if (exception.StatusCode == 400)
         {
-            logger.LogInformation(
+            logger.LogBadRequestFailed(
                 exception,
-                "Request failed (Status Code: {StatusCode}, Message: {BadRequestMessage}, Response Body: {BadRequestResponseBody})",
                 exception.StatusCode,
                 exception.Message,
                 exception.Response);
@@ -33,17 +32,15 @@ public static class ApiExceptionExtensions
 
         if (exception.StatusCode > 400 && exception.StatusCode < 500)
         {
-            logger.LogInformation(
+            logger.LogClientErrorFailed(
                 exception,
-                "Request failed (Status Code: {StatusCode}, Message: {ErrorMessage}",
                 exception.StatusCode,
                 exception.Message);
             return;
         }
 
-        logger.LogError(
+        logger.LogServerErrorFailed(
             exception,
-            "Request failed due to server error (Status Code: {StateCode}, Message: {Message})",
             exception.StatusCode,
             exception.Message);
     }

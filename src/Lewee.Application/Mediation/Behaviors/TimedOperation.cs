@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 
 namespace Lewee.Application.Mediation.Behaviors;
+
 internal class TimedOperation : IDisposable
 {
     public const string BeginningOperationTemplate = "Beginning operation {TimedOperation}";
@@ -17,15 +18,14 @@ internal class TimedOperation : IDisposable
         this.logger = logger;
         this.timedOperationName = timedOperationName;
 
-        this.logger.LogInformation(BeginningOperationTemplate, this.timedOperationName);
+        this.logger.LogBeginningOperation(this.timedOperationName);
         this.stopwatch = Stopwatch.StartNew();
     }
 
     public void Dispose()
     {
         this.stopwatch.Stop();
-        this.logger.LogInformation(
-            CompletedOperationTemplate,
+        this.logger.LogCompletedOperation(
             this.timedOperationName,
             this.stopwatch.ElapsedMilliseconds);
     }

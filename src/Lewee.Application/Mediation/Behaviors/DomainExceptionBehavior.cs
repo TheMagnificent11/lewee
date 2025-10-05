@@ -27,7 +27,7 @@ internal class DomainExceptionBehavior<TCommand, TResponse> : IPipelineBehavior<
         }
         catch (DomainException ex)
         {
-            this.logger.LogInformation(ex, "Domain exception caught");
+            this.logger.LogDomainExceptionCaught(ex);
 
             var result = CommandResult.Fail(ResultStatus.BadRequest, ex.Message);
 
