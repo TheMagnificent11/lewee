@@ -81,7 +81,6 @@ jobs:
           head-sha: ${{ github.sha }}
 
       - name: Pack
-        if: github.ref == 'refs/heads/main'
         run: dotnet pack --configuration Release --no-restore --nologo /p:PackageVersion=${{ steps.version.outputs.fullSemVer }} --output ./output
 
       - name: Publish to NuGet
