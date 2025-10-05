@@ -23,8 +23,7 @@ jobs:
       contents: read
       pull-requests: write
     runs-on: ubuntu-latest
-    # Restrict approval to PRs created by Renovate Bot
-    if: github.actor == 'renovate[bot]'
+    # Only approve PRs with the 'dependencies' label (no actor restriction)
     steps:
       - name: Check for dependencies label
         id: check-label
