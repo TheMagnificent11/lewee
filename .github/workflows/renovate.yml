@@ -39,3 +39,5 @@ jobs:
         env:
           # Set log level from workflow input or default to info
           LOG_LEVEL: ${{ github.event.inputs.logLevel || 'info' }}
+          # Enable auto-discovery to find repositories automatically
+          RENOVATE_AUTODISCOVER: 'true'
