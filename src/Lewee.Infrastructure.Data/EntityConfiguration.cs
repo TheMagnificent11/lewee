@@ -8,24 +8,14 @@ namespace Lewee.Infrastructure.Data;
 /// Entity Configuration
 /// </summary>
 /// <typeparam name="TEntity">Entity type</typeparam>
-public abstract class EntityConfiguration<TEntity> : IEntityTypeConfiguration<TEntity>
+public abstract class EntityConfiguration<TEntity> : AuditableRecordConfiguration<TEntity>
     where TEntity : Entity
 {
     /// <inheritdoc/>
-    public virtual void Configure(EntityTypeBuilder<TEntity> builder)
+    public override void Configure(EntityTypeBuilder<TEntity> builder)
     {
-        builder.HasKey(x => x.Id);
-        builder.AddAuditUserProperties();
+        base.Configure(builder);
+
         builder.HasQueryFilter(x => !x.IsDeleted);
-
-        this.ConfigureEntity(builder);
     }
-
-    /// <summary>
-    /// Configures the database table for the entity type
-    /// </summary>
-    /// <param name="builder">
-    /// The builder to be used to configure the entity type
-    /// </param>
-    protected abstract void ConfigureEntity(EntityTypeBuilder<TEntity> builder);
 }
