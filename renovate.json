@@ -1,0 +1,79 @@
+{
+  "platform": "github",
+  "endpoint": "https://api.github.com",
+  "token": "${RENOVATE_TOKEN}",
+  "autodiscover": true,
+  "onboardingConfig": { "extends": ["config:base"] },
+  "packageRules": [
+    {
+      "matchPackagePatterns": ["^Ardalis\\."],
+      "groupName": "ardalis-updates (minor/patch)",
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "matchPackagePatterns": ["^Aspire\\."],
+      "groupName": "aspire-updates (minor/patch)",
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "matchPackagePatterns": ["^Correlate\\."],
+      "groupName": "correlate-updates (minor/patch)",
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "matchPackagePatterns": ["^FluentValidation"],
+      "groupName": "fluentvalidation-updates (minor/patch)",
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "matchPackagePatterns": ["^Fluxor"],
+      "groupName": "fluxor-updates (minor/patch)",
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "matchPackagePatterns": ["^Microsoft\\.AspNetCore\\."],
+      "groupName": "microsoft-aspnetcore-updates (minor/patch)",
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "matchPackagePatterns": ["^Microsoft\\.EntityFrameworkCore"],
+      "groupName": "microsoft-entityframework-updates (minor/patch)",
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "matchPackagePatterns": ["^Microsoft\\.Extensions\\."],
+      "groupName": "microsoft-extensions-updates (minor/patch)",
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "matchPackagePatterns": ["^OpenTelemetry"],
+      "groupName": "opentelemetry-updates (minor/patch)",
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "matchPackagePatterns": ["^Refit"],
+      "groupName": "refit-updates (minor/patch)",
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "matchPackagePatterns": ["^xunit"],
+      "groupName": "xunit-updates (minor/patch)",
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "matchPackagePatterns": [".*"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "description": "Default rule: only allow minor and patch updates for all other packages"
+    },
+    {
+      "matchPackagePatterns": ["^FluentAssertions"],
+      "enabled": false,
+      "description": "FluentAssertions packages should not be upgraded"
+    },
+    {
+      "matchPackagePatterns": ["^MediatR"],
+      "enabled": false,
+      "description": "MediatR packages should not be upgraded"
+    }
+  ]
+}
