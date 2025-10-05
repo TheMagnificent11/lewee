@@ -1,3 +1,13 @@
+# Auto-approve Dependabot PRs
+#
+# This workflow automatically approves Dependabot PRs that have the 'dependencies' label.
+# The approval appears as the lewee-bot user instead of github-actions.
+#
+# Prerequisites:
+# - LEWEE_BOT_TOKEN secret must be configured in the repository settings
+# - The token should be a Personal Access Token (PAT) or GitHub App token for the lewee-bot user
+# - The token must have 'pull_requests: write' permission
+#
 name: Auto-approve Dependabot PRs
 
 on:
@@ -26,10 +36,12 @@ jobs:
             echo "has_label=false" >> $GITHUB_OUTPUT
           fi
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Use lewee-bot token for checking labels
+          GH_TOKEN: ${{ secrets.LEWEE_BOT_TOKEN }}
 
       - name: Auto approve
         if: steps.check-label.outputs.has_label == 'true'
         run: gh pr review ${{ github.event.pull_request.number }} --repo ${{ github.repository }} --approve
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Use lewee-bot token so the approval appears as lewee-bot instead of github-actions
+          GH_TOKEN: ${{ secrets.LEWEE_BOT_TOKEN }}
