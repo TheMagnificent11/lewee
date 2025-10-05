@@ -27,9 +27,9 @@
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="9.0.4" />
   </ItemGroup>
   <ItemGroup Label="Aspire">
-    <PackageVersion Include="Aspire.Hosting.AppHost" Version="9.5.0" />
+    <PackageVersion Include="Aspire.Hosting.AppHost" Version="9.5.1" />
     <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="9.5.1" />
-    <PackageVersion Include="Aspire.Hosting.Testing" Version="9.5.0" />
+    <PackageVersion Include="Aspire.Hosting.Testing" Version="9.5.1" />
     <PackageVersion Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.5.1" />
   </ItemGroup>
   <ItemGroup Label="MediatR (DO NOT UPGRADE)">
