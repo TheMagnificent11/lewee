@@ -1,0 +1,5 @@
+# This file defines code ownership for the lewee repository
+# Code owners will be automatically requested for review when changes are made to files they own
+
+# Global ownership - applies to all files in the repository
+* @TheMagnificent11 @lewee-admin @lewee-bot
