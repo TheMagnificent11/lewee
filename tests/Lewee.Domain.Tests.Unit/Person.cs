@@ -18,6 +18,8 @@ public class Person : Entity
     }
 
     public string GivenName { get; }
+
     public string Surname { get; }
+
     public DateOnly DateOfBirth { get; }
 }
