@@ -51,6 +51,15 @@ public class EntityTests
     }
 
     [Fact]
+    public void Equals_DifferentTypes_ReturnsFalse()
+    {
+        var person = new Person(Guid.NewGuid(), "John", "Doe", DateOnly.FromDateTime(DateTime.Now));
+        var employee = new Employee(person.Id, "John", "Doe", DateOnly.FromDateTime(DateTime.Now), "EMP001");
+
+        person.Equals(employee).Should().BeFalse();
+    }
+
+    [Fact]
     public void GetHashCode_SameId_ReturnsSameHashCode()
     {
         var id = Guid.NewGuid();
@@ -107,6 +116,22 @@ public class EntityTests
         var person = new Person(Guid.NewGuid(), "John", "Doe", DateOnly.FromDateTime(DateTime.Now));
 
         person.Undelete();
+
+        person.IsDeleted.Should().BeFalse();
+    }
+
+    [Fact]
+    public void Entity_ImplementsISoftDeleteEntity()
+    {
+        var person = new Person(Guid.NewGuid(), "John", "Doe", DateOnly.FromDateTime(DateTime.Now));
+
+        person.Should().BeAssignableTo<ISoftDeleteEntity>();
+    }
+
+    [Fact]
+    public void Entity_DefaultIsDeleted_IsFalse()
+    {
+        var person = new Person(Guid.NewGuid(), "John", "Doe", DateOnly.FromDateTime(DateTime.Now));
 
         person.IsDeleted.Should().BeFalse();
     }

@@ -32,4 +32,17 @@ public class ValueObjectTests
         // Assert
         result.Should().BeFalse();
     }
+
+    [Fact]
+    public void Equals_ReturnsFalse_WhenOtherIsNull()
+    {
+        // Arrange
+        var address = new Address(123, "Main St", "Suburb", "State", "12345");
+
+        // Act
+        var result = address.Equals(null);
+
+        // Assert
+        result.Should().BeFalse();
+    }
 }
