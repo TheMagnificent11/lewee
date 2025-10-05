@@ -6,7 +6,6 @@ This package assists with building the application layer of an application using
 
 - [FluentValidation](https://docs.fluentvalidation.net/en/latest)
 - [FreeMediator](https://github.com/khellang/FreeMediator)
-- [Serilog](https://serilog.net)
 - [Lewee.Domain](../Lewee.Domain/README.md)
 - [Lewee.Contracts](../Lewee.Contracts/README.md)
 
@@ -75,7 +74,7 @@ As mentioned in the [Pipeline Behaviors](#pipeline-behaviors) section, the `Tena
 - [FailureLoggingBehavior](./Mediation/Behaviors/FailureLoggingBehavior.cs)
   - Checks the `Status` of requests that have `Result` return types and logs an error if there was an unexpected failure, or an information log if there was domain/validation failure.
 - [PerformanceLoggingBehavior](./Mediation/Behaviors/PerformanceBehavior.cs)
-  - Uses `Serilog`'s `BeginTimedOperation` functionality to log the time taken to execute the request.
+  - Logs the time taken to execute the request using high-performance logging.
 - [TenantLoggingBehavior](./Mediation/Behaviors/TenantLoggingBehavior.cs)
   - Adds a `TenantId` structured logging property for every request that implements `ITenantedRequest`.
 - [UnhandledExceptionBehavior](./Mediation//Behaviors/CorrelationIdLoggingBehavior.cs)
