@@ -1,5 +1,6 @@
 using Lewee.Blazor.Fluxor.Actions;
 using Lewee.Blazor.Messaging;
+using Microsoft.Extensions.Logging;
 using Pizzeria.Store.Contracts;
 using Pizzeria.Store.WebClient.States.Orders.Actions;
 
@@ -18,15 +19,13 @@ public class MessageToActionMapper : IMessageToActionMapper
     {
         if (message == null)
         {
-            this.logger.LogWarning("Received null message with CorrelationId={CorrelationId}", correlationId);
+            this.logger.LogReceivedNullMessage(correlationId);
             return null;
         }
 
-        this.logger.LogInformation(
-            "Mapping message: Type={MessageType}, CorrelationId={CorrelationId}, Message={@Message}",
+        this.logger.LogMappingMessage(
             message.GetType().FullName,
-            correlationId,
-            message);
+            correlationId);
 
         var result = message switch
         {
@@ -36,14 +35,13 @@ public class MessageToActionMapper : IMessageToActionMapper
 
         if (result != null)
         {
-            this.logger.LogInformation(
-                "Successfully mapped {MessageType} to {ActionType}",
+            this.logger.LogSuccessfullyMapped(
                 message.GetType().Name,
                 result.GetType().Name);
         }
         else
         {
-            this.logger.LogWarning("No mapping found for message type {MessageType}", message.GetType().FullName);
+            this.logger.LogNoMappingFound(message.GetType().FullName);
         }
 
         return result;
