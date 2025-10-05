@@ -53,7 +53,7 @@ jobs:
         run: dotnet build --configuration Release --no-restore --nologo
 
       - name: Test
-        run: dotnet-coverage collect "dotnet test --no-build --nologo" --settings coverage.xml -f cobertura -o ./coverage/coverage.cobertura.xml
+        run: dotnet-coverage collect "dotnet test --configuration Release --no-build --nologo" --settings coverage.xml -f cobertura -o ./coverage/coverage.cobertura.xml
 
       - name: Generate Coverage Report
         if: ${{ inputs.is-pr == true }}
@@ -82,7 +82,7 @@ jobs:
 
       - name: Pack
         if: github.ref == 'refs/heads/main'
-        run: dotnet pack --configuration Release --nologo /p:PackageVersion=${{ steps.version.outputs.fullSemVer }} --output ./output
+        run: dotnet pack --configuration Release --no-restore --nologo /p:PackageVersion=${{ steps.version.outputs.fullSemVer }} --output ./output
 
       - name: Publish to NuGet
         if: github.ref == 'refs/heads/main'
