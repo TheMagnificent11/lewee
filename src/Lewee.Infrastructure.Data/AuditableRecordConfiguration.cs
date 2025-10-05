@@ -20,24 +20,36 @@ public abstract class AuditableRecordConfiguration<TEntity> : IEntityTypeConfigu
         builder.AddAuditUserProperties();
 
         // Add concurrency token as a shadow property
-        // Check if using PostgreSQL by looking at model annotations
+        // Detect database provider by looking at model annotations
         var model = builder.Metadata.Model;
-        var isPostgreSql = model.GetAnnotations()
+        var annotations = model.GetAnnotations();
+
+        var isPostgreSql = annotations
             .Any(a => a.Name.Contains("Npgsql", StringComparison.OrdinalIgnoreCase) ||
                      a.Value?.ToString()?.Contains("Npgsql", StringComparison.OrdinalIgnoreCase) == true);
 
-        if (isPostgreSql)
+        var isSqlServer = annotations
+            .Any(a => a.Name.Contains("SqlServer", StringComparison.OrdinalIgnoreCase) ||
+                     a.Value?.ToString()?.Contains("SqlServer", StringComparison.OrdinalIgnoreCase) == true);
+
+        switch ((isPostgreSql, isSqlServer))
         {
-            // PostgreSQL uses uint with xid type
-            builder.Property<uint>("Version")
-                .IsRowVersion()
-                .HasColumnType("xid");
-        }
-        else
-        {
-            // SQL Server uses byte[] with rowversion
-            builder.Property<byte[]>("Version")
-                .IsRowVersion();
+            case (true, _):
+                // PostgreSQL uses uint with xid type
+                builder.Property<uint>("Version")
+                    .IsRowVersion()
+                    .HasColumnType("xid");
+                break;
+
+            case (false, true):
+                // SQL Server uses byte[] with rowversion
+                builder.Property<byte[]>("Version")
+                    .IsRowVersion();
+                break;
+
+            default:
+                // No concurrency token configuration for unknown providers
+                break;
         }
 
         this.ConfigureEntity(builder);
