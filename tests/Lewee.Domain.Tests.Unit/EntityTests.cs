@@ -119,4 +119,20 @@ public class EntityTests
 
         person.IsDeleted.Should().BeFalse();
     }
+
+    [Fact]
+    public void Entity_ImplementsISoftDeleteEntity()
+    {
+        var person = new Person(Guid.NewGuid(), "John", "Doe", DateOnly.FromDateTime(DateTime.Now));
+
+        person.Should().BeAssignableTo<ISoftDeleteEntity>();
+    }
+
+    [Fact]
+    public void Entity_DefaultIsDeleted_IsFalse()
+    {
+        var person = new Person(Guid.NewGuid(), "John", "Doe", DateOnly.FromDateTime(DateTime.Now));
+
+        person.IsDeleted.Should().BeFalse();
+    }
 }
