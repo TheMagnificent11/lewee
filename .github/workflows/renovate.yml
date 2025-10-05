@@ -1,0 +1,41 @@
+name: Renovate
+
+# Run Renovate once per week at midnight Saturday UTC
+on:
+  schedule:
+    - cron: '0 0 * * 6'  # Midnight Saturday UTC (0 minutes, 0 hours, every day of month, every month, Saturday)
+  workflow_dispatch:  # Allow manual triggering
+    inputs:
+      logLevel:
+        description: 'Log level for Renovate'
+        required: false
+        default: 'info'
+        type: choice
+        options:
+          - info
+          - debug
+          - warn
+          - error
+
+jobs:
+  renovate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # Fetch full history for proper git operations
+          fetch-depth: 0
+
+      - name: Self-hosted Renovate
+        uses: renovatebot/github-action@v40.3.2
+        with:
+          configurationFile: renovate.json
+          token: ${{ secrets.RENOVATE_TOKEN }}
+        env:
+          # Set log level from workflow input or default to info
+          LOG_LEVEL: ${{ github.event.inputs.logLevel || 'info' }}

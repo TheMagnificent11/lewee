@@ -1,0 +1,89 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base",
+    ":dependencyDashboard",
+    ":semanticCommits",
+    ":automergeDigest",
+    ":automergeMinor"
+  ],
+  "timezone": "UTC",
+  "schedule": ["at any time"],
+  "labels": ["dependencies"],
+  "baseBranches": ["develop"],
+  "prConcurrentLimit": 10,
+  "prCreation": "immediate",
+  "packageRules": [
+    {
+      "matchPackagePatterns": ["^Ardalis\\."],
+      "groupName": "ardalis-updates (minor/patch)",
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "matchPackagePatterns": ["^Aspire\\."],
+      "groupName": "aspire-updates (minor/patch)",
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "matchPackagePatterns": ["^Correlate\\."],
+      "groupName": "correlate-updates (minor/patch)",
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "matchPackagePatterns": ["^FluentValidation"],
+      "groupName": "fluentvalidation-updates (minor/patch)",
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "matchPackagePatterns": ["^Fluxor"],
+      "groupName": "fluxor-updates (minor/patch)",
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "matchPackagePatterns": ["^Microsoft\\.AspNetCore\\."],
+      "groupName": "microsoft-aspnetcore-updates (minor/patch)",
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "matchPackagePatterns": ["^Microsoft\\.EntityFrameworkCore"],
+      "groupName": "microsoft-entityframework-updates (minor/patch)",
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "matchPackagePatterns": ["^Microsoft\\.Extensions\\."],
+      "groupName": "microsoft-extensions-updates (minor/patch)",
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "matchPackagePatterns": ["^OpenTelemetry"],
+      "groupName": "opentelemetry-updates (minor/patch)",
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "matchPackagePatterns": ["^Refit"],
+      "groupName": "refit-updates (minor/patch)",
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "matchPackagePatterns": ["^xunit"],
+      "groupName": "xunit-updates (minor/patch)",
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "matchPackagePatterns": [".*"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false,
+      "description": "Block major updates for all packages"
+    },
+    {
+      "matchPackagePatterns": ["^FluentAssertions"],
+      "enabled": false,
+      "description": "FluentAssertions packages should not be upgraded"
+    },
+    {
+      "matchPackagePatterns": ["^MediatR"],
+      "enabled": false,
+      "description": "MediatR packages should not be upgraded"
+    }
+  ]
+}
