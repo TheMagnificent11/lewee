@@ -64,13 +64,13 @@ jobs:
 
       - name: Add Coverage PR Comment
         uses: marocchino/sticky-pull-request-comment@v2
-        if: ${{ inputs.is-pr == true }}
+        if: ${{ inputs.is-pr == true && github.actor != 'dependabot[bot]' }}
         with:
           recreate: true
           path: coverage-report/SummaryGithub.md
 
       - name: Check Diff Coverage (90% threshold)
-        if: ${{ inputs.is-pr == true }}
+        if: ${{ inputs.is-pr == true && github.actor != 'dependabot[bot]' }}
         uses: ./.github/actions/diff-coverage-check
         with:
           coverage-file: coverage/coverage.cobertura.xml
