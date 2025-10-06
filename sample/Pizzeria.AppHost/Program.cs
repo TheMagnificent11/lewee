@@ -2,9 +2,11 @@ using Pizzeria.Common;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-// Add Keycloak using Aspire integration
-var authServer = builder.AddKeycloak(ServiceNames.AuthServer, port: 8080)
-    .WithDataVolume();
+var authServer = Environments.IsIntegrationTesting
+    ? builder.AddKeycloak(ServiceNames.AuthServer)
+        .WithLifetime(ContainerLifetime.Persistent)
+        .WithDataVolume()
+    : builder.AddKeycloak(ServiceNames.AuthServer);
 
 var databaseServer = Environments.IsIntegrationTesting
     ? builder.AddPostgres(ServiceNames.DatabaseServer)
