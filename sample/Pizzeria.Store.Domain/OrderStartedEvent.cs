@@ -17,5 +17,4 @@ public sealed class OrderStartedEvent : DomainEvent
     }
 
     public Guid OrderId { get; init; }
-    public DateTime EventDateTime { get; init; }
 }

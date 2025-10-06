@@ -17,5 +17,4 @@ public abstract class OrderSubmittedEvent : DomainEvent
     }
 
     public Guid OrderId { get; init; }
-    public DateTime EventDateTime { get; init; }
 }
