@@ -18,7 +18,9 @@ public sealed class PizzaOrderingTests : PizzeriaTests
     {
         // Arrange
         using var httpClient = await this.factory.GetServiceClientAsync(ServiceNames.PizzaStoreApi);
+        var token = await this.factory.GetJwtTokenAsync();
         using var request = new HttpRequestMessage(HttpMethod.Post, Endpoints.StoreApi.Orders);
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
         // Act
         using var response = await httpClient.SendAsync(request);
@@ -42,15 +44,20 @@ public sealed class PizzaOrderingTests : PizzeriaTests
     {
         // Arrange
         using var httpClient = await this.factory.GetServiceClientAsync(ServiceNames.PizzaStoreApi);
+        var token = await this.factory.GetJwtTokenAsync();
+
         using var createOrderRequest = new HttpRequestMessage(HttpMethod.Post, Endpoints.StoreApi.Orders);
+        createOrderRequest.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
         using var createOrderResponse = await httpClient.SendAsync(createOrderRequest);
 
         createOrderResponse.EnsureSuccessStatusCode();
         var order = await this.factory.GetLatestOrderAsync();
         order.Should().NotBeNull();
+
         using var addPizzaRequest = new HttpRequestMessage(
             HttpMethod.Put,
             Endpoints.StoreApi.GetAddPizzaToOrderEndpoint(order.Id, Menu.PizzaIds.QuattroFormaggi));
+        addPizzaRequest.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
         // Act
         using var addPizzaResponse = await httpClient.SendAsync(addPizzaRequest);

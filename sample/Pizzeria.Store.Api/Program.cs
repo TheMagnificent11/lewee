@@ -26,7 +26,28 @@ builder.Services
     .AddLeweeDatabaseSeeder<StoreDbContext, StoreSeeder>()
     .AddPizzaStoreApplication()
     .AddCorrelationIdServices()
-    .AddLeweeSignalR()
+    .AddLeweeSignalR();
+
+builder.Services
+    .AddAuthentication()
+    .AddKeycloakJwtBearer(
+        serviceName: ServiceNames.AuthServer,
+        realm: Pizzeria.Common.Environments.Auth.RealmName,
+        options =>
+        {
+            options.Audience = ServiceNames.PizzaStoreApi;
+
+            // For development only - disable HTTPS metadata validation
+            // In production, use explicit Authority configuration instead
+            if (builder.Environment.IsDevelopment())
+            {
+                options.RequireHttpsMetadata = false;
+            }
+        });
+
+builder.Services.AddAuthorizationBuilder();
+
+builder.Services
     .AddFastEndpoints()
     .AddEndpointsApiExplorer()
     .AddSwaggerGen();
@@ -34,6 +55,8 @@ builder.Services
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapHub<ClientEventHub>("/events");
 app.UseFastEndpoints();
 app.UseCorrelationIdMiddleware();

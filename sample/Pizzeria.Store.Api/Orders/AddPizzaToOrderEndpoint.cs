@@ -13,7 +13,7 @@ public sealed class AddPizzaToOrderEndpoint : CommandEndpoint<EmptyRequest>
 
     protected override string Name => "Add Pizza To Order";
 
-    protected override bool IsAnonymousAllowed => true;
+    protected override bool IsAnonymousAllowed => false;
 
     public override async Task HandleAsync(EmptyRequest req, CancellationToken ct)
     {
