@@ -17,7 +17,6 @@ Below is summary of the dependencies used by Lewee. Note that this isn't a list 
 - [MediatR](https://mediatr.io/) version 12.5.0 (free version)
 - [FastEndpoints](https://fast-endpoints.com)
 - [FluentValidation](https://docs.fluentvalidation.net/en/latest) version 8.7.0 (free version)
-- [Ardalis.Specification](http://specification.ardalis.com)
 - [xUnit](https://xunit.net)
 
 ## Running the sample application
