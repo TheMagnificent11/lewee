@@ -128,7 +128,7 @@ dotnet test sample-tests/Pizzeria.Tests.Integration/
 | Warnings as Errors | Enabled | Build fails on any warning |
 | Code Style in Build | Enforced | Style violations break the build |
 | Documentation Generation | Required | All framework projects must generate XML docs |
-| Code Coverage | Optional | Test projects excluded from coverage |
+| Code Coverage | Required for Framework | Pull requests with changes to `src/` directory (Lewee packages) must have at least 90% line coverage |
 
 ### Coding Style
 
@@ -147,6 +147,7 @@ dotnet format lewee.sln
 - [ ] No style violations
 - [ ] XML documentation for public APIs
 - [ ] Follows existing patterns in the codebase
+- [ ] Framework changes (`src/` directory) have at least 90% line coverage
 
 ## Validation Workflows
 
@@ -385,7 +386,8 @@ Failed to start container: port already in use
 2. Add XML documentation for public APIs
 3. Follow existing architectural patterns
 4. Add unit tests for new functionality
-5. Update relevant README.md files
+5. Ensure at least 90% line coverage for all changes
+6. Update relevant README.md files
 
 **When working on sample app (Pizzeria.*):**
 1. Demonstrate best practices
@@ -397,6 +399,7 @@ Failed to start container: port already in use
 - [ ] Follows domain-driven design principles
 - [ ] Maintains clean architecture boundaries
 - [ ] Includes appropriate tests
+- [ ] Framework changes have at least 90% line coverage
 - [ ] Documentation updated
 - [ ] No warnings or style violations
 
