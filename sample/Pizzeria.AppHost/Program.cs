@@ -3,10 +3,13 @@ using Pizzeria.Common;
 var builder = DistributedApplication.CreateBuilder(args);
 
 // Add Keycloak container manually for better control
+var keycloakAdminUsername = builder.AddParameter("keycloak-admin-username", secret: true);
+var keycloakAdminPassword = builder.AddParameter("keycloak-admin-password", secret: true);
+
 var authServer = builder.AddContainer(ServiceNames.AuthServer, "quay.io/keycloak/keycloak", "26.1.0")
     .WithEndpoint(port: 8080, targetPort: 8080, name: "http")
-    .WithEnvironment("KEYCLOAK_ADMIN", "admin")
-    .WithEnvironment("KEYCLOAK_ADMIN_PASSWORD", "admin")
+    .WithEnvironment("KEYCLOAK_ADMIN", keycloakAdminUsername)
+    .WithEnvironment("KEYCLOAK_ADMIN_PASSWORD", keycloakAdminPassword)
     .WithArgs("start-dev");
 
 var databaseServer = Environments.IsIntegrationTesting
@@ -21,10 +24,10 @@ var pizzaStoreDatabase = databaseServer.AddDatabase(pizzaStoreDatabaseName);
 
 builder.AddProject<Projects.Pizzeria_Store_Api>(ServiceNames.PizzaStoreApi)
     .WithReference(pizzaStoreDatabase)
-    .WithEnvironment("Authentication__Schemes__Bearer__Authority", authServer.GetEndpoint("http"))
-    .WithEnvironment("Authentication__Schemes__Bearer__ValidAudience", "pizzeria-store-api")
-    .WithEnvironment("Authentication__Schemes__Bearer__ValidIssuer", authServer.GetEndpoint("http"))
-    .WithEnvironment("Authentication__Schemes__Bearer__RequireHttpsMetadata", "false")
+    .WithEnvironment(Environments.AuthenticationSchemesBearerAuthority, authServer.GetEndpoint("http"))
+    .WithEnvironment(Environments.AuthenticationSchemesBearerValidAudience, ServiceNames.PizzaStoreApi)
+    .WithEnvironment(Environments.AuthenticationSchemesBearerValidIssuer, authServer.GetEndpoint("http"))
+    .WithEnvironment(Environments.AuthenticationSchemesBearerRequireHttpsMetadata, "false")
     .WaitFor(pizzaStoreDatabase)
     .WaitFor(authServer)
     .WithHttpHealthCheck("/health");

@@ -34,7 +34,7 @@ builder.Services
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        var authority = builder.Configuration["Authentication:Schemes:Bearer:Authority"];
+        var authority = builder.Configuration[Pizzeria.Common.Environments.AuthenticationSchemesBearerAuthority];
         if (!string.IsNullOrEmpty(authority))
         {
             options.Authority = $"{authority}/realms/pizzeria";
