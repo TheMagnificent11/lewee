@@ -25,4 +25,9 @@ public abstract class DomainEvent : INotification
     /// Gets or sets the user ID
     /// </summary>
     public string? UserId { get; set; }
+
+    /// <summary>
+    /// Gets the date-time of the event
+    /// </summary>
+    public DateTime EventDateTime { get; init; }
 }
