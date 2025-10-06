@@ -1,4 +1,5 @@
-﻿using Aspire.Hosting;
+﻿using System.Net.Http.Json;
+using Aspire.Hosting;
 using Aspire.Hosting.ApplicationModel;
 using Aspire.Hosting.Testing;
 using Lewee.Domain;
@@ -15,12 +16,15 @@ namespace Pizzeria.Tests.Integration;
 public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 {
     public const string CollectionName = "PizzeriaCollection";
+    private const string TestUsername = "testuser";
+    private const string TestPassword = "testpassword";
 
     private IDistributedApplicationTestingBuilder builder;
     private DistributedApplication app;
     private ResourceNotificationService resourceNotificationService;
     private StoreDbContext storeDbContext;
     private QueryProjectionService<StoreDbContext> storeDbQueryProjectionService;
+    private string keycloakBaseUrl;
 
     public async Task InitializeAsync()
     {
@@ -38,9 +42,18 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
         await this.app.StartAsync();
 
+        // Wait for Keycloak to be running
+        await this.resourceNotificationService
+            .WaitForResourceAsync(ServiceNames.Keycloak, KnownResourceStates.Running)
+            .WaitAsync(TimeSpan.FromMinutes(10)); // To allow Aspire to pull Docker images
+
         await this.resourceNotificationService
             .WaitForResourceAsync(ServiceNames.PizzaStoreApi, KnownResourceStates.Running)
             .WaitAsync(TimeSpan.FromMinutes(10)); // To allow Aspire to pull Docker images
+
+        // Get Keycloak base URL for token requests
+        var keycloakHttpClient = this.app.CreateHttpClient(ServiceNames.Keycloak);
+        this.keycloakBaseUrl = keycloakHttpClient.BaseAddress!.ToString().TrimEnd('/');
 
         var databaseName = ServiceNames.GetPizzaStoreDatabaseName();
         var storeDbConnectionString = await this.app.GetConnectionStringAsync(databaseName);
@@ -50,6 +63,26 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
         this.storeDbContext = new StoreDbContext(storeDbOptionsBuilder.Options);
         this.storeDbQueryProjectionService = new QueryProjectionService<StoreDbContext>(this.storeDbContext);
+    }
+
+    public async Task<string> GetJwtTokenAsync()
+    {
+        using var httpClient = new HttpClient();
+        var tokenEndpoint = $"{this.keycloakBaseUrl}/realms/pizzeria/protocol/openid-connect/token";
+
+        var tokenRequest = new FormUrlEncodedContent(new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            ["grant_type"] = "password",
+            ["client_id"] = "pizzeria-store-api",
+            ["username"] = TestUsername,
+            ["password"] = TestPassword
+        });
+
+        var response = await httpClient.PostAsync(tokenEndpoint, tokenRequest);
+        response.EnsureSuccessStatusCode();
+
+        var tokenResponse = await response.Content.ReadFromJsonAsync<KeycloakTokenResponse>();
+        return tokenResponse!.AccessToken;
     }
 
     public async Task<HttpClient> GetServiceClientAsync(string serviceName)

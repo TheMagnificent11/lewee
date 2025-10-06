@@ -27,6 +27,11 @@ builder.Services
     .AddPizzaStoreApplication()
     .AddCorrelationIdServices()
     .AddLeweeSignalR()
+    .AddAuthentication()
+    .AddKeycloakJwtBearer(ServiceNames.Keycloak, realm: "pizzeria");
+
+builder.Services
+    .AddAuthorization()
     .AddFastEndpoints()
     .AddEndpointsApiExplorer()
     .AddSwaggerGen();
@@ -35,6 +40,8 @@ var app = builder.Build();
 
 app.MapDefaultEndpoints();
 app.MapHub<ClientEventHub>("/events");
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseFastEndpoints();
 app.UseCorrelationIdMiddleware();
 

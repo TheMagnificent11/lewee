@@ -12,6 +12,8 @@ public static class ServiceNames
 
     public const string PizzaStoreWebClient = "pizza-store-web-client";
 
+    public const string Keycloak = "keycloak";
+
     public static string GetPizzaStoreDatabaseName()
     {
         if (Environments.IsIntegrationTesting)

@@ -2,6 +2,10 @@ using Pizzeria.Common;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
+var keycloak = builder.AddKeycloak(ServiceNames.Keycloak, 8080)
+    .WithDataVolume()
+    .WithRealmImport("./keycloak-realm.json");
+
 var databaseServer = Environments.IsIntegrationTesting
     ? builder.AddPostgres(ServiceNames.DatabaseServer)
     : builder.AddPostgres(ServiceNames.DatabaseServer)
@@ -14,7 +18,9 @@ var pizzaStoreDatabase = databaseServer.AddDatabase(pizzaStoreDatabaseName);
 
 builder.AddProject<Projects.Pizzeria_Store_Api>(ServiceNames.PizzaStoreApi)
     .WithReference(pizzaStoreDatabase)
+    .WithReference(keycloak)
     .WaitFor(pizzaStoreDatabase)
+    .WaitFor(keycloak)
     .WithHttpHealthCheck("/health");
 
 /*

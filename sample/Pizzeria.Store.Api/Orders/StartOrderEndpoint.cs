@@ -13,7 +13,7 @@ public sealed class StartOrderEndpoint : CommandEndpoint<EmptyRequest>
 
     protected override string Name => "Start Order";
 
-    protected override bool IsAnonymousAllowed => true;
+    protected override bool IsAnonymousAllowed => false;
 
     public override async Task HandleAsync(EmptyRequest req, CancellationToken ct)
     {
