@@ -58,9 +58,9 @@ builder.Services
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
-app.MapHub<ClientEventHub>("/events");
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapHub<ClientEventHub>("/events");
 app.UseFastEndpoints();
 app.UseCorrelationIdMiddleware();
 

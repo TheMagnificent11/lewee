@@ -42,14 +42,14 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
         await this.app.StartAsync();
 
-        // Wait for Keycloak to be running
+        // Wait for auth server to be running
         await this.resourceNotificationService
-            .WaitForResourceAsync(ServiceNames.Keycloak, KnownResourceStates.Running)
+            .WaitForResourceAsync(ServiceNames.AuthServer, KnownResourceStates.Running)
             .WaitAsync(TimeSpan.FromMinutes(10)); // To allow Aspire to pull Docker images
 
-        // Get Keycloak base URL for token requests
-        var keycloakHttpClient = this.app.CreateHttpClient(ServiceNames.Keycloak);
-        this.keycloakBaseUrl = keycloakHttpClient.BaseAddress!.ToString().TrimEnd('/');
+        // Get auth server base URL for token requests
+        var authServerHttpClient = this.app.CreateHttpClient(ServiceNames.AuthServer);
+        this.keycloakBaseUrl = authServerHttpClient.BaseAddress!.ToString().TrimEnd('/');
 
         // Initialize Keycloak realm and test user
         await this.InitializeKeycloakAsync();

@@ -12,7 +12,7 @@ public static class ServiceNames
 
     public const string PizzaStoreWebClient = "pizza-store-web-client";
 
-    public const string Keycloak = "keycloak";
+    public const string AuthServer = "auth-server";
 
     public static string GetPizzaStoreDatabaseName()
     {
