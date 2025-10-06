@@ -73,12 +73,12 @@ public abstract class QuerySpecification<T>
     /// <summary>
     /// Gets the where expressions for filtering
     /// </summary>
-    internal IReadOnlyList<Expression<Func<T, bool>>> WhereExpressions => this.whereExpressions.AsReadOnly();
+    public IReadOnlyList<Expression<Func<T, bool>>> WhereExpressions => this.whereExpressions.AsReadOnly();
 
     /// <summary>
     /// Gets the include expressions for eager loading
     /// </summary>
-    internal IReadOnlyList<IncludeExpression> IncludeExpressions => this.includeExpressions.AsReadOnly();
+    public IReadOnlyList<IncludeExpression> IncludeExpressions => this.includeExpressions.AsReadOnly();
 
     /// <summary>
     /// Gets the query builder to configure the specification
@@ -88,7 +88,7 @@ public abstract class QuerySpecification<T>
     /// <summary>
     /// Represents an include expression for eager loading
     /// </summary>
-    internal sealed class IncludeExpression
+    public sealed class IncludeExpression
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="IncludeExpression"/> class
