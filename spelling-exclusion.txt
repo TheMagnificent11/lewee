@@ -7,10 +7,14 @@ deserializer
 Fluxor
 FreeMediator
 Gitflow
+Keycloak
 Mediatr
+openid
+OpenId
 Postgre
 Postgres
 PostgreSQL
 respawner
+undispatched
 uuid
 xmin

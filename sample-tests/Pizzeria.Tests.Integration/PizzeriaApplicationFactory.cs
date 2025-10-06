@@ -16,8 +16,8 @@ namespace Pizzeria.Tests.Integration;
 public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 {
     public const string CollectionName = "PizzeriaCollection";
-    private const string TestUsername = "testuser";
-    private const string TestPassword = "testpassword";
+    private const string TestUsername = "test-user";
+    private const string TestPassword = "test-password";
 
     private IDistributedApplicationTestingBuilder builder;
     private DistributedApplication app;
@@ -54,7 +54,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         // If the scheme is tcp, replace it with http (Aspire Keycloak might return tcp scheme)
         if (baseAddress.StartsWith("tcp://", StringComparison.OrdinalIgnoreCase))
         {
-            baseAddress = "http://" + baseAddress.Substring(6);
+            baseAddress = $"http://{baseAddress[6..]}";
         }
 
         this.keycloakBaseUrl = baseAddress;
@@ -86,7 +86,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
             ["grant_type"] = "password",
             ["client_id"] = "pizzeria-store-api",
             ["username"] = TestUsername,
-            ["password"] = TestPassword
+            ["password"] = TestPassword,
         });
 
         var response = await httpClient.PostAsync(tokenEndpoint, tokenRequest);
@@ -182,7 +182,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
             ["grant_type"] = "password",
             ["client_id"] = "admin-cli",
             ["username"] = "admin",
-            ["password"] = "admin"
+            ["password"] = "admin",
         });
 
         var adminTokenResponse = await httpClient.PostAsync("/realms/master/protocol/openid-connect/token", adminTokenRequest);
@@ -196,7 +196,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         {
             realm = "pizzeria",
             enabled = true,
-            sslRequired = "none"
+            sslRequired = "none",
         };
 
         var realmResponse = await httpClient.PostAsJsonAsync("/admin/realms", realmPayload);
@@ -220,7 +220,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
             implicitFlowEnabled = false,
             redirectUris = new[] { "*" },
             webOrigins = new[] { "*" },
-            attributes = new { access_token_lifespan = "300" }
+            attributes = new { access_token_lifespan = "300" },
         };
 
         var clientResponse = await httpClient.PostAsJsonAsync("/admin/realms/pizzeria/clients", clientPayload);
@@ -244,9 +244,9 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
                 {
                     type = "password",
                     value = TestPassword,
-                    temporary = false
-                }
-            }
+                    temporary = false,
+                },
+            },
         };
 
         var userResponse = await httpClient.PostAsJsonAsync("/admin/realms/pizzeria/users", userPayload);
