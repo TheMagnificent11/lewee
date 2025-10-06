@@ -4,9 +4,9 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 var authServer = Environments.IsIntegrationTesting
     ? builder.AddKeycloak(ServiceNames.AuthServer)
+    : builder.AddKeycloak(ServiceNames.AuthServer)
         .WithLifetime(ContainerLifetime.Persistent)
-        .WithDataVolume()
-    : builder.AddKeycloak(ServiceNames.AuthServer);
+        .WithDataVolume();
 
 var databaseServer = Environments.IsIntegrationTesting
     ? builder.AddPostgres(ServiceNames.DatabaseServer)
