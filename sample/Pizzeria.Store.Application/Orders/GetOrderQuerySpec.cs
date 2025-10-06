@@ -1,5 +1,4 @@
-﻿using Ardalis.Specification;
-using Lewee.Domain;
+﻿using Lewee.Domain;
 using Pizzeria.Store.Domain;
 
 namespace Pizzeria.Store.Application.Orders;
@@ -10,6 +9,6 @@ internal sealed class GetOrderQuerySpec : QuerySpecification<Order>
     {
         this.Query.Where(x => x.Id == orderId)
             .Include(x => x.Pizzas)
-            .ThenInclude(x => x.Pizza);
+            .ThenInclude<OrderPizza, Pizza>(x => x.Pizza);
     }
 }
