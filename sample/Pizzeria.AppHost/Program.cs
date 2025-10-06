@@ -2,8 +2,12 @@ using Pizzeria.Common;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-var keycloak = builder.AddKeycloak(ServiceNames.Keycloak, 8080)
-    .WithDataVolume();
+// Add Keycloak container manually for better control
+var keycloak = builder.AddContainer(ServiceNames.Keycloak, "quay.io/keycloak/keycloak", "26.1.0")
+    .WithEndpoint(port: 8080, targetPort: 8080, name: "http")
+    .WithEnvironment("KEYCLOAK_ADMIN", "admin")
+    .WithEnvironment("KEYCLOAK_ADMIN_PASSWORD", "admin")
+    .WithArgs("start-dev");
 
 var databaseServer = Environments.IsIntegrationTesting
     ? builder.AddPostgres(ServiceNames.DatabaseServer)
@@ -17,7 +21,10 @@ var pizzaStoreDatabase = databaseServer.AddDatabase(pizzaStoreDatabaseName);
 
 builder.AddProject<Projects.Pizzeria_Store_Api>(ServiceNames.PizzaStoreApi)
     .WithReference(pizzaStoreDatabase)
-    .WithReference(keycloak)
+    .WithEnvironment("Authentication__Schemes__Bearer__Authority", keycloak.GetEndpoint("http"))
+    .WithEnvironment("Authentication__Schemes__Bearer__ValidAudience", "pizzeria-store-api")
+    .WithEnvironment("Authentication__Schemes__Bearer__ValidIssuer", keycloak.GetEndpoint("http"))
+    .WithEnvironment("Authentication__Schemes__Bearer__RequireHttpsMetadata", "false")
     .WaitFor(pizzaStoreDatabase)
     .WaitFor(keycloak)
     .WithHttpHealthCheck("/health");

@@ -4,6 +4,8 @@ using Lewee.Infrastructure.AspNet.Observability;
 using Lewee.Infrastructure.AspNet.SignalR;
 using Lewee.Infrastructure.Data;
 using Lewee.Infrastructure.PostgreSQL;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Pizzeria.Common;
 using Pizzeria.ServiceDefaults;
 using Pizzeria.Store.Application;
@@ -26,9 +28,26 @@ builder.Services
     .AddLeweeDatabaseSeeder<StoreDbContext, StoreSeeder>()
     .AddPizzaStoreApplication()
     .AddCorrelationIdServices()
-    .AddLeweeSignalR()
-    .AddAuthentication()
-    .AddKeycloakJwtBearer(ServiceNames.Keycloak, realm: "pizzeria");
+    .AddLeweeSignalR();
+
+// Configure JWT Bearer authentication
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        var authority = builder.Configuration["Authentication:Schemes:Bearer:Authority"];
+        if (!string.IsNullOrEmpty(authority))
+        {
+            options.Authority = $"{authority}/realms/pizzeria";
+            options.RequireHttpsMetadata = false;
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidIssuer = $"{authority}/realms/pizzeria",
+                ValidateAudience = false,
+                ValidateLifetime = true
+            };
+        }
+    });
 
 builder.Services
     .AddAuthorization()
