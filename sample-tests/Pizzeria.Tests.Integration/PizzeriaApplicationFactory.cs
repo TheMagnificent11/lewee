@@ -47,9 +47,17 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
             .WaitForResourceAsync(ServiceNames.AuthServer, KnownResourceStates.Running)
             .WaitAsync(TimeSpan.FromMinutes(10)); // To allow Aspire to pull Docker images
 
-        // Get auth server base URL for token requests
+        // Get auth server base URL for token requests using CreateHttpClient
         var authServerHttpClient = this.app.CreateHttpClient(ServiceNames.AuthServer);
-        this.keycloakBaseUrl = authServerHttpClient.BaseAddress!.ToString().TrimEnd('/');
+        var baseAddress = authServerHttpClient.BaseAddress!.ToString().TrimEnd('/');
+
+        // If the scheme is tcp, replace it with http (Aspire Keycloak might return tcp scheme)
+        if (baseAddress.StartsWith("tcp://", StringComparison.OrdinalIgnoreCase))
+        {
+            baseAddress = "http://" + baseAddress.Substring(6);
+        }
+
+        this.keycloakBaseUrl = baseAddress;
 
         // Initialize Keycloak realm and test user
         await this.InitializeKeycloakAsync();
