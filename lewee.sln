@@ -72,8 +72,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lewee.Blazor.Tests.Integrat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pizzeria.Store.Application.Tests.Unit", "sample-tests\Pizzeria.Store.Application.Tests.Unit\Pizzeria.Store.Application.Tests.Unit.csproj", "{F1CB65AD-EDDB-4576-93D6-08D443CEA466}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0AB3BF05-4346-4AA6-1389-037BE0695223}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lewee.Infrastructure.Data.Tests.Unit", "tests\Lewee.Infrastructure.Data.Tests.Unit\Lewee.Infrastructure.Data.Tests.Unit.csproj", "{4907C7CA-2AA3-4E86-BCD7-09BB7AAA4A08}"
 EndProject
 Global
@@ -425,9 +423,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{4907C7CA-2AA3-4E86-BCD7-09BB7AAA4A08} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A223C33D-6D37-4C0E-8755-BA46F9759CB1}
