@@ -2,7 +2,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Lewee.Infrastructure.Data\Lewee.Infrastructure.Data.csproj" />
-    <ProjectReference Include="..\..\src\Lewee.Infrastructure.PostgreSQL\Lewee.Infrastructure.PostgreSQL.csproj" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
