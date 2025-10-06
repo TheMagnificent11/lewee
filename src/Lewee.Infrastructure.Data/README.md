@@ -7,8 +7,9 @@ This project contains the data access layer for applications using `Lewee` depen
 ## Dependencies
 
 - `Lewee.Domain`
-- `Ardalis.Specification.EntityFrameworkCore`
 - `Mediatr`
+- `Microsoft.EntityFrameworkCore`
+- `Microsoft.EntityFrameworkCore.SqlServer`
 - `Microsoft.Extensions.Configuration.Binder`
 - `Microsoft.Extensions.DependencyModel`
 - `Microsoft.Extensions.Hosting.Abstractions`

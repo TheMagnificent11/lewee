@@ -1,12 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <PackageReference Include="Ardalis.Specification" />
     <PackageReference Include="MediatR.Contracts" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Lewee.Shared\Lewee.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Lewee.Infrastructure.Data</_Parameter1>
+    </AssemblyAttribute>
   </ItemGroup>
 
 </Project>
