@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using EntityFramework.Exceptions.PostgreSQL;
 using Lewee.Domain;
 using Lewee.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -44,6 +45,7 @@ public static class PostgreSqlConfiguration
                         x => x.MigrationsHistoryTable(HistoryRepository.DefaultTableName, schema));
                 }
 
+                options.UseExceptionProcessor();
                 options.AddAuditInterceptor(authenticatedUserService);
                 options.AddDomainEventInterceptor<T>(authenticatedUserService);
             })

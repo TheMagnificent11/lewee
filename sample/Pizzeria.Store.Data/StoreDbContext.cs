@@ -1,10 +1,10 @@
-﻿using Lewee.Infrastructure.Data;
+﻿using Lewee.Infrastructure.PostgreSQL;
 using Microsoft.EntityFrameworkCore;
 using Pizzeria.Store.Domain;
 
 namespace Pizzeria.Store.Data;
 
-public sealed class StoreDbContext : ApplicationDbContext<StoreDbContext>
+public sealed class StoreDbContext : PostgresApplicationDbContext<StoreDbContext>
 {
     public const string SchemaName = "sto";
 
