@@ -3,8 +3,7 @@ using Pizzeria.Common;
 var builder = DistributedApplication.CreateBuilder(args);
 
 var keycloak = builder.AddKeycloak(ServiceNames.Keycloak, 8080)
-    .WithDataVolume()
-    .WithRealmImport("./keycloak-realm.json");
+    .WithDataVolume();
 
 var databaseServer = Environments.IsIntegrationTesting
     ? builder.AddPostgres(ServiceNames.DatabaseServer)

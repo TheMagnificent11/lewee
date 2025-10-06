@@ -15,12 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="keycloak-realm.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Pizzeria.Common\Pizzeria.Common.csproj" IsAspireProjectResource="false" />
     <ProjectReference Include="..\Pizzeria.Store.Api\Pizzeria.Store.Api.csproj" />
     <ProjectReference Include="..\Pizzeria.Store.WebClient\Pizzeria.Store.WebClient.csproj" />
