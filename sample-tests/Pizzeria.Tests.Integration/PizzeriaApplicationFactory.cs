@@ -195,11 +195,9 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
             return adminToken!.AccessToken;
         }
-        else
-        {
-            var errorContent = await adminTokenResponse.Content.ReadAsStringAsync();
-            throw new Exception($"Failed to authenticate with Keycloak. Status: {adminTokenResponse.StatusCode}, Error: {errorContent}");
-        }
+
+        var errorContent = await adminTokenResponse.Content.ReadAsStringAsync();
+        throw new Exception($"Failed to authenticate with Keycloak. Status: {adminTokenResponse.StatusCode}, Error: {errorContent}");
     }
 
     private static async Task CreatePizzeriaRealmAsync(HttpClient httpClient)

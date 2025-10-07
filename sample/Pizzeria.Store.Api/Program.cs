@@ -26,7 +26,9 @@ builder.Services
     .AddLeweeDatabaseSeeder<StoreDbContext, StoreSeeder>()
     .AddPizzaStoreApplication()
     .AddCorrelationIdServices()
-    .AddLeweeSignalR()
+    .AddLeweeSignalR();
+
+builder.Services
     .AddAuthentication()
     .AddKeycloakJwtBearer(
         serviceName: ServiceNames.AuthServer,
@@ -43,8 +45,9 @@ builder.Services
             }
         });
 
+builder.Services.AddAuthorizationBuilder();
+
 builder.Services
-    .AddAuthorization()
     .AddFastEndpoints()
     .AddEndpointsApiExplorer()
     .AddSwaggerGen();
