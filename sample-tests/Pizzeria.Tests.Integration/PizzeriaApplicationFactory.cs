@@ -177,60 +177,29 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
     private static async Task<string> GetAdminAccessTokenAsync(HttpClient httpClient)
     {
-        KeycloakTokenResponse adminToken = null;
-        var retryCount = 0;
-        var maxRetries = 5;
-
-        while (adminToken == null && retryCount < maxRetries)
+        using var adminTokenRequest = new FormUrlEncodedContent(new Dictionary<string, string>(StringComparer.Ordinal)
         {
-            try
-            {
-                // Get admin token
-                using var adminTokenRequest = new FormUrlEncodedContent(new Dictionary<string, string>(StringComparer.Ordinal)
-                {
-                    ["grant_type"] = "password",
-                    ["client_id"] = "admin-cli",
-                    ["username"] = Environments.Keycloak.IntegrationTesting.AdminUsername,
-                    ["password"] = Environments.Keycloak.IntegrationTesting.AdminPassword,
-                });
+            ["grant_type"] = "password",
+            ["client_id"] = "admin-cli",
+            ["username"] = Environments.Keycloak.IntegrationTesting.AdminUsername,
+            ["password"] = Environments.Keycloak.IntegrationTesting.AdminPassword,
+        });
 
-                using var adminTokenResponse = await httpClient.PostAsync(
-                    "/realms/master/protocol/openid-connect/token",
-                    adminTokenRequest);
+        using var adminTokenResponse = await httpClient.PostAsync(
+            "/realms/master/protocol/openid-connect/token",
+            adminTokenRequest);
 
-                if (adminTokenResponse.IsSuccessStatusCode)
-                {
-                    adminToken = await adminTokenResponse.Content.ReadFromJsonAsync<KeycloakTokenResponse>();
-                }
-                else
-                {
-                    retryCount++;
-                    if (retryCount < maxRetries)
-                    {
-                        var delay = TimeSpan.FromSeconds(Math.Pow(2, retryCount)); // Exponential backoff
-                        await Task.Delay(delay);
-                    }
-                    else
-                    {
-                        var errorContent = await adminTokenResponse.Content.ReadAsStringAsync();
-                        throw new Exception($"Failed to authenticate with Keycloak admin after {maxRetries} attempts. Status: {adminTokenResponse.StatusCode}, Error: {errorContent}");
-                    }
-                }
-            }
-            catch (HttpRequestException) when (retryCount < maxRetries - 1)
-            {
-                retryCount++;
-                var delay = TimeSpan.FromSeconds(Math.Pow(2, retryCount));
-                await Task.Delay(delay);
-            }
-        }
-
-        if (adminToken == null)
+        if (adminTokenResponse.IsSuccessStatusCode)
         {
-            throw new Exception("Failed to obtain Keycloak admin token after all retries");
-        }
+            var adminToken = await adminTokenResponse.Content.ReadFromJsonAsync<KeycloakTokenResponse>();
 
-        return adminToken.AccessToken;
+            return adminToken!.AccessToken;
+        }
+        else
+        {
+            var errorContent = await adminTokenResponse.Content.ReadAsStringAsync();
+            throw new Exception($"Failed to authenticate with Keycloak. Status: {adminTokenResponse.StatusCode}, Error: {errorContent}");
+        }
     }
 
     private static async Task CreatePizzeriaRealmAsync(HttpClient httpClient)
