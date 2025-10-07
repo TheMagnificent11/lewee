@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using Aspire.Hosting;
 using Aspire.Hosting.ApplicationModel;
 using Aspire.Hosting.Testing;
@@ -82,12 +83,12 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
     public async Task<string> GetJwtTokenAsync()
     {
         using var httpClient = new HttpClient();
-        var tokenEndpoint = $"{this.keycloakBaseUrl}/realms/{Environments.KeycloakRealmName}/protocol/openid-connect/token";
+        var tokenEndpoint = $"{this.keycloakBaseUrl}/realms/{Environments.Keycloak.RealmName}/protocol/openid-connect/token";
 
         var tokenRequest = new FormUrlEncodedContent(new Dictionary<string, string>(StringComparer.Ordinal)
         {
             ["grant_type"] = "password",
-            ["client_id"] = Environments.KeycloakClientId,
+            ["client_id"] = Environments.Keycloak.ApiClientId,
             ["username"] = TestUsername,
             ["password"] = TestPassword,
         });
@@ -174,6 +175,142 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         }
     }
 
+    private static async Task<string> GetAdminAccessTokenAsync(HttpClient httpClient)
+    {
+        KeycloakTokenResponse adminToken = null;
+        var retryCount = 0;
+        var maxRetries = 5;
+
+        while (adminToken == null && retryCount < maxRetries)
+        {
+            try
+            {
+                // Get admin token
+                using var adminTokenRequest = new FormUrlEncodedContent(new Dictionary<string, string>(StringComparer.Ordinal)
+                {
+                    ["grant_type"] = "password",
+                    ["client_id"] = "admin-cli",
+                    ["username"] = Environments.Keycloak.IntegrationTesting.AdminUsername,
+                    ["password"] = Environments.Keycloak.IntegrationTesting.AdminPassword,
+                });
+
+                using var adminTokenResponse = await httpClient.PostAsync(
+                    "/realms/master/protocol/openid-connect/token",
+                    adminTokenRequest);
+
+                if (adminTokenResponse.IsSuccessStatusCode)
+                {
+                    adminToken = await adminTokenResponse.Content.ReadFromJsonAsync<KeycloakTokenResponse>();
+                }
+                else
+                {
+                    retryCount++;
+                    if (retryCount < maxRetries)
+                    {
+                        var delay = TimeSpan.FromSeconds(Math.Pow(2, retryCount)); // Exponential backoff
+                        await Task.Delay(delay);
+                    }
+                    else
+                    {
+                        var errorContent = await adminTokenResponse.Content.ReadAsStringAsync();
+                        throw new Exception($"Failed to authenticate with Keycloak admin after {maxRetries} attempts. Status: {adminTokenResponse.StatusCode}, Error: {errorContent}");
+                    }
+                }
+            }
+            catch (HttpRequestException) when (retryCount < maxRetries - 1)
+            {
+                retryCount++;
+                var delay = TimeSpan.FromSeconds(Math.Pow(2, retryCount));
+                await Task.Delay(delay);
+            }
+        }
+
+        if (adminToken == null)
+        {
+            throw new Exception("Failed to obtain Keycloak admin token after all retries");
+        }
+
+        return adminToken.AccessToken;
+    }
+
+    private static async Task CreatePizzeriaRealmAsync(HttpClient httpClient)
+    {
+        var realmPayload = new
+        {
+            realm = Environments.Keycloak.RealmName,
+            enabled = true,
+            sslRequired = "none",
+        };
+
+        var realmResponse = await httpClient.PostAsJsonAsync("/admin/realms", realmPayload);
+        if (!realmResponse.IsSuccessStatusCode)
+        {
+            var error = await realmResponse.Content.ReadAsStringAsync();
+            if (!error.Contains("Conflict", StringComparison.Ordinal))
+            {
+                throw new Exception($"Failed to create realm: {error}");
+            }
+        }
+    }
+
+    private static async Task CreateStoreApiClientAsync(HttpClient httpClient)
+    {
+        var clientPayload = new
+        {
+            clientId = Environments.Keycloak.ApiClientId,
+            enabled = true,
+            publicClient = true,
+            directAccessGrantsEnabled = true,
+            standardFlowEnabled = true,
+            implicitFlowEnabled = false,
+            redirectUris = new[] { "*" },
+            webOrigins = new[] { "*" },
+            attributes = new { access_token_lifespan = "300" },
+        };
+
+        using var clientResponse = await httpClient.PostAsJsonAsync(
+            $"/admin/realms/{Environments.Keycloak.RealmName}/clients",
+            clientPayload);
+
+        if (!clientResponse.IsSuccessStatusCode)
+        {
+            var error = await clientResponse.Content.ReadAsStringAsync();
+            if (!error.Contains("Conflict", StringComparison.Ordinal))
+            {
+                throw new Exception($"Failed to create client: {error}");
+            }
+        }
+    }
+
+    private static async Task CreateTestUserAsync(HttpClient httpClient)
+    {
+        var userPayload = new
+        {
+            username = TestUsername,
+            enabled = true,
+            credentials = new[]
+            {
+                new
+                {
+                    type = "password",
+                    value = TestPassword,
+                    temporary = false,
+                },
+            },
+        };
+        var userResponse = await httpClient.PostAsJsonAsync(
+            $"/admin/realms/{Environments.Keycloak.RealmName}/users",
+            userPayload);
+        if (!userResponse.IsSuccessStatusCode)
+        {
+            var error = await userResponse.Content.ReadAsStringAsync();
+            if (!error.Contains("Conflict", StringComparison.Ordinal) && !error.Contains("already exists", StringComparison.Ordinal))
+            {
+                throw new Exception($"Failed to create user: {error}");
+            }
+        }
+    }
+
     private async Task WaitForKeycloakReadyAsync()
     {
         using var httpClient = new HttpClient();
@@ -213,126 +350,12 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         using var httpClient = new HttpClient();
         httpClient.BaseAddress = new Uri(this.keycloakBaseUrl);
 
-        // Retry getting admin token with exponential backoff
-        KeycloakTokenResponse adminToken = null;
-        var retryCount = 0;
-        var maxRetries = 5;
+        var adminAccessToken = await GetAdminAccessTokenAsync(httpClient);
 
-        while (adminToken == null && retryCount < maxRetries)
-        {
-            try
-            {
-                // Get admin token
-                var adminTokenRequest = new FormUrlEncodedContent(new Dictionary<string, string>(StringComparer.Ordinal)
-                {
-                    ["grant_type"] = "password",
-                    ["client_id"] = "admin-cli",
-                    ["username"] = "admin",
-                    ["password"] = "admin",
-                });
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", adminAccessToken);
 
-                var adminTokenResponse = await httpClient.PostAsync("/realms/master/protocol/openid-connect/token", adminTokenRequest);
-
-                if (adminTokenResponse.IsSuccessStatusCode)
-                {
-                    adminToken = await adminTokenResponse.Content.ReadFromJsonAsync<KeycloakTokenResponse>();
-                }
-                else
-                {
-                    retryCount++;
-                    if (retryCount < maxRetries)
-                    {
-                        var delay = TimeSpan.FromSeconds(Math.Pow(2, retryCount)); // Exponential backoff
-                        await Task.Delay(delay);
-                    }
-                    else
-                    {
-                        var errorContent = await adminTokenResponse.Content.ReadAsStringAsync();
-                        throw new Exception($"Failed to authenticate with Keycloak admin after {maxRetries} attempts. Status: {adminTokenResponse.StatusCode}, Error: {errorContent}");
-                    }
-                }
-            }
-            catch (HttpRequestException) when (retryCount < maxRetries - 1)
-            {
-                retryCount++;
-                var delay = TimeSpan.FromSeconds(Math.Pow(2, retryCount));
-                await Task.Delay(delay);
-            }
-        }
-
-        if (adminToken == null)
-        {
-            throw new Exception("Failed to obtain Keycloak admin token after all retries");
-        }
-
-        httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", adminToken.AccessToken);
-
-        // Create pizzeria realm
-        var realmPayload = new
-        {
-            realm = Environments.KeycloakRealmName,
-            enabled = true,
-            sslRequired = "none",
-        };
-
-        var realmResponse = await httpClient.PostAsJsonAsync("/admin/realms", realmPayload);
-        if (!realmResponse.IsSuccessStatusCode)
-        {
-            var error = await realmResponse.Content.ReadAsStringAsync();
-            if (!error.Contains("Conflict", StringComparison.Ordinal))
-            {
-                throw new Exception($"Failed to create realm: {error}");
-            }
-        }
-
-        // Create client
-        var clientPayload = new
-        {
-            clientId = Environments.KeycloakClientId,
-            enabled = true,
-            publicClient = true,
-            directAccessGrantsEnabled = true,
-            standardFlowEnabled = true,
-            implicitFlowEnabled = false,
-            redirectUris = new[] { "*" },
-            webOrigins = new[] { "*" },
-            attributes = new { access_token_lifespan = "300" },
-        };
-
-        var clientResponse = await httpClient.PostAsJsonAsync($"/admin/realms/{Environments.KeycloakRealmName}/clients", clientPayload);
-        if (!clientResponse.IsSuccessStatusCode)
-        {
-            var error = await clientResponse.Content.ReadAsStringAsync();
-            if (!error.Contains("Conflict", StringComparison.Ordinal))
-            {
-                throw new Exception($"Failed to create client: {error}");
-            }
-        }
-
-        // Create test user
-        var userPayload = new
-        {
-            username = TestUsername,
-            enabled = true,
-            credentials = new[]
-            {
-                new
-                {
-                    type = "password",
-                    value = TestPassword,
-                    temporary = false,
-                },
-            },
-        };
-
-        var userResponse = await httpClient.PostAsJsonAsync($"/admin/realms/{Environments.KeycloakRealmName}/users", userPayload);
-        if (!userResponse.IsSuccessStatusCode)
-        {
-            var error = await userResponse.Content.ReadAsStringAsync();
-            if (!error.Contains("Conflict", StringComparison.Ordinal) && !error.Contains("already exists", StringComparison.Ordinal))
-            {
-                throw new Exception($"Failed to create user: {error}");
-            }
-        }
+        await CreatePizzeriaRealmAsync(httpClient);
+        await CreateStoreApiClientAsync(httpClient);
+        await CreateTestUserAsync(httpClient);
     }
 }

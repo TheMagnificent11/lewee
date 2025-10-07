@@ -30,7 +30,7 @@ builder.Services
     .AddAuthentication()
     .AddKeycloakJwtBearer(
         serviceName: ServiceNames.AuthServer,
-        realm: Pizzeria.Common.Environments.KeycloakRealmName,
+        realm: Pizzeria.Common.Environments.Keycloak.RealmName,
         options =>
         {
             options.Audience = ServiceNames.PizzaStoreApi;

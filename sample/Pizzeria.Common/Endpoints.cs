@@ -17,8 +17,8 @@ public static class Endpoints
         public static string GetAddPizzaToOrderEndpoint(Guid orderId, Guid pizzaId)
         {
             return AddPizzaToOrder
-                .Replace($"{{{RouteTokens.OrderId}}}", orderId.ToString())
-                .Replace($"{{{RouteTokens.PizzaId}}}", pizzaId.ToString());
+                .Replace($"{{{RouteTokens.OrderId}}}", orderId.ToString(), StringComparison.OrdinalIgnoreCase)
+                .Replace($"{{{RouteTokens.PizzaId}}}", pizzaId.ToString(), StringComparison.OrdinalIgnoreCase);
         }
     }
 }
