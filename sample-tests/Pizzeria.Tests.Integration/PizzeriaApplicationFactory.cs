@@ -47,6 +47,9 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
             .WaitForResourceAsync(ServiceNames.AuthServer, KnownResourceStates.Running)
             .WaitAsync(TimeSpan.FromMinutes(10)); // To allow Aspire to pull Docker images
 
+        // Give Keycloak additional time to fully initialize after container starts
+        await Task.Delay(TimeSpan.FromSeconds(10));
+
         // Get auth server base URL for token requests using CreateHttpClient
         var authServerHttpClient = this.app.CreateHttpClient(ServiceNames.AuthServer);
         var baseAddress = authServerHttpClient.BaseAddress!.ToString().TrimEnd('/');
@@ -176,20 +179,59 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         using var httpClient = new HttpClient();
         httpClient.BaseAddress = new Uri(this.keycloakBaseUrl);
 
-        // Get admin token
-        var adminTokenRequest = new FormUrlEncodedContent(new Dictionary<string, string>(StringComparer.Ordinal)
+        // Retry getting admin token with exponential backoff
+        KeycloakTokenResponse adminToken = null;
+        var retryCount = 0;
+        var maxRetries = 5;
+
+        while (adminToken == null && retryCount < maxRetries)
         {
-            ["grant_type"] = "password",
-            ["client_id"] = "admin-cli",
-            ["username"] = "admin",
-            ["password"] = "admin",
-        });
+            try
+            {
+                // Get admin token
+                var adminTokenRequest = new FormUrlEncodedContent(new Dictionary<string, string>(StringComparer.Ordinal)
+                {
+                    ["grant_type"] = "password",
+                    ["client_id"] = "admin-cli",
+                    ["username"] = "admin",
+                    ["password"] = "admin",
+                });
 
-        var adminTokenResponse = await httpClient.PostAsync("/realms/master/protocol/openid-connect/token", adminTokenRequest);
-        adminTokenResponse.EnsureSuccessStatusCode();
-        var adminToken = await adminTokenResponse.Content.ReadFromJsonAsync<KeycloakTokenResponse>();
+                var adminTokenResponse = await httpClient.PostAsync("/realms/master/protocol/openid-connect/token", adminTokenRequest);
 
-        httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", adminToken!.AccessToken);
+                if (adminTokenResponse.IsSuccessStatusCode)
+                {
+                    adminToken = await adminTokenResponse.Content.ReadFromJsonAsync<KeycloakTokenResponse>();
+                }
+                else
+                {
+                    retryCount++;
+                    if (retryCount < maxRetries)
+                    {
+                        var delay = TimeSpan.FromSeconds(Math.Pow(2, retryCount)); // Exponential backoff
+                        await Task.Delay(delay);
+                    }
+                    else
+                    {
+                        var errorContent = await adminTokenResponse.Content.ReadAsStringAsync();
+                        throw new Exception($"Failed to authenticate with Keycloak admin after {maxRetries} attempts. Status: {adminTokenResponse.StatusCode}, Error: {errorContent}");
+                    }
+                }
+            }
+            catch (HttpRequestException) when (retryCount < maxRetries - 1)
+            {
+                retryCount++;
+                var delay = TimeSpan.FromSeconds(Math.Pow(2, retryCount));
+                await Task.Delay(delay);
+            }
+        }
+
+        if (adminToken == null)
+        {
+            throw new Exception("Failed to obtain Keycloak admin token after all retries");
+        }
+
+        httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", adminToken.AccessToken);
 
         // Create pizzeria realm
         var realmPayload = new
