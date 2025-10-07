@@ -6,13 +6,7 @@ public static class Environments
 
     public const string IntegrationTesting = "IntegrationTesting";
 
-    public const string AuthenticationSchemesBearerAuthority = "Authentication__Schemes__Bearer__Authority";
-
     public const string AuthenticationSchemesBearerValidAudience = "Authentication__Schemes__Bearer__ValidAudience";
-
-    public const string AuthenticationSchemesBearerValidIssuer = "Authentication__Schemes__Bearer__ValidIssuer";
-
-    public const string AuthenticationSchemesBearerRequireHttpsMetadata = "Authentication__Schemes__Bearer__RequireHttpsMetadata";
 
     public const string KeycloakRealmName = "pizzeria";
 
