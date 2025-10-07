@@ -28,7 +28,20 @@ builder.Services
     .AddCorrelationIdServices()
     .AddLeweeSignalR()
     .AddAuthentication()
-    .AddKeycloakJwtBearer(ServiceNames.AuthServer, realm: "pizzeria");
+    .AddKeycloakJwtBearer(
+        serviceName: ServiceNames.AuthServer,
+        realm: "pizzeria",
+        options =>
+        {
+            options.Audience = ServiceNames.PizzaStoreApi;
+
+            // For development only - disable HTTPS metadata validation
+            // In production, use explicit Authority configuration instead
+            if (builder.Environment.IsDevelopment())
+            {
+                options.RequireHttpsMetadata = false;
+            }
+        });
 
 builder.Services
     .AddAuthorization()
