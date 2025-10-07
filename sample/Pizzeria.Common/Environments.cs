@@ -14,6 +14,10 @@ public static class Environments
 
     public const string AuthenticationSchemesBearerRequireHttpsMetadata = "Authentication__Schemes__Bearer__RequireHttpsMetadata";
 
+    public const string KeycloakRealmName = "pizzeria";
+
+    public const string KeycloakClientId = "pizzeria-store-api";
+
     public static bool IsIntegrationTesting =>
         string.Equals(Environment.GetEnvironmentVariable(IsIntegrationTestEnvironmentVariableName), "TRUE", StringComparison.Ordinal);
 

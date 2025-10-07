@@ -82,12 +82,12 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
     public async Task<string> GetJwtTokenAsync()
     {
         using var httpClient = new HttpClient();
-        var tokenEndpoint = $"{this.keycloakBaseUrl}/realms/pizzeria/protocol/openid-connect/token";
+        var tokenEndpoint = $"{this.keycloakBaseUrl}/realms/{Environments.KeycloakRealmName}/protocol/openid-connect/token";
 
         var tokenRequest = new FormUrlEncodedContent(new Dictionary<string, string>(StringComparer.Ordinal)
         {
             ["grant_type"] = "password",
-            ["client_id"] = "pizzeria-store-api",
+            ["client_id"] = Environments.KeycloakClientId,
             ["username"] = TestUsername,
             ["password"] = TestPassword,
         });
@@ -236,7 +236,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         // Create pizzeria realm
         var realmPayload = new
         {
-            realm = "pizzeria",
+            realm = Environments.KeycloakRealmName,
             enabled = true,
             sslRequired = "none",
         };
@@ -254,7 +254,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         // Create client
         var clientPayload = new
         {
-            clientId = "pizzeria-store-api",
+            clientId = Environments.KeycloakClientId,
             enabled = true,
             publicClient = true,
             directAccessGrantsEnabled = true,
@@ -265,7 +265,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
             attributes = new { access_token_lifespan = "300" },
         };
 
-        var clientResponse = await httpClient.PostAsJsonAsync("/admin/realms/pizzeria/clients", clientPayload);
+        var clientResponse = await httpClient.PostAsJsonAsync($"/admin/realms/{Environments.KeycloakRealmName}/clients", clientPayload);
         if (!clientResponse.IsSuccessStatusCode)
         {
             var error = await clientResponse.Content.ReadAsStringAsync();
@@ -291,7 +291,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
             },
         };
 
-        var userResponse = await httpClient.PostAsJsonAsync("/admin/realms/pizzeria/users", userPayload);
+        var userResponse = await httpClient.PostAsJsonAsync($"/admin/realms/{Environments.KeycloakRealmName}/users", userPayload);
         if (!userResponse.IsSuccessStatusCode)
         {
             var error = await userResponse.Content.ReadAsStringAsync();
