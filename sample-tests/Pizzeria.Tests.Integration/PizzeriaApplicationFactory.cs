@@ -47,9 +47,6 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
             .WaitForResourceAsync(ServiceNames.AuthServer, KnownResourceStates.Running)
             .WaitAsync(TimeSpan.FromMinutes(10)); // To allow Aspire to pull Docker images
 
-        // Give Keycloak additional time to fully initialize after container starts
-        await Task.Delay(TimeSpan.FromSeconds(10));
-
         // Get auth server base URL for token requests using CreateHttpClient
         var authServerHttpClient = this.app.CreateHttpClient(ServiceNames.AuthServer);
         var baseAddress = authServerHttpClient.BaseAddress!.ToString().TrimEnd('/');
@@ -61,6 +58,9 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         }
 
         this.keycloakBaseUrl = baseAddress;
+
+        // Wait for Keycloak to be ready by polling its health endpoint
+        await this.WaitForKeycloakReadyAsync();
 
         // Initialize Keycloak realm and test user
         await this.InitializeKeycloakAsync();
@@ -172,6 +172,40 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         {
             await this.builder.DisposeAsync();
         }
+    }
+
+    private async Task WaitForKeycloakReadyAsync()
+    {
+        using var httpClient = new HttpClient();
+        httpClient.BaseAddress = new Uri(this.keycloakBaseUrl);
+        httpClient.Timeout = TimeSpan.FromSeconds(5);
+
+        var maxAttempts = 30; // 30 attempts with 2-second delays = up to 1 minute
+        for (var attempt = 0; attempt < maxAttempts; attempt++)
+        {
+            try
+            {
+                // Try to access the Keycloak master realm endpoint
+                var response = await httpClient.GetAsync("/realms/master");
+                if (response.IsSuccessStatusCode)
+                {
+                    // Keycloak is ready
+                    return;
+                }
+            }
+            catch (HttpRequestException)
+            {
+                // Keycloak not ready yet
+            }
+            catch (TaskCanceledException)
+            {
+                // Timeout, Keycloak not ready yet
+            }
+
+            await Task.Delay(TimeSpan.FromSeconds(2));
+        }
+
+        throw new Exception("Keycloak did not become ready within the timeout period");
     }
 
     private async Task InitializeKeycloakAsync()
