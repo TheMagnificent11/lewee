@@ -5,7 +5,7 @@ on:
     # Run when commits are pushed to mainline branch (main or master)
     # Set this to the mainline branch you are using
     branches:
-      - feature/deploy
+      - main
 
 # Set up permissions for deploying with secretless Azure federated credentials
 # https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-portal%2Clinux#set-up-azure-login-with-openid-connect-authentication
@@ -31,7 +31,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: | 
+          dotnet-version: |
             8.x.x
             9.x.x
 
@@ -53,4 +53,4 @@ jobs:
         run: azd deploy --no-prompt
         env:
           AZURE_DATABASE_SERVER_PASSWORD: ${{ secrets.AZURE_DATABASE_SERVER_PASSWORD }}
-        
+
