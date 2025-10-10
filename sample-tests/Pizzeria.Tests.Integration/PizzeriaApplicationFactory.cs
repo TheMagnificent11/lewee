@@ -181,8 +181,8 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         {
             ["grant_type"] = "password",
             ["client_id"] = "admin-cli",
-            ["username"] = Environments.Auth.IntegrationTesting.AdminUsername,
-            ["password"] = Environments.Auth.IntegrationTesting.AdminPassword,
+            ["username"] = Environments.Auth.DefaultAdminCredentialsForTesting.Username,
+            ["password"] = Environments.Auth.DefaultAdminCredentialsForTesting.Password,
         });
 
         using var adminTokenResponse = await httpClient.PostAsync(

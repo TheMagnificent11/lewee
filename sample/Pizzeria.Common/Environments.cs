@@ -22,10 +22,10 @@ public static class Environments
 
         public const string ApiClientId = "pizzeria-store-api";
 
-        public static class IntegrationTesting
+        public static class DefaultAdminCredentialsForTesting
         {
-            public const string AdminUsername = "admin";
-            public const string AdminPassword = "admin";
+            public const string Username = "admin";
+            public const string Password = "!MySuperStrongPassword123!";
         }
     }
 }

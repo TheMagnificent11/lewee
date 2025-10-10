@@ -2,13 +2,27 @@ using Pizzeria.Common;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-var authServer = Environments.IsIntegrationTesting
-    ? builder.AddKeycloak(ServiceNames.AuthServer)
-        .WithEnvironment("KEYCLOAK_ADMIN", Environments.Auth.IntegrationTesting.AdminUsername)
-        .WithEnvironment("KEYCLOAK_ADMIN_PASSWORD", Environments.Auth.IntegrationTesting.AdminPassword)
-    : builder.AddKeycloak(ServiceNames.AuthServer)
+var setDefaultAuthServerAdminCredentials = Environments.IsIntegrationTesting;
+
+#if DEBUG
+setDefaultAuthServerAdminCredentials = true;
+#endif
+
+var authServer = builder.AddKeycloak(ServiceNames.AuthServer);
+
+if (setDefaultAuthServerAdminCredentials)
+{
+    authServer = authServer
+        .WithEnvironment("KC_BOOTSTRAP_ADMIN_USERNAME", Environments.Auth.DefaultAdminCredentialsForTesting.Username)
+        .WithEnvironment("KC_BOOTSTRAP_ADMIN_PASSWORD", Environments.Auth.DefaultAdminCredentialsForTesting.Password);
+}
+
+if (!Environments.IsIntegrationTesting)
+{
+    authServer = authServer
         .WithLifetime(ContainerLifetime.Persistent)
         .WithDataVolume();
+}
 
 var databaseServer = Environments.IsIntegrationTesting
     ? builder.AddPostgres(ServiceNames.DatabaseServer)
