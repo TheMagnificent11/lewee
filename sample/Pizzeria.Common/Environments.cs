@@ -16,7 +16,7 @@ public static class Environments
         Environment.SetEnvironmentVariable(IsIntegrationTestEnvironmentVariableName, "TRUE");
     }
 
-    public static class Keycloak
+    public static class Auth
     {
         public const string RealmName = "pizzeria";
 

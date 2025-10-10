@@ -83,12 +83,12 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
     public async Task<string> GetJwtTokenAsync()
     {
         using var httpClient = new HttpClient();
-        var tokenEndpoint = $"{this.keycloakBaseUrl}/realms/{Environments.Keycloak.RealmName}/protocol/openid-connect/token";
+        var tokenEndpoint = $"{this.keycloakBaseUrl}/realms/{Environments.Auth.RealmName}/protocol/openid-connect/token";
 
         var tokenRequest = new FormUrlEncodedContent(new Dictionary<string, string>(StringComparer.Ordinal)
         {
             ["grant_type"] = "password",
-            ["client_id"] = Environments.Keycloak.ApiClientId,
+            ["client_id"] = Environments.Auth.ApiClientId,
             ["username"] = TestUsername,
             ["password"] = TestPassword,
         });
@@ -181,8 +181,8 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         {
             ["grant_type"] = "password",
             ["client_id"] = "admin-cli",
-            ["username"] = Environments.Keycloak.IntegrationTesting.AdminUsername,
-            ["password"] = Environments.Keycloak.IntegrationTesting.AdminPassword,
+            ["username"] = Environments.Auth.IntegrationTesting.AdminUsername,
+            ["password"] = Environments.Auth.IntegrationTesting.AdminPassword,
         });
 
         using var adminTokenResponse = await httpClient.PostAsync(
@@ -204,7 +204,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
     {
         var realmPayload = new
         {
-            realm = Environments.Keycloak.RealmName,
+            realm = Environments.Auth.RealmName,
             enabled = true,
             sslRequired = "none",
         };
@@ -224,7 +224,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
     {
         var clientPayload = new
         {
-            clientId = Environments.Keycloak.ApiClientId,
+            clientId = Environments.Auth.ApiClientId,
             enabled = true,
             publicClient = true,
             directAccessGrantsEnabled = true,
@@ -236,7 +236,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         };
 
         using var clientResponse = await httpClient.PostAsJsonAsync(
-            $"/admin/realms/{Environments.Keycloak.RealmName}/clients",
+            $"/admin/realms/{Environments.Auth.RealmName}/clients",
             clientPayload);
 
         if (!clientResponse.IsSuccessStatusCode)
@@ -266,7 +266,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
             },
         };
         var userResponse = await httpClient.PostAsJsonAsync(
-            $"/admin/realms/{Environments.Keycloak.RealmName}/users",
+            $"/admin/realms/{Environments.Auth.RealmName}/users",
             userPayload);
         if (!userResponse.IsSuccessStatusCode)
         {

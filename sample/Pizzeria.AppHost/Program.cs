@@ -4,8 +4,8 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 var authServer = Environments.IsIntegrationTesting
     ? builder.AddKeycloak(ServiceNames.AuthServer)
-        .WithEnvironment("KEYCLOAK_ADMIN", Environments.Keycloak.IntegrationTesting.AdminUsername)
-        .WithEnvironment("KEYCLOAK_ADMIN_PASSWORD", Environments.Keycloak.IntegrationTesting.AdminPassword)
+        .WithEnvironment("KEYCLOAK_ADMIN", Environments.Auth.IntegrationTesting.AdminUsername)
+        .WithEnvironment("KEYCLOAK_ADMIN_PASSWORD", Environments.Auth.IntegrationTesting.AdminPassword)
     : builder.AddKeycloak(ServiceNames.AuthServer)
         .WithLifetime(ContainerLifetime.Persistent)
         .WithDataVolume();
