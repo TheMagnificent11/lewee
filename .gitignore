@@ -39,3 +39,6 @@ Obj/
 
 # Dotnet Pack Location
 /output
+
+# Azure
+.azure
