@@ -1,4 +1,4 @@
-# Run when commits are pushed to feature/deploy
+# Run when commits are pushed to the main branch
 on:
   workflow_dispatch:
   push:
