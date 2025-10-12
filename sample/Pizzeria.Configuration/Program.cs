@@ -24,11 +24,12 @@ builder.Services
         typeof(Pizza).Assembly,
         StoreDbContext.SchemaName);
 
-builder.Services.AddHttpClient<KeycloakHttpClient>(httpClient =>
-{
-    httpClient.BaseAddress = new Uri($"https://{ServiceNames.AuthServer}");
-    httpClient.Timeout = TimeSpan.FromSeconds(5);
-});
+builder.Services
+    .AddHttpClient<KeycloakHttpClient>(ServiceNames.AuthServer, httpClient =>
+    {
+        httpClient.Timeout = TimeSpan.FromSeconds(5);
+    })
+    .AddServiceDiscovery();
 
 builder.Services.AddTransient<IAuthServerConfiguration, KeycloakConfigurationService>();
 builder.Services.AddTransient<IDatabaseConfigurationService, PizzeriaStoreDatabaseConfigurationService>();
