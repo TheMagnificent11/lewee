@@ -74,6 +74,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pizzeria.Store.Application.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lewee.Infrastructure.Data.Tests.Unit", "tests\Lewee.Infrastructure.Data.Tests.Unit\Lewee.Infrastructure.Data.Tests.Unit.csproj", "{4907C7CA-2AA3-4E86-BCD7-09BB7AAA4A08}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{4F9DEAE5-078F-E77A-2E4A-FEB6FFE226FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pizzeria.Configuration", "sample\Pizzeria.Configuration\Pizzeria.Configuration.csproj", "{35D290E1-04BF-4653-B5A5-9836E818B6AF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -420,9 +424,24 @@ Global
 		{4907C7CA-2AA3-4E86-BCD7-09BB7AAA4A08}.Release|x64.Build.0 = Release|Any CPU
 		{4907C7CA-2AA3-4E86-BCD7-09BB7AAA4A08}.Release|x86.ActiveCfg = Release|Any CPU
 		{4907C7CA-2AA3-4E86-BCD7-09BB7AAA4A08}.Release|x86.Build.0 = Release|Any CPU
+		{35D290E1-04BF-4653-B5A5-9836E818B6AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35D290E1-04BF-4653-B5A5-9836E818B6AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35D290E1-04BF-4653-B5A5-9836E818B6AF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{35D290E1-04BF-4653-B5A5-9836E818B6AF}.Debug|x64.Build.0 = Debug|Any CPU
+		{35D290E1-04BF-4653-B5A5-9836E818B6AF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{35D290E1-04BF-4653-B5A5-9836E818B6AF}.Debug|x86.Build.0 = Debug|Any CPU
+		{35D290E1-04BF-4653-B5A5-9836E818B6AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35D290E1-04BF-4653-B5A5-9836E818B6AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35D290E1-04BF-4653-B5A5-9836E818B6AF}.Release|x64.ActiveCfg = Release|Any CPU
+		{35D290E1-04BF-4653-B5A5-9836E818B6AF}.Release|x64.Build.0 = Release|Any CPU
+		{35D290E1-04BF-4653-B5A5-9836E818B6AF}.Release|x86.ActiveCfg = Release|Any CPU
+		{35D290E1-04BF-4653-B5A5-9836E818B6AF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{35D290E1-04BF-4653-B5A5-9836E818B6AF} = {4F9DEAE5-078F-E77A-2E4A-FEB6FFE226FF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A223C33D-6D37-4C0E-8755-BA46F9759CB1}
