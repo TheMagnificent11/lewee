@@ -32,25 +32,25 @@ public static class Environments
         {
             public static class Customer1
             {
-                public const string Username = "customer";
+                public const string Username = "customer-1";
                 public const string Password = "Password123!";
             }
 
             public static class FrontStaff1
             {
-                public const string Username = "front-staff";
+                public const string Username = "front-staff-1";
                 public const string Password = "Password123!";
             }
 
             public static class KitchenStaff1
             {
-                public const string Username = "kitchen-staff";
+                public const string Username = "kitchen-staff-1";
                 public const string Password = "Password123!";
             }
 
             public static class DeliveryDriver1
             {
-                public const string Username = "delivery-driver";
+                public const string Username = "delivery-driver-1";
                 public const string Password = "Password123!";
             }
         }

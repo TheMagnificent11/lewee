@@ -11,20 +11,10 @@ var builder = Host.CreateApplicationBuilder(args);
 
 builder.AddServiceDefaults();
 
-builder.Services.AddHttpClient<KeycloakHttpClient>((serviceProvider, httpClient) =>
+builder.Services.AddHttpClient<KeycloakHttpClient>(httpClient =>
 {
-    var configuration = serviceProvider.GetRequiredService<IConfiguration>();
-    var connectionString = configuration.GetConnectionString(ServiceNames.AuthServer);
-
-    if (!string.IsNullOrEmpty(connectionString))
-    {
-        var baseUrl = connectionString.StartsWith("Endpoint=", StringComparison.OrdinalIgnoreCase)
-            ? connectionString["Endpoint=".Length..]
-            : connectionString;
-
-        httpClient.BaseAddress = new Uri(baseUrl.TrimEnd('/'));
-        httpClient.Timeout = TimeSpan.FromSeconds(5);
-    }
+    httpClient.BaseAddress = new Uri($"https://{ServiceNames.AuthServer}");
+    httpClient.Timeout = TimeSpan.FromSeconds(5);
 });
 
 builder.Services.AddTransient<IAuthServerConfiguration, KeycloakConfigurationService>();
@@ -42,7 +32,8 @@ try
     await authServerService.ConfigureAsync();
 
     var databaseService = host.Services.GetRequiredService<IDatabaseConfigurationService>();
-    await databaseService.ConfigureAsync();
+    await databaseService.MigrateAsync();
+    await databaseService.SeedDataAsync();
 
     logger.LogInformation("Configuration completed successfully");
 }

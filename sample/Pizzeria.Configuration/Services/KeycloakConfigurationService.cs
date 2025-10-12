@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Pizzeria.Auth;
 using Pizzeria.Common;
@@ -11,22 +10,18 @@ namespace Pizzeria.Configuration.Services;
 public sealed class KeycloakConfigurationService : IAuthServerConfiguration
 {
     private readonly KeycloakHttpClient keycloakHttpClient;
-    private readonly IConfiguration configuration;
     private readonly ILogger<KeycloakConfigurationService> logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="KeycloakConfigurationService"/> class.
     /// </summary>
     /// <param name="keycloakHttpClient">Keycloak HTTP client</param>
-    /// <param name="configuration">Configuration</param>
     /// <param name="logger">Logger</param>
     public KeycloakConfigurationService(
         KeycloakHttpClient keycloakHttpClient,
-        IConfiguration configuration,
         ILogger<KeycloakConfigurationService> logger)
     {
         this.keycloakHttpClient = keycloakHttpClient;
-        this.configuration = configuration;
         this.logger = logger;
     }
 
@@ -34,10 +29,6 @@ public sealed class KeycloakConfigurationService : IAuthServerConfiguration
     public async Task ConfigureAsync()
     {
         this.logger.LogInformation("Starting Keycloak configuration...");
-
-        var keycloakBaseUrl = await this.GetKeycloakBaseUrlAsync();
-
-        this.logger.LogInformation("Keycloak base URL: {BaseUrl}", keycloakBaseUrl);
 
         await this.keycloakHttpClient.WaitForReadyAsync();
 
@@ -65,24 +56,5 @@ public sealed class KeycloakConfigurationService : IAuthServerConfiguration
             Environments.Auth.Users.DeliveryDriver1.Password);
 
         this.logger.LogInformation("Keycloak configuration completed successfully");
-    }
-
-    private Task<string> GetKeycloakBaseUrlAsync()
-    {
-        var connectionString = this.configuration.GetConnectionString(ServiceNames.AuthServer);
-        if (string.IsNullOrEmpty(connectionString))
-        {
-            throw new InvalidOperationException($"Connection string for '{ServiceNames.AuthServer}' not found");
-        }
-
-        // Connection string format: "Endpoint=http://localhost:8080"
-        if (connectionString.StartsWith("Endpoint=", StringComparison.OrdinalIgnoreCase))
-        {
-            var baseUrl = connectionString["Endpoint=".Length..];
-            return Task.FromResult(baseUrl.TrimEnd('/'));
-        }
-
-        // Fallback if it's just a URL
-        return Task.FromResult(connectionString.TrimEnd('/'));
     }
 }

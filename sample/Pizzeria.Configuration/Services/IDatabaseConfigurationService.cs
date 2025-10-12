@@ -6,8 +6,14 @@ namespace Pizzeria.Configuration.Services;
 public interface IDatabaseConfigurationService
 {
     /// <summary>
-    /// Configures the database
+    /// Migrates the database
     /// </summary>
     /// <returns>Task</returns>
-    Task ConfigureAsync();
+    Task MigrateAsync();
+
+    /// <summary>
+    /// Seeds the database with initial data
+    /// </summary>
+    /// <returns>Task</returns>
+    Task SeedDataAsync();
 }
