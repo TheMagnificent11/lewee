@@ -1,3 +1,5 @@
+using Lewee.Infrastructure.AspNet.Auth;
+using Lewee.Infrastructure.PostgreSQL;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -6,10 +8,21 @@ using Pizzeria.Auth;
 using Pizzeria.Common;
 using Pizzeria.Configuration.Services;
 using Pizzeria.ServiceDefaults;
+using Pizzeria.Store.Data;
+using Pizzeria.Store.Domain;
 
 var builder = Host.CreateApplicationBuilder(args);
 
 builder.AddServiceDefaults();
+
+var databaseName = ServiceNames.GetPizzaStoreDatabaseName();
+
+builder.Services
+    .AddAuthenticatedUserService()
+    .AddLeweePostgreSQL<StoreDbContext>(
+        builder.Configuration.GetConnectionString(databaseName)!,
+        typeof(Pizza).Assembly,
+        StoreDbContext.SchemaName);
 
 builder.Services.AddHttpClient<KeycloakHttpClient>(httpClient =>
 {

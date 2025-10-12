@@ -1,7 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Pizzeria.Common;
 using Pizzeria.Store.Data;
 using Pizzeria.Store.Domain;
 
@@ -12,19 +10,19 @@ namespace Pizzeria.Configuration.Services;
 /// </summary>
 public sealed class PizzeriaStoreDatabaseConfigurationService : IDatabaseConfigurationService
 {
-    private readonly IConfiguration configuration;
+    private readonly StoreDbContext dbContext;
     private readonly ILogger<PizzeriaStoreDatabaseConfigurationService> logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PizzeriaStoreDatabaseConfigurationService"/> class.
     /// </summary>
-    /// <param name="configuration">Configuration</param>
+    /// <param name="dbContext">Store database context</param>
     /// <param name="logger">Logger</param>
     public PizzeriaStoreDatabaseConfigurationService(
-        IConfiguration configuration,
+        StoreDbContext dbContext,
         ILogger<PizzeriaStoreDatabaseConfigurationService> logger)
     {
-        this.configuration = configuration;
+        this.dbContext = dbContext;
         this.logger = logger;
     }
 
@@ -32,21 +30,7 @@ public sealed class PizzeriaStoreDatabaseConfigurationService : IDatabaseConfigu
     public async Task MigrateAsync()
     {
         this.logger.LogInformation("Running database migrations...");
-
-        var databaseName = ServiceNames.GetPizzaStoreDatabaseName();
-        var connectionString = this.configuration.GetConnectionString(databaseName);
-
-        if (string.IsNullOrEmpty(connectionString))
-        {
-            throw new InvalidOperationException($"Connection string for '{databaseName}' not found");
-        }
-
-        var optionsBuilder = new DbContextOptionsBuilder<StoreDbContext>();
-        optionsBuilder.UseNpgsql(connectionString);
-
-        await using var dbContext = new StoreDbContext(optionsBuilder.Options);
-        await dbContext.Database.MigrateAsync();
-
+        await this.dbContext.Database.MigrateAsync();
         this.logger.LogInformation("Database migrations completed successfully");
     }
 
@@ -55,29 +39,16 @@ public sealed class PizzeriaStoreDatabaseConfigurationService : IDatabaseConfigu
     {
         this.logger.LogInformation("Seeding database...");
 
-        var databaseName = ServiceNames.GetPizzaStoreDatabaseName();
-        var connectionString = this.configuration.GetConnectionString(databaseName);
-
-        if (string.IsNullOrEmpty(connectionString))
-        {
-            throw new InvalidOperationException($"Connection string for '{databaseName}' not found");
-        }
-
-        var optionsBuilder = new DbContextOptionsBuilder<StoreDbContext>();
-        optionsBuilder.UseNpgsql(connectionString);
-
-        await using var dbContext = new StoreDbContext(optionsBuilder.Options);
-
         var pizzas = Menu.Pizzas;
         var hasChanges = false;
 
         foreach (var item in pizzas)
         {
-            var existing = await dbContext.Pizzas.FindAsync(item.Id);
+            var existing = await this.dbContext.Pizzas.FindAsync(item.Id);
 
             if (existing == null)
             {
-                dbContext.Pizzas.Add(item);
+                this.dbContext.Pizzas.Add(item);
                 hasChanges = true;
             }
         }
@@ -88,7 +59,7 @@ public sealed class PizzeriaStoreDatabaseConfigurationService : IDatabaseConfigu
             return;
         }
 
-        await dbContext.SaveChangesAsync();
+        await this.dbContext.SaveChangesAsync();
         this.logger.LogInformation("Database seeded successfully");
     }
 }
