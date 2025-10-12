@@ -6,6 +6,7 @@ using Lewee.Domain;
 using Lewee.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Pizzeria.Auth;
 using Pizzeria.Common;
 using Pizzeria.Store.Data;
 using Pizzeria.Store.Domain;
@@ -16,8 +17,6 @@ namespace Pizzeria.Tests.Integration;
 public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 {
     public const string CollectionName = "PizzeriaCollection";
-    private const string TestUsername = "customer";
-    private const string TestPassword = "Password123!";
 
     private IDistributedApplicationTestingBuilder builder;
     private DistributedApplication app;
@@ -82,8 +81,8 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         {
             ["grant_type"] = "password",
             ["client_id"] = Environments.Auth.ApiClientId,
-            ["username"] = TestUsername,
-            ["password"] = TestPassword,
+            ["username"] = Environments.Auth.Users.Customer1.Username,
+            ["password"] = Environments.Auth.Users.Customer1.Password,
         });
 
         var response = await httpClient.PostAsync(tokenEndpoint, tokenRequest);

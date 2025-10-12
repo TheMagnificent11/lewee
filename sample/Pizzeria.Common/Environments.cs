@@ -27,5 +27,32 @@ public static class Environments
             public const string Username = "admin";
             public const string Password = "!MySuperStrongPassword123!";
         }
+
+        public static class Users
+        {
+            public static class Customer1
+            {
+                public const string Username = "customer";
+                public const string Password = "Password123!";
+            }
+
+            public static class FrontStaff1
+            {
+                public const string Username = "front-staff";
+                public const string Password = "Password123!";
+            }
+
+            public static class KitchenStaff1
+            {
+                public const string Username = "kitchen-staff";
+                public const string Password = "Password123!";
+            }
+
+            public static class DeliveryDriver1
+            {
+                public const string Username = "delivery-driver";
+                public const string Password = "Password123!";
+            }
+        }
     }
 }

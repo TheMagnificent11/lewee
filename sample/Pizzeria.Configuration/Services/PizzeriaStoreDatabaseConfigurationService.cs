@@ -7,11 +7,19 @@ using Pizzeria.Store.Domain;
 
 namespace Pizzeria.Configuration.Services;
 
-public sealed class PizzeriaStoreDatabaseConfigurationService : IPizzeriaStoreDatabaseConfigurationService
+/// <summary>
+/// Pizzeria store database configuration service
+/// </summary>
+public sealed class PizzeriaStoreDatabaseConfigurationService : IDatabaseConfigurationService
 {
     private readonly IConfiguration configuration;
     private readonly ILogger<PizzeriaStoreDatabaseConfigurationService> logger;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PizzeriaStoreDatabaseConfigurationService"/> class.
+    /// </summary>
+    /// <param name="configuration">Configuration</param>
+    /// <param name="logger">Logger</param>
     public PizzeriaStoreDatabaseConfigurationService(
         IConfiguration configuration,
         ILogger<PizzeriaStoreDatabaseConfigurationService> logger)
@@ -20,6 +28,7 @@ public sealed class PizzeriaStoreDatabaseConfigurationService : IPizzeriaStoreDa
         this.logger = logger;
     }
 
+    /// <inheritdoc/>
     public async Task ConfigureAsync()
     {
         this.logger.LogInformation("Starting database configuration...");
