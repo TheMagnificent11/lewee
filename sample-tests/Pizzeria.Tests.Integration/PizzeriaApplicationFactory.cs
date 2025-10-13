@@ -55,11 +55,6 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
         this.keycloakBaseUrl = baseAddress;
 
-        // Wait for configuration to complete
-        await this.resourceNotificationService
-            .WaitForResourceAsync(ServiceNames.PizzeriaConfiguration, KnownResourceStates.Finished)
-            .WaitAsync(TimeSpan.FromMinutes(5));
-
         await this.resourceNotificationService
             .WaitForResourceAsync(ServiceNames.PizzaStoreApi, KnownResourceStates.Running)
             .WaitAsync(TimeSpan.FromMinutes(10)); // To allow Aspire to pull Docker images

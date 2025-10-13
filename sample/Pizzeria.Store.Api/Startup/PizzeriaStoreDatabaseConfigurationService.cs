@@ -3,9 +3,9 @@ using Microsoft.Extensions.Logging;
 using Pizzeria.Store.Data;
 using Pizzeria.Store.Domain;
 
-namespace Pizzeria.Configuration.Services;
+namespace Pizzeria.Store.Api.Startup;
 
-public sealed class PizzeriaStoreDatabaseConfigurationService : IDatabaseConfigurationService
+internal sealed class PizzeriaStoreDatabaseConfigurationService
 {
     private readonly StoreDbContext dbContext;
     private readonly ILogger<PizzeriaStoreDatabaseConfigurationService> logger;

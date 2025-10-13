@@ -22,6 +22,7 @@ builder.Services
         builder.Configuration.GetConnectionString(databaseName)!,
         typeof(Pizza).Assembly,
         StoreDbContext.SchemaName)
+    .AddLeweeDatabaseSeeder<StoreDbContext, StoreSeeder>()
     .AddLeweeDatabaseServices<StoreDbContext>(typeof(Pizza).Assembly)
     .AddPizzaStoreApplication()
     .AddCorrelationIdServices()

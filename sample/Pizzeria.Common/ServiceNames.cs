@@ -14,8 +14,6 @@ public static class ServiceNames
 
     public const string AuthServer = "auth-server";
 
-    public const string PizzeriaConfiguration = "pizzeria-configuration";
-
     public static string GetPizzaStoreDatabaseName()
     {
         if (Environments.IsIntegrationTesting)
