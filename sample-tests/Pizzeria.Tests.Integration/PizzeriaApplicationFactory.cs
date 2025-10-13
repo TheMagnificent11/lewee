@@ -31,10 +31,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
         // https://learn.microsoft.com/en-us/dotnet/aspire/testing/manage-app-host?pivots=xunit
         this.builder = await DistributedApplicationTestingBuilder.CreateAsync<Projects.Pizzeria_AppHost>();
-        this.builder.Services.ConfigureHttpClientDefaults(x =>
-        {
-            x.AddStandardResilienceHandler();
-        });
+        this.builder.Services.ConfigureHttpClientDefaults(x => { });
 
         this.app = await this.builder.BuildAsync();
         this.resourceNotificationService = this.app.Services.GetRequiredService<ResourceNotificationService>();
