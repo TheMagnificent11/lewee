@@ -27,7 +27,7 @@ builder.Services
 builder.Services
     .AddHttpClient<KeycloakHttpClient>(httpClient =>
     {
-        httpClient.BaseAddress = new Uri($"https://{ServiceNames.AuthServer}");
+        httpClient.BaseAddress = new Uri($"http://{ServiceNames.AuthServer}");
         httpClient.Timeout = TimeSpan.FromSeconds(5);
     })
     .AddServiceDiscovery();
