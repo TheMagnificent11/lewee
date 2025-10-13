@@ -6,29 +6,17 @@ using Pizzeria.Common;
 
 namespace Pizzeria.Auth;
 
-/// <summary>
-/// HTTP client for Keycloak API operations
-/// </summary>
 public sealed class KeycloakHttpClient
 {
     private readonly HttpClient httpClient;
     private readonly ILogger<KeycloakHttpClient> logger;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="KeycloakHttpClient"/> class.
-    /// </summary>
-    /// <param name="httpClient">HTTP client</param>
-    /// <param name="logger">Logger</param>
     public KeycloakHttpClient(HttpClient httpClient, ILogger<KeycloakHttpClient> logger)
     {
         this.httpClient = httpClient;
         this.logger = logger;
     }
 
-    /// <summary>
-    /// Gets the admin access token
-    /// </summary>
-    /// <returns>Admin access token</returns>
     public async Task<string> GetAdminAccessTokenAsync()
     {
         this.logger.LogInformation("Authenticating with Keycloak admin...");
@@ -55,20 +43,11 @@ public sealed class KeycloakHttpClient
         throw new InvalidOperationException($"Failed to authenticate with Keycloak. Status: {adminTokenResponse.StatusCode}, Error: {errorContent}");
     }
 
-    /// <summary>
-    /// Sets the bearer token for subsequent requests
-    /// </summary>
-    /// <param name="token">Bearer token</param>
     public void SetBearerToken(string token)
     {
         this.httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
     }
 
-    /// <summary>
-    /// Checks if a realm exists in Keycloak
-    /// </summary>
-    /// <param name="realmName">Realm name</param>
-    /// <returns>True if realm exists, false otherwise</returns>
     public async Task<bool> RealmExistsAsync(string realmName)
     {
         try
@@ -84,11 +63,6 @@ public sealed class KeycloakHttpClient
         }
     }
 
-    /// <summary>
-    /// Creates a realm in Keycloak
-    /// </summary>
-    /// <param name="realmName">Realm name</param>
-    /// <returns>Task</returns>
     public async Task CreateRealmAsync(string realmName)
     {
         // Check if realm already exists
@@ -117,12 +91,6 @@ public sealed class KeycloakHttpClient
         this.logger.LogInformation("Realm {RealmName} created successfully", realmName);
     }
 
-    /// <summary>
-    /// Checks if a client exists in the specified realm
-    /// </summary>
-    /// <param name="realmName">Realm name</param>
-    /// <param name="clientId">Client ID</param>
-    /// <returns>True if client exists, false otherwise</returns>
     public async Task<bool> ClientExistsAsync(string realmName, string clientId)
     {
         try
@@ -144,13 +112,7 @@ public sealed class KeycloakHttpClient
         }
     }
 
-    /// <summary>
-    /// Creates a client in Keycloak
-    /// </summary>
-    /// <param name="realmName">Realm name</param>
-    /// <param name="clientId">Client ID</param>
-    /// <returns>Task</returns>
-    public async Task CreateClientAsync(string realmName, string clientId)
+    public async Task CreateClientAsync(string realmName, string clientId, string clientName)
     {
         // Check if client already exists
         if (await this.ClientExistsAsync(realmName, clientId))
@@ -167,41 +129,50 @@ public sealed class KeycloakHttpClient
             enabled = true,
             publicClient = true,
             directAccessGrantsEnabled = true,
+            serviceAccountsEnabled = false,
             standardFlowEnabled = true,
             implicitFlowEnabled = false,
+            fullScopeAllowed = true,
             redirectUris = new[] { "*" },
             webOrigins = new[] { "*" },
-            attributes = new { access_token_lifespan = "300" },
+            attributes = new
+            {
+                access_token_lifespan = "300",
+                client_credentials_use_refresh_token = "false",
+            },
+            protocolMappers = new[]
+            {
+                new
+                {
+                    name = clientName,
+                    protocol = "openid-connect",
+                    protocolMapper = "oidc-usersessionmodel-note-mapper",
+                    consentRequired = false,
+                    config = new
+                    {
+                        user_session_note = "clientId",
+                        id_token_claim = "true",
+                        access_token_claim = "true",
+                        claim_name = "clientId",
+                        jsonType_label = "String",
+                    },
+                },
+            },
         };
 
-        try
+        using var clientResponse = await this.httpClient.PostAsJsonAsync(
+            $"/admin/realms/{realmName}/clients",
+            clientPayload);
+
+        if (!clientResponse.IsSuccessStatusCode)
         {
-            using var clientResponse = await this.httpClient.PostAsJsonAsync(
-                $"/admin/realms/{realmName}/clients",
-                clientPayload);
-
-            if (!clientResponse.IsSuccessStatusCode)
-            {
-                var error = await clientResponse.Content.ReadAsStringAsync();
-                throw new InvalidOperationException($"Failed to create client: {error}");
-            }
-
-            this.logger.LogInformation("Client {ClientId} created successfully", clientId);
+            var error = await clientResponse.Content.ReadAsStringAsync();
+            throw new InvalidOperationException($"Failed to create client: {error}");
         }
-        catch (HttpRequestException ex)
-        {
-            this.logger.LogError(ex, "Error creating client");
 
-            throw;
-        }
+        this.logger.LogInformation("Client {ClientId} created successfully", clientId);
     }
 
-    /// <summary>
-    /// Checks if a user exists in the specified realm
-    /// </summary>
-    /// <param name="realmName">Realm name</param>
-    /// <param name="username">Username</param>
-    /// <returns>True if user exists, false otherwise</returns>
     public async Task<bool> UserExistsAsync(string realmName, string username)
     {
         try
@@ -223,13 +194,6 @@ public sealed class KeycloakHttpClient
         }
     }
 
-    /// <summary>
-    /// Creates a user in Keycloak
-    /// </summary>
-    /// <param name="realmName">Realm name</param>
-    /// <param name="username">Username</param>
-    /// <param name="password">Password</param>
-    /// <returns>Task</returns>
     public async Task CreateUserAsync(string realmName, string username, string password)
     {
         // Check if user already exists
@@ -280,10 +244,6 @@ public sealed class KeycloakHttpClient
         }
     }
 
-    /// <summary>
-    /// Waits for Keycloak to be ready
-    /// </summary>
-    /// <returns>Task</returns>
     public async Task WaitForReadyAsync()
     {
         this.logger.LogInformation("Waiting for Keycloak to be ready...");

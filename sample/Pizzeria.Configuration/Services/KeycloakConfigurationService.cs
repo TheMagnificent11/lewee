@@ -37,7 +37,10 @@ public sealed class KeycloakConfigurationService : IAuthServerConfiguration
         this.keycloakHttpClient.SetBearerToken(adminAccessToken);
 
         await this.keycloakHttpClient.CreateRealmAsync(Environments.Auth.RealmName);
-        await this.keycloakHttpClient.CreateClientAsync(Environments.Auth.RealmName, Environments.Auth.ApiClientId);
+        await this.keycloakHttpClient.CreateClientAsync(
+            Environments.Auth.RealmName,
+            Environments.Auth.ApiClientId,
+            clientName: "Pizzeria Store API Client");
         await this.keycloakHttpClient.CreateUserAsync(
             Environments.Auth.RealmName,
             Environments.Auth.Users.Customer1.Username,
