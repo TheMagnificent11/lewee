@@ -245,6 +245,8 @@ public sealed class KeycloakHttpClient
         {
             username,
             enabled = true,
+            emailVerified = true,
+            requiredActions = Array.Empty<string>(),
             credentials = new[]
             {
                 new
