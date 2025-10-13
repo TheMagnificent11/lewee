@@ -25,8 +25,9 @@ builder.Services
         StoreDbContext.SchemaName);
 
 builder.Services
-    .AddHttpClient<KeycloakHttpClient>(ServiceNames.AuthServer, httpClient =>
+    .AddHttpClient<KeycloakHttpClient>(httpClient =>
     {
+        httpClient.BaseAddress = new Uri($"https://{ServiceNames.AuthServer}");
         httpClient.Timeout = TimeSpan.FromSeconds(5);
     })
     .AddServiceDiscovery();
