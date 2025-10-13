@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Pizzeria.Common\Pizzeria.Common.csproj" IsAspireProjectResource="false" />
+    <ProjectReference Include="..\Pizzeria.Configuration\Pizzeria.Configuration.csproj" />
     <ProjectReference Include="..\Pizzeria.Store.Api\Pizzeria.Store.Api.csproj" />
     <ProjectReference Include="..\Pizzeria.Store.WebClient\Pizzeria.Store.WebClient.csproj" />
   </ItemGroup>
