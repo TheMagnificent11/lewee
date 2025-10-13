@@ -17,7 +17,7 @@ public sealed class KeycloakHttpClient
         this.logger = logger;
     }
 
-    public async Task<string> GetAdminAccessTokenAsync()
+    public async Task<string> GetAdminAccessTokenAsync(CancellationToken cancellationToken)
     {
         this.logger.LogInformation("Authenticating with Keycloak admin...");
 
@@ -31,15 +31,16 @@ public sealed class KeycloakHttpClient
 
         using var adminTokenResponse = await this.httpClient.PostAsync(
             "/realms/master/protocol/openid-connect/token",
-            adminTokenRequest);
+            adminTokenRequest,
+            cancellationToken);
 
         if (adminTokenResponse.IsSuccessStatusCode)
         {
-            var adminToken = await adminTokenResponse.Content.ReadFromJsonAsync<KeycloakTokenResponse>();
+            var adminToken = await adminTokenResponse.Content.ReadFromJsonAsync<KeycloakTokenResponse>(cancellationToken);
             return adminToken!.AccessToken;
         }
 
-        var errorContent = await adminTokenResponse.Content.ReadAsStringAsync();
+        var errorContent = await adminTokenResponse.Content.ReadAsStringAsync(cancellationToken);
         throw new InvalidOperationException($"Failed to authenticate with Keycloak. Status: {adminTokenResponse.StatusCode}, Error: {errorContent}");
     }
 
@@ -48,11 +49,11 @@ public sealed class KeycloakHttpClient
         this.httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
     }
 
-    public async Task<bool> RealmExistsAsync(string realmName)
+    public async Task<bool> RealmExistsAsync(string realmName, CancellationToken cancellationToken)
     {
         try
         {
-            var response = await this.httpClient.GetAsync($"/admin/realms/{realmName}");
+            using var response = await this.httpClient.GetAsync($"/admin/realms/{realmName}", cancellationToken);
             return response.IsSuccessStatusCode;
         }
         catch (HttpRequestException ex)
@@ -63,10 +64,10 @@ public sealed class KeycloakHttpClient
         }
     }
 
-    public async Task CreateRealmAsync(string realmName)
+    public async Task CreateRealmAsync(string realmName, CancellationToken cancellationToken)
     {
         // Check if realm already exists
-        if (await this.RealmExistsAsync(realmName))
+        if (await this.RealmExistsAsync(realmName, cancellationToken))
         {
             this.logger.LogInformation("Realm {RealmName} already exists", realmName);
             return;
@@ -81,27 +82,35 @@ public sealed class KeycloakHttpClient
             sslRequired = "none",
         };
 
-        var realmResponse = await this.httpClient.PostAsJsonAsync("/admin/realms", realmPayload);
+        using var realmResponse = await this.httpClient.PostAsJsonAsync(
+            "/admin/realms",
+            realmPayload,
+            cancellationToken);
         if (!realmResponse.IsSuccessStatusCode)
         {
-            var error = await realmResponse.Content.ReadAsStringAsync();
+            var error = await realmResponse.Content.ReadAsStringAsync(cancellationToken);
             throw new InvalidOperationException($"Failed to create realm: {error}");
         }
 
         this.logger.LogInformation("Realm {RealmName} created successfully", realmName);
     }
 
-    public async Task<bool> ClientExistsAsync(string realmName, string clientId)
+    public async Task<bool> ClientExistsAsync(
+        string realmName,
+        string clientId,
+        CancellationToken cancellationToken)
     {
         try
         {
-            var response = await this.httpClient.GetAsync($"/admin/realms/{realmName}/clients?clientId={clientId}");
+            using var response = await this.httpClient.GetAsync(
+                $"/admin/realms/{realmName}/clients?clientId={clientId}",
+                cancellationToken);
             if (!response.IsSuccessStatusCode)
             {
                 return false;
             }
 
-            var clients = await response.Content.ReadFromJsonAsync<JsonElement[]>();
+            var clients = await response.Content.ReadFromJsonAsync<JsonElement[]>(cancellationToken);
             return clients?.Length > 0;
         }
         catch (HttpRequestException ex)
@@ -112,10 +121,14 @@ public sealed class KeycloakHttpClient
         }
     }
 
-    public async Task CreateClientAsync(string realmName, string clientId, string clientName)
+    public async Task CreateClientAsync(
+        string realmName,
+        string clientId,
+        string clientName,
+        CancellationToken cancellationToken)
     {
         // Check if client already exists
-        if (await this.ClientExistsAsync(realmName, clientId))
+        if (await this.ClientExistsAsync(realmName, clientId, cancellationToken))
         {
             this.logger.LogInformation("Client {ClientId} already exists in realm {RealmName}", clientId, realmName);
             return;
@@ -162,28 +175,34 @@ public sealed class KeycloakHttpClient
 
         using var clientResponse = await this.httpClient.PostAsJsonAsync(
             $"/admin/realms/{realmName}/clients",
-            clientPayload);
+            clientPayload,
+            cancellationToken);
 
         if (!clientResponse.IsSuccessStatusCode)
         {
-            var error = await clientResponse.Content.ReadAsStringAsync();
+            var error = await clientResponse.Content.ReadAsStringAsync(cancellationToken);
             throw new InvalidOperationException($"Failed to create client: {error}");
         }
 
         this.logger.LogInformation("Client {ClientId} created successfully", clientId);
     }
 
-    public async Task<bool> UserExistsAsync(string realmName, string username)
+    public async Task<bool> UserExistsAsync(
+        string realmName,
+        string username,
+        CancellationToken cancellationToken)
     {
         try
         {
-            var response = await this.httpClient.GetAsync($"/admin/realms/{realmName}/users?username={username}");
+            using var response = await this.httpClient.GetAsync(
+                $"/admin/realms/{realmName}/users?username={username}",
+                cancellationToken);
             if (!response.IsSuccessStatusCode)
             {
                 return false;
             }
 
-            var users = await response.Content.ReadFromJsonAsync<JsonElement[]>();
+            var users = await response.Content.ReadFromJsonAsync<JsonElement[]>(cancellationToken);
             return users?.Length > 0;
         }
         catch (HttpRequestException ex)
@@ -194,10 +213,14 @@ public sealed class KeycloakHttpClient
         }
     }
 
-    public async Task CreateUserAsync(string realmName, string username, string password)
+    public async Task CreateUserAsync(
+        string realmName,
+        string username,
+        string password,
+        CancellationToken cancellationToken)
     {
         // Check if user already exists
-        if (await this.UserExistsAsync(realmName, username))
+        if (await this.UserExistsAsync(realmName, username, cancellationToken))
         {
             this.logger.LogInformation("User {Username} already exists in realm {RealmName}", username, realmName);
             return;
@@ -224,13 +247,14 @@ public sealed class KeycloakHttpClient
 
         try
         {
-            var userResponse = await this.httpClient.PostAsJsonAsync(
+            using var userResponse = await this.httpClient.PostAsJsonAsync(
                 $"/admin/realms/{realmName}/users",
-                userPayload);
+                userPayload,
+                cancellationToken);
 
             if (!userResponse.IsSuccessStatusCode)
             {
-                var error = await userResponse.Content.ReadAsStringAsync();
+                var error = await userResponse.Content.ReadAsStringAsync(cancellationToken);
                 throw new InvalidOperationException($"Failed to create user {username}: {error}");
             }
 
@@ -244,7 +268,7 @@ public sealed class KeycloakHttpClient
         }
     }
 
-    public async Task WaitForReadyAsync()
+    public async Task WaitForReadyAsync(CancellationToken cancellationToken)
     {
         this.logger.LogInformation("Waiting for Keycloak to be ready...");
 
@@ -253,7 +277,7 @@ public sealed class KeycloakHttpClient
         {
             try
             {
-                var response = await this.httpClient.GetAsync("/realms/master");
+                using var response = await this.httpClient.GetAsync("/realms/master", cancellationToken);
                 if (response.IsSuccessStatusCode)
                 {
                     this.logger.LogInformation("Keycloak is ready");
@@ -269,7 +293,7 @@ public sealed class KeycloakHttpClient
                 // Timeout, Keycloak not ready yet
             }
 
-            await Task.Delay(TimeSpan.FromSeconds(2));
+            await Task.Delay(TimeSpan.FromSeconds(2), cancellationToken);
         }
 
         throw new InvalidOperationException("Keycloak did not become ready within the timeout period");

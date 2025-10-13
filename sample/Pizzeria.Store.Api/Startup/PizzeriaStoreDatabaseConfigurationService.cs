@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Pizzeria.Store.Data;
 using Pizzeria.Store.Domain;
 
@@ -10,6 +9,9 @@ internal sealed class PizzeriaStoreDatabaseConfigurationService
     private readonly StoreDbContext dbContext;
     private readonly ILogger<PizzeriaStoreDatabaseConfigurationService> logger;
 
+    private bool isMigrated;
+    private bool isSeeded;
+
     public PizzeriaStoreDatabaseConfigurationService(
         StoreDbContext dbContext,
         ILogger<PizzeriaStoreDatabaseConfigurationService> logger)
@@ -18,14 +20,19 @@ internal sealed class PizzeriaStoreDatabaseConfigurationService
         this.logger = logger;
     }
 
-    public async Task MigrateAsync()
+    public bool IsReady => this.isMigrated && this.isSeeded;
+
+    public async Task MigrateAsync(CancellationToken cancellationToken)
     {
         this.logger.LogInformation("Running database migrations...");
-        await this.dbContext.Database.MigrateAsync();
+
+        await this.dbContext.Database.MigrateAsync(cancellationToken);
+        this.isMigrated = true;
+
         this.logger.LogInformation("Database migrations completed successfully");
     }
 
-    public async Task SeedDataAsync()
+    public async Task SeedDataAsync(CancellationToken cancellationToken)
     {
         this.logger.LogInformation("Seeding database...");
 
@@ -34,7 +41,7 @@ internal sealed class PizzeriaStoreDatabaseConfigurationService
 
         foreach (var item in pizzas)
         {
-            var existing = await this.dbContext.Pizzas.FindAsync(item.Id);
+            var existing = await this.dbContext.Pizzas.FindAsync(item.Id, cancellationToken);
 
             if (existing == null)
             {
@@ -46,10 +53,15 @@ internal sealed class PizzeriaStoreDatabaseConfigurationService
         if (!hasChanges)
         {
             this.logger.LogInformation("No seed data changes required");
+            this.isSeeded = true;
+
             return;
         }
 
-        await this.dbContext.SaveChangesAsync();
+        await this.dbContext.SaveChangesAsync(cancellationToken);
+
+        this.isSeeded = true;
+
         this.logger.LogInformation("Database seeded successfully");
     }
 }
