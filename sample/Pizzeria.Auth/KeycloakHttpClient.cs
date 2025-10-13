@@ -1,5 +1,6 @@
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Pizzeria.Common;
 
@@ -64,12 +65,39 @@ public sealed class KeycloakHttpClient
     }
 
     /// <summary>
+    /// Checks if a realm exists in Keycloak
+    /// </summary>
+    /// <param name="realmName">Realm name</param>
+    /// <returns>True if realm exists, false otherwise</returns>
+    public async Task<bool> RealmExistsAsync(string realmName)
+    {
+        try
+        {
+            var response = await this.httpClient.GetAsync($"/admin/realms/{realmName}");
+            return response.IsSuccessStatusCode;
+        }
+        catch (HttpRequestException ex)
+        {
+            this.logger.LogError(ex, "Error checking realm existence");
+
+            return false;
+        }
+    }
+
+    /// <summary>
     /// Creates a realm in Keycloak
     /// </summary>
     /// <param name="realmName">Realm name</param>
     /// <returns>Task</returns>
     public async Task CreateRealmAsync(string realmName)
     {
+        // Check if realm already exists
+        if (await this.RealmExistsAsync(realmName))
+        {
+            this.logger.LogInformation("Realm {RealmName} already exists", realmName);
+            return;
+        }
+
         this.logger.LogInformation("Creating realm: {RealmName}...", realmName);
 
         var realmPayload = new
@@ -83,16 +111,37 @@ public sealed class KeycloakHttpClient
         if (!realmResponse.IsSuccessStatusCode)
         {
             var error = await realmResponse.Content.ReadAsStringAsync();
-            if (error.Contains("Conflict", StringComparison.Ordinal))
-            {
-                this.logger.LogInformation("Realm {RealmName} already exists", realmName);
-                return;
-            }
-
             throw new InvalidOperationException($"Failed to create realm: {error}");
         }
 
         this.logger.LogInformation("Realm {RealmName} created successfully", realmName);
+    }
+
+    /// <summary>
+    /// Checks if a client exists in the specified realm
+    /// </summary>
+    /// <param name="realmName">Realm name</param>
+    /// <param name="clientId">Client ID</param>
+    /// <returns>True if client exists, false otherwise</returns>
+    public async Task<bool> ClientExistsAsync(string realmName, string clientId)
+    {
+        try
+        {
+            var response = await this.httpClient.GetAsync($"/admin/realms/{realmName}/clients?clientId={clientId}");
+            if (!response.IsSuccessStatusCode)
+            {
+                return false;
+            }
+
+            var clients = await response.Content.ReadFromJsonAsync<JsonElement[]>();
+            return clients?.Length > 0;
+        }
+        catch (HttpRequestException ex)
+        {
+            this.logger.LogError(ex, "Error checking client existence");
+
+            return false;
+        }
     }
 
     /// <summary>
@@ -103,6 +152,13 @@ public sealed class KeycloakHttpClient
     /// <returns>Task</returns>
     public async Task CreateClientAsync(string realmName, string clientId)
     {
+        // Check if client already exists
+        if (await this.ClientExistsAsync(realmName, clientId))
+        {
+            this.logger.LogInformation("Client {ClientId} already exists in realm {RealmName}", clientId, realmName);
+            return;
+        }
+
         this.logger.LogInformation("Creating client: {ClientId} in realm: {RealmName}...", clientId, realmName);
 
         var clientPayload = new
@@ -118,23 +174,53 @@ public sealed class KeycloakHttpClient
             attributes = new { access_token_lifespan = "300" },
         };
 
-        using var clientResponse = await this.httpClient.PostAsJsonAsync(
-            $"/admin/realms/{realmName}/clients",
-            clientPayload);
-
-        if (!clientResponse.IsSuccessStatusCode)
+        try
         {
-            var error = await clientResponse.Content.ReadAsStringAsync();
-            if (error.Contains("Conflict", StringComparison.Ordinal))
+            using var clientResponse = await this.httpClient.PostAsJsonAsync(
+                $"/admin/realms/{realmName}/clients",
+                clientPayload);
+
+            if (!clientResponse.IsSuccessStatusCode)
             {
-                this.logger.LogInformation("Client {ClientId} already exists", clientId);
-                return;
+                var error = await clientResponse.Content.ReadAsStringAsync();
+                throw new InvalidOperationException($"Failed to create client: {error}");
             }
 
-            throw new InvalidOperationException($"Failed to create client: {error}");
+            this.logger.LogInformation("Client {ClientId} created successfully", clientId);
         }
+        catch (HttpRequestException ex)
+        {
+            this.logger.LogError(ex, "Error creating client");
 
-        this.logger.LogInformation("Client {ClientId} created successfully", clientId);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Checks if a user exists in the specified realm
+    /// </summary>
+    /// <param name="realmName">Realm name</param>
+    /// <param name="username">Username</param>
+    /// <returns>True if user exists, false otherwise</returns>
+    public async Task<bool> UserExistsAsync(string realmName, string username)
+    {
+        try
+        {
+            var response = await this.httpClient.GetAsync($"/admin/realms/{realmName}/users?username={username}");
+            if (!response.IsSuccessStatusCode)
+            {
+                return false;
+            }
+
+            var users = await response.Content.ReadFromJsonAsync<JsonElement[]>();
+            return users?.Length > 0;
+        }
+        catch (HttpRequestException ex)
+        {
+            this.logger.LogError(ex, "Error checking user existence");
+
+            return false;
+        }
     }
 
     /// <summary>
@@ -146,6 +232,13 @@ public sealed class KeycloakHttpClient
     /// <returns>Task</returns>
     public async Task CreateUserAsync(string realmName, string username, string password)
     {
+        // Check if user already exists
+        if (await this.UserExistsAsync(realmName, username))
+        {
+            this.logger.LogInformation("User {Username} already exists in realm {RealmName}", username, realmName);
+            return;
+        }
+
         this.logger.LogInformation("Creating user: {Username} in realm: {RealmName}...", username, realmName);
 
         var userPayload = new
@@ -163,23 +256,26 @@ public sealed class KeycloakHttpClient
             },
         };
 
-        var userResponse = await this.httpClient.PostAsJsonAsync(
-            $"/admin/realms/{realmName}/users",
-            userPayload);
-
-        if (!userResponse.IsSuccessStatusCode)
+        try
         {
-            var error = await userResponse.Content.ReadAsStringAsync();
-            if (error.Contains("Conflict", StringComparison.Ordinal) || error.Contains("already exists", StringComparison.Ordinal))
+            var userResponse = await this.httpClient.PostAsJsonAsync(
+                $"/admin/realms/{realmName}/users",
+                userPayload);
+
+            if (!userResponse.IsSuccessStatusCode)
             {
-                this.logger.LogInformation("User {Username} already exists", username);
-                return;
+                var error = await userResponse.Content.ReadAsStringAsync();
+                throw new InvalidOperationException($"Failed to create user {username}: {error}");
             }
 
-            throw new InvalidOperationException($"Failed to create user {username}: {error}");
+            this.logger.LogInformation("User {Username} created successfully", username);
         }
+        catch (HttpRequestException ex)
+        {
+            this.logger.LogError(ex, "Error creating user");
 
-        this.logger.LogInformation("User {Username} created successfully", username);
+            throw;
+        }
     }
 
     /// <summary>
