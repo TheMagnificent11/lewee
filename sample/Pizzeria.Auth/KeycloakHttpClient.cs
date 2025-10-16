@@ -80,6 +80,35 @@ public sealed class KeycloakHttpClient
             realm = realmName,
             enabled = true,
             sslRequired = "none",
+            directGrantsOnly = false,
+            bruteForceProtected = false,
+            loginWithEmailAllowed = true,
+            duplicateEmailsAllowed = false,
+            resetPasswordAllowed = true,
+            editUsernameAllowed = false,
+            userManagedAccessAllowed = false,
+            registrationAllowed = false,
+            registrationEmailAsUsername = false,
+            rememberMe = true,
+            verifyEmail = false,
+            loginTheme = "base",
+            accountTheme = "base",
+            adminTheme = "base",
+            emailTheme = "base",
+            eventsEnabled = false,
+            eventsExpiration = 0,
+            adminEventsEnabled = false,
+            adminEventsDetailsEnabled = false,
+            accessTokenLifespan = 300,
+            accessTokenLifespanForImplicitFlow = 900,
+            ssoSessionIdleTimeout = 1800,
+            ssoSessionMaxLifespan = 36000,
+            offlineSessionIdleTimeout = 2592000,
+            accessCodeLifespan = 60,
+            accessCodeLifespanUserAction = 300,
+            accessCodeLifespanLogin = 1800,
+            actionTokenGeneratedByAdminLifespan = 43200,
+            actionTokenGeneratedByUserLifespan = 300,
         };
 
         using var realmResponse = await this.httpClient.PostAsJsonAsync(
@@ -156,41 +185,11 @@ public sealed class KeycloakHttpClient
             {
                 access_token_lifespan = "300",
                 client_credentials_use_refresh_token = "false",
-                use_refresh_tokens = "true"
+                use_refresh_tokens = "true",
+                pkce_code_challenge_method = "S256",
             },
             defaultClientScopes = new[] { "web-origins", "profile", "roles", "email" },
             optionalClientScopes = new[] { "address", "phone", "offline_access", "microprofile-jwt" },
-            protocolMappers = new object[]
-            {
-                new
-                {
-                    name = "Client ID Mapper",
-                    protocol = "openid-connect",
-                    protocolMapper = "oidc-usersessionmodel-note-mapper",
-                    consentRequired = false,
-                    config = new
-                    {
-                        user_session_note = "clientId",
-                        id_token_claim = "true",
-                        access_token_claim = "true",
-                        claim_name = "clientId",
-                        jsonType_label = "String",
-                    },
-                },
-                new
-                {
-                    name = "Audience Mapper",
-                    protocol = "openid-connect",
-                    protocolMapper = "oidc-audience-mapper",
-                    consentRequired = false,
-                    config = new
-                    {
-                        included_client_audience = clientId,
-                        id_token_claim = "false",
-                        access_token_claim = "true"
-                    }
-                }
-            },
         };
 
         using var clientResponse = await this.httpClient.PostAsJsonAsync(
@@ -253,6 +252,9 @@ public sealed class KeycloakHttpClient
             username,
             enabled = true,
             emailVerified = true,
+            email = $"{username}@example.com",
+            firstName = username,
+            lastName = "User",
             requiredActions = Array.Empty<string>(),
             credentials = new[]
             {
@@ -317,5 +319,72 @@ public sealed class KeycloakHttpClient
         }
 
         throw new InvalidOperationException("Keycloak did not become ready within the timeout period");
+    }
+
+    public async Task<string> TestTokenEndpointAsync(
+        string realmName,
+        string clientId,
+        string username,
+        string password,
+        CancellationToken cancellationToken)
+    {
+        this.logger.LogInformation(
+            "Testing token endpoint for realm {RealmName}, client {ClientId}, user {Username}",
+            realmName,
+            clientId,
+            username);
+
+        var tokenEndpoint = $"/realms/{realmName}/protocol/openid-connect/token";
+
+        var tokenRequest = new FormUrlEncodedContent(new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            ["grant_type"] = "password",
+            ["client_id"] = clientId,
+            ["username"] = username,
+            ["password"] = password,
+        });
+
+        try
+        {
+            using var response = await this.httpClient.PostAsync(tokenEndpoint, tokenRequest, cancellationToken);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var tokenResponse = await response.Content.ReadFromJsonAsync<KeycloakTokenResponse>(cancellationToken);
+                this.logger.LogInformation("Token endpoint test successful for user {Username}", username);
+                return tokenResponse!.AccessToken;
+            }
+
+            var errorContent = await response.Content.ReadAsStringAsync(cancellationToken);
+            KeycloakErrorResponse? errorResponse = null;
+
+            try
+            {
+                errorResponse = JsonSerializer.Deserialize<KeycloakErrorResponse>(errorContent);
+            }
+            catch
+            {
+                // If we can't parse as JSON, use the raw content
+            }
+
+            var errorMessage = errorResponse != null
+                ? $"Error: {errorResponse.Error}, Description: {errorResponse.ErrorDescription}"
+                : errorContent;
+
+            this.logger.LogError(
+                "Token endpoint test failed. Status: {StatusCode}, Error: {Error}",
+                response.StatusCode,
+                errorMessage);
+
+            throw new InvalidOperationException(
+                $"Token endpoint test failed for user {username}. " +
+                $"Status: {response.StatusCode}, " +
+                $"Error: {errorMessage}");
+        }
+        catch (HttpRequestException ex)
+        {
+            this.logger.LogError(ex, "HTTP error during token endpoint test");
+            throw new InvalidOperationException("HTTP error during token endpoint test", ex);
+        }
     }
 }
