@@ -1,5 +1,6 @@
 ﻿using Pizzeria.Auth;
 using Pizzeria.Common;
+using Pizzeria.Store.Data;
 
 namespace Pizzeria.Store.Api.Startup;
 
@@ -16,11 +17,11 @@ internal static class StartupConfiguration
         });
 
         services.AddHealthChecks()
+            .AddDbContextCheck<StoreDbContext>("database", tags: ["live"])
             .AddCheck<StartupReadinessHealthCheck>("startup_readiness", tags: ["ready"]);
 
         return services
             .AddTransient<StartupStatusService>()
-            .AddTransient<StoreDatabaseConfigurationService>()
             .AddTransient<KeycloakConfigurationService>()
             .AddHostedService<ConfigurationHostedService>();
     }
