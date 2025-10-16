@@ -139,25 +139,32 @@ public sealed class KeycloakHttpClient
         var clientPayload = new
         {
             clientId,
+            name = clientName,
             enabled = true,
             publicClient = true,
-            directAccessGrantsEnabled = true,
+            directAccessGrantsEnabled = true, // Required for password grant
             serviceAccountsEnabled = false,
             standardFlowEnabled = true,
             implicitFlowEnabled = false,
             fullScopeAllowed = true,
             redirectUris = new[] { "*" },
             webOrigins = new[] { "*" },
+            protocol = "openid-connect",
+            bearerOnly = false,
+            consentRequired = false,
             attributes = new
             {
                 access_token_lifespan = "300",
                 client_credentials_use_refresh_token = "false",
+                use_refresh_tokens = "true"
             },
-            protocolMappers = new[]
+            defaultClientScopes = new[] { "web-origins", "profile", "roles", "email" },
+            optionalClientScopes = new[] { "address", "phone", "offline_access", "microprofile-jwt" },
+            protocolMappers = new object[]
             {
                 new
                 {
-                    name = clientName,
+                    name = "Client ID Mapper",
                     protocol = "openid-connect",
                     protocolMapper = "oidc-usersessionmodel-note-mapper",
                     consentRequired = false,
@@ -170,6 +177,19 @@ public sealed class KeycloakHttpClient
                         jsonType_label = "String",
                     },
                 },
+                new
+                {
+                    name = "Audience Mapper",
+                    protocol = "openid-connect",
+                    protocolMapper = "oidc-audience-mapper",
+                    consentRequired = false,
+                    config = new
+                    {
+                        included_client_audience = clientId,
+                        id_token_claim = "false",
+                        access_token_claim = "true"
+                    }
+                }
             },
         };
 
