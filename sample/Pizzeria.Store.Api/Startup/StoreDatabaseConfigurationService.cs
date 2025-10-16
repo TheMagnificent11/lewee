@@ -7,27 +7,27 @@ namespace Pizzeria.Store.Api.Startup;
 internal sealed class StoreDatabaseConfigurationService
 {
     private readonly StoreDbContext dbContext;
+    private readonly StartupStatusService startupStatusService;
     private readonly ILogger<StoreDatabaseConfigurationService> logger;
-
-    private bool isMigrated;
-    private bool isSeeded;
 
     public StoreDatabaseConfigurationService(
         StoreDbContext dbContext,
+        StartupStatusService startupStatusService,
         ILogger<StoreDatabaseConfigurationService> logger)
     {
         this.dbContext = dbContext;
+        this.startupStatusService = startupStatusService;
         this.logger = logger;
     }
 
-    public bool IsReady => this.isMigrated && this.isSeeded;
+    public bool IsReady => this.startupStatusService.IsDatabaseReady;
 
     public async Task MigrateAsync(CancellationToken cancellationToken)
     {
         this.logger.LogInformation("Running database migrations...");
 
         await this.dbContext.Database.MigrateAsync(cancellationToken);
-        this.isMigrated = true;
+        this.startupStatusService.SetDatabaseMigrated();
 
         this.logger.LogInformation("Database migrations completed successfully");
     }
@@ -52,14 +52,14 @@ internal sealed class StoreDatabaseConfigurationService
         if (!hasChanges)
         {
             this.logger.LogInformation("No seed data changes required");
-            this.isSeeded = true;
+            this.startupStatusService.SetDatabaseSeeded();
 
             return;
         }
 
         await this.dbContext.SaveChangesAsync(cancellationToken);
 
-        this.isSeeded = true;
+        this.startupStatusService.SetDatabaseSeeded();
 
         this.logger.LogInformation("Database seeded successfully");
     }

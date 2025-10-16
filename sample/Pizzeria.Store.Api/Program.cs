@@ -4,6 +4,7 @@ using Lewee.Infrastructure.AspNet.Observability;
 using Lewee.Infrastructure.AspNet.SignalR;
 using Lewee.Infrastructure.Data;
 using Lewee.Infrastructure.PostgreSQL;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Pizzeria.Common;
 using Pizzeria.ServiceDefaults;
 using Pizzeria.Store.Api.Startup;
@@ -57,6 +58,13 @@ builder.Services
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
+
+// Map the /ready endpoint for startup readiness checks
+app.MapHealthChecks("/ready", new HealthCheckOptions
+{
+    Predicate = healthCheck => healthCheck.Tags.Contains("ready"),
+});
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapHub<ClientEventHub>("/events");

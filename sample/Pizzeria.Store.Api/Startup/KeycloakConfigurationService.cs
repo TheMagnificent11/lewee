@@ -1,22 +1,24 @@
 using Pizzeria.Auth;
-using PizzeriaEnvironment = Pizzeria.Common.Environments;
 
 namespace Pizzeria.Store.Api.Startup;
 
 internal sealed class KeycloakConfigurationService
 {
     private readonly KeycloakHttpClient keycloakHttpClient;
+    private readonly StartupStatusService startupStatusService;
     private readonly ILogger<KeycloakConfigurationService> logger;
 
     public KeycloakConfigurationService(
         KeycloakHttpClient keycloakHttpClient,
+        StartupStatusService startupStatusService,
         ILogger<KeycloakConfigurationService> logger)
     {
         this.keycloakHttpClient = keycloakHttpClient;
+        this.startupStatusService = startupStatusService;
         this.logger = logger;
     }
 
-    public bool IsReady { get; private set; }
+    public bool IsReady => this.startupStatusService.IsKeycloakReady;
 
     public async Task ConfigureAsync(CancellationToken cancellationToken)
     {
@@ -28,34 +30,34 @@ internal sealed class KeycloakConfigurationService
 
         this.keycloakHttpClient.SetBearerToken(adminAccessToken);
 
-        await this.keycloakHttpClient.CreateRealmAsync(PizzeriaEnvironment.Auth.RealmName, cancellationToken);
+        await this.keycloakHttpClient.CreateRealmAsync(Pizzeria.Common.Environments.Auth.RealmName, cancellationToken);
         await this.keycloakHttpClient.CreateClientAsync(
-            PizzeriaEnvironment.Auth.RealmName,
-            PizzeriaEnvironment.Auth.ApiClientId,
+            Pizzeria.Common.Environments.Auth.RealmName,
+            Pizzeria.Common.Environments.Auth.ApiClientId,
             clientName: "Pizzeria Store API Client",
             cancellationToken);
         await this.keycloakHttpClient.CreateUserAsync(
-            PizzeriaEnvironment.Auth.RealmName,
-            PizzeriaEnvironment.Auth.Users.Customer1.Username,
-            PizzeriaEnvironment.Auth.Users.Customer1.Password,
+            Pizzeria.Common.Environments.Auth.RealmName,
+            Pizzeria.Common.Environments.Auth.Users.Customer1.Username,
+            Pizzeria.Common.Environments.Auth.Users.Customer1.Password,
             cancellationToken);
         await this.keycloakHttpClient.CreateUserAsync(
-            PizzeriaEnvironment.Auth.RealmName,
-            PizzeriaEnvironment.Auth.Users.FrontStaff1.Username,
-            PizzeriaEnvironment.Auth.Users.FrontStaff1.Password,
+            Pizzeria.Common.Environments.Auth.RealmName,
+            Pizzeria.Common.Environments.Auth.Users.FrontStaff1.Username,
+            Pizzeria.Common.Environments.Auth.Users.FrontStaff1.Password,
             cancellationToken);
         await this.keycloakHttpClient.CreateUserAsync(
-            PizzeriaEnvironment.Auth.RealmName,
-            PizzeriaEnvironment.Auth.Users.KitchenStaff1.Username,
-            PizzeriaEnvironment.Auth.Users.KitchenStaff1.Password,
+            Pizzeria.Common.Environments.Auth.RealmName,
+            Pizzeria.Common.Environments.Auth.Users.KitchenStaff1.Username,
+            Pizzeria.Common.Environments.Auth.Users.KitchenStaff1.Password,
             cancellationToken);
         await this.keycloakHttpClient.CreateUserAsync(
-            PizzeriaEnvironment.Auth.RealmName,
-            PizzeriaEnvironment.Auth.Users.DeliveryDriver1.Username,
-            PizzeriaEnvironment.Auth.Users.DeliveryDriver1.Password,
+            Pizzeria.Common.Environments.Auth.RealmName,
+            Pizzeria.Common.Environments.Auth.Users.DeliveryDriver1.Username,
+            Pizzeria.Common.Environments.Auth.Users.DeliveryDriver1.Password,
             cancellationToken);
 
-        this.IsReady = true;
+        this.startupStatusService.SetKeycloakReady();
 
         this.logger.LogInformation("Keycloak configuration completed successfully");
     }

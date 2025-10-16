@@ -145,7 +145,8 @@ dotnet format lewee.sln
 **Quality Checklist:**
 - [ ] No compiler warnings
 - [ ] No style violations
-- [ ] XML documentation for public APIs
+- [ ] Address compiler information messages that result for Roslyn analyzers
+- [ ] XML documentation for public APIs for C# projects within the `src` directory
 - [ ] Follows existing patterns in the codebase
 - [ ] Framework changes (`src/` directory) have at least 90% line coverage
 
