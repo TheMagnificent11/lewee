@@ -41,8 +41,7 @@ internal sealed class StoreDatabaseConfigurationService
 
         foreach (var item in pizzas)
         {
-            var existing = await this.dbContext.Pizzas.FindAsync(item.Id, cancellationToken);
-
+            var existing = await this.dbContext.Pizzas.FindAsync([item.Id], cancellationToken);
             if (existing == null)
             {
                 this.dbContext.Pizzas.Add(item);

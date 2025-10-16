@@ -20,7 +20,7 @@ internal sealed class ConfigurationHostedService : BackgroundService
     {
         try
         {
-            using var scope = this.serviceProvider.CreateScope();
+            await using var scope = this.serviceProvider.CreateAsyncScope();
 
             var dbConfigService = scope.Resolve<StoreDatabaseConfigurationService>();
             var keycloakConfigService = scope.Resolve<KeycloakConfigurationService>();
