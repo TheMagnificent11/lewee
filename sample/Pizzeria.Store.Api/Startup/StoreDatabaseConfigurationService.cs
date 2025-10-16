@@ -4,17 +4,17 @@ using Pizzeria.Store.Domain;
 
 namespace Pizzeria.Store.Api.Startup;
 
-internal sealed class PizzeriaStoreDatabaseConfigurationService
+internal sealed class StoreDatabaseConfigurationService
 {
     private readonly StoreDbContext dbContext;
-    private readonly ILogger<PizzeriaStoreDatabaseConfigurationService> logger;
+    private readonly ILogger<StoreDatabaseConfigurationService> logger;
 
     private bool isMigrated;
     private bool isSeeded;
 
-    public PizzeriaStoreDatabaseConfigurationService(
+    public StoreDatabaseConfigurationService(
         StoreDbContext dbContext,
-        ILogger<PizzeriaStoreDatabaseConfigurationService> logger)
+        ILogger<StoreDatabaseConfigurationService> logger)
     {
         this.dbContext = dbContext;
         this.logger = logger;

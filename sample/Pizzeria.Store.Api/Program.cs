@@ -6,6 +6,7 @@ using Lewee.Infrastructure.Data;
 using Lewee.Infrastructure.PostgreSQL;
 using Pizzeria.Common;
 using Pizzeria.ServiceDefaults;
+using Pizzeria.Store.Api.Startup;
 using Pizzeria.Store.Application;
 using Pizzeria.Store.Data;
 using Pizzeria.Store.Domain;
@@ -50,7 +51,8 @@ builder.Services.AddAuthorizationBuilder();
 builder.Services
     .AddFastEndpoints()
     .AddEndpointsApiExplorer()
-    .AddSwaggerGen();
+    .AddSwaggerGen()
+    .AddStartupConfiguration();
 
 var app = builder.Build();
 

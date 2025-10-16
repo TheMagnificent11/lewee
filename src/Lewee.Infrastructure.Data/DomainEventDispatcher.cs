@@ -43,9 +43,15 @@ internal class DomainEventDispatcher<TContext>
 
     private async Task<bool> ThereAreEventsToDispatchAsync(CancellationToken token)
     {
-        using (var scope = await this.dbContextFactory.CreateDbContextAsync(token))
+        using (var dbContext = await this.dbContextFactory.CreateDbContextAsync(token))
         {
-            var dbSet = scope.Set<DomainEventReference>();
+            var dbCreated = await dbContext.Database.EnsureCreatedAsync(token);
+            if (!dbCreated)
+            {
+                return false;
+            }
+
+            var dbSet = dbContext.Set<DomainEventReference>();
 
             if (dbSet == null)
             {
