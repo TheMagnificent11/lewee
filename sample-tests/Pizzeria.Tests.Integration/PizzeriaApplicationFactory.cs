@@ -72,7 +72,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         this.storeDbQueryProjectionService = new QueryProjectionService<StoreDbContext>(this.storeDbContext);
     }
 
-    public async Task<string> GetJwtTokenAsync()
+    public async Task<string> GetJwtAsync()
     {
         using var httpClient = new HttpClient();
         var tokenEndpoint = $"{this.keycloakBaseUrl}/realms/{Environments.Auth.RealmName}/protocol/openid-connect/token";

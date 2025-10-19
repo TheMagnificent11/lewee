@@ -18,7 +18,7 @@ public sealed class PizzaOrderingTests : PizzeriaTests
     {
         // Arrange
         using var httpClient = await this.factory.GetServiceClientAsync(ServiceNames.PizzaStoreApi);
-        var token = await this.factory.GetJwtTokenAsync();
+        var token = await this.factory.GetJwtAsync();
         using var request = new HttpRequestMessage(HttpMethod.Post, Endpoints.StoreApi.Orders);
         request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
@@ -44,7 +44,7 @@ public sealed class PizzaOrderingTests : PizzeriaTests
     {
         // Arrange
         using var httpClient = await this.factory.GetServiceClientAsync(ServiceNames.PizzaStoreApi);
-        var token = await this.factory.GetJwtTokenAsync();
+        var token = await this.factory.GetJwtAsync();
 
         using var createOrderRequest = new HttpRequestMessage(HttpMethod.Post, Endpoints.StoreApi.Orders);
         createOrderRequest.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
