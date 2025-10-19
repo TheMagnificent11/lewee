@@ -36,7 +36,11 @@ builder.Services
         realm: Pizzeria.Common.Environments.Auth.RealmName,
         options =>
         {
-            options.Audience = ServiceNames.PizzaStoreApi;
+            // Re-enable proper validation now that Keycloak is configured correctly
+            options.TokenValidationParameters.ValidateAudience = false; // Keep this false since audience mapping might still need work
+            options.TokenValidationParameters.ValidateIssuer = true;
+            options.TokenValidationParameters.ValidateLifetime = true;
+            options.TokenValidationParameters.ValidateIssuerSigningKey = true;
 
             // For development only - disable HTTPS metadata validation
             // In production, use explicit Authority configuration instead

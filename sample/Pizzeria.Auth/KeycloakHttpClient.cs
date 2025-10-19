@@ -80,35 +80,15 @@ public sealed class KeycloakHttpClient
             realm = realmName,
             enabled = true,
             sslRequired = "none",
-            directGrantsOnly = false,
-            bruteForceProtected = false,
+            registrationAllowed = false,
             loginWithEmailAllowed = true,
             duplicateEmailsAllowed = false,
             resetPasswordAllowed = true,
             editUsernameAllowed = false,
-            userManagedAccessAllowed = false,
-            registrationAllowed = false,
-            registrationEmailAsUsername = false,
+            bruteForceProtected = false,
             rememberMe = true,
             verifyEmail = false,
-            loginTheme = "base",
-            accountTheme = "base",
-            adminTheme = "base",
-            emailTheme = "base",
-            eventsEnabled = false,
-            eventsExpiration = 0,
-            adminEventsEnabled = false,
-            adminEventsDetailsEnabled = false,
             accessTokenLifespan = 300,
-            accessTokenLifespanForImplicitFlow = 900,
-            ssoSessionIdleTimeout = 1800,
-            ssoSessionMaxLifespan = 36000,
-            offlineSessionIdleTimeout = 2592000,
-            accessCodeLifespan = 60,
-            accessCodeLifespanUserAction = 300,
-            accessCodeLifespanLogin = 1800,
-            actionTokenGeneratedByAdminLifespan = 43200,
-            actionTokenGeneratedByUserLifespan = 300,
         };
 
         using var realmResponse = await this.httpClient.PostAsJsonAsync(
@@ -156,11 +136,11 @@ public sealed class KeycloakHttpClient
         string clientName,
         CancellationToken cancellationToken)
     {
-        // Check if client already exists
+        // Check if client already exists and delete it to ensure clean configuration
         if (await this.ClientExistsAsync(realmName, clientId, cancellationToken))
         {
-            this.logger.LogInformation("Client {ClientId} already exists in realm {RealmName}", clientId, realmName);
-            return;
+            this.logger.LogInformation("Client {ClientId} already exists in realm {RealmName}, recreating...", clientId, realmName);
+            await this.DeleteClientAsync(realmName, clientId, cancellationToken);
         }
 
         this.logger.LogInformation("Creating client: {ClientId} in realm: {RealmName}...", clientId, realmName);
@@ -171,25 +151,36 @@ public sealed class KeycloakHttpClient
             name = clientName,
             enabled = true,
             publicClient = true,
-            directAccessGrantsEnabled = true, // Required for password grant
-            serviceAccountsEnabled = false,
+            directAccessGrantsEnabled = true,
             standardFlowEnabled = true,
             implicitFlowEnabled = false,
+            serviceAccountsEnabled = false,
             fullScopeAllowed = true,
-            redirectUris = new[] { "*" },
-            webOrigins = new[] { "*" },
-            protocol = "openid-connect",
             bearerOnly = false,
             consentRequired = false,
+            protocol = "openid-connect",
+            redirectUris = new[] { "*" },
+            webOrigins = new[] { "*" },
             attributes = new
             {
                 access_token_lifespan = "300",
-                client_credentials_use_refresh_token = "false",
-                use_refresh_tokens = "true",
-                pkce_code_challenge_method = "S256",
             },
-            defaultClientScopes = new[] { "web-origins", "profile", "roles", "email" },
-            optionalClientScopes = new[] { "address", "phone", "offline_access", "microprofile-jwt" },
+            protocolMappers = new object[]
+            {
+                new
+                {
+                    name = "audience-mapper",
+                    protocol = "openid-connect",
+                    protocolMapper = "oidc-audience-mapper",
+                    consentRequired = false,
+                    config = new
+                    {
+                        included_client_audience = clientId,
+                        id_token_claim = "false",
+                        access_token_claim = "true",
+                    },
+                },
+            },
         };
 
         using var clientResponse = await this.httpClient.PostAsJsonAsync(
@@ -204,6 +195,51 @@ public sealed class KeycloakHttpClient
         }
 
         this.logger.LogInformation("Client {ClientId} created successfully", clientId);
+    }
+
+    public async Task DeleteClientAsync(string realmName, string clientId, CancellationToken cancellationToken)
+    {
+        try
+        {
+            // First get the client UUID
+            using var getClientResponse = await this.httpClient.GetAsync(
+                $"/admin/realms/{realmName}/clients?clientId={clientId}",
+                cancellationToken);
+
+            if (!getClientResponse.IsSuccessStatusCode)
+            {
+                this.logger.LogWarning("Failed to find client {ClientId} for deletion", clientId);
+                return;
+            }
+
+            var clients = await getClientResponse.Content.ReadFromJsonAsync<JsonElement[]>(cancellationToken);
+            if (clients == null || clients.Length == 0)
+            {
+                this.logger.LogWarning("Client {ClientId} not found for deletion", clientId);
+                return;
+            }
+
+            var clientUuid = clients[0].GetProperty("id").GetString();
+
+            // Delete the client using the UUID
+            using var deleteResponse = await this.httpClient.DeleteAsync(
+                $"/admin/realms/{realmName}/clients/{clientUuid}",
+                cancellationToken);
+
+            if (deleteResponse.IsSuccessStatusCode)
+            {
+                this.logger.LogInformation("Client {ClientId} deleted successfully", clientId);
+            }
+            else
+            {
+                var error = await deleteResponse.Content.ReadAsStringAsync(cancellationToken);
+                this.logger.LogWarning("Failed to delete client {ClientId}: {Error}", clientId, error);
+            }
+        }
+        catch (Exception ex)
+        {
+            this.logger.LogError(ex, "Error deleting client {ClientId}", clientId);
+        }
     }
 
     public async Task<bool> UserExistsAsync(
