@@ -22,7 +22,7 @@ internal sealed class ConfigurationHostedService : BackgroundService
         {
             await using var scope = this.serviceProvider.CreateAsyncScope();
 
-            var keycloakConfigService = scope.Resolve<KeycloakConfigurationService>();
+            var keycloakConfigService = scope.Resolve<AuthServerConfigurationService>();
 
             await this.SetupKeycloakAsync(keycloakConfigService, stoppingToken);
         }
@@ -47,7 +47,7 @@ internal sealed class ConfigurationHostedService : BackgroundService
     }
 
     private async Task SetupKeycloakAsync(
-        KeycloakConfigurationService keycloakConfigurationService,
+        AuthServerConfigurationService keycloakConfigurationService,
         CancellationToken cancellationToken)
     {
         this.logger.LogInformation("Setting-up auth server...");

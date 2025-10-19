@@ -1,17 +1,17 @@
-using Pizzeria.Auth;
+﻿using Pizzeria.Auth;
 
 namespace Pizzeria.Store.Api.Startup;
 
-internal sealed class KeycloakConfigurationService
+internal sealed class AuthServerConfigurationService
 {
     private readonly KeycloakHttpClient keycloakHttpClient;
     private readonly StartupStatusService startupStatusService;
-    private readonly ILogger<KeycloakConfigurationService> logger;
+    private readonly ILogger<AuthServerConfigurationService> logger;
 
-    public KeycloakConfigurationService(
+    public AuthServerConfigurationService(
         KeycloakHttpClient keycloakHttpClient,
         StartupStatusService startupStatusService,
-        ILogger<KeycloakConfigurationService> logger)
+        ILogger<AuthServerConfigurationService> logger)
     {
         this.keycloakHttpClient = keycloakHttpClient;
         this.startupStatusService = startupStatusService;
@@ -28,17 +28,17 @@ internal sealed class KeycloakConfigurationService
 
             this.logger.LogInformation("Step 1: Waiting for Keycloak to be ready...");
             await this.keycloakHttpClient.WaitForReadyAsync(cancellationToken);
-            this.logger.LogInformation("Step 1: ? Keycloak is ready");
+            this.logger.LogInformation("Step 1: ✓ Keycloak is ready");
 
             this.logger.LogInformation("Step 2: Getting admin access token...");
             var adminAccessToken = await this.keycloakHttpClient.GetAdminAccessTokenAsync(cancellationToken);
-            this.logger.LogInformation("Step 2: ? Admin access token obtained");
+            this.logger.LogInformation("Step 2: ✓ Admin access token obtained");
 
             this.keycloakHttpClient.SetBearerToken(adminAccessToken);
 
             this.logger.LogInformation("Step 3: Creating realm '{RealmName}'...", Pizzeria.Common.Environments.Auth.RealmName);
             await this.keycloakHttpClient.CreateRealmAsync(Pizzeria.Common.Environments.Auth.RealmName, cancellationToken);
-            this.logger.LogInformation("Step 3: ? Realm created/verified");
+            this.logger.LogInformation("Step 3: ✓ Realm created/verified");
 
             this.logger.LogInformation("Step 4: Creating client '{ClientId}'...", Pizzeria.Common.Environments.Auth.ApiClientId);
             await this.keycloakHttpClient.CreateClientAsync(
@@ -46,7 +46,7 @@ internal sealed class KeycloakConfigurationService
                 Pizzeria.Common.Environments.Auth.ApiClientId,
                 clientName: "Pizzeria Store API Client",
                 cancellationToken);
-            this.logger.LogInformation("Step 4: ? Client created/verified");
+            this.logger.LogInformation("Step 4: ✓ Client created/verified");
 
             this.logger.LogInformation("Step 5: Creating test user '{Username}'...", Pizzeria.Common.Environments.Auth.Users.Customer1.Username);
             await this.keycloakHttpClient.CreateUserAsync(
@@ -54,7 +54,7 @@ internal sealed class KeycloakConfigurationService
                 Pizzeria.Common.Environments.Auth.Users.Customer1.Username,
                 Pizzeria.Common.Environments.Auth.Users.Customer1.Password,
                 cancellationToken);
-            this.logger.LogInformation("Step 5: ? Test user created/verified");
+            this.logger.LogInformation("Step 5: ✓ Test user created/verified");
 
             // Test the token endpoint
             this.logger.LogInformation("Step 6: Testing token endpoint...");
@@ -64,7 +64,7 @@ internal sealed class KeycloakConfigurationService
                 Pizzeria.Common.Environments.Auth.Users.Customer1.Username,
                 Pizzeria.Common.Environments.Auth.Users.Customer1.Password,
                 cancellationToken);
-            this.logger.LogInformation("Step 6: ? Token endpoint test successful");
+            this.logger.LogInformation("Step 6: ✓ Token endpoint test successful");
 
             this.logger.LogInformation("Creating remaining users...");
             await this.keycloakHttpClient.CreateUserAsync(
@@ -84,15 +84,15 @@ internal sealed class KeycloakConfigurationService
                 cancellationToken);
 
             this.startupStatusService.SetKeycloakReady();
-            this.logger.LogInformation("? Keycloak configuration completed successfully");
+            this.logger.LogInformation("✅ Keycloak configuration completed successfully");
         }
         catch (Exception ex)
         {
-            this.logger.LogError(ex, "? Keycloak configuration failed at step: {Message}", ex.Message);
+            this.logger.LogError(ex, "❌ Keycloak configuration failed at step: {Message}", ex.Message);
 
             // Mark as ready anyway to prevent startup timeout
             this.startupStatusService.SetKeycloakReady();
-            this.logger.LogWarning("?? Marked Keycloak as ready despite configuration failure");
+            this.logger.LogWarning("⚠️ Marked Keycloak as ready despite configuration failure");
         }
     }
 }

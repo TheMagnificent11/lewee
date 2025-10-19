@@ -22,7 +22,7 @@ internal static class StartupConfiguration
 
         return services
             .AddTransient<StartupStatusService>()
-            .AddTransient<KeycloakConfigurationService>()
+            .AddTransient<AuthServerConfigurationService>()
             .AddHostedService<ConfigurationHostedService>();
     }
 }
