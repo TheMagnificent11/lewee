@@ -36,8 +36,8 @@ builder.Services
         realm: Pizzeria.Common.Environments.Auth.RealmName,
         options =>
         {
-            // Re-enable proper validation now that Keycloak is configured correctly
-            options.TokenValidationParameters.ValidateAudience = false; // Keep this false since audience mapping might still need work
+            // TODO: Fix audience mapping and enable audience validation in production. See issue #1234
+            options.TokenValidationParameters.ValidateAudience = builder.Environment.IsDevelopment() ? false : true;
             options.TokenValidationParameters.ValidateIssuer = true;
             options.TokenValidationParameters.ValidateLifetime = true;
             options.TokenValidationParameters.ValidateIssuerSigningKey = true;

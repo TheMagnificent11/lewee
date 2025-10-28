@@ -28,7 +28,7 @@ internal sealed class ConfigurationHostedService : BackgroundService
         }
         catch (Exception ex)
         {
-            this.logger.LogCritical(ex, "Failed to configure database/auth server");
+            this.logger.LogCritical(ex, "Failed to configure auth server");
 
             // Even if configuration fails, mark as ready to allow startup to complete
             // The actual API calls will fail later with authentication errors

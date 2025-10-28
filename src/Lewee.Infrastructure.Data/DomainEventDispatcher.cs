@@ -45,12 +45,6 @@ internal class DomainEventDispatcher<TContext>
     {
         using (var dbContext = await this.dbContextFactory.CreateDbContextAsync(token))
         {
-            var dbCreated = await dbContext.Database.EnsureCreatedAsync(token);
-            if (!dbCreated)
-            {
-                return false;
-            }
-
             var dbSet = dbContext.Set<DomainEventReference>();
 
             if (dbSet == null)
