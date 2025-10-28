@@ -20,13 +20,8 @@ internal sealed class StartupReadinessHealthCheck : IHealthCheck
             return Task.FromResult(HealthCheckResult.Healthy("All startup services are ready"));
         }
 
-        var details = new Dictionary<string, object>(StringComparer.Ordinal)
-        {
-            ["keycloak"] = isKeycloakReady ? "ready" : "not ready",
-        };
-
         var description = $"Startup services not ready - Keycloak: {(isKeycloakReady ? "ready" : "not ready")}";
 
-        return Task.FromResult(HealthCheckResult.Unhealthy(description, data: details));
+        return Task.FromResult(HealthCheckResult.Unhealthy(description));
     }
 }

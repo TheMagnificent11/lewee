@@ -37,7 +37,7 @@ builder.Services
         options =>
         {
             // TODO: Fix audience mapping and enable audience validation in production. See issue #1234
-            options.TokenValidationParameters.ValidateAudience = builder.Environment.IsDevelopment() ? false : true;
+            options.TokenValidationParameters.ValidateAudience = !builder.Environment.IsDevelopment();
             options.TokenValidationParameters.ValidateIssuer = true;
             options.TokenValidationParameters.ValidateLifetime = true;
             options.TokenValidationParameters.ValidateIssuerSigningKey = true;
