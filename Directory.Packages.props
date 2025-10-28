@@ -21,12 +21,12 @@
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="9.0.4" />
   </ItemGroup>
   <ItemGroup Label="Aspire">
-    <PackageVersion Include="Aspire.Hosting.AppHost" Version="9.5.1" />
-    <PackageVersion Include="Aspire.Hosting.Keycloak" Version="9.5.1-preview.1.25502.11" />
-    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="9.5.1" />
-    <PackageVersion Include="Aspire.Hosting.Testing" Version="9.5.1" />
-    <PackageVersion Include="Aspire.Keycloak.Authentication" Version="9.5.1-preview.1.25502.11" />
-    <PackageVersion Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.5.1" />
+    <PackageVersion Include="Aspire.Hosting.AppHost" Version="9.5.2" />
+    <PackageVersion Include="Aspire.Hosting.Keycloak" Version="9.5.2-preview.1.25522.3" />
+    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="9.5.2" />
+    <PackageVersion Include="Aspire.Hosting.Testing" Version="9.5.2" />
+    <PackageVersion Include="Aspire.Keycloak.Authentication" Version="9.5.2-preview.1.25522.3" />
+    <PackageVersion Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.5.2" />
   </ItemGroup>
   <ItemGroup Label="Correlate">
     <PackageVersion Include="Correlate.AspNetCore" Version="6.0.0" />
@@ -67,7 +67,7 @@
     <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="9.9.0" />
     <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.9" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.9" />
-    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="9.5.0" />
+    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="9.5.2" />
   </ItemGroup>
   <ItemGroup Label="FluentAssertions (DO NOT UPGRADE)">
     <PackageVersion Include="FluentAssertions" Version="8.7.0" />
