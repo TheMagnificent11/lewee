@@ -1,109 +1,84 @@
 ﻿using Lewee.Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
 
 namespace Lewee.Infrastructure.Data;
 
-/*
- * TODO: potential better ways to do domain event dispatching
- * DB context interceptor might be better for this: https://learn.microsoft.com/en-au/ef/core/logging-events-diagnostics/interceptors#detecting-success
- * Or, handling an event: https://learn.microsoft.com/en-us/dotnet/api/microsoft.entityframeworkcore.dbcontext.savedchanges?view=efcore-7.0
- */
-internal class DomainEventDispatcher<TContext>
+/// <summary>
+/// SaveChanges interceptor that dispatches domain events after a successful save
+/// </summary>
+/// <typeparam name="TContext">The database context type</typeparam>
+internal class DomainEventDispatcher<TContext> : SaveChangesInterceptor
     where TContext : DbContext, IApplicationDbContext
 {
-    private const int BatchSize = 50;
-
-    private readonly IDbContextFactory<TContext> dbContextFactory;
     private readonly IMediator mediator;
     private readonly ILogger logger;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DomainEventDispatcher{TContext}"/> class
+    /// </summary>
+    /// <param name="mediator">MediatR mediator for publishing events</param>
+    /// <param name="logger">Logger instance</param>
     public DomainEventDispatcher(
-        IDbContextFactory<TContext> dbContextFactory,
         IMediator mediator,
         ILogger<DomainEventDispatcher<TContext>> logger)
     {
-        this.dbContextFactory = dbContextFactory;
         this.mediator = mediator;
         this.logger = logger;
     }
 
-    public async Task DispatchEventsAsync(CancellationToken cancellationToken)
+    /// <inheritdoc/>
+    public override async ValueTask<int> SavedChangesAsync(
+        SaveChangesCompletedEventData eventData,
+        int result,
+        CancellationToken cancellationToken = default)
     {
-        var eventsToDispatch = await this.ThereAreEventsToDispatchAsync(cancellationToken);
-
-        while (eventsToDispatch && !cancellationToken.IsCancellationRequested)
-        {
-            await this.DispatchBatchAsync(cancellationToken);
-
-            eventsToDispatch = await this.ThereAreEventsToDispatchAsync(cancellationToken);
-        }
+        await this.DispatchEventsAsync(eventData.Context, cancellationToken);
+        return await base.SavedChangesAsync(eventData, result, cancellationToken);
     }
 
-    private async Task<bool> ThereAreEventsToDispatchAsync(CancellationToken token)
+    private async Task DispatchEventsAsync(DbContext? context, CancellationToken cancellationToken)
     {
-        using (var dbContext = await this.dbContextFactory.CreateDbContextAsync(token))
+        if (context is not TContext typedContext)
         {
-            var dbSet = dbContext.Set<DomainEventReference>();
-
-            if (dbSet == null)
-            {
-                return false;
-            }
-
-            return await dbSet
-                .Where(x => !x.Dispatched)
-                .OrderBy(x => x.PersistedAt)
-                .AnyAsync(token);
+            return;
         }
-    }
 
-    private async Task DispatchBatchAsync(CancellationToken token)
-    {
-        using (var scope = await this.dbContextFactory.CreateDbContextAsync(token))
+        var dbSet = typedContext.Set<DomainEventReference>();
+        if (dbSet == null)
         {
-            var dbSet = scope.Set<DomainEventReference>();
-            if (dbSet == null)
-            {
-                return;
-            }
-
-            var events = await dbSet
-                .Where(x => !x.Dispatched)
-                .OrderBy(x => x.PersistedAt)
-                .Take(BatchSize)
-                .ToArrayAsync(token);
-
-            var domainEvents = new List<DomainEvent>();
-
-            foreach (var domainEventReference in events)
-            {
-                domainEventReference.Dispatch();
-
-                var domainEvent = domainEventReference.ToDomainEvent();
-
-                if (domainEvent == null)
-                {
-                    this.logger.LogWarning(
-                        "Could not deserialize DomainEventReference {Id}",
-                        domainEventReference.Id);
-                }
-                else
-                {
-                    domainEvents.Add(domainEvent);
-                }
-            }
-
-            if (domainEvents.Count > 0)
-            {
-                foreach (var domainEvent in domainEvents)
-                {
-                    await this.mediator.Publish(domainEvent, token);
-                }
-            }
-
-            await scope.SaveChangesAsync(token);
+            return;
         }
+
+        var events = await dbSet
+            .Where(x => !x.Dispatched)
+            .OrderBy(x => x.PersistedAt)
+            .ToListAsync(cancellationToken);
+
+        if (events.Count == 0)
+        {
+            return;
+        }
+
+        foreach (var domainEventReference in events)
+        {
+            domainEventReference.Dispatch();
+
+            var domainEvent = domainEventReference.ToDomainEvent();
+
+            if (domainEvent == null)
+            {
+                this.logger.LogWarning(
+                    "Could not deserialize DomainEventReference {Id}",
+                    domainEventReference.Id);
+                continue;
+            }
+
+            await this.mediator.Publish(domainEvent, cancellationToken);
+        }
+
+        await typedContext.SaveChangesAsync(cancellationToken);
     }
 }

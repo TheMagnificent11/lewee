@@ -1,5 +1,6 @@
 ﻿using Lewee.Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Lewee.Infrastructure.Data;
 
@@ -36,6 +37,24 @@ public static class ApplicationDbContextOptionsBuilderExtensions
         where TContext : DbContext, IApplicationDbContext
     {
         optionsBuilder.AddInterceptors(new DomainEventSaveChangesInterceptor<TContext>(authenticatedUserService));
+
+        return optionsBuilder;
+    }
+
+    /// <summary>
+    /// Adds the domain event dispatcher interceptor to the database context options builder
+    /// </summary>
+    /// <typeparam name="TContext">DB context type</typeparam>
+    /// <param name="optionsBuilder">DB context options builder</param>
+    /// <param name="serviceProvider">Service provider for resolving dependencies</param>
+    /// <returns>The updated DB context options builder</returns>
+    public static DbContextOptionsBuilder AddDomainEventDispatcherInterceptor<TContext>(
+        this DbContextOptionsBuilder optionsBuilder,
+        IServiceProvider serviceProvider)
+        where TContext : DbContext, IApplicationDbContext
+    {
+        var dispatcher = serviceProvider.GetRequiredService<DomainEventDispatcher<TContext>>();
+        optionsBuilder.AddInterceptors(dispatcher);
 
         return optionsBuilder;
     }

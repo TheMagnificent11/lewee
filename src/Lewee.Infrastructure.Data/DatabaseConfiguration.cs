@@ -45,7 +45,6 @@ public static class DatabaseConfiguration
         }
 
         services.AddScoped<DomainEventDispatcher<T>>();
-        services.AddHostedService<DomainEventDispatcherService<T>>();
 
         services.AddTransient<IQueryProjectionService, QueryProjectionService<T>>();
 
