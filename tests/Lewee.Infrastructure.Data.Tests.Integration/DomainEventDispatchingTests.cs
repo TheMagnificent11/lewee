@@ -1,0 +1,179 @@
+using Aspire.Hosting;
+using Aspire.Hosting.Testing;
+using FluentAssertions;
+using Lewee.Domain;
+using Lewee.Infrastructure.PostgreSQL;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Xunit;
+
+namespace Lewee.Infrastructure.Data.Tests.Integration;
+
+/// <summary>
+/// Integration tests for domain event dispatching
+/// </summary>
+public sealed class DomainEventDispatchingTests : IAsyncLifetime
+{
+    private IDistributedApplicationTestingBuilder builder;
+    private DistributedApplication app;
+    private string connectionString;
+    private IServiceProvider serviceProvider;
+
+    public async Task InitializeAsync()
+    {
+        // Create the test application
+        this.builder = await DistributedApplicationTestingBuilder.CreateAsync<Projects.Lewee_Infrastructure_Data_IntegrationAppHost>();
+
+        this.app = await this.builder.BuildAsync();
+        await this.app.StartAsync();
+
+        // Get connection string
+        this.connectionString = await this.app.GetConnectionStringAsync("testdb");
+
+        // Build service provider with necessary services
+        var services = new ServiceCollection();
+
+        services.AddLogging();
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(DomainEventDispatchingTests).Assembly));
+        services.AddSingleton<IAuthenticatedUserService>(new TestAuthenticatedUserService());
+
+        services.AddLeweePostgreSQL<TestDbContext>(
+            this.connectionString!,
+            typeof(TestOrder).Assembly,
+            "test");
+
+        this.serviceProvider = services.BuildServiceProvider();
+
+        // Ensure database is created
+        using var scope = this.serviceProvider.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<TestDbContext>();
+        await dbContext.Database.EnsureCreatedAsync();
+    }
+
+    public async Task DisposeAsync()
+    {
+        if (this.serviceProvider is IDisposable disposable)
+        {
+            disposable.Dispose();
+        }
+
+        if (this.app != null)
+        {
+            await this.app.StopAsync();
+            await this.app.DisposeAsync();
+        }
+
+        if (this.builder != null)
+        {
+            await this.builder.DisposeAsync();
+        }
+    }
+
+    [Fact]
+    public async Task DomainEvents_ShouldBeDispatchedAfterSaveChanges()
+    {
+        // Arrange
+        TestOrderSubmittedEventHandler.Reset();
+
+        using var scope = this.serviceProvider!.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<TestDbContext>();
+
+        var orderId = Guid.NewGuid();
+        var correlationId = Guid.NewGuid();
+        var order = new TestOrder(orderId, "TEST-001");
+
+        // Act
+        order.Submit(correlationId);
+        dbContext.Orders!.Add(order);
+        await dbContext.SaveChangesAsync();
+
+        // Assert - Event should be dispatched immediately after save
+        TestOrderSubmittedEventHandler.ReceivedEvents.Should().HaveCount(1);
+        var receivedEvent = TestOrderSubmittedEventHandler.ReceivedEvents[0];
+        receivedEvent.OrderId.Should().Be(orderId);
+        receivedEvent.CorrelationId.Should().Be(correlationId);
+    }
+
+    [Fact]
+    public async Task DomainEvents_ShouldBeMarkedAsDispatched()
+    {
+        // Arrange
+        TestOrderSubmittedEventHandler.Reset();
+
+        using var scope = this.serviceProvider!.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<TestDbContext>();
+
+        var orderId = Guid.NewGuid();
+        var correlationId = Guid.NewGuid();
+        var order = new TestOrder(orderId, "TEST-002");
+
+        // Act
+        order.Submit(correlationId);
+        dbContext.Orders!.Add(order);
+        await dbContext.SaveChangesAsync();
+
+        // Assert - Domain event reference should be marked as dispatched
+        var eventReferences = await dbContext.DomainEventReferences!
+            .Where(e => !e.Dispatched)
+            .ToListAsync();
+
+        eventReferences.Should().BeEmpty("all events should be dispatched");
+    }
+
+    [Fact]
+    public async Task MultipleDomainEvents_ShouldAllBeDispatched()
+    {
+        // Arrange
+        TestOrderSubmittedEventHandler.Reset();
+
+        using var scope = this.serviceProvider!.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<TestDbContext>();
+
+        var order1 = new TestOrder(Guid.NewGuid(), "TEST-003");
+        var order2 = new TestOrder(Guid.NewGuid(), "TEST-004");
+        var order3 = new TestOrder(Guid.NewGuid(), "TEST-005");
+
+        // Act
+        order1.Submit(Guid.NewGuid());
+        order2.Submit(Guid.NewGuid());
+        order3.Submit(Guid.NewGuid());
+
+        dbContext.Orders!.Add(order1);
+        dbContext.Orders!.Add(order2);
+        dbContext.Orders!.Add(order3);
+
+        await dbContext.SaveChangesAsync();
+
+        // Assert - All events should be dispatched
+        TestOrderSubmittedEventHandler.ReceivedEvents.Should().HaveCount(3);
+    }
+
+    [Fact]
+    public async Task DomainEvents_ShouldNotBeDispatchedIfSaveFails()
+    {
+        // Arrange
+        TestOrderSubmittedEventHandler.Reset();
+
+        using var scope = this.serviceProvider!.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<TestDbContext>();
+
+        var orderId = Guid.NewGuid();
+        var order = new TestOrder(orderId, "TEST-006");
+
+        // Act
+        order.Submit(Guid.NewGuid());
+        dbContext.Orders!.Add(order);
+
+        // Add a duplicate order with the same ID to cause a constraint violation
+        var duplicateOrder = new TestOrder(orderId, "TEST-007");
+        dbContext.Orders!.Add(duplicateOrder);
+
+        // Assert
+        var exception = await Assert.ThrowsAsync<DbUpdateException>(
+            async () => await dbContext.SaveChangesAsync());
+
+        // Events should not be dispatched because save failed
+        TestOrderSubmittedEventHandler.ReceivedEvents.Should().BeEmpty();
+    }
+}
