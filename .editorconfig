@@ -185,13 +185,14 @@ dotnet_diagnostic.IDE0290.severity = none
 
 # Meziantou.Analyzer
 dotnet_diagnostic.MA0004.severity = none
+dotnet_diagnostic.MA0006.severity = none
 dotnet_diagnostic.MA0016.severity = none
 dotnet_diagnostic.MA0026.severity = none
-dotnet_diagnostic.MA0048.severity = none
-dotnet_diagnostic.MA0158.severity = none
 dotnet_diagnostic.MA0047.severity = none
+dotnet_diagnostic.MA0048.severity = none
 dotnet_diagnostic.MA0051.severity = none
-dotnet_diagnostic.MA0006.severity = none
+dotnet_diagnostic.MA0076.severity = none
+dotnet_diagnostic.MA0158.severity = none
 
 # SonarAnalyzer.CSharp
 dotnet_diagnostic.S2094.severity = none

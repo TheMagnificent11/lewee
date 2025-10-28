@@ -1,10 +1,12 @@
-﻿using Aspire.Hosting;
+﻿using System.Net.Http.Json;
+using Aspire.Hosting;
 using Aspire.Hosting.ApplicationModel;
 using Aspire.Hosting.Testing;
 using Lewee.Domain;
 using Lewee.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Pizzeria.Auth;
 using Pizzeria.Common;
 using Pizzeria.Store.Data;
 using Pizzeria.Store.Domain;
@@ -21,6 +23,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
     private ResourceNotificationService resourceNotificationService;
     private StoreDbContext storeDbContext;
     private QueryProjectionService<StoreDbContext> storeDbQueryProjectionService;
+    private string keycloakBaseUrl;
 
     public async Task InitializeAsync()
     {
@@ -28,19 +31,36 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
         // https://learn.microsoft.com/en-us/dotnet/aspire/testing/manage-app-host?pivots=xunit
         this.builder = await DistributedApplicationTestingBuilder.CreateAsync<Projects.Pizzeria_AppHost>();
-        this.builder.Services.ConfigureHttpClientDefaults(x =>
-        {
-            x.AddStandardResilienceHandler();
-        });
+        this.builder.Services.ConfigureHttpClientDefaults(x => { });
 
         this.app = await this.builder.BuildAsync();
         this.resourceNotificationService = this.app.Services.GetRequiredService<ResourceNotificationService>();
 
         await this.app.StartAsync();
 
+        // Wait for auth server to be running
+        await this.resourceNotificationService
+            .WaitForResourceAsync(ServiceNames.AuthServer, KnownResourceStates.Running)
+            .WaitAsync(TimeSpan.FromMinutes(10)); // To allow Aspire to pull Docker images
+
+        // Get auth server base URL for token requests using CreateHttpClient
+        var authServerHttpClient = this.app.CreateHttpClient(ServiceNames.AuthServer);
+        var baseAddress = authServerHttpClient.BaseAddress!.ToString().TrimEnd('/');
+
+        // If the scheme is tcp, replace it with http (Aspire Keycloak might return tcp scheme)
+        if (baseAddress.StartsWith("tcp://", StringComparison.OrdinalIgnoreCase))
+        {
+            baseAddress = $"http://{baseAddress[6..]}";
+        }
+
+        this.keycloakBaseUrl = baseAddress;
+
         await this.resourceNotificationService
             .WaitForResourceAsync(ServiceNames.PizzaStoreApi, KnownResourceStates.Running)
             .WaitAsync(TimeSpan.FromMinutes(10)); // To allow Aspire to pull Docker images
+
+        // Wait for startup readiness (database and Keycloak configuration)
+        await this.WaitForStartupReadinessAsync(TimeSpan.FromMinutes(1));
 
         var databaseName = ServiceNames.GetPizzaStoreDatabaseName();
         var storeDbConnectionString = await this.app.GetConnectionStringAsync(databaseName);
@@ -50,6 +70,26 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
         this.storeDbContext = new StoreDbContext(storeDbOptionsBuilder.Options);
         this.storeDbQueryProjectionService = new QueryProjectionService<StoreDbContext>(this.storeDbContext);
+    }
+
+    public async Task<string> GetJwtAsync()
+    {
+        using var httpClient = new HttpClient();
+        var tokenEndpoint = $"{this.keycloakBaseUrl}/realms/{Environments.Auth.RealmName}/protocol/openid-connect/token";
+
+        var tokenRequest = new FormUrlEncodedContent(new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            ["grant_type"] = "password",
+            ["client_id"] = Environments.Auth.ApiClientId,
+            ["username"] = Environments.Auth.Users.Customer1.Username,
+            ["password"] = Environments.Auth.Users.Customer1.Password,
+        });
+
+        var response = await httpClient.PostAsync(tokenEndpoint, tokenRequest);
+        response.EnsureSuccessStatusCode();
+
+        var tokenResponse = await response.Content.ReadFromJsonAsync<KeycloakTokenResponse>();
+        return tokenResponse!.AccessToken;
     }
 
     public async Task<HttpClient> GetServiceClientAsync(string serviceName)
@@ -125,5 +165,31 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         {
             await this.builder.DisposeAsync();
         }
+    }
+
+    private async Task WaitForStartupReadinessAsync(TimeSpan timeout)
+    {
+        using var httpClient = this.app.CreateHttpClient(ServiceNames.PizzaStoreApi);
+        var endTime = DateTime.UtcNow.Add(timeout);
+
+        while (DateTime.UtcNow < endTime)
+        {
+            try
+            {
+                var response = await httpClient.GetAsync("/ready");
+                if (response.IsSuccessStatusCode)
+                {
+                    return;
+                }
+            }
+            catch
+            {
+                // Ignore exceptions and continue polling
+            }
+
+            await Task.Delay(TimeSpan.FromSeconds(2));
+        }
+
+        throw new TimeoutException($"Startup readiness check timed out after {timeout.TotalMinutes} minutes. The /ready endpoint did not return a successful response.");
     }
 }

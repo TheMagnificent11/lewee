@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\sample\Pizzeria.AppHost\Pizzeria.AppHost.csproj" />
+    <ProjectReference Include="..\..\sample\Pizzeria.Auth\Pizzeria.Auth.csproj" />
     <ProjectReference Include="..\..\sample\Pizzeria.Store.Data\Pizzeria.Store.Data.csproj" />
     <ProjectReference Include="..\..\sample\Pizzeria.Store.Domain\Pizzeria.Store.Domain.csproj" />
   </ItemGroup>

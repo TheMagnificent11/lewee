@@ -1,7 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Npgsql;
+﻿using Npgsql;
 using Pizzeria.Common;
-using Pizzeria.Store.Data;
 using Respawn;
 using Xunit;
 
@@ -43,7 +41,7 @@ SELECT EXISTS
         var respawner = await Respawner.CreateAsync(connection, new RespawnerOptions
         {
             DbAdapter = DbAdapter.Postgres,
-            TablesToIgnore = ["Pizzas"] // Don't reset the Pizzas table as it contains seed data
+            TablesToIgnore = ["Pizzas"], // Don't reset the Pizzas table as it contains seed data
         });
 
         await respawner.ResetAsync(connection);
@@ -74,17 +72,6 @@ SELECT EXISTS
 
         var finalCount = await this.factory.GetUndispatchedDomainEventCountAsync();
         throw new TimeoutException($"Timed out waiting for domain events to be dispatched. {finalCount} events remain undispatched after {timeout.TotalSeconds} seconds.");
-    }
-
-    private static async Task EnsureDatabaseMigratedAsync(string connectionString)
-    {
-        var optionsBuilder = new DbContextOptionsBuilder<StoreDbContext>();
-        optionsBuilder.UseNpgsql(connectionString);
-
-        await using var dbContext = new StoreDbContext(optionsBuilder.Options);
-
-        // Apply any pending migrations
-        await dbContext.Database.MigrateAsync();
     }
 
     private static async Task<bool> TablesExistsAsync(NpgsqlConnection connection)

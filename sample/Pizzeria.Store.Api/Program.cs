@@ -6,6 +6,7 @@ using Lewee.Infrastructure.Data;
 using Lewee.Infrastructure.PostgreSQL;
 using Pizzeria.Common;
 using Pizzeria.ServiceDefaults;
+using Pizzeria.Store.Api.Startup;
 using Pizzeria.Store.Application;
 using Pizzeria.Store.Data;
 using Pizzeria.Store.Domain;
@@ -22,18 +23,46 @@ builder.Services
         builder.Configuration.GetConnectionString(databaseName)!,
         typeof(Pizza).Assembly,
         StoreDbContext.SchemaName)
-    .AddLeweeDatabaseServices<StoreDbContext>(typeof(Pizza).Assembly)
     .AddLeweeDatabaseSeeder<StoreDbContext, StoreSeeder>()
+    .AddLeweeDatabaseServices<StoreDbContext>(typeof(Pizza).Assembly)
     .AddPizzaStoreApplication()
     .AddCorrelationIdServices()
-    .AddLeweeSignalR()
+    .AddLeweeSignalR();
+
+builder.Services
+    .AddAuthentication()
+    .AddKeycloakJwtBearer(
+        serviceName: ServiceNames.AuthServer,
+        realm: Pizzeria.Common.Environments.Auth.RealmName,
+        options =>
+        {
+            // TODO: Fix audience mapping and enable audience validation in production. See issue #1234
+            options.TokenValidationParameters.ValidateAudience = !builder.Environment.IsDevelopment();
+            options.TokenValidationParameters.ValidateIssuer = true;
+            options.TokenValidationParameters.ValidateLifetime = true;
+            options.TokenValidationParameters.ValidateIssuerSigningKey = true;
+
+            // For development only - disable HTTPS metadata validation
+            // In production, use explicit Authority configuration instead
+            if (builder.Environment.IsDevelopment())
+            {
+                options.RequireHttpsMetadata = false;
+            }
+        });
+
+builder.Services.AddAuthorizationBuilder();
+
+builder.Services
     .AddFastEndpoints()
     .AddEndpointsApiExplorer()
-    .AddSwaggerGen();
+    .AddSwaggerGen()
+    .AddStartupConfiguration();
 
 var app = builder.Build();
 
-app.MapDefaultEndpoints();
+app.UseHealthEndpoints();
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapHub<ClientEventHub>("/events");
 app.UseFastEndpoints();
 app.UseCorrelationIdMiddleware();
