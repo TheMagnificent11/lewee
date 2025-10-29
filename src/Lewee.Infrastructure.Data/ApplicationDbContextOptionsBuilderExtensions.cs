@@ -53,8 +53,9 @@ public static class ApplicationDbContextOptionsBuilderExtensions
         IServiceProvider serviceProvider)
         where TContext : DbContext, IApplicationDbContext
     {
-        var dispatcher = serviceProvider.GetRequiredService<DomainEventDispatcher<TContext>>();
-        optionsBuilder.AddInterceptors(dispatcher);
+        // Create a lazy interceptor that resolves dependencies when first needed
+        var lazyDispatcher = new LazyDomainEventDispatcherInterceptor<TContext>(serviceProvider);
+        optionsBuilder.AddInterceptors(lazyDispatcher);
 
         return optionsBuilder;
     }
