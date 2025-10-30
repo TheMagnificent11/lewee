@@ -13,18 +13,22 @@ namespace Lewee.Infrastructure.Data;
 internal class DomainEventDispatcher<TContext> : SaveChangesInterceptor
     where TContext : DbContext, IApplicationDbContext
 {
+    private readonly IDbContextFactory<TContext> dbContextFactory;
     private readonly IMediator mediator;
     private readonly ILogger logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DomainEventDispatcher{TContext}"/> class
     /// </summary>
+    /// <param name="dbContextFactory">DbContext factory for creating new context instances</param>
     /// <param name="mediator">MediatR mediator for publishing events</param>
     /// <param name="logger">Logger instance</param>
     public DomainEventDispatcher(
+        IDbContextFactory<TContext> dbContextFactory,
         IMediator mediator,
         ILogger<DomainEventDispatcher<TContext>> logger)
     {
+        this.dbContextFactory = dbContextFactory;
         this.mediator = mediator;
         this.logger = logger;
     }
@@ -35,18 +39,31 @@ internal class DomainEventDispatcher<TContext> : SaveChangesInterceptor
         int result,
         CancellationToken cancellationToken = default)
     {
-        await this.DispatchEventsAsync(eventData.Context, cancellationToken);
+        // Dispatch events in a fire-and-forget manner to avoid blocking the save operation
+        // Use a separate task to avoid issues with the current context
+        _ = Task.Run(
+            async () =>
+            {
+                try
+                {
+                    await this.DispatchEventsAsync(cancellationToken);
+                }
+                catch (Exception ex)
+                {
+                    this.logger.LogError(ex, "Error dispatching domain events");
+                }
+            },
+            cancellationToken);
+
         return await base.SavedChangesAsync(eventData, result, cancellationToken);
     }
 
-    private async Task DispatchEventsAsync(DbContext? context, CancellationToken cancellationToken)
+    private async Task DispatchEventsAsync(CancellationToken cancellationToken)
     {
-        if (context is not TContext typedContext)
-        {
-            return;
-        }
+        // Use a new DbContext instance to avoid conflicts with the original context
+        await using var context = await this.dbContextFactory.CreateDbContextAsync(cancellationToken);
 
-        var dbSet = typedContext.Set<DomainEventReference>();
+        var dbSet = context.Set<DomainEventReference>();
         if (dbSet == null)
         {
             return;
@@ -79,6 +96,7 @@ internal class DomainEventDispatcher<TContext> : SaveChangesInterceptor
             await this.mediator.Publish(domainEvent, cancellationToken);
         }
 
-        await typedContext.SaveChangesAsync(cancellationToken);
+        // Save the dispatch status using the separate context
+        await context.SaveChangesAsync(cancellationToken);
     }
 }
