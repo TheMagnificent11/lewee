@@ -3,6 +3,7 @@ using Aspire.Hosting.ApplicationModel;
 using Aspire.Hosting.Testing;
 using FluentAssertions;
 using Lewee.Domain;
+using Lewee.Infrastructure.Data.IntegrationAppHost;
 using Lewee.Infrastructure.PostgreSQL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,11 +35,11 @@ public sealed class DomainEventDispatchingTests : IAsyncLifetime
 
         // Wait for PostgreSQL to be running
         await resourceNotificationService
-            .WaitForResourceAsync("postgres", KnownResourceStates.Running)
+            .WaitForResourceAsync(ServiceNames.DatabaseServer, KnownResourceStates.Running)
             .WaitAsync(TimeSpan.FromMinutes(5));
 
         // Get connection string
-        this.connectionString = await this.app.GetConnectionStringAsync("testdb");
+        this.connectionString = await this.app.GetConnectionStringAsync(ServiceNames.Database);
 
         // Build service provider with necessary services
         var services = new ServiceCollection();
@@ -54,9 +55,10 @@ public sealed class DomainEventDispatchingTests : IAsyncLifetime
 
         this.serviceProvider = services.BuildServiceProvider();
 
-        // Ensure database is created
-        using var scope = this.serviceProvider.CreateScope();
+        await using var scope = this.serviceProvider.CreateAsyncScope();
+
         var dbContext = scope.ServiceProvider.GetRequiredService<TestDbContext>();
+
         await dbContext.Database.EnsureCreatedAsync();
     }
 
@@ -85,7 +87,7 @@ public sealed class DomainEventDispatchingTests : IAsyncLifetime
         // Arrange
         TestOrderSubmittedEventHandler.Reset();
 
-        using var scope = this.serviceProvider!.CreateScope();
+        await using var scope = this.serviceProvider!.CreateAsyncScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<TestDbContext>();
 
         var orderId = Guid.NewGuid();
@@ -98,7 +100,7 @@ public sealed class DomainEventDispatchingTests : IAsyncLifetime
         await dbContext.SaveChangesAsync();
 
         // Assert - Event should be dispatched immediately after save
-        TestOrderSubmittedEventHandler.ReceivedEvents.Should().HaveCount(1);
+        TestOrderSubmittedEventHandler.ReceivedEvents.Should().ContainSingle();
         var receivedEvent = TestOrderSubmittedEventHandler.ReceivedEvents[0];
         receivedEvent.OrderId.Should().Be(orderId);
         receivedEvent.CorrelationId.Should().Be(correlationId);
@@ -110,7 +112,8 @@ public sealed class DomainEventDispatchingTests : IAsyncLifetime
         // Arrange
         TestOrderSubmittedEventHandler.Reset();
 
-        using var scope = this.serviceProvider!.CreateScope();
+        await using var scope = this.serviceProvider!.CreateAsyncScope();
+
         var dbContext = scope.ServiceProvider.GetRequiredService<TestDbContext>();
 
         var orderId = Guid.NewGuid();
@@ -136,7 +139,8 @@ public sealed class DomainEventDispatchingTests : IAsyncLifetime
         // Arrange
         TestOrderSubmittedEventHandler.Reset();
 
-        using var scope = this.serviceProvider!.CreateScope();
+        await using var scope = this.serviceProvider!.CreateAsyncScope();
+
         var dbContext = scope.ServiceProvider.GetRequiredService<TestDbContext>();
 
         var order1 = new TestOrder(Guid.NewGuid(), "TEST-003");
@@ -164,7 +168,8 @@ public sealed class DomainEventDispatchingTests : IAsyncLifetime
         // Arrange
         TestOrderSubmittedEventHandler.Reset();
 
-        using var scope = this.serviceProvider!.CreateScope();
+        await using var scope = this.serviceProvider!.CreateAsyncScope();
+
         var dbContext = scope.ServiceProvider.GetRequiredService<TestDbContext>();
 
         var orderId = Guid.NewGuid();
@@ -179,8 +184,9 @@ public sealed class DomainEventDispatchingTests : IAsyncLifetime
         dbContext.Orders!.Add(duplicateOrder);
 
         // Assert
-        var exception = await Assert.ThrowsAsync<DbUpdateException>(
-            async () => await dbContext.SaveChangesAsync());
+        Func<Task> act = async () => await dbContext.SaveChangesAsync();
+
+        await act.Should().ThrowAsync<DbUpdateException>();
 
         // Events should not be dispatched because save failed
         TestOrderSubmittedEventHandler.ReceivedEvents.Should().BeEmpty();

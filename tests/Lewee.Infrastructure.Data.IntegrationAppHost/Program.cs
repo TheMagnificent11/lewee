@@ -1,8 +1,9 @@
-using Aspire.Hosting;
+using Lewee.Infrastructure.Data.IntegrationAppHost;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-var postgres = builder.AddPostgres("postgres")
-    .AddDatabase("testdb");
+var postgres = builder
+    .AddPostgres(ServiceNames.DatabaseServer)
+    .AddDatabase(ServiceNames.Database);
 
 await builder.Build().RunAsync();
