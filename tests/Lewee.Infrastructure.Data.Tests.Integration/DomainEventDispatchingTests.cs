@@ -35,8 +35,13 @@ public sealed class DomainEventDispatchingTests : IAsyncLifetime
 
         // Wait for PostgreSQL to be running
         await resourceNotificationService
-            .WaitForResourceAsync(ServiceNames.DatabaseServer, KnownResourceStates.Running)
+   .WaitForResourceAsync(ServiceNames.DatabaseServer, KnownResourceStates.Running)
             .WaitAsync(TimeSpan.FromMinutes(5));
+
+        // Wait for database to be ready
+        await resourceNotificationService
+            .WaitForResourceAsync(ServiceNames.Database, KnownResourceStates.Running)
+          .WaitAsync(TimeSpan.FromMinutes(5));
 
         // Get connection string
         this.connectionString = await this.app.GetConnectionStringAsync(ServiceNames.Database);
@@ -49,17 +54,14 @@ public sealed class DomainEventDispatchingTests : IAsyncLifetime
         services.AddSingleton<IAuthenticatedUserService>(new TestAuthenticatedUserService());
 
         services.AddLeweePostgreSQL<TestDbContext>(
-            this.connectionString!,
-            typeof(TestOrder).Assembly,
-            "test");
+    this.connectionString!,
+    typeof(TestOrder).Assembly,
+    "test");
 
         this.serviceProvider = services.BuildServiceProvider();
 
-        await using var scope = this.serviceProvider.CreateAsyncScope();
-
-        var dbContext = scope.ServiceProvider.GetRequiredService<TestDbContext>();
-
-        await dbContext.Database.EnsureCreatedAsync();
+        // Retry database initialization with exponential backoff
+        await this.WaitForDatabaseReadyAsync();
     }
 
     public async Task DisposeAsync()
@@ -128,7 +130,7 @@ public sealed class DomainEventDispatchingTests : IAsyncLifetime
         // Assert - Domain event reference should be marked as dispatched
         var eventReferences = await dbContext.DomainEventReferences!
             .Where(e => !e.Dispatched)
-            .ToListAsync();
+   .ToListAsync();
 
         eventReferences.Should().BeEmpty("all events should be dispatched");
     }
@@ -168,19 +170,24 @@ public sealed class DomainEventDispatchingTests : IAsyncLifetime
         // Arrange
         TestOrderSubmittedEventHandler.Reset();
 
-        await using var scope = this.serviceProvider!.CreateAsyncScope();
-
-        var dbContext = scope.ServiceProvider.GetRequiredService<TestDbContext>();
-
+        // First, add an order to the database
         var orderId = Guid.NewGuid();
-        var order = new TestOrder(orderId, "TEST-006");
+        await using (var scope = this.serviceProvider!.CreateAsyncScope())
+        {
+            var setupDbContext = scope.ServiceProvider.GetRequiredService<TestDbContext>();
+            var existingOrder = new TestOrder(orderId, "TEST-006-EXISTING");
+            setupDbContext.Orders!.Add(existingOrder);
+            await setupDbContext.SaveChangesAsync();
+        }
+
+        // Now try to add another order with the same ID in a new context
+        await using var testScope = this.serviceProvider!.CreateAsyncScope();
+        var dbContext = testScope.ServiceProvider.GetRequiredService<TestDbContext>();
+
+        var duplicateOrder = new TestOrder(orderId, "TEST-006-DUPLICATE");
 
         // Act
-        order.Submit(Guid.NewGuid());
-        dbContext.Orders!.Add(order);
-
-        // Add a duplicate order with the same ID to cause a constraint violation
-        var duplicateOrder = new TestOrder(orderId, "TEST-007");
+        duplicateOrder.Submit(Guid.NewGuid());
         dbContext.Orders!.Add(duplicateOrder);
 
         // Assert
@@ -190,5 +197,34 @@ public sealed class DomainEventDispatchingTests : IAsyncLifetime
 
         // Events should not be dispatched because save failed
         TestOrderSubmittedEventHandler.ReceivedEvents.Should().BeEmpty();
+    }
+
+    private async Task WaitForDatabaseReadyAsync()
+    {
+        var maxRetries = 10;
+        var delayMs = 500;
+
+        for (var i = 0; i < maxRetries; i++)
+        {
+            try
+            {
+                await using var scope = this.serviceProvider.CreateAsyncScope();
+                var dbContext = scope.ServiceProvider.GetRequiredService<TestDbContext>();
+
+                await dbContext.Database.EnsureCreatedAsync();
+                return; // Success
+            }
+            catch (Exception) when (i < maxRetries - 1)
+            {
+                // Wait with exponential backoff
+                await Task.Delay(delayMs);
+                delayMs *= 2; // Exponential backoff
+            }
+        }
+
+        // One final attempt without catching exceptions
+        await using var finalScope = this.serviceProvider.CreateAsyncScope();
+        var finalDbContext = finalScope.ServiceProvider.GetRequiredService<TestDbContext>();
+        await finalDbContext.Database.EnsureCreatedAsync();
     }
 }
