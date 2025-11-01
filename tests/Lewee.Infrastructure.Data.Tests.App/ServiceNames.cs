@@ -1,4 +1,4 @@
-﻿namespace Lewee.Infrastructure.Data.IntegrationAppHost;
+﻿namespace Lewee.Infrastructure.Data.Tests.App;
 
 /// <summary>
 /// Service Names

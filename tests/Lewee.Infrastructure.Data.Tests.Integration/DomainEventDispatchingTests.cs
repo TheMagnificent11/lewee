@@ -3,7 +3,7 @@ using Aspire.Hosting.ApplicationModel;
 using Aspire.Hosting.Testing;
 using FluentAssertions;
 using Lewee.Domain;
-using Lewee.Infrastructure.Data.IntegrationAppHost;
+using Lewee.Infrastructure.Data.Tests.App;
 using Lewee.Infrastructure.PostgreSQL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,7 +24,7 @@ public sealed class DomainEventDispatchingTests : IAsyncLifetime
     public async Task InitializeAsync()
     {
         // Create the test application
-        this.builder = await DistributedApplicationTestingBuilder.CreateAsync<Projects.Lewee_Infrastructure_Data_IntegrationAppHost>();
+        this.builder = await DistributedApplicationTestingBuilder.CreateAsync<Projects.Lewee_Infrastructure_Data_Tests_App>();
 
         this.app = await this.builder.BuildAsync();
 
@@ -35,13 +35,13 @@ public sealed class DomainEventDispatchingTests : IAsyncLifetime
 
         // Wait for PostgreSQL to be running
         await resourceNotificationService
-   .WaitForResourceAsync(ServiceNames.DatabaseServer, KnownResourceStates.Running)
+            .WaitForResourceAsync(ServiceNames.DatabaseServer, KnownResourceStates.Running)
             .WaitAsync(TimeSpan.FromMinutes(5));
 
         // Wait for database to be ready
         await resourceNotificationService
             .WaitForResourceAsync(ServiceNames.Database, KnownResourceStates.Running)
-          .WaitAsync(TimeSpan.FromMinutes(5));
+            .WaitAsync(TimeSpan.FromMinutes(5));
 
         // Get connection string
         this.connectionString = await this.app.GetConnectionStringAsync(ServiceNames.Database);
@@ -54,9 +54,9 @@ public sealed class DomainEventDispatchingTests : IAsyncLifetime
         services.AddSingleton<IAuthenticatedUserService>(new TestAuthenticatedUserService());
 
         services.AddLeweePostgreSQL<TestDbContext>(
-    this.connectionString!,
-    typeof(TestOrder).Assembly,
-    "test");
+            this.connectionString!,
+            typeof(TestOrder).Assembly,
+            "test");
 
         this.serviceProvider = services.BuildServiceProvider();
 

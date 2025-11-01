@@ -1,8 +1,8 @@
-using Lewee.Infrastructure.Data.IntegrationAppHost;
+using Lewee.Infrastructure.Data.Tests.App;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-var postgres = builder
+builder
     .AddPostgres(ServiceNames.DatabaseServer)
     .AddDatabase(ServiceNames.Database);
 
