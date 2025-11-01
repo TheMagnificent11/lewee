@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base",
+    "config:recommended",
     ":dependencyDashboard",
     ":semanticCommits",
     ":automergeDigest",
@@ -10,80 +10,80 @@
   "timezone": "UTC",
   "schedule": ["at any time"],
   "labels": ["dependencies"],
-  "baseBranches": ["develop"],
+  "baseBranchPatterns": ["develop"],
   "prConcurrentLimit": 10,
   "prCreation": "immediate",
   "packageRules": [
     {
-      "matchPackagePatterns": ["^Ardalis\\."],
       "groupName": "ardalis-updates (minor/patch)",
-      "matchUpdateTypes": ["minor", "patch"]
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchPackageNames": ["/^Ardalis\\./"]
     },
     {
-      "matchPackagePatterns": ["^Aspire\\."],
       "groupName": "aspire-updates (minor/patch)",
-      "matchUpdateTypes": ["minor", "patch"]
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchPackageNames": ["/^Aspire\\./"]
     },
     {
-      "matchPackagePatterns": ["^Correlate\\."],
       "groupName": "correlate-updates (minor/patch)",
-      "matchUpdateTypes": ["minor", "patch"]
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchPackageNames": ["/^Correlate\\./"]
     },
     {
-      "matchPackagePatterns": ["^FluentValidation"],
       "groupName": "fluentvalidation-updates (minor/patch)",
-      "matchUpdateTypes": ["minor", "patch"]
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchPackageNames": ["/^FluentValidation/"]
     },
     {
-      "matchPackagePatterns": ["^Fluxor"],
       "groupName": "fluxor-updates (minor/patch)",
-      "matchUpdateTypes": ["minor", "patch"]
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchPackageNames": ["/^Fluxor/"]
     },
     {
-      "matchPackagePatterns": ["^Microsoft\\.AspNetCore\\."],
       "groupName": "microsoft-aspnetcore-updates (minor/patch)",
-      "matchUpdateTypes": ["minor", "patch"]
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchPackageNames": ["/^Microsoft\\.AspNetCore\\./"]
     },
     {
-      "matchPackagePatterns": ["^Microsoft\\.EntityFrameworkCore"],
       "groupName": "microsoft-entityframework-updates (minor/patch)",
-      "matchUpdateTypes": ["minor", "patch"]
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchPackageNames": ["/^Microsoft\\.EntityFrameworkCore/"]
     },
     {
-      "matchPackagePatterns": ["^Microsoft\\.Extensions\\."],
       "groupName": "microsoft-extensions-updates (minor/patch)",
-      "matchUpdateTypes": ["minor", "patch"]
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchPackageNames": ["/^Microsoft\\.Extensions\\./"]
     },
     {
-      "matchPackagePatterns": ["^OpenTelemetry"],
       "groupName": "opentelemetry-updates (minor/patch)",
-      "matchUpdateTypes": ["minor", "patch"]
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchPackageNames": ["/^OpenTelemetry/"]
     },
     {
-      "matchPackagePatterns": ["^Refit"],
       "groupName": "refit-updates (minor/patch)",
-      "matchUpdateTypes": ["minor", "patch"]
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchPackageNames": ["/^Refit/"]
     },
     {
-      "matchPackagePatterns": ["^xunit"],
       "groupName": "xunit-updates (minor/patch)",
-      "matchUpdateTypes": ["minor", "patch"]
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchPackageNames": ["/^xunit/"]
     },
     {
-      "matchPackagePatterns": [".*"],
       "matchUpdateTypes": ["major"],
       "enabled": false,
-      "description": "Block major updates for all packages"
+      "description": "Block major updates for all packages",
+      "matchPackageNames": ["/.*/"]
     },
     {
-      "matchPackagePatterns": ["^FluentAssertions"],
       "enabled": false,
-      "description": "FluentAssertions packages should not be upgraded"
+      "description": "FluentAssertions packages should not be upgraded",
+      "matchPackageNames": ["/^FluentAssertions/"]
     },
     {
-      "matchPackagePatterns": ["^MediatR"],
       "enabled": false,
-      "description": "MediatR packages should not be upgraded"
+      "description": "MediatR packages should not be upgraded",
+      "matchPackageNames": ["/^MediatR/"]
     }
   ]
 }
