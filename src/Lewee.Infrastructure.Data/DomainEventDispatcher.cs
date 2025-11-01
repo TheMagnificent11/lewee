@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Lewee.Infrastructure.Data;
 
-internal class DomainEventDispatcher<TContext>
+internal sealed class DomainEventDispatcher<TContext>
     where TContext : DbContext, IApplicationDbContext
 {
     private const int BatchSize = 50;
