@@ -48,7 +48,7 @@ public static class PostgreSqlConfiguration
                 options.UseExceptionProcessor();
                 options.AddAuditInterceptor(authenticatedUserService);
                 options.AddDomainEventInterceptor<T>(authenticatedUserService);
-                options.AddDomainEventDispatcherInterceptor<T>(provider);
+                options.AddDomainEventDispatcherInterceptor<T>();
             })
             .AddLeweeDatabaseServices<T>(domainAssembly);
 

@@ -1,9 +1,9 @@
 using Aspire.Hosting;
+using Aspire.Hosting.ApplicationModel;
 using Aspire.Hosting.Testing;
 using FluentAssertions;
 using Lewee.Domain;
 using Lewee.Infrastructure.PostgreSQL;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -26,7 +26,16 @@ public sealed class DomainEventDispatchingTests : IAsyncLifetime
         this.builder = await DistributedApplicationTestingBuilder.CreateAsync<Projects.Lewee_Infrastructure_Data_IntegrationAppHost>();
 
         this.app = await this.builder.BuildAsync();
+
+        // Get resource notification service before starting
+        var resourceNotificationService = this.app.Services.GetRequiredService<ResourceNotificationService>();
+
         await this.app.StartAsync();
+
+        // Wait for PostgreSQL to be running
+        await resourceNotificationService
+            .WaitForResourceAsync("postgres", KnownResourceStates.Running)
+            .WaitAsync(TimeSpan.FromMinutes(5));
 
         // Get connection string
         this.connectionString = await this.app.GetConnectionStringAsync("testdb");
@@ -71,7 +80,7 @@ public sealed class DomainEventDispatchingTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task DomainEvents_ShouldBeDispatchedAfterSaveChanges()
+    public async Task DomainEvents_ShouldBeDispatchedAfterSaveChangesAsync()
     {
         // Arrange
         TestOrderSubmittedEventHandler.Reset();
@@ -96,7 +105,7 @@ public sealed class DomainEventDispatchingTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task DomainEvents_ShouldBeMarkedAsDispatched()
+    public async Task DomainEvents_ShouldBeMarkedAsDispatchedAsync()
     {
         // Arrange
         TestOrderSubmittedEventHandler.Reset();
@@ -122,7 +131,7 @@ public sealed class DomainEventDispatchingTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task MultipleDomainEvents_ShouldAllBeDispatched()
+    public async Task MultipleDomainEvents_ShouldAllBeDispatchedAsync()
     {
         // Arrange
         TestOrderSubmittedEventHandler.Reset();
@@ -150,7 +159,7 @@ public sealed class DomainEventDispatchingTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task DomainEvents_ShouldNotBeDispatchedIfSaveFails()
+    public async Task DomainEvents_ShouldNotBeDispatchedIfSaveFailsAsync()
     {
         // Arrange
         TestOrderSubmittedEventHandler.Reset();
