@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <Project>
 
   <PropertyGroup>
@@ -48,7 +47,7 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup Condition="$(MSBuildProjectName.Contains('.Tests'))">
+  <ItemGroup Condition="$(MSBuildProjectName.Contains('.Tests')) AND '$(IsAspireHost)' != 'true'">
     <PackageReference Include="FluentAssertions" />
     <PackageReference Include="FluentAssertions.Analyzers">
       <PrivateAssets>all</PrivateAssets>

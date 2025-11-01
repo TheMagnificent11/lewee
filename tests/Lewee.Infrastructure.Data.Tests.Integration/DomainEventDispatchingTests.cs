@@ -1,9 +1,10 @@
 using Aspire.Hosting;
+using Aspire.Hosting.ApplicationModel;
 using Aspire.Hosting.Testing;
 using FluentAssertions;
 using Lewee.Domain;
+using Lewee.Infrastructure.Data.Tests.App;
 using Lewee.Infrastructure.PostgreSQL;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -23,13 +24,27 @@ public sealed class DomainEventDispatchingTests : IAsyncLifetime
     public async Task InitializeAsync()
     {
         // Create the test application
-        this.builder = await DistributedApplicationTestingBuilder.CreateAsync<Projects.Lewee_Infrastructure_Data_IntegrationAppHost>();
+        this.builder = await DistributedApplicationTestingBuilder.CreateAsync<Projects.Lewee_Infrastructure_Data_Tests_App>();
 
         this.app = await this.builder.BuildAsync();
+
+        // Get resource notification service before starting
+        var resourceNotificationService = this.app.Services.GetRequiredService<ResourceNotificationService>();
+
         await this.app.StartAsync();
 
+        // Wait for PostgreSQL to be running
+        await resourceNotificationService
+            .WaitForResourceAsync(ServiceNames.DatabaseServer, KnownResourceStates.Running)
+            .WaitAsync(TimeSpan.FromMinutes(5));
+
+        // Wait for database to be ready
+        await resourceNotificationService
+            .WaitForResourceAsync(ServiceNames.Database, KnownResourceStates.Running)
+            .WaitAsync(TimeSpan.FromMinutes(5));
+
         // Get connection string
-        this.connectionString = await this.app.GetConnectionStringAsync("testdb");
+        this.connectionString = await this.app.GetConnectionStringAsync(ServiceNames.Database);
 
         // Build service provider with necessary services
         var services = new ServiceCollection();
@@ -45,10 +60,8 @@ public sealed class DomainEventDispatchingTests : IAsyncLifetime
 
         this.serviceProvider = services.BuildServiceProvider();
 
-        // Ensure database is created
-        using var scope = this.serviceProvider.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<TestDbContext>();
-        await dbContext.Database.EnsureCreatedAsync();
+        // Retry database initialization with exponential backoff
+        await this.WaitForDatabaseReadyAsync();
     }
 
     public async Task DisposeAsync()
@@ -71,12 +84,12 @@ public sealed class DomainEventDispatchingTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task DomainEvents_ShouldBeDispatchedAfterSaveChanges()
+    public async Task DomainEvents_ShouldBeDispatchedAfterSaveChangesAsync()
     {
         // Arrange
         TestOrderSubmittedEventHandler.Reset();
 
-        using var scope = this.serviceProvider!.CreateScope();
+        await using var scope = this.serviceProvider!.CreateAsyncScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<TestDbContext>();
 
         var orderId = Guid.NewGuid();
@@ -89,19 +102,20 @@ public sealed class DomainEventDispatchingTests : IAsyncLifetime
         await dbContext.SaveChangesAsync();
 
         // Assert - Event should be dispatched immediately after save
-        TestOrderSubmittedEventHandler.ReceivedEvents.Should().HaveCount(1);
+        TestOrderSubmittedEventHandler.ReceivedEvents.Should().ContainSingle();
         var receivedEvent = TestOrderSubmittedEventHandler.ReceivedEvents[0];
         receivedEvent.OrderId.Should().Be(orderId);
         receivedEvent.CorrelationId.Should().Be(correlationId);
     }
 
     [Fact]
-    public async Task DomainEvents_ShouldBeMarkedAsDispatched()
+    public async Task DomainEvents_ShouldBeMarkedAsDispatchedAsync()
     {
         // Arrange
         TestOrderSubmittedEventHandler.Reset();
 
-        using var scope = this.serviceProvider!.CreateScope();
+        await using var scope = this.serviceProvider!.CreateAsyncScope();
+
         var dbContext = scope.ServiceProvider.GetRequiredService<TestDbContext>();
 
         var orderId = Guid.NewGuid();
@@ -116,18 +130,19 @@ public sealed class DomainEventDispatchingTests : IAsyncLifetime
         // Assert - Domain event reference should be marked as dispatched
         var eventReferences = await dbContext.DomainEventReferences!
             .Where(e => !e.Dispatched)
-            .ToListAsync();
+   .ToListAsync();
 
         eventReferences.Should().BeEmpty("all events should be dispatched");
     }
 
     [Fact]
-    public async Task MultipleDomainEvents_ShouldAllBeDispatched()
+    public async Task MultipleDomainEvents_ShouldAllBeDispatchedAsync()
     {
         // Arrange
         TestOrderSubmittedEventHandler.Reset();
 
-        using var scope = this.serviceProvider!.CreateScope();
+        await using var scope = this.serviceProvider!.CreateAsyncScope();
+
         var dbContext = scope.ServiceProvider.GetRequiredService<TestDbContext>();
 
         var order1 = new TestOrder(Guid.NewGuid(), "TEST-003");
@@ -150,30 +165,66 @@ public sealed class DomainEventDispatchingTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task DomainEvents_ShouldNotBeDispatchedIfSaveFails()
+    public async Task DomainEvents_ShouldNotBeDispatchedIfSaveFailsAsync()
     {
         // Arrange
         TestOrderSubmittedEventHandler.Reset();
 
-        using var scope = this.serviceProvider!.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<TestDbContext>();
-
+        // First, add an order to the database
         var orderId = Guid.NewGuid();
-        var order = new TestOrder(orderId, "TEST-006");
+        await using (var scope = this.serviceProvider!.CreateAsyncScope())
+        {
+            var setupDbContext = scope.ServiceProvider.GetRequiredService<TestDbContext>();
+            var existingOrder = new TestOrder(orderId, "TEST-006-EXISTING");
+            setupDbContext.Orders!.Add(existingOrder);
+            await setupDbContext.SaveChangesAsync();
+        }
+
+        // Now try to add another order with the same ID in a new context
+        await using var testScope = this.serviceProvider!.CreateAsyncScope();
+        var dbContext = testScope.ServiceProvider.GetRequiredService<TestDbContext>();
+
+        var duplicateOrder = new TestOrder(orderId, "TEST-006-DUPLICATE");
 
         // Act
-        order.Submit(Guid.NewGuid());
-        dbContext.Orders!.Add(order);
-
-        // Add a duplicate order with the same ID to cause a constraint violation
-        var duplicateOrder = new TestOrder(orderId, "TEST-007");
+        duplicateOrder.Submit(Guid.NewGuid());
         dbContext.Orders!.Add(duplicateOrder);
 
         // Assert
-        var exception = await Assert.ThrowsAsync<DbUpdateException>(
-            async () => await dbContext.SaveChangesAsync());
+        Func<Task> act = async () => await dbContext.SaveChangesAsync();
+
+        await act.Should().ThrowAsync<DbUpdateException>();
 
         // Events should not be dispatched because save failed
         TestOrderSubmittedEventHandler.ReceivedEvents.Should().BeEmpty();
+    }
+
+    private async Task WaitForDatabaseReadyAsync()
+    {
+        var maxRetries = 10;
+        var delayMs = 500;
+
+        for (var i = 0; i < maxRetries; i++)
+        {
+            try
+            {
+                await using var scope = this.serviceProvider.CreateAsyncScope();
+                var dbContext = scope.ServiceProvider.GetRequiredService<TestDbContext>();
+
+                await dbContext.Database.EnsureCreatedAsync();
+                return; // Success
+            }
+            catch (Exception) when (i < maxRetries - 1)
+            {
+                // Wait with exponential backoff
+                await Task.Delay(delayMs);
+                delayMs *= 2; // Exponential backoff
+            }
+        }
+
+        // One final attempt without catching exceptions
+        await using var finalScope = this.serviceProvider.CreateAsyncScope();
+        var finalDbContext = finalScope.ServiceProvider.GetRequiredService<TestDbContext>();
+        await finalDbContext.Database.EnsureCreatedAsync();
     }
 }

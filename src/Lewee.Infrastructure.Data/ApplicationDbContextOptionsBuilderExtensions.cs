@@ -13,12 +13,14 @@ public static class ApplicationDbContextOptionsBuilderExtensions
     /// Adds the audit interceptor to the database context options builder
     /// </summary>
     /// <param name="optionsBuilder">DB context options builder</param>
-    /// <param name="authenticatedUserService">Authentication service interface</param>
+    /// <param name="serviceProvider">Service provider to resolve dependencies</param>
     /// <returns>The updated DB context options builder</returns>
     public static DbContextOptionsBuilder AddAuditInterceptor(
         this DbContextOptionsBuilder optionsBuilder,
-        IAuthenticatedUserService authenticatedUserService)
+        IServiceProvider serviceProvider)
     {
+        var authenticatedUserService = serviceProvider.GetRequiredService<IAuthenticatedUserService>();
+
         optionsBuilder.AddInterceptors(new AuditDetailsSaveChangesInterceptor(authenticatedUserService));
 
         return optionsBuilder;
@@ -29,33 +31,19 @@ public static class ApplicationDbContextOptionsBuilderExtensions
     /// </summary>
     /// <typeparam name="TContext">DB context type</typeparam>
     /// <param name="optionsBuilder">DB context options builder</param>
-    /// <param name="authenticatedUserService">Authentication service interface</param>
+    /// <param name="serviceProvider">Service provider to resolve dependencies</param>
     /// <returns>The updated DB context options builder</returns>
-    public static DbContextOptionsBuilder AddDomainEventInterceptor<TContext>(
-        this DbContextOptionsBuilder optionsBuilder,
-        IAuthenticatedUserService authenticatedUserService)
-        where TContext : DbContext, IApplicationDbContext
-    {
-        optionsBuilder.AddInterceptors(new DomainEventSaveChangesInterceptor<TContext>(authenticatedUserService));
-
-        return optionsBuilder;
-    }
-
-    /// <summary>
-    /// Adds the domain event dispatcher interceptor to the database context options builder
-    /// </summary>
-    /// <typeparam name="TContext">DB context type</typeparam>
-    /// <param name="optionsBuilder">DB context options builder</param>
-    /// <param name="serviceProvider">Service provider for resolving dependencies</param>
-    /// <returns>The updated DB context options builder</returns>
-    public static DbContextOptionsBuilder AddDomainEventDispatcherInterceptor<TContext>(
+    public static DbContextOptionsBuilder AddDomainEventInterceptors<TContext>(
         this DbContextOptionsBuilder optionsBuilder,
         IServiceProvider serviceProvider)
         where TContext : DbContext, IApplicationDbContext
     {
-        // Create a lazy interceptor that resolves dependencies when first needed
-        var lazyDispatcher = new LazyDomainEventDispatcherInterceptor<TContext>(serviceProvider);
-        optionsBuilder.AddInterceptors(lazyDispatcher);
+        var authenticatedUserService = serviceProvider.GetRequiredService<IAuthenticatedUserService>();
+        var domainEventSaveChangesInterceptor = new DomainEventSaveChangesInterceptor<TContext>(authenticatedUserService);
+        var domainEventDispatcherInterceptor = new DomainEventsTransactionInterceptor<TContext>(serviceProvider);
+
+        optionsBuilder.AddInterceptors(domainEventSaveChangesInterceptor);
+        optionsBuilder.AddInterceptors(domainEventDispatcherInterceptor);
 
         return optionsBuilder;
     }

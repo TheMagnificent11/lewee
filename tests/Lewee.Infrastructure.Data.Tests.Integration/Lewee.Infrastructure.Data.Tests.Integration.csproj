@@ -11,7 +11,7 @@
     <ProjectReference Include="..\..\src\Lewee.Infrastructure.PostgreSQL\Lewee.Infrastructure.PostgreSQL.csproj" />
     <ProjectReference Include="..\..\src\Lewee.Domain\Lewee.Domain.csproj" />
     <ProjectReference Include="..\..\src\Lewee.Application\Lewee.Application.csproj" />
-    <ProjectReference Include="..\Lewee.Infrastructure.Data.IntegrationAppHost\Lewee.Infrastructure.Data.IntegrationAppHost.csproj" />
+    <ProjectReference Include="..\Lewee.Infrastructure.Data.Tests.App\Lewee.Infrastructure.Data.Tests.App.csproj" />
   </ItemGroup>
 
 </Project>
