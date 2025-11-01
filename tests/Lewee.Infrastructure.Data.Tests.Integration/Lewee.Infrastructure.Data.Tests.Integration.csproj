@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.PostgreSQL" />
+    <PackageReference Include="Aspire.Hosting.Testing" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Lewee.Infrastructure.Data\Lewee.Infrastructure.Data.csproj" />
+    <ProjectReference Include="..\..\src\Lewee.Infrastructure.PostgreSQL\Lewee.Infrastructure.PostgreSQL.csproj" />
+    <ProjectReference Include="..\..\src\Lewee.Domain\Lewee.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Lewee.Application\Lewee.Application.csproj" />
+    <ProjectReference Include="..\Lewee.Infrastructure.Data.Tests.App\Lewee.Infrastructure.Data.Tests.App.csproj" />
+  </ItemGroup>
+
+</Project>

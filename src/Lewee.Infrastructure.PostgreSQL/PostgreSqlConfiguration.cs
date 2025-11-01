@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using EntityFramework.Exceptions.PostgreSQL;
-using Lewee.Domain;
 using Lewee.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -32,8 +31,6 @@ public static class PostgreSqlConfiguration
         services
             .AddDbContextFactory<T>((provider, options) =>
             {
-                var authenticatedUserService = provider.GetRequiredService<IAuthenticatedUserService>();
-
                 if (string.IsNullOrWhiteSpace(schema))
                 {
                     options.UseNpgsql(connectionString);
@@ -46,8 +43,8 @@ public static class PostgreSqlConfiguration
                 }
 
                 options.UseExceptionProcessor();
-                options.AddAuditInterceptor(authenticatedUserService);
-                options.AddDomainEventInterceptor<T>(authenticatedUserService);
+                options.AddAuditInterceptor(provider);
+                options.AddDomainEventInterceptors<T>(provider);
             })
             .AddLeweeDatabaseServices<T>(domainAssembly);
 

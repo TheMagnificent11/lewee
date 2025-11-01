@@ -76,6 +76,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lewee.Infrastructure.Data.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pizzeria.Auth", "sample\Pizzeria.Auth\Pizzeria.Auth.csproj", "{42D27FC7-14AE-4701-B6B0-A78EBA25FE1C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lewee.Infrastructure.Data.Tests.App", "tests\Lewee.Infrastructure.Data.Tests.App\Lewee.Infrastructure.Data.Tests.App.csproj", "{AB675376-6EB2-6BE7-AD23-CD355884B3F5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lewee.Infrastructure.Data.Tests.Integration", "tests\Lewee.Infrastructure.Data.Tests.Integration\Lewee.Infrastructure.Data.Tests.Integration.csproj", "{63581A04-6833-54DC-3B1C-3D903DFE68FF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -434,6 +438,30 @@ Global
 		{42D27FC7-14AE-4701-B6B0-A78EBA25FE1C}.Release|x64.Build.0 = Release|Any CPU
 		{42D27FC7-14AE-4701-B6B0-A78EBA25FE1C}.Release|x86.ActiveCfg = Release|Any CPU
 		{42D27FC7-14AE-4701-B6B0-A78EBA25FE1C}.Release|x86.Build.0 = Release|Any CPU
+		{AB675376-6EB2-6BE7-AD23-CD355884B3F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB675376-6EB2-6BE7-AD23-CD355884B3F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB675376-6EB2-6BE7-AD23-CD355884B3F5}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{AB675376-6EB2-6BE7-AD23-CD355884B3F5}.Debug|x64.Build.0 = Debug|Any CPU
+		{AB675376-6EB2-6BE7-AD23-CD355884B3F5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AB675376-6EB2-6BE7-AD23-CD355884B3F5}.Debug|x86.Build.0 = Debug|Any CPU
+		{AB675376-6EB2-6BE7-AD23-CD355884B3F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB675376-6EB2-6BE7-AD23-CD355884B3F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB675376-6EB2-6BE7-AD23-CD355884B3F5}.Release|x64.ActiveCfg = Release|Any CPU
+		{AB675376-6EB2-6BE7-AD23-CD355884B3F5}.Release|x64.Build.0 = Release|Any CPU
+		{AB675376-6EB2-6BE7-AD23-CD355884B3F5}.Release|x86.ActiveCfg = Release|Any CPU
+		{AB675376-6EB2-6BE7-AD23-CD355884B3F5}.Release|x86.Build.0 = Release|Any CPU
+		{63581A04-6833-54DC-3B1C-3D903DFE68FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63581A04-6833-54DC-3B1C-3D903DFE68FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63581A04-6833-54DC-3B1C-3D903DFE68FF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{63581A04-6833-54DC-3B1C-3D903DFE68FF}.Debug|x64.Build.0 = Debug|Any CPU
+		{63581A04-6833-54DC-3B1C-3D903DFE68FF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{63581A04-6833-54DC-3B1C-3D903DFE68FF}.Debug|x86.Build.0 = Debug|Any CPU
+		{63581A04-6833-54DC-3B1C-3D903DFE68FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63581A04-6833-54DC-3B1C-3D903DFE68FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63581A04-6833-54DC-3B1C-3D903DFE68FF}.Release|x64.ActiveCfg = Release|Any CPU
+		{63581A04-6833-54DC-3B1C-3D903DFE68FF}.Release|x64.Build.0 = Release|Any CPU
+		{63581A04-6833-54DC-3B1C-3D903DFE68FF}.Release|x86.ActiveCfg = Release|Any CPU
+		{63581A04-6833-54DC-3B1C-3D903DFE68FF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

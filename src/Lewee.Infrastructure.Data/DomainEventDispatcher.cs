@@ -5,12 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Lewee.Infrastructure.Data;
 
-/*
- * TODO: potential better ways to do domain event dispatching
- * DB context interceptor might be better for this: https://learn.microsoft.com/en-au/ef/core/logging-events-diagnostics/interceptors#detecting-success
- * Or, handling an event: https://learn.microsoft.com/en-us/dotnet/api/microsoft.entityframeworkcore.dbcontext.savedchanges?view=efcore-7.0
- */
-internal class DomainEventDispatcher<TContext>
+internal sealed class DomainEventDispatcher<TContext>
     where TContext : DbContext, IApplicationDbContext
 {
     private const int BatchSize = 50;
