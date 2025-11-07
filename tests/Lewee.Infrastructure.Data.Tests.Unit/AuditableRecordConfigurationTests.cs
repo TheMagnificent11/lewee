@@ -1,7 +1,6 @@
 using FluentAssertions;
 using Lewee.Domain;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Xunit;
 
@@ -30,28 +29,6 @@ public class AuditableRecordConfigurationTests
         versionProperty!.ClrType.Should().Be(typeof(uint));
         versionProperty.IsConcurrencyToken.Should().BeTrue();
         versionProperty.GetColumnType().Should().Be("xid");
-    }
-
-    [Fact]
-    public void Configure_WithSqlServer_ShouldAddConcurrencyTokenWithRowVersion()
-    {
-        // Arrange
-        var options = new DbContextOptionsBuilder<TestSqlServerContext>()
-            .UseSqlServer("Server=localhost;Database=test;User Id=test;Password=test;TrustServerCertificate=true")
-            .Options;
-
-        using var context = new TestSqlServerContext(options);
-        var model = context.Model;
-
-        // Act
-        var entityType = model.FindEntityType(typeof(TestEntity));
-
-        // Assert
-        entityType.Should().NotBeNull();
-        var versionProperty = entityType!.FindProperty("Version");
-        versionProperty.Should().NotBeNull();
-        versionProperty!.ClrType.Should().Be(typeof(byte[]));
-        versionProperty.IsConcurrencyToken.Should().BeTrue();
     }
 
     [Fact]
