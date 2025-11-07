@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Pizzeria.Auth;
-using Pizzeria.Common;
+using PizzeriaEnvironments = Pizzeria.Common.Environments;
 
 namespace Pizzeria.Configuration;
 
@@ -38,32 +38,32 @@ internal sealed class KeycloakConfigurationService
 
             this.logger.LogInformation("Step 3: Creating test users...");
 
-            this.logger.LogInformation("Creating user '{Username}'...", Environments.Auth.Users.Customer1.Username);
+            this.logger.LogInformation("Creating user '{Username}'...", PizzeriaEnvironments.Auth.Users.Customer1.Username);
             await this.keycloakHttpClient.CreateUserAsync(
-                Environments.Auth.RealmName,
-                Environments.Auth.Users.Customer1.Username,
-                Environments.Auth.Users.Customer1.Password,
+                PizzeriaEnvironments.Auth.RealmName,
+                PizzeriaEnvironments.Auth.Users.Customer1.Username,
+                PizzeriaEnvironments.Auth.Users.Customer1.Password,
                 cancellationToken);
 
-            this.logger.LogInformation("Creating user '{Username}'...", Environments.Auth.Users.FrontStaff1.Username);
+            this.logger.LogInformation("Creating user '{Username}'...", PizzeriaEnvironments.Auth.Users.FrontStaff1.Username);
             await this.keycloakHttpClient.CreateUserAsync(
-                Environments.Auth.RealmName,
-                Environments.Auth.Users.FrontStaff1.Username,
-                Environments.Auth.Users.FrontStaff1.Password,
+                PizzeriaEnvironments.Auth.RealmName,
+                PizzeriaEnvironments.Auth.Users.FrontStaff1.Username,
+                PizzeriaEnvironments.Auth.Users.FrontStaff1.Password,
                 cancellationToken);
 
-            this.logger.LogInformation("Creating user '{Username}'...", Environments.Auth.Users.KitchenStaff1.Username);
+            this.logger.LogInformation("Creating user '{Username}'...", PizzeriaEnvironments.Auth.Users.KitchenStaff1.Username);
             await this.keycloakHttpClient.CreateUserAsync(
-                Environments.Auth.RealmName,
-                Environments.Auth.Users.KitchenStaff1.Username,
-                Environments.Auth.Users.KitchenStaff1.Password,
+                PizzeriaEnvironments.Auth.RealmName,
+                PizzeriaEnvironments.Auth.Users.KitchenStaff1.Username,
+                PizzeriaEnvironments.Auth.Users.KitchenStaff1.Password,
                 cancellationToken);
 
-            this.logger.LogInformation("Creating user '{Username}'...", Environments.Auth.Users.DeliveryDriver1.Username);
+            this.logger.LogInformation("Creating user '{Username}'...", PizzeriaEnvironments.Auth.Users.DeliveryDriver1.Username);
             await this.keycloakHttpClient.CreateUserAsync(
-                Environments.Auth.RealmName,
-                Environments.Auth.Users.DeliveryDriver1.Username,
-                Environments.Auth.Users.DeliveryDriver1.Password,
+                PizzeriaEnvironments.Auth.RealmName,
+                PizzeriaEnvironments.Auth.Users.DeliveryDriver1.Username,
+                PizzeriaEnvironments.Auth.Users.DeliveryDriver1.Password,
                 cancellationToken);
 
             this.logger.LogInformation("Step 3: ✓ All test users created/verified");
@@ -71,10 +71,10 @@ internal sealed class KeycloakConfigurationService
             // Test the token endpoint
             this.logger.LogInformation("Step 4: Testing token endpoint...");
             await this.keycloakHttpClient.TestTokenEndpointAsync(
-                Environments.Auth.RealmName,
-                Environments.Auth.ApiClientId,
-                Environments.Auth.Users.Customer1.Username,
-                Environments.Auth.Users.Customer1.Password,
+                PizzeriaEnvironments.Auth.RealmName,
+                PizzeriaEnvironments.Auth.ApiClientId,
+                PizzeriaEnvironments.Auth.Users.Customer1.Username,
+                PizzeriaEnvironments.Auth.Users.Customer1.Password,
                 cancellationToken);
             this.logger.LogInformation("Step 4: ✓ Token endpoint test successful");
 
