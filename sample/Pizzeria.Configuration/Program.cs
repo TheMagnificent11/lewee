@@ -19,12 +19,15 @@ builder.AddServiceDefaults();
 var databaseName = ServiceNames.GetPizzaStoreDatabaseName();
 
 // Register database context - connection string will be resolved at runtime via service discovery
-builder.Services.AddDbContext<StoreDbContext>(options =>
+builder.Services.AddDbContext<StoreDbContext>((serviceProvider, options) =>
 {
-    var connectionString = builder.Configuration.GetConnectionString(databaseName)
-        ?? throw new InvalidOperationException($"Connection string for '{databaseName}' not found");
+    var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+    var connectionString = configuration.GetConnectionString(databaseName);
 
-    options.UseNpgsql(connectionString);
+    if (!string.IsNullOrWhiteSpace(connectionString))
+    {
+        options.UseNpgsql(connectionString);
+    }
 });
 
 // Register database seeder
