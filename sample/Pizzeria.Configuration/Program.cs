@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Pizzeria.Auth;
 using Pizzeria.Common;
 using Pizzeria.Configuration;
@@ -10,7 +10,7 @@ using Pizzeria.ServiceDefaults;
 using Pizzeria.Store.Data;
 using Pizzeria.Store.Domain;
 
-var builder = Host.CreateApplicationBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 
 // Add service defaults (required for service discovery)
 builder.AddServiceDefaults();
@@ -31,8 +31,10 @@ builder.Services.AddDbContext<StoreDbContext>(options =>
 builder.Services.AddScoped<Lewee.Infrastructure.Data.IDatabaseSeeder<StoreDbContext>, StoreSeeder>();
 
 // Register configuration services
+builder.Services.AddSingleton<ConfigurationStatusService>();
 builder.Services.AddScoped<PizzeriaStoreDatabaseConfigurationService>();
 builder.Services.AddScoped<KeycloakConfigurationService>();
+builder.Services.AddHostedService<ConfigurationBackgroundService>();
 
 // Register Keycloak HTTP client with service discovery
 builder.Services.AddHttpClient<KeycloakHttpClient>((serviceProvider, client) =>
@@ -42,31 +44,14 @@ builder.Services.AddHttpClient<KeycloakHttpClient>((serviceProvider, client) =>
     client.Timeout = TimeSpan.FromMinutes(1);
 });
 
-var host = builder.Build();
+// Add health checks
+builder.Services.AddHealthChecks()
+    .AddCheck<ConfigurationHealthCheck>("configuration_status");
 
-// Get the logger
-var logger = host.Services.GetRequiredService<ILogger<Program>>();
+var app = builder.Build();
 
-logger.LogInformation("Pizzeria Configuration starting...");
+// Map health check endpoints
+app.MapHealthChecks("/health");
+app.MapHealthChecks("/alive");
 
-try
-{
-    using var scope = host.Services.CreateScope();
-
-    // Configure database first
-    var dbConfigService = scope.ServiceProvider.GetRequiredService<PizzeriaStoreDatabaseConfigurationService>();
-    await dbConfigService.ConfigureAsync(CancellationToken.None);
-
-    // Then configure Keycloak
-    var keycloakConfigService = scope.ServiceProvider.GetRequiredService<KeycloakConfigurationService>();
-    await keycloakConfigService.ConfigureAsync(CancellationToken.None);
-
-    logger.LogInformation("✅ Pizzeria Configuration completed successfully");
-}
-catch (Exception ex)
-{
-    logger.LogError(ex, "❌ Pizzeria Configuration failed: {Message}", ex.Message);
-    return 1;
-}
-
-return 0;
+await app.RunAsync();

@@ -39,7 +39,8 @@ var configuration = builder.AddProject<Projects.Pizzeria_Configuration>("pizzeri
     .WithReference(authServer)
     .WithReference(pizzaStoreDatabase)
     .WaitFor(authServer)
-    .WaitFor(pizzaStoreDatabase);
+    .WaitFor(pizzaStoreDatabase)
+    .WithHttpHealthCheck("/health");
 
 builder.AddProject<Projects.Pizzeria_Store_Api>(ServiceNames.PizzaStoreApi)
     .WithReference(pizzaStoreDatabase)

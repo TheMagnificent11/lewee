@@ -55,10 +55,13 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
         this.keycloakBaseUrl = baseAddress;
 
-        // Wait for configuration to complete
+        // Wait for configuration to be running (it's now a web app, not a console app that finishes)
         await this.resourceNotificationService
-            .WaitForResourceAsync("pizzeria-configuration", KnownResourceStates.Finished)
+            .WaitForResourceAsync("pizzeria-configuration", KnownResourceStates.Running)
             .WaitAsync(TimeSpan.FromMinutes(5));
+
+        // Wait for configuration health check to report healthy
+        await this.WaitForConfigurationHealthAsync(TimeSpan.FromMinutes(2));
 
         // Wait for API to be running
         await this.resourceNotificationService
@@ -168,5 +171,31 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         {
             await this.builder.DisposeAsync();
         }
+    }
+
+    private async Task WaitForConfigurationHealthAsync(TimeSpan timeout)
+    {
+        using var httpClient = this.app.CreateHttpClient("pizzeria-configuration");
+        var endTime = DateTime.UtcNow.Add(timeout);
+
+        while (DateTime.UtcNow < endTime)
+        {
+            try
+            {
+                var response = await httpClient.GetAsync("/health");
+                if (response.IsSuccessStatusCode)
+                {
+                    return;
+                }
+            }
+            catch
+            {
+                // Ignore exceptions and continue polling
+            }
+
+            await Task.Delay(TimeSpan.FromSeconds(2));
+        }
+
+        throw new TimeoutException($"Configuration health check timed out after {timeout.TotalMinutes} minutes. The /health endpoint did not return a successful response.");
     }
 }
