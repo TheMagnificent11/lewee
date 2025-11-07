@@ -13,7 +13,7 @@ public sealed class PizzaOrderingTests : PizzeriaTests
     {
     }
 
-    [Fact(Skip = "Keycloak is not correctly configured")]
+    [Fact]
     public async Task Should_CreateOrder_When_OrderIsPlacedAsync()
     {
         // Arrange
@@ -39,7 +39,7 @@ public sealed class PizzaOrderingTests : PizzeriaTests
         orderProjection.Order.Id.Should().Be(order.Id);
     }
 
-    [Fact(Skip = "Keycloak is not correctly configured")]
+    [Fact]
     public async Task Should_AddPizzaToOrder_When_PizzaIsAddedAsync()
     {
         // Arrange

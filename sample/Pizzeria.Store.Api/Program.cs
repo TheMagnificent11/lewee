@@ -23,7 +23,6 @@ builder.Services
         builder.Configuration.GetConnectionString(databaseName)!,
         typeof(Pizza).Assembly,
         StoreDbContext.SchemaName)
-    .AddLeweeDatabaseSeeder<StoreDbContext, StoreSeeder>()
     .AddLeweeDatabaseServices<StoreDbContext>(typeof(Pizza).Assembly)
     .AddPizzaStoreApplication()
     .AddCorrelationIdServices()
@@ -74,7 +73,5 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-await app.Services.MigrateDatabaseAsync<StoreDbContext>(seedData: true);
 
 await app.RunAsync();

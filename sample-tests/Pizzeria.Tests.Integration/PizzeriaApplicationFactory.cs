@@ -55,12 +55,15 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
         this.keycloakBaseUrl = baseAddress;
 
+        // Wait for configuration to complete
+        await this.resourceNotificationService
+            .WaitForResourceAsync("pizzeria-configuration", KnownResourceStates.Finished)
+            .WaitAsync(TimeSpan.FromMinutes(5));
+
+        // Wait for API to be running
         await this.resourceNotificationService
             .WaitForResourceAsync(ServiceNames.PizzaStoreApi, KnownResourceStates.Running)
             .WaitAsync(TimeSpan.FromMinutes(10)); // To allow Aspire to pull Docker images
-
-        // Wait for startup readiness (database and Keycloak configuration)
-        await this.WaitForStartupReadinessAsync(TimeSpan.FromMinutes(1));
 
         var databaseName = ServiceNames.GetPizzaStoreDatabaseName();
         var storeDbConnectionString = await this.app.GetConnectionStringAsync(databaseName);
@@ -165,31 +168,5 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         {
             await this.builder.DisposeAsync();
         }
-    }
-
-    private async Task WaitForStartupReadinessAsync(TimeSpan timeout)
-    {
-        using var httpClient = this.app.CreateHttpClient(ServiceNames.PizzaStoreApi);
-        var endTime = DateTime.UtcNow.Add(timeout);
-
-        while (DateTime.UtcNow < endTime)
-        {
-            try
-            {
-                var response = await httpClient.GetAsync("/ready");
-                if (response.IsSuccessStatusCode)
-                {
-                    return;
-                }
-            }
-            catch
-            {
-                // Ignore exceptions and continue polling
-            }
-
-            await Task.Delay(TimeSpan.FromSeconds(2));
-        }
-
-        throw new TimeoutException($"Startup readiness check timed out after {timeout.TotalMinutes} minutes. The /ready endpoint did not return a successful response.");
     }
 }
