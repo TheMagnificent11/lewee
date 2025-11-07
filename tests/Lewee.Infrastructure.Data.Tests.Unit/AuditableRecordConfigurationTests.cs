@@ -1,7 +1,6 @@
 using FluentAssertions;
 using Lewee.Domain;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Xunit;
 
