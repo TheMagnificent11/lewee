@@ -19,7 +19,7 @@ namespace Pizzeria.Store.WebClient.Tests.Unit;
 public class OrdersEffectsTests : TestContext
 {
     [Fact]
-    public async Task OnStartOrderCompletedAsync_NavigatesToOrderPage()
+    public async Task OnStartOrderCompletedAsync_NavigatesToOrderPageAsync()
     {
         // Arrange
         var mockState = new Mock<IState<OrdersState>>();
@@ -58,7 +58,7 @@ public class OrdersEffectsTests : TestContext
     }
 
     [Fact]
-    public async Task ExecuteRequestAsync_Success_DispatchesSuccessAction()
+    public async Task ExecuteRequestAsync_Success_DispatchesSuccessActionAsync()
     {
         // Arrange
         var mockState = new Mock<IState<OrdersState>>();
@@ -92,7 +92,7 @@ public class OrdersEffectsTests : TestContext
     }
 
     [Fact]
-    public async Task ExecuteRequestAsync_Failure_DispatchesFailureAction()
+    public async Task ExecuteRequestAsync_Failure_DispatchesFailureActionAsync()
     {
         // Arrange
         var mockState = new Mock<IState<OrdersState>>();

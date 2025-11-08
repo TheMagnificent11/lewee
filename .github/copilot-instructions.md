@@ -122,6 +122,7 @@ dotnet test sample-tests/Pizzeria.Tests.Integration/
 ```
 
 ### Architecture Notes
+
 - **Orchestration**: .NET Aspire manages all services and containers
 - **Database**: PostgreSQL with automatic schema management
 - **No Manual Setup**: Aspire handles container lifecycle
@@ -138,6 +139,16 @@ dotnet test sample-tests/Pizzeria.Tests.Integration/
 | Documentation Generation | Required | All framework projects must generate XML docs |
 | Code Coverage | Required for Framework | Pull requests with changes to `src/` directory (Lewee packages) must have at least 90% line coverage |
 
+### Dependency Management
+
+The solution uses Central Package Management via `Directory.Packages.props`.
+
+Do not unnecessarily add package and project references; use implicit references where possible.
+
+Therefore, always check for existing references in packages and projects that already referenced implicitly in a C# project before adding new ones.
+
+Furhermore, when working on application C# projects like web applications, do not add a reference if it comes in the `Microsoft.NET.Sdk.Web` web SDK.
+
 ### Coding Style
 
 **Format Command:**
@@ -153,6 +164,7 @@ dotnet format lewee.sln
 **Quality Checklist:**
 - [ ] No compiler warnings
 - [ ] No style violations
+- [ ] No unused usings or variables
 - [ ] Address compiler information messages that result for Roslyn analyzers
 - [ ] XML documentation for public APIs for C# projects within the `src` directory
 - [ ] Follows existing patterns in the codebase
