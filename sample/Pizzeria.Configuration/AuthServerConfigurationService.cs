@@ -64,7 +64,7 @@ internal sealed class AuthServerConfigurationService
                 PizzeriaEnvironments.Auth.Users.DeliveryDriver1.Password,
                 cancellationToken);
 
-            this.logger.LogInformation("Step 3: ✓ All test users created/verified");
+            this.logger.LogInformation("Step 3: All test users created/verified");
 
             // Test the token endpoint
             this.logger.LogInformation("Step 4: Testing token endpoint...");

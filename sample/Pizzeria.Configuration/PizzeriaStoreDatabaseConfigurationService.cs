@@ -24,11 +24,11 @@ internal sealed class PizzeriaStoreDatabaseConfigurationService
 
             await this.serviceProvider.MigrateDatabaseAsync<StoreDbContext>(seedData: true, cancellationToken);
 
-            this.logger.LogInformation("✅ Database migration and seeding completed successfully");
+            this.logger.LogInformation("Database migration and seeding completed successfully");
         }
         catch (Exception ex)
         {
-            this.logger.LogError(ex, "❌ Database configuration failed: {Message}", ex.Message);
+            this.logger.LogError(ex, "Database configuration failed: {Message}", ex.Message);
             throw;
         }
     }
