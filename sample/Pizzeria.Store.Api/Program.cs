@@ -35,15 +35,17 @@ builder.Services
         realm: Pizzeria.Common.Environments.Auth.RealmName,
         options =>
         {
+            var isDevOrTest = builder.Environment.IsDevelopment() || Pizzeria.Common.Environments.IsIntegrationTesting;
+
             // TODO: Fix audience mapping and enable audience validation in production. See issue #1234
-            options.TokenValidationParameters.ValidateAudience = !builder.Environment.IsDevelopment();
+            options.TokenValidationParameters.ValidateAudience = !isDevOrTest;
             options.TokenValidationParameters.ValidateIssuer = true;
             options.TokenValidationParameters.ValidateLifetime = true;
             options.TokenValidationParameters.ValidateIssuerSigningKey = true;
 
-            // For development only - disable HTTPS metadata validation
+            // For development and integration testing - disable HTTPS metadata validation
             // In production, use explicit Authority configuration instead
-            if (builder.Environment.IsDevelopment())
+            if (isDevOrTest)
             {
                 options.RequireHttpsMetadata = false;
             }
