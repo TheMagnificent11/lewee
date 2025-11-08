@@ -8,7 +8,8 @@ var setDefaultAuthServerAdminCredentials = Environments.IsIntegrationTesting;
 setDefaultAuthServerAdminCredentials = true;
 #endif
 
-var authServer = builder.AddKeycloak(ServiceNames.AuthServer);
+var authServer = builder.AddKeycloak(ServiceNames.AuthServer)
+    .WithRealmImport("keycloak/pizzeria-realm.json");
 
 if (setDefaultAuthServerAdminCredentials)
 {
@@ -34,11 +35,17 @@ var databaseServer = Environments.IsIntegrationTesting
 var pizzaStoreDatabaseName = ServiceNames.GetPizzaStoreDatabaseName();
 var pizzaStoreDatabase = databaseServer.AddDatabase(pizzaStoreDatabaseName);
 
+var configuration = builder.AddProject<Projects.Pizzeria_Configuration>(ServiceNames.ConfigurationService)
+    .WithReference(authServer)
+    .WithReference(pizzaStoreDatabase)
+    .WaitFor(authServer)
+    .WaitFor(pizzaStoreDatabase)
+    .WithHttpHealthCheck("/health");
+
 builder.AddProject<Projects.Pizzeria_Store_Api>(ServiceNames.PizzaStoreApi)
     .WithReference(pizzaStoreDatabase)
     .WithReference(authServer)
-    .WaitFor(authServer)
-    .WaitFor(pizzaStoreDatabase)
+    .WaitFor(configuration)
     .WithHttpHealthCheck("/health");
 
 /*

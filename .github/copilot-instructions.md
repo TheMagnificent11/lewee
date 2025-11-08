@@ -17,6 +17,14 @@ Lewee is an opinionated set of packages to assist with setting up a domain-drive
 - Maintain backward compatibility for framework packages
 - Be minimal and focused
 
+## Visual Studio Solution
+
+**Do not use solution folders.**
+
+There are directory folders for the `src`, `tests`, `sample` and `sample-tests` projects.
+
+However, the C# projects are named so that test projects appear next to their corresponding source projects in the Visual Studio Solution Explorer.
+
 ## Environment Setup
 
 ### Prerequisites (Required)
@@ -114,6 +122,7 @@ dotnet test sample-tests/Pizzeria.Tests.Integration/
 ```
 
 ### Architecture Notes
+
 - **Orchestration**: .NET Aspire manages all services and containers
 - **Database**: PostgreSQL with automatic schema management
 - **No Manual Setup**: Aspire handles container lifecycle
@@ -130,6 +139,16 @@ dotnet test sample-tests/Pizzeria.Tests.Integration/
 | Documentation Generation | Required | All framework projects must generate XML docs |
 | Code Coverage | Required for Framework | Pull requests with changes to `src/` directory (Lewee packages) must have at least 90% line coverage |
 
+### Dependency Management
+
+The solution uses Central Package Management via `Directory.Packages.props`.
+
+Do not unnecessarily add package and project references; use implicit references where possible.
+
+Therefore, always check for existing references in packages and projects that already referenced implicitly in a C# project before adding new ones.
+
+Furhermore, when working on application C# projects like web applications, do not add a reference if it comes in the `Microsoft.NET.Sdk.Web` web SDK.
+
 ### Coding Style
 
 **Format Command:**
@@ -145,10 +164,19 @@ dotnet format lewee.sln
 **Quality Checklist:**
 - [ ] No compiler warnings
 - [ ] No style violations
+- [ ] No unused usings or variables
+- [ ] No magic strings or numbers, use constants or enums
 - [ ] Address compiler information messages that result for Roslyn analyzers
 - [ ] XML documentation for public APIs for C# projects within the `src` directory
 - [ ] Follows existing patterns in the codebase
 - [ ] Framework changes (`src/` directory) have at least 90% line coverage
+
+### Logging
+
+- Use logging scopes where possible to provide context (as opposed to structured properties within a log message
+  - Prefer to inherit structured properties from the scope when they are passed in as parameters
+    - Values like CorrelationId, TenantId, UserId etc that are passed in as method parameters should be added to the logging scope at the entry point of the request
+- Do not use emojis in log messages
 
 ## Validation Workflows
 

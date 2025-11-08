@@ -37,6 +37,7 @@ public sealed class Tests
 
         var clientLogs = this.fixture.GetClientLogs();
 
+        // Assert
         clientLogs.Should().NotBeNullOrEmpty();
 
         var actionToMapperLogs = clientLogs

@@ -90,7 +90,7 @@ public class DomainEventsCollectionTests
     }
 
     [Fact]
-    public async Task Raise_ConcurrentCalls_AllEventsAreAdded()
+    public async Task Raise_ConcurrentCalls_AllEventsAreAddedAsync()
     {
         // Arrange
         var collection = new DomainEventsCollection();

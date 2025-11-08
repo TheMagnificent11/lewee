@@ -55,12 +55,18 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
         this.keycloakBaseUrl = baseAddress;
 
+        // Wait for configuration to be running (it's now a web app, not a console app that finishes)
+        await this.resourceNotificationService
+            .WaitForResourceAsync(ServiceNames.ConfigurationService, KnownResourceStates.Running)
+            .WaitAsync(TimeSpan.FromMinutes(5));
+
+        // Wait for configuration health check to report healthy
+        await this.WaitForConfigurationHealthAsync(TimeSpan.FromMinutes(2));
+
+        // Wait for API to be running
         await this.resourceNotificationService
             .WaitForResourceAsync(ServiceNames.PizzaStoreApi, KnownResourceStates.Running)
             .WaitAsync(TimeSpan.FromMinutes(10)); // To allow Aspire to pull Docker images
-
-        // Wait for startup readiness (database and Keycloak configuration)
-        await this.WaitForStartupReadinessAsync(TimeSpan.FromMinutes(1));
 
         var databaseName = ServiceNames.GetPizzaStoreDatabaseName();
         var storeDbConnectionString = await this.app.GetConnectionStringAsync(databaseName);
@@ -167,16 +173,16 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         }
     }
 
-    private async Task WaitForStartupReadinessAsync(TimeSpan timeout)
+    private async Task WaitForConfigurationHealthAsync(TimeSpan timeout)
     {
-        using var httpClient = this.app.CreateHttpClient(ServiceNames.PizzaStoreApi);
+        using var httpClient = this.app.CreateHttpClient(ServiceNames.ConfigurationService);
         var endTime = DateTime.UtcNow.Add(timeout);
 
         while (DateTime.UtcNow < endTime)
         {
             try
             {
-                var response = await httpClient.GetAsync("/ready");
+                var response = await httpClient.GetAsync("/health");
                 if (response.IsSuccessStatusCode)
                 {
                     return;
@@ -190,6 +196,6 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
             await Task.Delay(TimeSpan.FromSeconds(2));
         }
 
-        throw new TimeoutException($"Startup readiness check timed out after {timeout.TotalMinutes} minutes. The /ready endpoint did not return a successful response.");
+        throw new TimeoutException($"Configuration health check timed out after {timeout.TotalMinutes} minutes. The /health endpoint did not return a successful response.");
     }
 }

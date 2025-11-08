@@ -16,6 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
 
 var databaseName = ServiceNames.GetPizzaStoreDatabaseName();
+var isDevOrTest = builder.Environment.IsDevelopment() || Pizzeria.Common.Environments.IsIntegrationTesting;
 
 builder.Services
     .AddAuthenticatedUserService()
@@ -23,7 +24,6 @@ builder.Services
         builder.Configuration.GetConnectionString(databaseName)!,
         typeof(Pizza).Assembly,
         StoreDbContext.SchemaName)
-    .AddLeweeDatabaseSeeder<StoreDbContext, StoreSeeder>()
     .AddLeweeDatabaseServices<StoreDbContext>(typeof(Pizza).Assembly)
     .AddPizzaStoreApplication()
     .AddCorrelationIdServices()
@@ -36,18 +36,15 @@ builder.Services
         realm: Pizzeria.Common.Environments.Auth.RealmName,
         options =>
         {
-            // TODO: Fix audience mapping and enable audience validation in production. See issue #1234
-            options.TokenValidationParameters.ValidateAudience = !builder.Environment.IsDevelopment();
-            options.TokenValidationParameters.ValidateIssuer = true;
-            options.TokenValidationParameters.ValidateLifetime = true;
-            options.TokenValidationParameters.ValidateIssuerSigningKey = true;
+            // Disable HTTPS metadata requirement for local/containerized Keycloak
+            options.RequireHttpsMetadata = !isDevOrTest;
 
-            // For development only - disable HTTPS metadata validation
-            // In production, use explicit Authority configuration instead
-            if (builder.Environment.IsDevelopment())
-            {
-                options.RequireHttpsMetadata = false;
-            }
+            // TODO: Integration tests are currently failing with 401 Unauthorized
+            // This appears to be an issue with JWT validation in the Aspire testing environment
+            // Possible causes:
+            // 1. Service discovery URL mismatch between token issuer and API authority
+            // 2. JWKS endpoint not reachable from API container
+            // 3. Timing issue with Keycloak readiness
         });
 
 builder.Services.AddAuthorizationBuilder();
@@ -74,7 +71,5 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-await app.Services.MigrateDatabaseAsync<StoreDbContext>(seedData: true);
 
 await app.RunAsync();

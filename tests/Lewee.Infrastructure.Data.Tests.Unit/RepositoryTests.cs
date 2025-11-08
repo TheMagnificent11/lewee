@@ -8,7 +8,7 @@ namespace Lewee.Infrastructure.Data.Tests.Unit;
 public class RepositoryTests
 {
     [Fact]
-    public async Task QueryAsync_WithWhereSpecification_ShouldApplyFilter()
+    public async Task QueryAsync_WithWhereSpecification_ShouldApplyFilterAsync()
     {
         // Arrange
         var options = new DbContextOptionsBuilder<TestDbContext>()
@@ -33,7 +33,7 @@ public class RepositoryTests
     }
 
     [Fact]
-    public async Task QueryAsync_WithMultipleWhereSpecification_ShouldApplyAllFilters()
+    public async Task QueryAsync_WithMultipleWhereSpecification_ShouldApplyAllFiltersAsync()
     {
         // Arrange
         var options = new DbContextOptionsBuilder<TestDbContext>()
@@ -59,7 +59,7 @@ public class RepositoryTests
     }
 
     [Fact]
-    public async Task QueryOneAsync_WithWhereSpecification_ShouldReturnFirstMatch()
+    public async Task QueryOneAsync_WithWhereSpecification_ShouldReturnFirstMatchAsync()
     {
         // Arrange
         var options = new DbContextOptionsBuilder<TestDbContext>()
@@ -84,7 +84,7 @@ public class RepositoryTests
     }
 
     [Fact]
-    public async Task QueryOneAsync_WithNoMatches_ShouldReturnNull()
+    public async Task QueryOneAsync_WithNoMatches_ShouldReturnNullAsync()
     {
         // Arrange
         var options = new DbContextOptionsBuilder<TestDbContext>()
@@ -107,7 +107,7 @@ public class RepositoryTests
     }
 
     [Fact]
-    public async Task AllAsync_ShouldReturnAllEntities()
+    public async Task AllAsync_ShouldReturnAllEntitiesAsync()
     {
         // Arrange
         var options = new DbContextOptionsBuilder<TestDbContext>()
@@ -130,7 +130,7 @@ public class RepositoryTests
     }
 
     [Fact]
-    public async Task RetrieveByIdAsync_WithValidId_ShouldReturnEntity()
+    public async Task RetrieveByIdAsync_WithValidId_ShouldReturnEntityAsync()
     {
         // Arrange
         var options = new DbContextOptionsBuilder<TestDbContext>()
@@ -153,7 +153,7 @@ public class RepositoryTests
     }
 
     [Fact]
-    public async Task RetrieveByIdAsync_WithInvalidId_ShouldReturnNull()
+    public async Task RetrieveByIdAsync_WithInvalidId_ShouldReturnNullAsync()
     {
         // Arrange
         var options = new DbContextOptionsBuilder<TestDbContext>()
@@ -171,7 +171,7 @@ public class RepositoryTests
     }
 
     [Fact]
-    public async Task AddAsync_ShouldAddEntity()
+    public async Task AddAsync_ShouldAddEntityAsync()
     {
         // Arrange
         var options = new DbContextOptionsBuilder<TestDbContext>()
@@ -193,7 +193,7 @@ public class RepositoryTests
     }
 
     [Fact]
-    public async Task SaveChangesAsync_ShouldPersistChanges()
+    public async Task SaveChangesAsync_ShouldPersistChangesAsync()
     {
         // Arrange
         var options = new DbContextOptionsBuilder<TestDbContext>()
