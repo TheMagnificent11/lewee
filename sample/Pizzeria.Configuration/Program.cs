@@ -1,14 +1,10 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Lewee.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Pizzeria.Auth;
 using Pizzeria.Common;
 using Pizzeria.Configuration;
 using Pizzeria.ServiceDefaults;
 using Pizzeria.Store.Data;
-using Pizzeria.Store.Domain;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,12 +27,12 @@ builder.Services.AddDbContext<StoreDbContext>((serviceProvider, options) =>
 });
 
 // Register database seeder
-builder.Services.AddScoped<Lewee.Infrastructure.Data.IDatabaseSeeder<StoreDbContext>, StoreSeeder>();
+builder.Services.AddTransient<IDatabaseSeeder<StoreDbContext>, StoreSeeder>();
 
 // Register configuration services
 builder.Services.AddSingleton<ConfigurationStatusService>();
-builder.Services.AddScoped<PizzeriaStoreDatabaseConfigurationService>();
-builder.Services.AddScoped<KeycloakConfigurationService>();
+builder.Services.AddTransient<PizzeriaStoreDatabaseConfigurationService>();
+builder.Services.AddTransient<AuthServerConfigurationService>();
 builder.Services.AddHostedService<ConfigurationBackgroundService>();
 
 // Register Keycloak HTTP client with service discovery
@@ -48,7 +44,8 @@ builder.Services.AddHttpClient<KeycloakHttpClient>((serviceProvider, client) =>
 });
 
 // Add health checks
-builder.Services.AddHealthChecks()
+builder.Services
+    .AddHealthChecks()
     .AddCheck<ConfigurationHealthCheck>("configuration_status");
 
 var app = builder.Build();

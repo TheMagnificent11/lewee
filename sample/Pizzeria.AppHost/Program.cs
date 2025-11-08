@@ -35,7 +35,7 @@ var databaseServer = Environments.IsIntegrationTesting
 var pizzaStoreDatabaseName = ServiceNames.GetPizzaStoreDatabaseName();
 var pizzaStoreDatabase = databaseServer.AddDatabase(pizzaStoreDatabaseName);
 
-var configuration = builder.AddProject<Projects.Pizzeria_Configuration>("pizzeria-configuration")
+var configuration = builder.AddProject<Projects.Pizzeria_Configuration>(ServiceNames.ConfigurationService)
     .WithReference(authServer)
     .WithReference(pizzaStoreDatabase)
     .WaitFor(authServer)

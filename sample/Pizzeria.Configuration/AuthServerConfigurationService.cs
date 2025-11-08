@@ -1,17 +1,16 @@
-using Microsoft.Extensions.Logging;
 using Pizzeria.Auth;
 using PizzeriaEnvironments = Pizzeria.Common.Environments;
 
 namespace Pizzeria.Configuration;
 
-internal sealed class KeycloakConfigurationService
+internal sealed class AuthServerConfigurationService
 {
     private readonly KeycloakHttpClient keycloakHttpClient;
-    private readonly ILogger<KeycloakConfigurationService> logger;
+    private readonly ILogger<AuthServerConfigurationService> logger;
 
-    public KeycloakConfigurationService(
+    public AuthServerConfigurationService(
         KeycloakHttpClient keycloakHttpClient,
-        ILogger<KeycloakConfigurationService> logger)
+        ILogger<AuthServerConfigurationService> logger)
     {
         this.keycloakHttpClient = keycloakHttpClient;
         this.logger = logger;
@@ -21,21 +20,20 @@ internal sealed class KeycloakConfigurationService
     {
         try
         {
-            this.logger.LogInformation("Starting Keycloak configuration...");
+            this.logger.LogInformation("Starting Auth Server configuration...");
 
-            this.logger.LogInformation("Step 1: Waiting for Keycloak to be ready...");
+            this.logger.LogInformation("Step 1: Waiting for Auth Server to be ready...");
             await this.keycloakHttpClient.WaitForReadyAsync(cancellationToken);
-            this.logger.LogInformation("Step 1: ✓ Keycloak is ready");
+            this.logger.LogInformation("Step 1: Auth Server is ready");
 
             this.logger.LogInformation("Step 2: Getting admin access token...");
             var adminAccessToken = await this.keycloakHttpClient.GetAdminAccessTokenAsync(cancellationToken);
-            this.logger.LogInformation("Step 2: ✓ Admin access token obtained");
+            this.logger.LogInformation("Step 2: Admin access token obtained");
 
             this.keycloakHttpClient.SetBearerToken(adminAccessToken);
 
             // Note: Realm and client are now imported via JSON in AppHost
             // We only need to create users here
-
             this.logger.LogInformation("Step 3: Creating test users...");
 
             this.logger.LogInformation("Creating user '{Username}'...", PizzeriaEnvironments.Auth.Users.Customer1.Username);
@@ -76,13 +74,13 @@ internal sealed class KeycloakConfigurationService
                 PizzeriaEnvironments.Auth.Users.Customer1.Username,
                 PizzeriaEnvironments.Auth.Users.Customer1.Password,
                 cancellationToken);
-            this.logger.LogInformation("Step 4: ✓ Token endpoint test successful");
+            this.logger.LogInformation("Step 4: Token endpoint test successful");
 
-            this.logger.LogInformation("✅ Keycloak configuration completed successfully");
+            this.logger.LogInformation("Auth Server configuration completed successfully");
         }
         catch (Exception ex)
         {
-            this.logger.LogError(ex, "❌ Keycloak configuration failed: {Message}", ex.Message);
+            this.logger.LogError(ex, "Auth Server configuration failed: {Message}", ex.Message);
             throw;
         }
     }

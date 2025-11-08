@@ -1,23 +1,22 @@
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-
 namespace Pizzeria.Configuration;
 
 internal sealed class ConfigurationBackgroundService : BackgroundService
 {
-    private readonly IServiceProvider serviceProvider;
-    private readonly ILogger<ConfigurationBackgroundService> logger;
+    private readonly PizzeriaStoreDatabaseConfigurationService dbConfigService;
+    private readonly AuthServerConfigurationService authServerConfigService;
     private readonly ConfigurationStatusService statusService;
+    private readonly ILogger<ConfigurationBackgroundService> logger;
 
     public ConfigurationBackgroundService(
-        IServiceProvider serviceProvider,
-        ILogger<ConfigurationBackgroundService> logger,
-        ConfigurationStatusService statusService)
+        PizzeriaStoreDatabaseConfigurationService dbConfigService,
+        AuthServerConfigurationService authServerConfigService,
+        ConfigurationStatusService statusService,
+        ILogger<ConfigurationBackgroundService> logger)
     {
-        this.serviceProvider = serviceProvider;
-        this.logger = logger;
+        this.dbConfigService = dbConfigService;
+        this.authServerConfigService = authServerConfigService;
         this.statusService = statusService;
+        this.logger = logger;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -26,22 +25,18 @@ internal sealed class ConfigurationBackgroundService : BackgroundService
 
         try
         {
-            using var scope = this.serviceProvider.CreateScope();
-
             // Configure database first
-            var dbConfigService = scope.ServiceProvider.GetRequiredService<PizzeriaStoreDatabaseConfigurationService>();
-            await dbConfigService.ConfigureAsync(stoppingToken);
+            await this.dbConfigService.ConfigureAsync(stoppingToken);
 
             // Then configure Keycloak
-            var keycloakConfigService = scope.ServiceProvider.GetRequiredService<KeycloakConfigurationService>();
-            await keycloakConfigService.ConfigureAsync(stoppingToken);
+            await this.authServerConfigService.ConfigureAsync(stoppingToken);
 
             this.statusService.SetConfigurationComplete();
-            this.logger.LogInformation("✅ Pizzeria Configuration completed successfully");
+            this.logger.LogInformation("Pizzeria Configuration completed successfully");
         }
         catch (Exception ex)
         {
-            this.logger.LogError(ex, "❌ Pizzeria Configuration failed: {Message}", ex.Message);
+            this.logger.LogError(ex, "Pizzeria Configuration failed: {Message}", ex.Message);
             this.statusService.SetConfigurationFailed();
         }
     }

@@ -79,19 +79,22 @@ public static class DatabaseConfiguration
     /// <typeparam name="T">DB context to migrate</typeparam>
     /// <param name="serviceProvider">Service provider</param>
     /// <param name="seedData">Whether to seed data</param>
+    /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Asynchronous task</returns>
-    public static async Task MigrateDatabaseAsync<T>(this IServiceProvider serviceProvider, bool seedData = false)
+    public static async Task MigrateDatabaseAsync<T>(
+        this IServiceProvider serviceProvider,
+        bool seedData = false,
+        CancellationToken cancellationToken = default)
         where T : DbContext
     {
-        using (var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMinutes(5)))
-        using (var serviceScope = serviceProvider.CreateScope())
-        using (var dbContext = serviceScope.ServiceProvider.GetRequiredService<T>())
+        await using (var serviceScope = serviceProvider.CreateAsyncScope())
+        await using (var dbContext = serviceScope.ServiceProvider.GetRequiredService<T>())
         {
             var attempt = 0; // Used for exponential back-off
 
-            while (!cancellationTokenSource.IsCancellationRequested)
+            while (!cancellationToken.IsCancellationRequested)
             {
-                var canConnect = await dbContext.Database.CanConnectAsync(cancellationTokenSource.Token);
+                var canConnect = await dbContext.Database.CanConnectAsync(cancellationToken);
                 if (canConnect)
                 {
                     break;
@@ -99,15 +102,15 @@ public static class DatabaseConfiguration
 
                 var delayTimeSpan = CalculateExponentialBackoffDelay(attempt);
 
-                await Task.Delay(delayTimeSpan, cancellationTokenSource.Token);
+                await Task.Delay(delayTimeSpan, cancellationToken);
             }
 
-            if (cancellationTokenSource.IsCancellationRequested)
+            if (cancellationToken.IsCancellationRequested)
             {
                 return;
             }
 
-            await dbContext.Database.MigrateAsync(cancellationTokenSource.Token);
+            await dbContext.Database.MigrateAsync(cancellationToken);
 
             if (!seedData)
             {
@@ -120,7 +123,7 @@ public static class DatabaseConfiguration
                 return;
             }
 
-            await seeder.RunAsync(cancellationTokenSource.Token);
+            await seeder.RunAsync(cancellationToken);
         }
     }
 
