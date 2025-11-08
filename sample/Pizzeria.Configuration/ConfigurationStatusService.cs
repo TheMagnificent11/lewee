@@ -2,20 +2,17 @@ namespace Pizzeria.Configuration;
 
 internal sealed class ConfigurationStatusService
 {
-    private bool configurationComplete;
-    private bool configurationFailed;
+    public bool IsConfigurationComplete { get; private set; }
 
-    public bool IsConfigurationComplete => this.configurationComplete;
-
-    public bool ConfigurationFailed => this.configurationFailed;
+    public bool ConfigurationFailed { get; private set; }
 
     public void SetConfigurationComplete()
     {
-        this.configurationComplete = true;
+        this.IsConfigurationComplete = true;
     }
 
     public void SetConfigurationFailed()
     {
-        this.configurationFailed = true;
+        this.ConfigurationFailed = true;
     }
 }
