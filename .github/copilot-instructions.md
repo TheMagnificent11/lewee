@@ -158,6 +158,13 @@ dotnet format lewee.sln
 - [ ] Follows existing patterns in the codebase
 - [ ] Framework changes (`src/` directory) have at least 90% line coverage
 
+### Logging
+
+- Use logging scopes where possible to provide context (as opposed to structured properties within a log message
+  - Prefer to inherit structured properties from the scope when they are passed in as parameters
+    - Values like CorrelationId, TenantId, UserId etc that are passed in as method parameters should be added to the logging scope at the entry point of the request
+- Do not use emojis in log messages
+
 ## Validation Workflows
 
 ### Required Validation After Changes
