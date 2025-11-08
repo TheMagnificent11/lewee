@@ -165,6 +165,7 @@ dotnet format lewee.sln
 - [ ] No compiler warnings
 - [ ] No style violations
 - [ ] No unused usings or variables
+- [ ] No magic strings or numbers, use constants or enums
 - [ ] Address compiler information messages that result for Roslyn analyzers
 - [ ] XML documentation for public APIs for C# projects within the `src` directory
 - [ ] Follows existing patterns in the codebase
