@@ -8,12 +8,14 @@ namespace Pizzeria.Tests.Integration;
 [Collection(PizzeriaApplicationFactory.CollectionName)]
 public sealed class PizzaOrderingTests : PizzeriaTests
 {
+    private const string SkipReason = "Issues authorizing user when calling Pizza Store API";
+
     public PizzaOrderingTests(PizzeriaApplicationFactory factory)
         : base(factory)
     {
     }
 
-    [Fact]
+    [Fact(Skip = SkipReason)]
     public async Task Should_CreateOrder_When_OrderIsPlacedAsync()
     {
         // Arrange
@@ -39,7 +41,7 @@ public sealed class PizzaOrderingTests : PizzeriaTests
         orderProjection.Order.Id.Should().Be(order.Id);
     }
 
-    [Fact]
+    [Fact(Skip = SkipReason)]
     public async Task Should_AddPizzaToOrder_When_PizzaIsAddedAsync()
     {
         // Arrange

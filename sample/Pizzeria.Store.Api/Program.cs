@@ -16,6 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
 
 var databaseName = ServiceNames.GetPizzaStoreDatabaseName();
+var isDevOrTest = builder.Environment.IsDevelopment() || Pizzeria.Common.Environments.IsIntegrationTesting;
 
 builder.Services
     .AddAuthenticatedUserService()
@@ -35,20 +36,15 @@ builder.Services
         realm: Pizzeria.Common.Environments.Auth.RealmName,
         options =>
         {
-            var isDevOrTest = builder.Environment.IsDevelopment() || Pizzeria.Common.Environments.IsIntegrationTesting;
+            // Disable HTTPS metadata requirement for local/containerized Keycloak
+            options.RequireHttpsMetadata = !isDevOrTest;
 
-            // TODO: Fix audience mapping and enable audience validation in production. See issue #1234
-            options.TokenValidationParameters.ValidateAudience = !isDevOrTest;
-            options.TokenValidationParameters.ValidateIssuer = true;
-            options.TokenValidationParameters.ValidateLifetime = true;
-            options.TokenValidationParameters.ValidateIssuerSigningKey = true;
-
-            // For development and integration testing - disable HTTPS metadata validation
-            // In production, use explicit Authority configuration instead
-            if (isDevOrTest)
-            {
-                options.RequireHttpsMetadata = false;
-            }
+            // TODO: Integration tests are currently failing with 401 Unauthorized
+            // This appears to be an issue with JWT validation in the Aspire testing environment
+            // Possible causes:
+            // 1. Service discovery URL mismatch between token issuer and API authority
+            // 2. JWKS endpoint not reachable from API container
+            // 3. Timing issue with Keycloak readiness
         });
 
 builder.Services.AddAuthorizationBuilder();
