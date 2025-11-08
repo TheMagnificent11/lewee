@@ -57,7 +57,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
         // Wait for configuration to be running (it's now a web app, not a console app that finishes)
         await this.resourceNotificationService
-            .WaitForResourceAsync("pizzeria-configuration", KnownResourceStates.Running)
+            .WaitForResourceAsync(ServiceNames.ConfigurationService, KnownResourceStates.Running)
             .WaitAsync(TimeSpan.FromMinutes(5));
 
         // Wait for configuration health check to report healthy
@@ -175,7 +175,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
     private async Task WaitForConfigurationHealthAsync(TimeSpan timeout)
     {
-        using var httpClient = this.app.CreateHttpClient("pizzeria-configuration");
+        using var httpClient = this.app.CreateHttpClient(ServiceNames.ConfigurationService);
         var endTime = DateTime.UtcNow.Add(timeout);
 
         while (DateTime.UtcNow < endTime)
