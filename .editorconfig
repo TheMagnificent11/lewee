@@ -49,6 +49,7 @@ dotnet_style_coalesce_expression = true:suggestion
 dotnet_style_null_propagation = true:suggestion
 dotnet_style_operator_placement_when_wrapping = beginning_of_line
 dotnet_style_prefer_simplified_boolean_expressions = true:suggestion
+dotnet_style_require_accessibility_modifiers = for_non_interface_members
 
 # CSharp Styles
 csharp_style_namespace_declarations = file_scoped:warning
