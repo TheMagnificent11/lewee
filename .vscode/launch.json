@@ -5,7 +5,7 @@
             "name": "Launch Pizzeria AppHost (.NET Aspire)",
             "type": "coreclr",
             "request": "launch",
-            "program": "${workspaceFolder}/sample/Pizzeria.AppHost/bin/Debug/net9.0/Pizzeria.AppHost.dll",
+            "program": "${workspaceFolder}/sample/Pizzeria.AppHost/bin/Debug/net10.0/Pizzeria.AppHost.dll",
             "args": [],
             "cwd": "${workspaceFolder}/sample/Pizzeria.AppHost",
             "stopAtEntry": false,

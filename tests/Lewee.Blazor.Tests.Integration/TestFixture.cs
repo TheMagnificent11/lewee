@@ -39,55 +39,48 @@ public sealed class TestFixture : IAsyncLifetime
 
     public TestFixture()
     {
-        var builder = new WebHostBuilder()
-            .ConfigureServices(services =>
+        var builder = WebApplication.CreateBuilder();
+        builder.Services
+            .AddFakeLogging()
+            .AddRouting()
+            .AddLeweeSignalR();
+
+        builder.Services.AddMediatR(options => options.RegisterServicesFromAssembly(typeof(ClientEvent).Assembly));
+        builder.Services.AddHealthChecks();
+
+        var app = builder.Build();
+        app.UseRouting();
+
+        app.MapHealthChecks("/health");
+        app.MapHub<ClientEventHub>("/events");
+
+        app.MapPost("/api/orders", async (CreateOrderRequest request, IMediator mediator) =>
+        {
+            var order = new PizzaOrder
             {
-                services
-                    .AddFakeLogging()
-                    .AddRouting()
-                    .AddLeweeSignalR();
+                Id = Guid.NewGuid(),
+                CustomerName = "Test User",
+                CreatedAt = DateTime.UtcNow,
+            };
 
-                services.AddMediatR(options => options.RegisterServicesFromAssembly(typeof(ClientEvent).Assembly));
-                services.AddHealthChecks();
-            })
-            .Configure(app =>
-            {
-                app.UseRouting();
-                app.UseEndpoints(endpoints =>
-                {
-                    endpoints.MapHealthChecks("/health");
+            Orders.TryAdd(order.Id, order);
 
-                    endpoints.MapHub<ClientEventHub>("/events");
+            await mediator.Publish(new ClientEvent(Guid.NewGuid(), userId: null, order));
 
-                    endpoints.MapPost("/api/orders", async (CreateOrderRequest request, IMediator mediator) =>
-                    {
-                        var order = new PizzaOrder
-                        {
-                            Id = Guid.NewGuid(),
-                            CustomerName = "Test User",
-                            CreatedAt = DateTime.UtcNow,
-                        };
+            return Results.Ok();
+        });
 
-                        Orders.TryAdd(order.Id, order);
+        app.MapGet("/api/orders/{id}", (Guid id) =>
+        {
+            return Orders.TryGetValue(id, out var order)
+                ? Results.Ok(order)
+                : Results.NotFound();
+        });
 
-                        await mediator.Publish(new ClientEvent(Guid.NewGuid(), userId: null, order));
-
-                        return Results.Ok();
-                    });
-
-                    endpoints.MapGet("/api/orders/{id}", (Guid id) =>
-                    {
-                        return Orders.TryGetValue(id, out var order)
-                            ? Results.Ok(order)
-                            : Results.NotFound();
-                    });
-                });
-            });
-
-        this.server = new TestServer(builder);
+        this.server = new TestServer(app.Services);
         this.httpClient = this.server.CreateClient();
         this.client = new TestClient(this.httpClient);
-        this.serverLogCollector = this.server.Services.GetRequiredService<FakeLogCollector>();
+        this.serverLogCollector = app.Services.GetRequiredService<FakeLogCollector>();
     }
 
     public async Task InitializeAsync()
