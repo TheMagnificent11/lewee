@@ -1,5 +1,5 @@
 {
-  "realm": "pizzeria",
+  "realm": "lewee-pizzeria",
   "enabled": true,
   "sslRequired": "none",
   "registrationAllowed": false,
@@ -105,6 +105,25 @@
           }
         }
       ]
+    },
+    {
+      "clientId": "pizzeria-store-web",
+      "name": "Pizzeria Store Web Client",
+      "enabled": true,
+      "publicClient": true,
+      "directAccessGrantsEnabled": false,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "serviceAccountsEnabled": false,
+      "fullScopeAllowed": true,
+      "bearerOnly": false,
+      "consentRequired": false,
+      "protocol": "openid-connect",
+      "redirectUris": ["*"],
+      "webOrigins": ["*"],
+      "attributes": {
+        "access.token.lifespan": "300"
+      }
     }
   ]
 }
