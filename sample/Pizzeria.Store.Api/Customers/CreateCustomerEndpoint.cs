@@ -1,0 +1,25 @@
+using FastEndpoints;
+using Lewee.Infrastructure.AspNet.WebApi;
+using Pizzeria.Common;
+using Pizzeria.Store.Application.Customers;
+
+namespace Pizzeria.Store.Api.Customers;
+
+public sealed class CreateCustomerEndpoint : CommandEndpoint<CreateCustomerRequest>
+{
+    protected override string Route => Endpoints.StoreApi.Customers;
+
+    protected override CommandType CommandType => CommandType.Post;
+
+    protected override string Name => "Create Customer";
+
+    protected override bool IsAnonymousAllowed => true;
+
+    public override async Task HandleAsync(CreateCustomerRequest req, CancellationToken ct)
+    {
+        var command = new CreateCustomerCommand(req.ExternalId, this.CorrelationId);
+        var result = await this.Mediator.Send(command, ct);
+
+        await this.ToResponseAsync(result, ct);
+    }
+}
