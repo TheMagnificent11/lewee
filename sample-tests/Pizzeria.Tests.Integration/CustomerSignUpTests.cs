@@ -15,16 +15,13 @@ public sealed class CustomerSignUpTests : PizzeriaTests
     }
 
     [Fact]
-    public async Task Should_CreateCustomer_When_ValidExternalIdIsProvided()
+    public async Task Should_CreateCustomer_When_ValidUsernameAndPasswordProvided()
     {
         // Arrange
         using var httpClient = await this.factory.GetServiceClientAsync(ServiceNames.PizzaStoreApi);
         var username = $"testuser-{Guid.NewGuid()}";
         var password = "TestPassword123!";
-
-        // Create user in Keycloak and get the user ID
-        var keycloakUserId = await this.factory.CreateKeycloakUserAsync(username, password);
-        var request = new CreateCustomerRequest { ExternalId = keycloakUserId };
+        var request = new CreateCustomerRequest { Username = username, Password = password };
 
         // Act
         using var response = await httpClient.PostAsJsonAsync(Endpoints.StoreApi.Customers, request);
@@ -35,8 +32,12 @@ public sealed class CustomerSignUpTests : PizzeriaTests
 
         var customer = await this.factory.GetLatestCustomerAsync();
         customer.Should().NotBeNull();
-        customer.ExternalId.Should().Be(keycloakUserId);
+        customer.ExternalId.Should().NotBeNullOrEmpty();
         customer.Id.Should().NotBeEmpty();
+
+        // Verify the user was created in Keycloak by getting their ID
+        var keycloakUserId = await this.factory.GetKeycloakUserIdAsync(username);
+        customer.ExternalId.Should().Be(keycloakUserId);
     }
 
     [Fact]
@@ -46,10 +47,7 @@ public sealed class CustomerSignUpTests : PizzeriaTests
         using var httpClient = await this.factory.GetServiceClientAsync(ServiceNames.PizzaStoreApi);
         var username = $"testuser-{Guid.NewGuid()}";
         var password = "TestPassword123!";
-
-        // Create user in Keycloak and get the user ID
-        var keycloakUserId = await this.factory.CreateKeycloakUserAsync(username, password);
-        var request = new CreateCustomerRequest { ExternalId = keycloakUserId };
+        var request = new CreateCustomerRequest { Username = username, Password = password };
 
         // Act
         using var response = await httpClient.PostAsJsonAsync(Endpoints.StoreApi.Customers, request);
@@ -58,17 +56,18 @@ public sealed class CustomerSignUpTests : PizzeriaTests
         // Assert
         response.EnsureSuccessStatusCode();
 
+        var keycloakUserId = await this.factory.GetKeycloakUserIdAsync(username);
         var customer = await this.factory.GetCustomerByExternalIdAsync(keycloakUserId);
         customer.Should().NotBeNull();
         customer.ExternalId.Should().Be(keycloakUserId);
     }
 
     [Fact]
-    public async Task Should_ReturnBadRequest_When_ExternalIdIsEmpty()
+    public async Task Should_ReturnBadRequest_When_UsernameIsEmpty()
     {
         // Arrange
         using var httpClient = await this.factory.GetServiceClientAsync(ServiceNames.PizzaStoreApi);
-        var request = new CreateCustomerRequest { ExternalId = string.Empty };
+        var request = new CreateCustomerRequest { Username = string.Empty, Password = "TestPassword123!" };
 
         // Act
         using var response = await httpClient.PostAsJsonAsync(Endpoints.StoreApi.Customers, request);
@@ -78,12 +77,12 @@ public sealed class CustomerSignUpTests : PizzeriaTests
     }
 
     [Fact]
-    public async Task Should_ReturnBadRequest_When_ExternalIdExceedsMaxLength()
+    public async Task Should_ReturnBadRequest_When_PasswordIsTooShort()
     {
         // Arrange
         using var httpClient = await this.factory.GetServiceClientAsync(ServiceNames.PizzaStoreApi);
-        var externalId = new string('a', 101); // Max length is 100
-        var request = new CreateCustomerRequest { ExternalId = externalId };
+        var username = $"testuser-{Guid.NewGuid()}";
+        var request = new CreateCustomerRequest { Username = username, Password = "Short1!" }; // Less than 8 characters
 
         // Act
         using var response = await httpClient.PostAsJsonAsync(Endpoints.StoreApi.Customers, request);
@@ -93,7 +92,7 @@ public sealed class CustomerSignUpTests : PizzeriaTests
     }
 
     [Fact]
-    public async Task Should_CreateMultipleCustomers_When_DifferentExternalIdsProvided()
+    public async Task Should_CreateMultipleCustomers_When_DifferentUsernamesProvided()
     {
         // Arrange
         using var httpClient = await this.factory.GetServiceClientAsync(ServiceNames.PizzaStoreApi);
@@ -101,24 +100,23 @@ public sealed class CustomerSignUpTests : PizzeriaTests
         var username2 = $"testuser-{Guid.NewGuid()}";
         var password = "TestPassword123!";
 
-        // Create users in Keycloak and get their IDs
-        var keycloakUserId1 = await this.factory.CreateKeycloakUserAsync(username1, password);
-        var keycloakUserId2 = await this.factory.CreateKeycloakUserAsync(username2, password);
-
         // Act
         using var response1 = await httpClient.PostAsJsonAsync(
             Endpoints.StoreApi.Customers,
-            new CreateCustomerRequest { ExternalId = keycloakUserId1 });
+            new CreateCustomerRequest { Username = username1, Password = password });
         await this.WaitForDomainEventsToBeDispatchedAsync();
 
         using var response2 = await httpClient.PostAsJsonAsync(
             Endpoints.StoreApi.Customers,
-            new CreateCustomerRequest { ExternalId = keycloakUserId2 });
+            new CreateCustomerRequest { Username = username2, Password = password });
         await this.WaitForDomainEventsToBeDispatchedAsync();
 
         // Assert
         response1.EnsureSuccessStatusCode();
         response2.EnsureSuccessStatusCode();
+
+        var keycloakUserId1 = await this.factory.GetKeycloakUserIdAsync(username1);
+        var keycloakUserId2 = await this.factory.GetKeycloakUserIdAsync(username2);
 
         var customer1 = await this.factory.GetCustomerByExternalIdAsync(keycloakUserId1);
         var customer2 = await this.factory.GetCustomerByExternalIdAsync(keycloakUserId2);

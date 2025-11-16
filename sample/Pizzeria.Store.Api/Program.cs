@@ -4,6 +4,7 @@ using Lewee.Infrastructure.AspNet.Observability;
 using Lewee.Infrastructure.AspNet.SignalR;
 using Lewee.Infrastructure.Data;
 using Lewee.Infrastructure.PostgreSQL;
+using Pizzeria.Auth;
 using Pizzeria.Common;
 using Pizzeria.ServiceDefaults;
 using Pizzeria.Store.Api.Startup;
@@ -28,6 +29,14 @@ builder.Services
     .AddPizzaStoreApplication()
     .AddCorrelationIdServices()
     .AddLeweeSignalR();
+
+// Register Keycloak HTTP client with service discovery
+builder.Services.AddHttpClient<KeycloakHttpClient>((serviceProvider, client) =>
+{
+    // Use service discovery to get the Keycloak URL
+    client.BaseAddress = new Uri($"http://{ServiceNames.AuthServer}");
+    client.Timeout = TimeSpan.FromMinutes(1);
+});
 
 builder.Services
     .AddAuthentication()

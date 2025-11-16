@@ -2,5 +2,6 @@ namespace Pizzeria.Store.Api.Customers;
 
 public record CreateCustomerRequest
 {
-    public string ExternalId { get; init; }
+    public string Username { get; init; }
+    public string Password { get; init; }
 }

@@ -17,7 +17,7 @@ public sealed class CreateCustomerEndpoint : CommandEndpoint<CreateCustomerReque
 
     public override async Task HandleAsync(CreateCustomerRequest req, CancellationToken ct)
     {
-        var command = new CreateCustomerCommand(req.ExternalId, this.CorrelationId);
+        var command = new CreateCustomerCommand(req.Username, req.Password, this.CorrelationId);
         var result = await this.Mediator.Send(command, ct);
 
         await this.ToResponseAsync(result, ct);

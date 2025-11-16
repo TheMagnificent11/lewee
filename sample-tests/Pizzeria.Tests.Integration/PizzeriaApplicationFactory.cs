@@ -171,6 +171,21 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         return userId;
     }
 
+    public async Task<string> GetKeycloakUserIdAsync(string username)
+    {
+        using var httpClient = new HttpClient { BaseAddress = new Uri(this.keycloakBaseUrl) };
+        var keycloakClient = new KeycloakHttpClient(httpClient, new Microsoft.Extensions.Logging.Abstractions.NullLogger<KeycloakHttpClient>());
+
+        // Get admin token
+        var adminToken = await keycloakClient.GetAdminAccessTokenAsync(CancellationToken.None);
+        keycloakClient.SetBearerToken(adminToken);
+
+        // Get the user ID
+        var userId = await keycloakClient.GetUserIdAsync(Environments.Auth.RealmName, username, CancellationToken.None);
+
+        return userId;
+    }
+
     public async Task<T> GetQueryProjectionAsync<T>(string key)
         where T : class, IQueryProjection
     {

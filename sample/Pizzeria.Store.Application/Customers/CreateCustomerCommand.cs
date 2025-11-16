@@ -3,43 +3,69 @@ using Lewee.Application.Mediation.Requests;
 using Lewee.Domain;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Pizzeria.Auth;
+using Pizzeria.Common;
 using Pizzeria.Store.Domain;
 
 namespace Pizzeria.Store.Application.Customers;
 
-public record CreateCustomerCommand(string ExternalId, Guid CorrelationId) : ICommand
+public record CreateCustomerCommand(string Username, string Password, Guid CorrelationId) : ICommand
 {
     internal class Validator : AbstractValidator<CreateCustomerCommand>
     {
         public Validator()
         {
-            this.RuleFor(x => x.ExternalId)
+            this.RuleFor(x => x.Username)
                 .NotEmpty()
-                .MaximumLength(Customer.FieldLengths.ExternalId);
+                .MaximumLength(100);
+
+            this.RuleFor(x => x.Password)
+                .NotEmpty()
+                .MinimumLength(8)
+                .MaximumLength(100);
         }
     }
 
     internal sealed class Handler : IRequestHandler<CreateCustomerCommand, CommandResult>
     {
         private readonly IRepository<Customer> repository;
+        private readonly KeycloakHttpClient keycloakHttpClient;
         private readonly ILogger<Handler> logger;
 
-        public Handler(IRepository<Customer> repository, ILogger<Handler> logger)
+        public Handler(
+            IRepository<Customer> repository,
+            KeycloakHttpClient keycloakHttpClient,
+            ILogger<Handler> logger)
         {
             this.repository = repository;
+            this.keycloakHttpClient = keycloakHttpClient;
             this.logger = logger;
         }
 
         public async Task<CommandResult> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
         {
-            var customer = Customer.Create(request.ExternalId, request.CorrelationId);
+            // Create user in Keycloak
+            await this.keycloakHttpClient.CreateUserAsync(
+                Environments.Auth.RealmName,
+                request.Username,
+                request.Password,
+                cancellationToken);
+
+            // Get the Keycloak user ID
+            var keycloakUserId = await this.keycloakHttpClient.GetUserIdAsync(
+                Environments.Auth.RealmName,
+                request.Username,
+                cancellationToken);
+
+            // Create customer entity with Keycloak user ID
+            var customer = Customer.Create(keycloakUserId, request.CorrelationId);
 
             await this.repository.AddAsync(customer, cancellationToken);
             await this.repository.SaveChangesAsync(cancellationToken);
 
             this.logger.LogCustomerCreated(
                 customer.Id,
-                request.ExternalId);
+                keycloakUserId);
 
             return CommandResult.Success();
         }
