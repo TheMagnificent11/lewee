@@ -326,6 +326,39 @@ public sealed class KeycloakHttpClient
         }
     }
 
+    public async Task<string> GetUserIdAsync(
+        string realmName,
+        string username,
+        CancellationToken cancellationToken)
+    {
+        this.logger.LogInformation("Getting user ID for {Username} in realm {RealmName}...", username, realmName);
+
+        using var response = await this.httpClient.GetAsync(
+            $"/admin/realms/{realmName}/users?username={username}&exact=true",
+            cancellationToken);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var error = await response.Content.ReadAsStringAsync(cancellationToken);
+            throw new InvalidOperationException($"Failed to get user {username}: {error}");
+        }
+
+        var users = await response.Content.ReadFromJsonAsync<JsonElement[]>(cancellationToken);
+        if (users == null || users.Length == 0)
+        {
+            throw new InvalidOperationException($"User {username} not found in realm {realmName}");
+        }
+
+        var userId = users[0].GetProperty("id").GetString();
+        if (string.IsNullOrEmpty(userId))
+        {
+            throw new InvalidOperationException($"User {username} has no ID");
+        }
+
+        this.logger.LogInformation("User {Username} has ID {UserId}", username, userId);
+        return userId;
+    }
+
     public async Task WaitForReadyAsync(CancellationToken cancellationToken)
     {
         this.logger.LogInformation("Waiting for Keycloak to be ready...");

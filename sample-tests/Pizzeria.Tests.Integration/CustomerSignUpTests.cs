@@ -19,8 +19,12 @@ public sealed class CustomerSignUpTests : PizzeriaTests
     {
         // Arrange
         using var httpClient = await this.factory.GetServiceClientAsync(ServiceNames.PizzaStoreApi);
-        var externalId = $"keycloak-user-{Guid.NewGuid()}";
-        var request = new CreateCustomerRequest { ExternalId = externalId };
+        var username = $"testuser-{Guid.NewGuid()}";
+        var password = "TestPassword123!";
+
+        // Create user in Keycloak and get the user ID
+        var keycloakUserId = await this.factory.CreateKeycloakUserAsync(username, password);
+        var request = new CreateCustomerRequest { ExternalId = keycloakUserId };
 
         // Act
         using var response = await httpClient.PostAsJsonAsync(Endpoints.StoreApi.Customers, request);
@@ -31,7 +35,7 @@ public sealed class CustomerSignUpTests : PizzeriaTests
 
         var customer = await this.factory.GetLatestCustomerAsync();
         customer.Should().NotBeNull();
-        customer.ExternalId.Should().Be(externalId);
+        customer.ExternalId.Should().Be(keycloakUserId);
         customer.Id.Should().NotBeEmpty();
     }
 
@@ -40,8 +44,12 @@ public sealed class CustomerSignUpTests : PizzeriaTests
     {
         // Arrange
         using var httpClient = await this.factory.GetServiceClientAsync(ServiceNames.PizzaStoreApi);
-        var externalId = $"keycloak-user-{Guid.NewGuid()}";
-        var request = new CreateCustomerRequest { ExternalId = externalId };
+        var username = $"testuser-{Guid.NewGuid()}";
+        var password = "TestPassword123!";
+
+        // Create user in Keycloak and get the user ID
+        var keycloakUserId = await this.factory.CreateKeycloakUserAsync(username, password);
+        var request = new CreateCustomerRequest { ExternalId = keycloakUserId };
 
         // Act
         using var response = await httpClient.PostAsJsonAsync(Endpoints.StoreApi.Customers, request);
@@ -50,9 +58,9 @@ public sealed class CustomerSignUpTests : PizzeriaTests
         // Assert
         response.EnsureSuccessStatusCode();
 
-        var customer = await this.factory.GetCustomerByExternalIdAsync(externalId);
+        var customer = await this.factory.GetCustomerByExternalIdAsync(keycloakUserId);
         customer.Should().NotBeNull();
-        customer.ExternalId.Should().Be(externalId);
+        customer.ExternalId.Should().Be(keycloakUserId);
     }
 
     [Fact]
@@ -89,26 +97,31 @@ public sealed class CustomerSignUpTests : PizzeriaTests
     {
         // Arrange
         using var httpClient = await this.factory.GetServiceClientAsync(ServiceNames.PizzaStoreApi);
-        var externalId1 = $"keycloak-user-{Guid.NewGuid()}";
-        var externalId2 = $"keycloak-user-{Guid.NewGuid()}";
+        var username1 = $"testuser-{Guid.NewGuid()}";
+        var username2 = $"testuser-{Guid.NewGuid()}";
+        var password = "TestPassword123!";
+
+        // Create users in Keycloak and get their IDs
+        var keycloakUserId1 = await this.factory.CreateKeycloakUserAsync(username1, password);
+        var keycloakUserId2 = await this.factory.CreateKeycloakUserAsync(username2, password);
 
         // Act
         using var response1 = await httpClient.PostAsJsonAsync(
             Endpoints.StoreApi.Customers,
-            new CreateCustomerRequest { ExternalId = externalId1 });
+            new CreateCustomerRequest { ExternalId = keycloakUserId1 });
         await this.WaitForDomainEventsToBeDispatchedAsync();
 
         using var response2 = await httpClient.PostAsJsonAsync(
             Endpoints.StoreApi.Customers,
-            new CreateCustomerRequest { ExternalId = externalId2 });
+            new CreateCustomerRequest { ExternalId = keycloakUserId2 });
         await this.WaitForDomainEventsToBeDispatchedAsync();
 
         // Assert
         response1.EnsureSuccessStatusCode();
         response2.EnsureSuccessStatusCode();
 
-        var customer1 = await this.factory.GetCustomerByExternalIdAsync(externalId1);
-        var customer2 = await this.factory.GetCustomerByExternalIdAsync(externalId2);
+        var customer1 = await this.factory.GetCustomerByExternalIdAsync(keycloakUserId1);
+        var customer2 = await this.factory.GetCustomerByExternalIdAsync(keycloakUserId2);
 
         customer1.Should().NotBeNull();
         customer2.Should().NotBeNull();
