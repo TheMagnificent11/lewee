@@ -2,18 +2,18 @@ using Lewee.Domain;
 
 namespace Pizzeria.Store.Domain;
 
-public sealed class CustomerCreatedEvent : DomainEvent
+public sealed class UserCreatedEvent : DomainEvent
 {
-    public CustomerCreatedEvent(
-        Guid customerId,
+    public UserCreatedEvent(
+        Guid userEntityId,
         string externalId,
         Guid correlationId)
         : base(correlationId)
     {
-        this.CustomerId = customerId;
+        this.UserEntityId = userEntityId;
         this.ExternalId = externalId;
     }
 
-    public Guid CustomerId { get; init; }
+    public Guid UserEntityId { get; init; }
     public string ExternalId { get; init; }
 }

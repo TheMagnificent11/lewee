@@ -3,30 +3,30 @@ using Lewee.Domain;
 
 namespace Pizzeria.Store.Domain;
 
-public class Customer : AggregateRoot
+public class User : AggregateRoot
 {
-    internal Customer(string externalId, Guid correlationId)
+    internal User(string externalId, Guid correlationId)
         : base()
     {
         this.ExternalId = externalId;
 
-        this.DomainEvents.Raise(new CustomerCreatedEvent(
+        this.DomainEvents.Raise(new UserCreatedEvent(
             this.Id,
             this.ExternalId,
             correlationId));
     }
 
     [ExcludeFromCodeCoverage(Justification = "Only used by EF")]
-    private Customer()
+    private User()
         : base()
     {
     }
 
     public string ExternalId { get; protected set; }
 
-    public static Customer Create(string externalId, Guid correlationId)
+    public static User Create(string externalId, Guid correlationId)
     {
-        return new Customer(externalId, correlationId);
+        return new User(externalId, correlationId);
     }
 
     public static class FieldLengths

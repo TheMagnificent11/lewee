@@ -129,23 +129,23 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         return order;
     }
 
-    public async Task<Customer> GetLatestCustomerAsync()
+    public async Task<User> GetLatestCustomerAsync()
     {
-        var customer = await this.storeDbContext
-            .Customers
+        var user = await this.storeDbContext
+            .Users
             .OrderByDescending(x => x.ModifiedAtUtc)
             .FirstOrDefaultAsync();
 
-        return customer;
+        return user;
     }
 
-    public async Task<Customer> GetCustomerByExternalIdAsync(string externalId)
+    public async Task<User> GetCustomerByExternalIdAsync(string externalId)
     {
-        var customer = await this.storeDbContext
-            .Customers
+        var user = await this.storeDbContext
+            .Users
             .FirstOrDefaultAsync(x => x.ExternalId == externalId);
 
-        return customer;
+        return user;
     }
 
     public async Task<string> GetConnectionStringAsync(string serviceName)

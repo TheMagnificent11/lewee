@@ -19,5 +19,5 @@ public sealed class StoreDbContext : ApplicationDbContext<StoreDbContext>
 
     public DbSet<Order> Orders { get; set; }
 
-    public DbSet<Customer> Customers { get; set; }
+    public DbSet<User> Users { get; set; }
 }

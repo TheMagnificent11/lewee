@@ -6,7 +6,7 @@ using Pizzeria.Store.Domain;
 
 namespace Pizzeria.Store.Application.Customers;
 
-public class CustomerCreatedEventHandler : INotificationHandler<CustomerCreatedEvent>
+public class CustomerCreatedEventHandler : INotificationHandler<UserCreatedEvent>
 {
     private readonly IMediator mediator;
     private readonly ILogger<CustomerCreatedEventHandler> logger;
@@ -19,13 +19,13 @@ public class CustomerCreatedEventHandler : INotificationHandler<CustomerCreatedE
         this.logger = logger;
     }
 
-    public async Task Handle(CustomerCreatedEvent notification, CancellationToken cancellationToken)
+    public async Task Handle(UserCreatedEvent notification, CancellationToken cancellationToken)
     {
-        this.logger.LogHandlingCustomerCreatedEvent(notification.CustomerId);
+        this.logger.LogHandlingCustomerCreatedEvent(notification.UserEntityId);
 
         var dto = new CustomerDto
         {
-            Id = notification.CustomerId,
+            Id = notification.UserEntityId,
             ExternalId = notification.ExternalId,
         };
 
@@ -34,6 +34,6 @@ public class CustomerCreatedEventHandler : INotificationHandler<CustomerCreatedE
 
         await this.mediator.Publish(clientEvent, cancellationToken);
 
-        this.logger.LogPublishedCustomerDto(notification.CustomerId);
+        this.logger.LogPublishedCustomerDto(notification.UserEntityId);
     }
 }

@@ -28,12 +28,12 @@ public record CreateCustomerCommand(string Username, string Password, Guid Corre
 
     internal sealed class Handler : IRequestHandler<CreateCustomerCommand, CommandResult>
     {
-        private readonly IRepository<Customer> repository;
+        private readonly IRepository<User> repository;
         private readonly IAuthServerAdminClient authServerAdminClient;
         private readonly ILogger<Handler> logger;
 
         public Handler(
-            IRepository<Customer> repository,
+            IRepository<User> repository,
             IAuthServerAdminClient authServerAdminClient,
             ILogger<Handler> logger)
         {
@@ -57,14 +57,14 @@ public record CreateCustomerCommand(string Username, string Password, Guid Corre
                 request.Username,
                 cancellationToken);
 
-            // Create customer entity with Keycloak user ID
-            var customer = Customer.Create(keycloakUserId, request.CorrelationId);
+            // Create user entity with Keycloak user ID
+            var user = User.Create(keycloakUserId, request.CorrelationId);
 
-            await this.repository.AddAsync(customer, cancellationToken);
+            await this.repository.AddAsync(user, cancellationToken);
             await this.repository.SaveChangesAsync(cancellationToken);
 
             this.logger.LogCustomerCreated(
-                customer.Id,
+                user.Id,
                 keycloakUserId);
 
             return CommandResult.Success();

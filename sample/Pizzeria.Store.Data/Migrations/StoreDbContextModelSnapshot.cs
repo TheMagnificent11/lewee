@@ -113,7 +113,7 @@ namespace Pizzeria.Store.Data.Migrations
                     b.ToTable("QueryProjectionReferences", "sto");
                 });
 
-            modelBuilder.Entity("Pizzeria.Store.Domain.Customer", b =>
+            modelBuilder.Entity("Pizzeria.Store.Domain.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -154,7 +154,7 @@ namespace Pizzeria.Store.Data.Migrations
                     b.HasIndex("ExternalId")
                         .IsUnique();
 
-                    b.ToTable("Customers", "sto");
+                    b.ToTable("Users", "sto");
                 });
 
             modelBuilder.Entity("Pizzeria.Store.Domain.Order", b =>
