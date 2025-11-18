@@ -129,9 +129,63 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         return order;
     }
 
+    public async Task<User> GetLatestCustomerAsync()
+    {
+        var user = await this.storeDbContext
+            .Users
+            .OrderByDescending(x => x.ModifiedAtUtc)
+            .FirstOrDefaultAsync();
+
+        return user;
+    }
+
+    public async Task<User> GetCustomerByExternalIdAsync(string externalId)
+    {
+        var user = await this.storeDbContext
+            .Users
+            .FirstOrDefaultAsync(x => x.ExternalId == externalId);
+
+        return user;
+    }
+
     public async Task<string> GetConnectionStringAsync(string serviceName)
     {
         return await this.app.GetConnectionStringAsync(serviceName);
+    }
+
+    public async Task<string> CreateKeycloakUserAsync(string username, string password)
+    {
+        using var httpClient = new HttpClient { BaseAddress = new Uri(this.keycloakBaseUrl) };
+        using var memoryCache = new Microsoft.Extensions.Caching.Memory.MemoryCache(
+            new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions());
+        var authClient = AuthServerServiceCollectionExtensions.CreateAuthServerAdminClient(
+            httpClient,
+            Microsoft.Extensions.Logging.Abstractions.NullLogger.Instance,
+            memoryCache);
+
+        // Create the user
+        await authClient.CreateUserAsync(Environments.Auth.RealmName, username, password, CancellationToken.None);
+
+        // Get the user ID
+        var userId = await authClient.GetUserIdAsync(Environments.Auth.RealmName, username, CancellationToken.None);
+
+        return userId;
+    }
+
+    public async Task<string> GetKeycloakUserIdAsync(string username)
+    {
+        using var httpClient = new HttpClient { BaseAddress = new Uri(this.keycloakBaseUrl) };
+        using var memoryCache = new Microsoft.Extensions.Caching.Memory.MemoryCache(
+            new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions());
+        var authClient = AuthServerServiceCollectionExtensions.CreateAuthServerAdminClient(
+            httpClient,
+            Microsoft.Extensions.Logging.Abstractions.NullLogger.Instance,
+            memoryCache);
+
+        // Get the user ID
+        var userId = await authClient.GetUserIdAsync(Environments.Auth.RealmName, username, CancellationToken.None);
+
+        return userId;
     }
 
     public async Task<T> GetQueryProjectionAsync<T>(string key)

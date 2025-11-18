@@ -18,7 +18,7 @@ public static class Environments
 
     public static class Auth
     {
-        public const string RealmName = "pizzeria";
+        public const string RealmName = "lewee-pizzeria";
 
         public const string ApiClientId = "pizzeria-store-api";
 

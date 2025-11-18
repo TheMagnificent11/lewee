@@ -9,7 +9,7 @@ setDefaultAuthServerAdminCredentials = true;
 #endif
 
 var authServer = builder.AddKeycloak(ServiceNames.AuthServer)
-    .WithRealmImport("keycloak/pizzeria-realm.json");
+    .WithRealmImport($"keycloak/{Environments.Auth.RealmName}-realm.json");
 
 if (setDefaultAuthServerAdminCredentials)
 {
@@ -59,7 +59,7 @@ builder.AddProject<Projects.Pizzeria_Store_Api>(ServiceNames.PizzaStoreApi)
  * Re-enable this when both of the above issues are fixed.
  * https://github.com/TheMagnificent11/lewee/issues/372
  *
-builder.AddProject<Projects.Pizzeria_Store_WebClient>(ServiceNames.PizzaStoreWebClient)
+builder.AddProject<Projects.Pizzeria_Store_Web>(ServiceNames.PizzaStoreWebClient)
     .WithReference(pizzaStoreApi)
     .WaitFor(pizzaStoreApi)
     .WithHttpHealthCheck("/health");

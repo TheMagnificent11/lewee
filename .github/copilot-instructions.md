@@ -167,7 +167,8 @@ dotnet format lewee.sln
 - [ ] No unused usings or variables
 - [ ] No magic strings or numbers, use constants or enums
 - [ ] Address compiler information messages that result for Roslyn analyzers
-- [ ] XML documentation for public APIs for C# projects within the `src` directory
+- [ ] XML documentation for public and protected APIs **only** for C# projects within the `src` directory (Lewee framework packages)
+- [ ] No XML documentation for sample application code (`sample/` directory)
 - [ ] Follows existing patterns in the codebase
 - [ ] Framework changes (`src/` directory) have at least 90% line coverage
 
@@ -412,7 +413,7 @@ Failed to start container: port already in use
 
 **When working on framework (Lewee.*):**
 1. Maintain backward compatibility
-2. Add XML documentation for public APIs
+2. Add XML documentation for public and protected APIs
 3. Follow existing architectural patterns
 4. Add unit tests for new functionality
 5. Ensure at least 90% line coverage for all changes
@@ -421,8 +422,9 @@ Failed to start container: port already in use
 **When working on sample app (Pizzeria.*):**
 1. Demonstrate best practices
 2. Keep examples clear and focused
-3. Update comments to explain patterns
-4. Ensure integration tests pass
+3. Update comments to explain patterns (use inline comments, not XML documentation)
+4. Do not add XML documentation comments (///) to sample app code
+5. Ensure integration tests pass
 
 **Code Review Checklist:**
 - [ ] Follows domain-driven design principles
