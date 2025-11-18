@@ -4,17 +4,8 @@ using Microsoft.Extensions.Logging;
 
 namespace Pizzeria.Auth;
 
-/// <summary>
-/// Extension methods for adding auth server client services
-/// </summary>
 public static class AuthServerServiceCollectionExtensions
 {
-    /// <summary>
-    /// Adds the Keycloak auth server admin client to the service collection
-    /// </summary>
-    /// <param name="services">Service collection</param>
-    /// <param name="configureClient">Action to configure the HTTP client</param>
-    /// <returns>HTTP client builder for further configuration</returns>
     public static IHttpClientBuilder AddAuthServerAdminClient(
         this IServiceCollection services,
         Action<IServiceProvider, HttpClient> configureClient)
@@ -29,13 +20,6 @@ public static class AuthServerServiceCollectionExtensions
             .AddHttpMessageHandler<KeycloakAdminTokenHandler>();
     }
 
-    /// <summary>
-    /// Creates an auth server admin client instance for testing purposes
-    /// </summary>
-    /// <param name="httpClient">HTTP client to use</param>
-    /// <param name="logger">Logger instance</param>
-    /// <param name="memoryCache">Memory cache for token caching</param>
-    /// <returns>Auth server admin client instance</returns>
     public static IAuthServerAdminClient CreateAuthServerAdminClient(
         HttpClient httpClient,
         ILogger logger,
