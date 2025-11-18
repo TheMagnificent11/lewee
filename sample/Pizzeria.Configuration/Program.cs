@@ -35,8 +35,8 @@ builder.Services.AddTransient<PizzeriaStoreDatabaseConfigurationService>();
 builder.Services.AddTransient<AuthServerConfigurationService>();
 builder.Services.AddHostedService<ConfigurationBackgroundService>();
 
-// Register Keycloak HTTP client with service discovery
-builder.Services.AddHttpClient<KeycloakHttpClient>((serviceProvider, client) =>
+// Register auth server client with service discovery
+builder.Services.AddAuthServerClient((serviceProvider, client) =>
 {
     // Use service discovery to get the Keycloak URL
     client.BaseAddress = new Uri($"http://{ServiceNames.AuthServer}");

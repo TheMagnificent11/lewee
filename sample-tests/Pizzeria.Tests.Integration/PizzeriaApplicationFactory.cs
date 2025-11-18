@@ -156,17 +156,19 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
     public async Task<string> CreateKeycloakUserAsync(string username, string password)
     {
         using var httpClient = new HttpClient { BaseAddress = new Uri(this.keycloakBaseUrl) };
-        var keycloakClient = new KeycloakHttpClient(httpClient, new Microsoft.Extensions.Logging.Abstractions.NullLogger<KeycloakHttpClient>());
+        var authClient = AuthServerServiceCollectionExtensions.CreateAuthServerClient(
+            httpClient,
+            Microsoft.Extensions.Logging.Abstractions.NullLogger.Instance);
 
         // Get admin token
-        var adminToken = await keycloakClient.GetAdminAccessTokenAsync(CancellationToken.None);
-        keycloakClient.SetBearerToken(adminToken);
+        var adminToken = await authClient.GetAdminAccessTokenAsync(CancellationToken.None);
+        authClient.SetBearerToken(adminToken);
 
         // Create the user
-        await keycloakClient.CreateUserAsync(Environments.Auth.RealmName, username, password, CancellationToken.None);
+        await authClient.CreateUserAsync(Environments.Auth.RealmName, username, password, CancellationToken.None);
 
         // Get the user ID
-        var userId = await keycloakClient.GetUserIdAsync(Environments.Auth.RealmName, username, CancellationToken.None);
+        var userId = await authClient.GetUserIdAsync(Environments.Auth.RealmName, username, CancellationToken.None);
 
         return userId;
     }
@@ -174,14 +176,16 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
     public async Task<string> GetKeycloakUserIdAsync(string username)
     {
         using var httpClient = new HttpClient { BaseAddress = new Uri(this.keycloakBaseUrl) };
-        var keycloakClient = new KeycloakHttpClient(httpClient, new Microsoft.Extensions.Logging.Abstractions.NullLogger<KeycloakHttpClient>());
+        var authClient = AuthServerServiceCollectionExtensions.CreateAuthServerClient(
+            httpClient,
+            Microsoft.Extensions.Logging.Abstractions.NullLogger.Instance);
 
         // Get admin token
-        var adminToken = await keycloakClient.GetAdminAccessTokenAsync(CancellationToken.None);
-        keycloakClient.SetBearerToken(adminToken);
+        var adminToken = await authClient.GetAdminAccessTokenAsync(CancellationToken.None);
+        authClient.SetBearerToken(adminToken);
 
         // Get the user ID
-        var userId = await keycloakClient.GetUserIdAsync(Environments.Auth.RealmName, username, CancellationToken.None);
+        var userId = await authClient.GetUserIdAsync(Environments.Auth.RealmName, username, CancellationToken.None);
 
         return userId;
     }

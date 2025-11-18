@@ -6,7 +6,7 @@ using Pizzeria.Common;
 
 namespace Pizzeria.Auth;
 
-public sealed class KeycloakHttpClient
+internal sealed class KeycloakHttpClient : IAuthServerClient
 {
     private readonly HttpClient httpClient;
     private readonly ILogger<KeycloakHttpClient> logger;
