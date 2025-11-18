@@ -30,8 +30,8 @@ builder.Services
     .AddCorrelationIdServices()
     .AddLeweeSignalR();
 
-// Register auth server client with service discovery
-builder.Services.AddAuthServerClient((serviceProvider, client) =>
+// Register auth server admin client with service discovery
+builder.Services.AddAuthServerAdminClient((serviceProvider, client) =>
 {
     // Use service discovery to get the Keycloak URL
     client.BaseAddress = new Uri($"http://{ServiceNames.AuthServer}");

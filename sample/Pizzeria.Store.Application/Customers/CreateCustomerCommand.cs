@@ -29,30 +29,30 @@ public record CreateCustomerCommand(string Username, string Password, Guid Corre
     internal sealed class Handler : IRequestHandler<CreateCustomerCommand, CommandResult>
     {
         private readonly IRepository<Customer> repository;
-        private readonly IAuthServerClient authServerClient;
+        private readonly IAuthServerAdminClient authServerAdminClient;
         private readonly ILogger<Handler> logger;
 
         public Handler(
             IRepository<Customer> repository,
-            IAuthServerClient authServerClient,
+            IAuthServerAdminClient authServerAdminClient,
             ILogger<Handler> logger)
         {
             this.repository = repository;
-            this.authServerClient = authServerClient;
+            this.authServerAdminClient = authServerAdminClient;
             this.logger = logger;
         }
 
         public async Task<CommandResult> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
         {
             // Create user in Keycloak
-            await this.authServerClient.CreateUserAsync(
+            await this.authServerAdminClient.CreateUserAsync(
                 Environments.Auth.RealmName,
                 request.Username,
                 request.Password,
                 cancellationToken);
 
             // Get the Keycloak user ID
-            var keycloakUserId = await this.authServerClient.GetUserIdAsync(
+            var keycloakUserId = await this.authServerAdminClient.GetUserIdAsync(
                 Environments.Auth.RealmName,
                 request.Username,
                 cancellationToken);

@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -9,30 +10,59 @@ namespace Pizzeria.Auth;
 public static class AuthServerServiceCollectionExtensions
 {
     /// <summary>
-    /// Adds the Keycloak auth server client to the service collection
+    /// Adds the Keycloak auth server admin client to the service collection
     /// </summary>
     /// <param name="services">Service collection</param>
     /// <param name="configureClient">Action to configure the HTTP client</param>
     /// <returns>HTTP client builder for further configuration</returns>
-    public static IHttpClientBuilder AddAuthServerClient(
+    public static IHttpClientBuilder AddAuthServerAdminClient(
         this IServiceCollection services,
         Action<IServiceProvider, HttpClient> configureClient)
     {
-        return services.AddHttpClient<IAuthServerClient, KeycloakHttpClient>(configureClient);
+        // Ensure memory cache is registered
+        services.AddMemoryCache();
+
+        // Register the HTTP client with the delegating handler
+        return services
+            .AddTransient<KeycloakAdminTokenHandler>()
+            .AddHttpClient<IAuthServerAdminClient, KeycloakHttpClient>(configureClient)
+            .AddHttpMessageHandler<KeycloakAdminTokenHandler>();
     }
 
     /// <summary>
-    /// Creates an auth server client instance for testing purposes
+    /// Creates an auth server admin client instance for testing purposes
     /// </summary>
     /// <param name="httpClient">HTTP client to use</param>
     /// <param name="logger">Logger instance</param>
-    /// <returns>Auth server client instance</returns>
-    public static IAuthServerClient CreateAuthServerClient(HttpClient httpClient, ILogger logger)
+    /// <param name="memoryCache">Memory cache for token caching</param>
+    /// <returns>Auth server admin client instance</returns>
+    public static IAuthServerAdminClient CreateAuthServerAdminClient(
+        HttpClient httpClient,
+        ILogger logger,
+        IMemoryCache memoryCache)
     {
-        // Cast logger to the specific type needed by KeycloakHttpClient
+        // Create a delegating handler-wrapped HTTP client
+        var tokenHandlerLogger = new LoggerWrapper<KeycloakAdminTokenHandler>(logger);
+        var tokenHandler = new KeycloakAdminTokenHandler(memoryCache, tokenHandlerLogger)
+        {
+            InnerHandler = new HttpClientHandler(),
+        };
+
+        var wrappedClient = new HttpClient(tokenHandler)
+        {
+            BaseAddress = httpClient.BaseAddress,
+            Timeout = httpClient.Timeout,
+        };
+
+        // Copy headers
+        foreach (var header in httpClient.DefaultRequestHeaders)
+        {
+            wrappedClient.DefaultRequestHeaders.TryAddWithoutValidation(header.Key, header.Value);
+        }
+
         var typedLogger = logger as ILogger<KeycloakHttpClient>
             ?? new LoggerWrapper<KeycloakHttpClient>(logger);
-        return new KeycloakHttpClient(httpClient, typedLogger);
+        return new KeycloakHttpClient(wrappedClient, typedLogger);
     }
 
     private sealed class LoggerWrapper<T> : ILogger<T>

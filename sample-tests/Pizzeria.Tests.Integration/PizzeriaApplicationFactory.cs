@@ -156,13 +156,12 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
     public async Task<string> CreateKeycloakUserAsync(string username, string password)
     {
         using var httpClient = new HttpClient { BaseAddress = new Uri(this.keycloakBaseUrl) };
-        var authClient = AuthServerServiceCollectionExtensions.CreateAuthServerClient(
+        using var memoryCache = new Microsoft.Extensions.Caching.Memory.MemoryCache(
+            new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions());
+        var authClient = AuthServerServiceCollectionExtensions.CreateAuthServerAdminClient(
             httpClient,
-            Microsoft.Extensions.Logging.Abstractions.NullLogger.Instance);
-
-        // Get admin token
-        var adminToken = await authClient.GetAdminAccessTokenAsync(CancellationToken.None);
-        authClient.SetBearerToken(adminToken);
+            Microsoft.Extensions.Logging.Abstractions.NullLogger.Instance,
+            memoryCache);
 
         // Create the user
         await authClient.CreateUserAsync(Environments.Auth.RealmName, username, password, CancellationToken.None);
@@ -176,13 +175,12 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
     public async Task<string> GetKeycloakUserIdAsync(string username)
     {
         using var httpClient = new HttpClient { BaseAddress = new Uri(this.keycloakBaseUrl) };
-        var authClient = AuthServerServiceCollectionExtensions.CreateAuthServerClient(
+        using var memoryCache = new Microsoft.Extensions.Caching.Memory.MemoryCache(
+            new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions());
+        var authClient = AuthServerServiceCollectionExtensions.CreateAuthServerAdminClient(
             httpClient,
-            Microsoft.Extensions.Logging.Abstractions.NullLogger.Instance);
-
-        // Get admin token
-        var adminToken = await authClient.GetAdminAccessTokenAsync(CancellationToken.None);
-        authClient.SetBearerToken(adminToken);
+            Microsoft.Extensions.Logging.Abstractions.NullLogger.Instance,
+            memoryCache);
 
         // Get the user ID
         var userId = await authClient.GetUserIdAsync(Environments.Auth.RealmName, username, CancellationToken.None);

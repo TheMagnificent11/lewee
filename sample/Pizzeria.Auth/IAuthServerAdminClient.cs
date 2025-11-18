@@ -1,38 +1,10 @@
 namespace Pizzeria.Auth;
 
 /// <summary>
-/// Interface for authentication server operations
+/// Interface for authentication server admin operations
 /// </summary>
-public interface IAuthServerClient
+public interface IAuthServerAdminClient
 {
-    /// <summary>
-    /// Gets an admin access token for the authentication server
-    /// </summary>
-    /// <param name="cancellationToken">Cancellation token</param>
-    /// <returns>Admin access token</returns>
-    Task<string> GetAdminAccessTokenAsync(CancellationToken cancellationToken);
-
-    /// <summary>
-    /// Sets the bearer token for subsequent requests
-    /// </summary>
-    /// <param name="token">Bearer token</param>
-    void SetBearerToken(string token);
-
-    /// <summary>
-    /// Checks if a realm exists
-    /// </summary>
-    /// <param name="realmName">Name of the realm</param>
-    /// <param name="cancellationToken">Cancellation token</param>
-    /// <returns>True if the realm exists, false otherwise</returns>
-    Task<bool> RealmExistsAsync(string realmName, CancellationToken cancellationToken);
-
-    /// <summary>
-    /// Creates a new realm
-    /// </summary>
-    /// <param name="realmName">Name of the realm to create</param>
-    /// <param name="cancellationToken">Cancellation token</param>
-    Task CreateRealmAsync(string realmName, CancellationToken cancellationToken);
-
     /// <summary>
     /// Checks if a client exists in a realm
     /// </summary>
