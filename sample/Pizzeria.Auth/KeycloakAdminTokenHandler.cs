@@ -6,9 +6,6 @@ using Pizzeria.Common;
 
 namespace Pizzeria.Auth;
 
-/// <summary>
-/// Delegating handler that automatically adds admin authentication token to Keycloak admin API requests
-/// </summary>
 internal sealed class KeycloakAdminTokenHandler : DelegatingHandler
 {
     private const string TokenCacheKey = "KeycloakAdminToken";
