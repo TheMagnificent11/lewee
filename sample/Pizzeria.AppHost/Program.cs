@@ -9,7 +9,7 @@ setDefaultAuthServerAdminCredentials = true;
 #endif
 
 var authServer = builder.AddKeycloak(ServiceNames.AuthServer)
-    .WithRealmImport("keycloak/pizzeria-realm.json");
+    .WithRealmImport($"keycloak/{Environments.Auth.RealmName}-realm.json");
 
 if (setDefaultAuthServerAdminCredentials)
 {
