@@ -1,0 +1,69 @@
+@page "/signup"
+@inherits FluxorComponent
+
+<PageTitle>Sign Up - Pizzeria Store</PageTitle>
+
+<MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true">
+    Sign Up
+</MudText>
+
+<MudGrid Justify="Justify.Center">
+    <MudItem xs="12" sm="8" md="6" lg="4">
+        <MudCard>
+            <MudCardContent>
+                <MudTextField @bind-Value="username" 
+                              Label="Username" 
+                              Variant="Variant.Outlined" 
+                              Required="true"
+                              Disabled="UserSignUpState.Value.IsSigningUp"
+                              HelperText="Choose a unique username" />
+                
+                <MudTextField @bind-Value="password" 
+                              Label="Password" 
+                              Variant="Variant.Outlined" 
+                              InputType="InputType.Password"
+                              Required="true"
+                              Disabled="UserSignUpState.Value.IsSigningUp"
+                              Class="mt-4"
+                              HelperText="Minimum 8 characters, must include uppercase, lowercase, number and special character" />
+            </MudCardContent>
+            <MudCardActions>
+                <MudButton Variant="Variant.Filled" 
+                           Color="Color.Primary" 
+                           Size="Size.Large"
+                           FullWidth="true"
+                           OnClick="HandleSignUp"
+                           Disabled="UserSignUpState.Value.IsSigningUp || string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password)">
+                    @if (UserSignUpState.Value.IsSigningUp)
+                    {
+                        <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+                        <MudText Class="ml-2">Signing Up...</MudText>
+                    }
+                    else
+                    {
+                        <MudIcon Icon="Icons.Material.Filled.PersonAdd" />
+                        <MudText Class="ml-2">Sign Up</MudText>
+                    }
+                </MudButton>
+            </MudCardActions>
+        </MudCard>
+
+        @if (!string.IsNullOrEmpty(UserSignUpState.Value.ErrorMessage))
+        {
+            <MudAlert Severity="Severity.Error" 
+                      Class="mt-4" 
+                      ShowCloseIcon="true">
+                @UserSignUpState.Value.ErrorMessage
+            </MudAlert>
+        }
+
+        @if (UserSignUpState.Value.IsSuccess)
+        {
+            <MudAlert Severity="Severity.Success" Class="mt-4">
+                <MudText Typo="Typo.body1">
+                    Account created successfully! Redirecting to order page...
+                </MudText>
+            </MudAlert>
+        }
+    </MudItem>
+</MudGrid>

@@ -4,4 +4,5 @@ public static class Routes
 {
     public const string Home = "/";
     public const string Order = "/order";
+    public const string SignUp = "/signup";
 }
