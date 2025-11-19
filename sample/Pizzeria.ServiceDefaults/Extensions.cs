@@ -66,11 +66,9 @@ public static class Extensions
 
     public static IHostApplicationBuilder AddDefaultHealthChecks(this IHostApplicationBuilder builder)
     {
-#pragma warning disable SA1010 // Opening square brackets should be spaced correctly
         builder.Services
             .AddHealthChecks()
             .AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]);
-#pragma warning restore SA1010 // Opening square brackets should be spaced correctly
 
         return builder;
     }
@@ -86,7 +84,7 @@ public static class Extensions
             // Only health checks tagged with the "live" tag must pass for app to be considered alive
             app.MapHealthChecks("/alive", new HealthCheckOptions
             {
-                Predicate = r => r.Tags.Contains("live")
+                Predicate = r => r.Tags.Contains("live"),
             });
         }
 

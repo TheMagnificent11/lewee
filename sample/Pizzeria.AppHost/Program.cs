@@ -42,17 +42,16 @@ var configuration = builder.AddProject<Projects.Pizzeria_Configuration>(ServiceN
     .WaitFor(pizzaStoreDatabase)
     .WithHttpHealthCheck("/health");
 
-builder.AddProject<Projects.Pizzeria_Store_Api>(ServiceNames.PizzaStoreApi)
+var storeApi = builder.AddProject<Projects.Pizzeria_Store_Api>(ServiceNames.PizzaStoreApi)
     .WithReference(pizzaStoreDatabase)
     .WithReference(authServer)
     .WaitFor(configuration)
     .WithHttpHealthCheck("/health");
 
-// Temporarily disable web client to allow integration tests to run
-// TODO: Investigate Aspire DCP timeout issues when web client is enabled in test environment
-// builder.AddProject<Projects.Pizzeria_Store_Web>(ServiceNames.PizzaStoreWebClient)
-//     .WithReference(authServer)
-//     .WaitFor(configuration);
+builder.AddProject<Projects.Pizzeria_Store_Web>(ServiceNames.PizzaStoreWebClient)
+    .WithReference(authServer)
+    .WithReference(storeApi)
+    .WaitFor(storeApi);
 
 var app = builder.Build();
 
