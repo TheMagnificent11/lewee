@@ -57,10 +57,12 @@ builder.Services.AddAuthentication(options =>
                     try
                     {
                         // Create user entity in database if it doesn't exist
-                        await apiClient.CreateCustomerAsync(new CreateCustomerRequest
-                        {
-                            ExternalUserId = externalUserId,
-                        });
+                        await apiClient.CreateCustomerAsync(
+                            new CreateCustomerRequest
+                            {
+                                ExternalUserId = externalUserId,
+                            },
+                            context.HttpContext.RequestAborted);
                     }
                     catch
                     {
