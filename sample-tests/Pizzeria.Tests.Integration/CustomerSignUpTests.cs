@@ -1,7 +1,6 @@
-using System.Net.Http.Json;
 using FluentAssertions;
+using Microsoft.Playwright;
 using Pizzeria.Common;
-using Pizzeria.Store.Api.Customers;
 using Xunit;
 
 namespace Pizzeria.Tests.Integration;
@@ -15,114 +14,111 @@ public sealed class CustomerSignUpTests : PizzeriaTests
     }
 
     [Fact]
-    public async Task Should_CreateCustomer_When_ValidUsernameAndPasswordProvided()
+    public async Task Should_CreateCustomer_When_UserRegistersViaKeycloak()
     {
         // Arrange
-        using var httpClient = await this.factory.GetServiceClientAsync(ServiceNames.PizzaStoreApi);
+        var webClientUrl = await this.factory.GetWebClientBaseUrlAsync();
         var username = $"testuser-{Guid.NewGuid()}";
         var password = "TestPassword123!";
-        var request = new CreateCustomerRequest { Username = username, Password = password };
+        var email = $"{username}@example.com";
 
-        // Act
-        using var response = await httpClient.PostAsJsonAsync(Endpoints.StoreApi.Customers, request);
-        await this.WaitForDomainEventsToBeDispatchedAsync();
+        var playwright = await this.factory.GetPlaywrightAsync();
+        var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+        {
+            Headless = true,
+        });
+        var page = await browser.NewPageAsync();
 
-        // Assert
-        response.EnsureSuccessStatusCode();
+        try
+        {
+            // Act - Navigate to the web client (which should redirect to Keycloak login)
+            await page.GotoAsync(webClientUrl);
 
-        var customer = await this.factory.GetLatestCustomerAsync();
-        customer.Should().NotBeNull();
-        customer.ExternalId.Should().NotBeNullOrEmpty();
-        customer.Id.Should().NotBeEmpty();
+            // Wait for Keycloak login page to load
+            await page.WaitForSelectorAsync("text=Register", new PageWaitForSelectorOptions { Timeout = 10000 });
 
-        // Verify the user was created in Keycloak by getting their ID
-        var keycloakUserId = await this.factory.GetKeycloakUserIdAsync(username);
-        customer.ExternalId.Should().Be(keycloakUserId);
+            // Click on Register link
+            await page.ClickAsync("text=Register");
+
+            // Wait for registration form
+            await page.WaitForSelectorAsync("#firstName", new PageWaitForSelectorOptions { Timeout = 10000 });
+
+            // Fill out registration form
+            await page.FillAsync("#firstName", username);
+            await page.FillAsync("#lastName", "User");
+            await page.FillAsync("#email", email);
+            await page.FillAsync("#username", username);
+            await page.FillAsync("#password", password);
+            await page.FillAsync("#password-confirm", password);
+
+            // Submit registration
+            await page.ClickAsync("input[type='submit']");
+
+            // Wait for redirect back to the app and for domain events to be processed
+            await page.WaitForURLAsync($"{webClientUrl}/**", new PageWaitForURLOptions { Timeout = 30000 });
+            await this.WaitForDomainEventsToBeDispatchedAsync();
+
+            // Assert - Verify the user was created in the database
+            var keycloakUserId = await this.factory.GetKeycloakUserIdAsync(username);
+            var customer = await this.factory.GetCustomerByExternalIdAsync(keycloakUserId);
+            customer.Should().NotBeNull();
+            customer.ExternalId.Should().Be(keycloakUserId);
+            customer.Id.Should().NotBeEmpty();
+        }
+        finally
+        {
+            await page.CloseAsync();
+            await browser.CloseAsync();
+        }
     }
 
     [Fact]
-    public async Task Should_RetrieveCustomerByExternalId_When_CustomerExists()
+    public async Task Should_NavigateToHomePage_When_UserSuccessfullyRegisters()
     {
         // Arrange
-        using var httpClient = await this.factory.GetServiceClientAsync(ServiceNames.PizzaStoreApi);
+        var webClientUrl = await this.factory.GetWebClientBaseUrlAsync();
         var username = $"testuser-{Guid.NewGuid()}";
         var password = "TestPassword123!";
-        var request = new CreateCustomerRequest { Username = username, Password = password };
+        var email = $"{username}@example.com";
 
-        // Act
-        using var response = await httpClient.PostAsJsonAsync(Endpoints.StoreApi.Customers, request);
-        await this.WaitForDomainEventsToBeDispatchedAsync();
+        var playwright = await this.factory.GetPlaywrightAsync();
+        var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+        {
+            Headless = true,
+        });
+        var page = await browser.NewPageAsync();
 
-        // Assert
-        response.EnsureSuccessStatusCode();
+        try
+        {
+            // Act - Navigate to the web client
+            await page.GotoAsync(webClientUrl);
 
-        var keycloakUserId = await this.factory.GetKeycloakUserIdAsync(username);
-        var customer = await this.factory.GetCustomerByExternalIdAsync(keycloakUserId);
-        customer.Should().NotBeNull();
-        customer.ExternalId.Should().Be(keycloakUserId);
-    }
+            // Wait for Keycloak login page and click Register
+            await page.WaitForSelectorAsync("text=Register", new PageWaitForSelectorOptions { Timeout = 10000 });
+            await page.ClickAsync("text=Register");
 
-    [Fact]
-    public async Task Should_ReturnBadRequest_When_UsernameIsEmpty()
-    {
-        // Arrange
-        using var httpClient = await this.factory.GetServiceClientAsync(ServiceNames.PizzaStoreApi);
-        var request = new CreateCustomerRequest { Username = string.Empty, Password = "TestPassword123!" };
+            // Fill registration form
+            await page.WaitForSelectorAsync("#firstName", new PageWaitForSelectorOptions { Timeout = 10000 });
+            await page.FillAsync("#firstName", username);
+            await page.FillAsync("#lastName", "User");
+            await page.FillAsync("#email", email);
+            await page.FillAsync("#username", username);
+            await page.FillAsync("#password", password);
+            await page.FillAsync("#password-confirm", password);
 
-        // Act
-        using var response = await httpClient.PostAsJsonAsync(Endpoints.StoreApi.Customers, request);
+            // Submit registration
+            await page.ClickAsync("input[type='submit']");
 
-        // Assert
-        response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
-    }
+            // Wait for redirect back to the app
+            await page.WaitForURLAsync($"{webClientUrl}/**", new PageWaitForURLOptions { Timeout = 30000 });
 
-    [Fact]
-    public async Task Should_ReturnBadRequest_When_PasswordIsTooShort()
-    {
-        // Arrange
-        using var httpClient = await this.factory.GetServiceClientAsync(ServiceNames.PizzaStoreApi);
-        var username = $"testuser-{Guid.NewGuid()}";
-        var request = new CreateCustomerRequest { Username = username, Password = "Short1!" }; // Less than 8 characters
-
-        // Act
-        using var response = await httpClient.PostAsJsonAsync(Endpoints.StoreApi.Customers, request);
-
-        // Assert
-        response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
-    }
-
-    [Fact]
-    public async Task Should_CreateMultipleCustomers_When_DifferentUsernamesProvided()
-    {
-        // Arrange
-        using var httpClient = await this.factory.GetServiceClientAsync(ServiceNames.PizzaStoreApi);
-        var username1 = $"testuser-{Guid.NewGuid()}";
-        var username2 = $"testuser-{Guid.NewGuid()}";
-        var password = "TestPassword123!";
-
-        // Act
-        using var response1 = await httpClient.PostAsJsonAsync(
-            Endpoints.StoreApi.Customers,
-            new CreateCustomerRequest { Username = username1, Password = password });
-        await this.WaitForDomainEventsToBeDispatchedAsync();
-
-        using var response2 = await httpClient.PostAsJsonAsync(
-            Endpoints.StoreApi.Customers,
-            new CreateCustomerRequest { Username = username2, Password = password });
-        await this.WaitForDomainEventsToBeDispatchedAsync();
-
-        // Assert
-        response1.EnsureSuccessStatusCode();
-        response2.EnsureSuccessStatusCode();
-
-        var keycloakUserId1 = await this.factory.GetKeycloakUserIdAsync(username1);
-        var keycloakUserId2 = await this.factory.GetKeycloakUserIdAsync(username2);
-
-        var customer1 = await this.factory.GetCustomerByExternalIdAsync(keycloakUserId1);
-        var customer2 = await this.factory.GetCustomerByExternalIdAsync(keycloakUserId2);
-
-        customer1.Should().NotBeNull();
-        customer2.Should().NotBeNull();
-        customer1.Id.Should().NotBe(customer2.Id);
+            // Assert - Verify user is on the home page
+            page.Url.Should().StartWith(webClientUrl);
+        }
+        finally
+        {
+            await page.CloseAsync();
+            await browser.CloseAsync();
+        }
     }
 }

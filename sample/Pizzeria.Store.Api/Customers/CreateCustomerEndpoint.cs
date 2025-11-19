@@ -13,11 +13,11 @@ public sealed class CreateCustomerEndpoint : CommandEndpoint<CreateCustomerReque
 
     protected override string Name => "Create Customer";
 
-    protected override bool IsAnonymousAllowed => true;
+    protected override bool IsAnonymousAllowed => false;
 
     public override async Task HandleAsync(CreateCustomerRequest req, CancellationToken ct)
     {
-        var command = new CreateCustomerCommand(req.Username, req.Password, this.CorrelationId);
+        var command = new CreateCustomerCommand(req.ExternalUserId, this.CorrelationId);
         var result = await this.Mediator.Send(command, ct);
 
         await this.ToResponseAsync(result, ct);

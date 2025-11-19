@@ -6,6 +6,7 @@ using Lewee.Domain;
 using Lewee.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Playwright;
 using Pizzeria.Auth;
 using Pizzeria.Common;
 using Pizzeria.Store.Data;
@@ -24,10 +25,14 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
     private StoreDbContext storeDbContext;
     private QueryProjectionService<StoreDbContext> storeDbQueryProjectionService;
     private string keycloakBaseUrl;
+    private IPlaywright playwright;
 
     public async Task InitializeAsync()
     {
         Environments.SetToIntegrationTesting();
+
+        // Initialize Playwright
+        this.playwright = await Playwright.CreateAsync();
 
         // https://learn.microsoft.com/en-us/dotnet/aspire/testing/manage-app-host?pivots=xunit
         this.builder = await DistributedApplicationTestingBuilder.CreateAsync<Projects.Pizzeria_AppHost>();
@@ -222,8 +227,18 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         return baseAddress;
     }
 
+    public Task<IPlaywright> GetPlaywrightAsync()
+    {
+        return Task.FromResult(this.playwright);
+    }
+
     public async Task DisposeAsync()
     {
+        if (this.playwright != null)
+        {
+            this.playwright.Dispose();
+        }
+
         if (this.storeDbContext != null)
         {
             await this.storeDbContext.DisposeAsync();
