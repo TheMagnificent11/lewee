@@ -1,8 +1,11 @@
+using System.Security.Claims;
 using Lewee.Blazor;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using MudBlazor.Services;
 using Pizzeria.Common;
 using Pizzeria.ServiceDefaults;
+using Pizzeria.Store.Contracts;
 using Pizzeria.Store.Web;
 using Pizzeria.Store.Web.Services;
 using Pizzeria.Store.Web.States;
@@ -41,6 +44,32 @@ builder.Services.AddAuthentication(options =>
         options.Scope.Add("openid");
         options.Scope.Add("profile");
         options.Scope.Add("email");
+
+        // Handle user creation on first login
+        options.Events = new OpenIdConnectEvents
+        {
+            OnTokenValidated = async context =>
+            {
+                var externalUserId = context.Principal?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (!string.IsNullOrEmpty(externalUserId))
+                {
+                    var apiClient = context.HttpContext.RequestServices.GetRequiredService<IPizzeriaApiClient>();
+                    try
+                    {
+                        // Create user entity in database if it doesn't exist
+                        await apiClient.CreateCustomerAsync(new CreateCustomerRequest
+                        {
+                            ExternalUserId = externalUserId,
+                        });
+                    }
+                    catch
+                    {
+                        // Ignore errors - user might already exist or API might be temporarily unavailable
+                        // This shouldn't prevent the user from accessing the application
+                    }
+                }
+            },
+        };
     });
 
 builder.Services.AddAuthorization();
