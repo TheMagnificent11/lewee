@@ -208,6 +208,20 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         return count;
     }
 
+    public async Task<string> GetWebClientBaseUrlAsync()
+    {
+        var httpClient = await this.GetServiceClientAsync(ServiceNames.PizzaStoreWebClient);
+        var baseAddress = httpClient.BaseAddress!.ToString().TrimEnd('/');
+
+        // If the scheme is tcp, replace it with http (Aspire might return tcp scheme)
+        if (baseAddress.StartsWith("tcp://", StringComparison.OrdinalIgnoreCase))
+        {
+            baseAddress = $"http://{baseAddress[6..]}";
+        }
+
+        return baseAddress;
+    }
+
     public async Task DisposeAsync()
     {
         if (this.storeDbContext != null)

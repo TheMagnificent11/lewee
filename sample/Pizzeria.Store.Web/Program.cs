@@ -2,18 +2,18 @@ using Lewee.Blazor;
 using MudBlazor.Services;
 using Pizzeria.Common;
 using Pizzeria.ServiceDefaults;
+using Pizzeria.Store.Web;
 using Pizzeria.Store.Web.Services;
 using Pizzeria.Store.Web.States;
 using Refit;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add Aspire service defaults (now works with server-side Blazor!)
+// Add Aspire service defaults
 builder.AddServiceDefaults();
 
 // Add services to the container
-builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
+builder.Services.AddRazorComponents();
 
 // Configure Refit HTTP client for API using Aspire service discovery
 const string ApiClientName = "PizzeriaApi";
@@ -46,10 +46,8 @@ app.MapDefaultEndpoints();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.UseRouting();
+app.UseAntiforgery();
 
-app.MapRazorPages();
-app.MapBlazorHub();
-app.MapFallbackToPage("/_Host");
+app.MapRazorComponents<App>();
 
 await app.RunAsync();
