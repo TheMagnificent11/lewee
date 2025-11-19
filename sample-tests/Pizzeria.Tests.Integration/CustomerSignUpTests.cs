@@ -1,6 +1,5 @@
 using FluentAssertions;
 using Microsoft.Playwright;
-using Pizzeria.Common;
 using Xunit;
 
 namespace Pizzeria.Tests.Integration;

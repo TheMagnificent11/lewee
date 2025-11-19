@@ -22,10 +22,10 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
     private IDistributedApplicationTestingBuilder builder;
     private DistributedApplication app;
     private ResourceNotificationService resourceNotificationService;
-    private StoreDbContext storeDbContext;
-    private QueryProjectionService<StoreDbContext> storeDbQueryProjectionService;
     private string keycloakBaseUrl;
     private IPlaywright playwright;
+
+    private ServiceProvider serviceProvider;
 
     public async Task InitializeAsync()
     {
@@ -35,7 +35,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         this.playwright = await Playwright.CreateAsync();
 
         // Install browsers if not already installed (for CI/CD environments)
-        var exitCode = Microsoft.Playwright.Program.Main(new[] { "install", "chromium" });
+        var exitCode = Program.Main(["install", "chromium"]);
         if (exitCode != 0)
         {
             throw new Exception($"Failed to install Playwright browsers. Exit code: {exitCode}");
@@ -82,14 +82,22 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
         var databaseName = ServiceNames.GetPizzaStoreDatabaseName();
         var storeDbConnectionString = await this.app.GetConnectionStringAsync(databaseName);
-        var storeDbOptionsBuilder = new DbContextOptionsBuilder<StoreDbContext>();
 
-        storeDbOptionsBuilder.UseNpgsql(storeDbConnectionString);
+        // Setup service provider
+        var services = new ServiceCollection();
+        services.AddDbContext<StoreDbContext>(options =>
+        {
+            options.UseNpgsql(storeDbConnectionString);
+        });
+        services.AddTransient<IQueryProjectionService, QueryProjectionService<StoreDbContext>>();
+        services.AddKeycloakAdminClient(
+            Environments.Auth.RealmName,
+            options => options.BaseAddress = new Uri(this.keycloakBaseUrl));
 
-        this.storeDbContext = new StoreDbContext(storeDbOptionsBuilder.Options);
-        this.storeDbQueryProjectionService = new QueryProjectionService<StoreDbContext>(this.storeDbContext);
+        this.serviceProvider = services.BuildServiceProvider();
     }
 
+    // TODO: this should be removed after `PizzaOrderTests` are refactored to use Playwright
     public async Task<string> GetJwtAsync(string username, string password)
     {
         using var httpClient = new HttpClient();
@@ -123,7 +131,9 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
     public async Task<Order> GetLatestOrderAsync()
     {
-        var order = await this.storeDbContext
+        var storeDbContext = this.serviceProvider.GetRequiredService<StoreDbContext>();
+
+        var order = await storeDbContext
             .Orders
             .OrderByDescending(x => x.ModifiedAtUtc)
             .FirstOrDefaultAsync();
@@ -133,7 +143,9 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
     public async Task<Order> GetOrderAsync(Guid orderId)
     {
-        var order = await this.storeDbContext
+        var storeDbContext = this.serviceProvider.GetRequiredService<StoreDbContext>();
+
+        var order = await storeDbContext
             .Orders
             .Include(x => x.Pizzas)
             .FirstOrDefaultAsync(x => x.Id == orderId);
@@ -143,7 +155,9 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
     public async Task<User> GetLatestCustomerAsync()
     {
-        var user = await this.storeDbContext
+        var storeDbContext = this.serviceProvider.GetRequiredService<StoreDbContext>();
+
+        var user = await storeDbContext
             .Users
             .OrderByDescending(x => x.ModifiedAtUtc)
             .FirstOrDefaultAsync();
@@ -153,7 +167,9 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
     public async Task<User> GetCustomerByExternalIdAsync(string externalId)
     {
-        var user = await this.storeDbContext
+        var storeDbContext = this.serviceProvider.GetRequiredService<StoreDbContext>();
+
+        var user = await storeDbContext
             .Users
             .FirstOrDefaultAsync(x => x.ExternalId == externalId);
 
@@ -165,37 +181,10 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         return await this.app.GetConnectionStringAsync(serviceName);
     }
 
-    public async Task<string> CreateKeycloakUserAsync(string username, string password)
-    {
-        using var httpClient = new HttpClient { BaseAddress = new Uri(this.keycloakBaseUrl) };
-        using var memoryCache = new Microsoft.Extensions.Caching.Memory.MemoryCache(
-            new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions());
-        var authClient = AuthServerServiceCollectionExtensions.CreateAuthServerAdminClient(
-            httpClient,
-            Microsoft.Extensions.Logging.Abstractions.NullLogger.Instance,
-            memoryCache);
-
-        // Create the user
-        await authClient.CreateUserAsync(Environments.Auth.RealmName, username, password, CancellationToken.None);
-
-        // Get the user ID
-        var userId = await authClient.GetUserIdAsync(Environments.Auth.RealmName, username, CancellationToken.None);
-
-        return userId;
-    }
-
     public async Task<string> GetKeycloakUserIdAsync(string username)
     {
-        using var httpClient = new HttpClient { BaseAddress = new Uri(this.keycloakBaseUrl) };
-        using var memoryCache = new Microsoft.Extensions.Caching.Memory.MemoryCache(
-            new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions());
-        var authClient = AuthServerServiceCollectionExtensions.CreateAuthServerAdminClient(
-            httpClient,
-            Microsoft.Extensions.Logging.Abstractions.NullLogger.Instance,
-            memoryCache);
-
-        // Get the user ID
-        var userId = await authClient.GetUserIdAsync(Environments.Auth.RealmName, username, CancellationToken.None);
+        var authClient = this.serviceProvider.GetRequiredService<IAuthServerAdminClient>();
+        var userId = await authClient.GetUserIdAsync(username, CancellationToken.None);
 
         return userId;
     }
@@ -203,17 +192,21 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
     public async Task<T> GetQueryProjectionAsync<T>(string key)
         where T : class, IQueryProjection
     {
-        return await this.storeDbQueryProjectionService.RetrieveByKeyAsync<T>(key, CancellationToken.None);
+        var storeDbQueryProjectionService = this.serviceProvider.GetRequiredService<IQueryProjectionService>();
+
+        return await storeDbQueryProjectionService.RetrieveByKeyAsync<T>(key, CancellationToken.None);
     }
 
     public async Task<int> GetUndispatchedDomainEventCountAsync()
     {
-        if (this.storeDbContext.DomainEventReferences == null)
+        var storeDbContext = this.serviceProvider.GetRequiredService<StoreDbContext>();
+
+        if (storeDbContext.DomainEventReferences == null)
         {
             return 0;
         }
 
-        var count = await this.storeDbContext.DomainEventReferences
+        var count = await storeDbContext.DomainEventReferences
             .Where(x => !x.Dispatched)
             .CountAsync();
 
@@ -241,14 +234,11 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
     public async Task DisposeAsync()
     {
-        if (this.playwright != null)
-        {
-            this.playwright.Dispose();
-        }
+        this.playwright?.Dispose();
 
-        if (this.storeDbContext != null)
+        if (this.serviceProvider != null)
         {
-            await this.storeDbContext.DisposeAsync();
+            await this.serviceProvider.DisposeAsync();
         }
 
         if (this.app != null)

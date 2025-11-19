@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <ItemGroup>
-    <ProjectReference Include="..\Pizzeria.Auth\Pizzeria.Auth.csproj" />
     <ProjectReference Include="..\Pizzeria.Common\Pizzeria.Common.csproj" />
     <ProjectReference Include="..\Pizzeria.ServiceDefaults\Pizzeria.ServiceDefaults.csproj" />
     <ProjectReference Include="..\Pizzeria.Store.Data\Pizzeria.Store.Data.csproj" />

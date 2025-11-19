@@ -1,6 +1,5 @@
 ﻿using Lewee.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using Pizzeria.Auth;
 using Pizzeria.Common;
 using Pizzeria.Configuration;
 using Pizzeria.ServiceDefaults;
@@ -33,14 +32,6 @@ builder.Services.AddTransient<IDatabaseSeeder<StoreDbContext>, StoreSeeder>();
 builder.Services.AddSingleton<ConfigurationStatusService>();
 builder.Services.AddTransient<PizzeriaStoreDatabaseConfigurationService>();
 builder.Services.AddHostedService<ConfigurationBackgroundService>();
-
-// Register auth server admin client with service discovery
-builder.Services.AddAuthServerAdminClient((serviceProvider, client) =>
-{
-    // Use service discovery to get the Keycloak URL
-    client.BaseAddress = new Uri($"http://{ServiceNames.AuthServer}");
-    client.Timeout = TimeSpan.FromMinutes(1);
-});
 
 // Add health checks
 builder.Services
