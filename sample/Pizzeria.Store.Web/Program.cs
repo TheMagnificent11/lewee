@@ -46,9 +46,8 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 builder.Services.AddCascadingAuthenticationState();
 
-// Add services to the container
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
+// Add Razor components
+builder.Services.AddRazorComponents();
 
 // Configure Refit HTTP client for API using Aspire service discovery
 const string ApiClientName = "PizzeriaApi";
