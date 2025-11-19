@@ -31,8 +31,15 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
     {
         Environments.SetToIntegrationTesting();
 
-        // Initialize Playwright
+        // Initialize Playwright and ensure browsers are installed
         this.playwright = await Playwright.CreateAsync();
+
+        // Install browsers if not already installed (for CI/CD environments)
+        var exitCode = Microsoft.Playwright.Program.Main(new[] { "install", "chromium" });
+        if (exitCode != 0)
+        {
+            throw new Exception($"Failed to install Playwright browsers. Exit code: {exitCode}");
+        }
 
         // https://learn.microsoft.com/en-us/dotnet/aspire/testing/manage-app-host?pivots=xunit
         this.builder = await DistributedApplicationTestingBuilder.CreateAsync<Projects.Pizzeria_AppHost>();

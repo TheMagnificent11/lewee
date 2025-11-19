@@ -20,8 +20,6 @@ public static class Environments
     {
         public const string RealmName = "lewee-pizzeria";
 
-        public const string ApiClientId = "pizzeria-store-api";
-
         public static class Clients
         {
             public const string StoreApi = "pizzeria-store-api";
