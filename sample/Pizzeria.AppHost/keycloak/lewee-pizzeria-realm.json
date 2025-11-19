@@ -122,7 +122,11 @@
       "redirectUris": ["*"],
       "webOrigins": ["*"],
       "attributes": {
-        "access.token.lifespan": "300"
+        "access.token.lifespan": "300",
+        "pkce.code.challenge.method": "S256",
+        "oauth2.device.authorization.grant.enabled": "false",
+        "oidc.ciba.grant.enabled": "false",
+        "client.secret.creation.time": "0"
       }
     }
   ]

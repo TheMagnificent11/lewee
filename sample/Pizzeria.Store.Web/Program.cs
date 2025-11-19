@@ -26,9 +26,11 @@ builder.Services.AddAuthentication(options =>
     options =>
     {
         options.ClientId = Pizzeria.Common.Environments.Auth.Clients.StoreWeb;
+        options.ResponseType = "code"; // Use authorization code flow
         options.SaveTokens = true;
         options.GetClaimsFromUserInfoEndpoint = true;
         options.RequireHttpsMetadata = false; // For development/testing only
+        options.UsePkce = true; // Enable PKCE for public clients
 
         // Map claims
         options.TokenValidationParameters.NameClaimType = "preferred_username";
