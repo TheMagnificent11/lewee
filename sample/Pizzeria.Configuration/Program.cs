@@ -32,7 +32,6 @@ builder.Services.AddTransient<IDatabaseSeeder<StoreDbContext>, StoreSeeder>();
 // Register configuration services
 builder.Services.AddSingleton<ConfigurationStatusService>();
 builder.Services.AddTransient<PizzeriaStoreDatabaseConfigurationService>();
-builder.Services.AddTransient<AuthServerConfigurationService>();
 builder.Services.AddHostedService<ConfigurationBackgroundService>();
 
 // Register auth server admin client with service discovery
