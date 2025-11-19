@@ -13,7 +13,7 @@ public sealed class CreateCustomerEndpoint : CommandEndpoint<CreateCustomerReque
 
     protected override string Name => "Create Customer";
 
-    protected override bool IsAnonymousAllowed => false;
+    protected override bool IsAnonymousAllowed => true;
 
     public override async Task HandleAsync(CreateCustomerRequest req, CancellationToken ct)
     {

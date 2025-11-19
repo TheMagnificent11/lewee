@@ -34,6 +34,17 @@ public record CreateCustomerCommand(string ExternalUserId, Guid CorrelationId) :
 
         public async Task<CommandResult> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
         {
+            // Check if user already exists
+            var specification = new UserByExternalIdSpecification(request.ExternalUserId);
+            var existingUser = await this.repository.QueryOneAsync(specification, cancellationToken);
+
+            if (existingUser != null)
+            {
+                // User already exists, return success
+                this.logger.LogCustomerAlreadyExists(existingUser.Id, request.ExternalUserId);
+                return CommandResult.Success();
+            }
+
             // Create user entity with Keycloak user ID
             var user = User.Create(request.ExternalUserId, request.CorrelationId);
 
