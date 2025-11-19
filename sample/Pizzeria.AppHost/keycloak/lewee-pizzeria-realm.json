@@ -2,7 +2,7 @@
   "realm": "lewee-pizzeria",
   "enabled": true,
   "sslRequired": "none",
-  "registrationAllowed": false,
+  "registrationAllowed": true,
   "loginWithEmailAllowed": true,
   "duplicateEmailsAllowed": false,
   "resetPasswordAllowed": true,
@@ -11,68 +11,6 @@
   "rememberMe": true,
   "verifyEmail": false,
   "accessTokenLifespan": 300,
-  "users": [
-    {
-      "username": "customer-1",
-      "enabled": true,
-      "emailVerified": true,
-      "email": "customer-1@example.com",
-      "firstName": "customer-1",
-      "lastName": "User",
-      "credentials": [
-        {
-          "type": "password",
-          "value": "Password123!",
-          "temporary": false
-        }
-      ]
-    },
-    {
-      "username": "front-staff-1",
-      "enabled": true,
-      "emailVerified": true,
-      "email": "front-staff-1@example.com",
-      "firstName": "front-staff-1",
-      "lastName": "User",
-      "credentials": [
-        {
-          "type": "password",
-          "value": "Password123!",
-          "temporary": false
-        }
-      ]
-    },
-    {
-      "username": "kitchen-staff-1",
-      "enabled": true,
-      "emailVerified": true,
-      "email": "kitchen-staff-1@example.com",
-      "firstName": "kitchen-staff-1",
-      "lastName": "User",
-      "credentials": [
-        {
-          "type": "password",
-          "value": "Password123!",
-          "temporary": false
-        }
-      ]
-    },
-    {
-      "username": "delivery-driver-1",
-      "enabled": true,
-      "emailVerified": true,
-      "email": "delivery-driver-1@example.com",
-      "firstName": "delivery-driver-1",
-      "lastName": "User",
-      "credentials": [
-        {
-          "type": "password",
-          "value": "Password123!",
-          "temporary": false
-        }
-      ]
-    }
-  ],
   "clients": [
     {
       "clientId": "pizzeria-store-api",
@@ -122,7 +60,11 @@
       "redirectUris": ["*"],
       "webOrigins": ["*"],
       "attributes": {
-        "access.token.lifespan": "300"
+        "access.token.lifespan": "300",
+        "pkce.code.challenge.method": "S256",
+        "oauth2.device.authorization.grant.enabled": "false",
+        "oidc.ciba.grant.enabled": "false",
+        "client.secret.creation.time": "0"
       }
     }
   ]

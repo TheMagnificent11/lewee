@@ -15,7 +15,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Lewee.Infrastructure.AspNet.WebApi\Lewee.Infrastructure.AspNet.WebApi.csproj" />
     <ProjectReference Include="..\..\src\Lewee.Infrastructure.PostgreSQL\Lewee.Infrastructure.PostgreSQL.csproj" />
-    <ProjectReference Include="..\Pizzeria.Auth\Pizzeria.Auth.csproj" />
     <ProjectReference Include="..\Pizzeria.Common\Pizzeria.Common.csproj" />
     <ProjectReference Include="..\Pizzeria.Store.Application\Pizzeria.Store.Application.csproj" />
     <ProjectReference Include="..\Pizzeria.Store.Data\Pizzeria.Store.Data.csproj" />

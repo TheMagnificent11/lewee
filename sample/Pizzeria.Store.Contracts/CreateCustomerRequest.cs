@@ -1,4 +1,4 @@
-namespace Pizzeria.Store.Api.Customers;
+namespace Pizzeria.Store.Contracts;
 
 public record CreateCustomerRequest
 {

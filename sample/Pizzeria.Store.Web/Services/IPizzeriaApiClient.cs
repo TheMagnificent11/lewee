@@ -17,5 +17,3 @@ public interface IPizzeriaApiClient
     [Post("/customers")]
     Task CreateCustomerAsync([Body] CreateCustomerRequest request, CancellationToken cancellationToken = default);
 }
-
-public record CreateCustomerRequest(string Username, string Password);
