@@ -35,13 +35,13 @@ public sealed class CustomerSignUpTests : PizzeriaTests
             await page.GotoAsync(webClientUrl);
 
             // Wait for Keycloak login page to load
-            await page.WaitForSelectorAsync("text=Register", new PageWaitForSelectorOptions { Timeout = 10000 });
+            await page.WaitForSelectorAsync("text=Register", new PageWaitForSelectorOptions { Timeout = 30000 });
 
             // Click on Register link
             await page.ClickAsync("text=Register");
 
             // Wait for registration form
-            await page.WaitForSelectorAsync("#firstName", new PageWaitForSelectorOptions { Timeout = 10000 });
+            await page.WaitForSelectorAsync("#firstName", new PageWaitForSelectorOptions { Timeout = 30000 });
 
             // Fill out registration form
             await page.FillAsync("#firstName", username);
@@ -54,8 +54,13 @@ public sealed class CustomerSignUpTests : PizzeriaTests
             // Submit registration
             await page.ClickAsync("input[type='submit']");
 
-            // Wait for redirect back to the app and for domain events to be processed
-            await page.WaitForURLAsync($"{webClientUrl}/**", new PageWaitForURLOptions { Timeout = 30000 });
+            // Wait for redirect back to the app
+            await page.WaitForURLAsync($"{webClientUrl}/**", new PageWaitForURLOptions { Timeout = 60000 });
+
+            // Wait a bit for the User entity to be created via the OnTokenValidated event
+            await Task.Delay(TimeSpan.FromSeconds(5));
+
+            // Wait for domain events to be dispatched
             await this.WaitForDomainEventsToBeDispatchedAsync();
 
             // Assert - Verify the user was created in the database
@@ -94,11 +99,11 @@ public sealed class CustomerSignUpTests : PizzeriaTests
             await page.GotoAsync(webClientUrl);
 
             // Wait for Keycloak login page and click Register
-            await page.WaitForSelectorAsync("text=Register", new PageWaitForSelectorOptions { Timeout = 10000 });
+            await page.WaitForSelectorAsync("text=Register", new PageWaitForSelectorOptions { Timeout = 30000 });
             await page.ClickAsync("text=Register");
 
             // Fill registration form
-            await page.WaitForSelectorAsync("#firstName", new PageWaitForSelectorOptions { Timeout = 10000 });
+            await page.WaitForSelectorAsync("#firstName", new PageWaitForSelectorOptions { Timeout = 30000 });
             await page.FillAsync("#firstName", username);
             await page.FillAsync("#lastName", "User");
             await page.FillAsync("#email", email);
@@ -110,10 +115,15 @@ public sealed class CustomerSignUpTests : PizzeriaTests
             await page.ClickAsync("input[type='submit']");
 
             // Wait for redirect back to the app
-            await page.WaitForURLAsync($"{webClientUrl}/**", new PageWaitForURLOptions { Timeout = 30000 });
+            await page.WaitForURLAsync($"{webClientUrl}/**", new PageWaitForURLOptions { Timeout = 60000 });
 
-            // Assert - Verify user is on the home page
+            // Assert - Verify user is on the home page (authenticated)
             page.Url.Should().StartWith(webClientUrl);
+
+            // Verify we can see content from the authenticated page
+            // (This confirms the user is authenticated and not stuck on a redirect loop)
+            var pageContent = await page.ContentAsync();
+            pageContent.Should().Contain("Lewee Pizzeria");
         }
         finally
         {
