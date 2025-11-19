@@ -22,6 +22,12 @@ public static class Environments
 
         public const string ApiClientId = "pizzeria-store-api";
 
+        public static class Clients
+        {
+            public const string StoreApi = "pizzeria-store-api";
+            public const string StoreWeb = "pizzeria-store-web";
+        }
+
         public static class DefaultAdminCredentialsForTesting
         {
             public const string Username = "admin";

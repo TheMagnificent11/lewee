@@ -13,7 +13,4 @@ public interface IPizzeriaApiClient
 
     [Put("/orders/{orderId}/pizzas/{pizzaId}")]
     Task AddPizzaToOrderAsync(Guid orderId, Guid pizzaId, CancellationToken cancellationToken = default);
-
-    [Post("/customers")]
-    Task CreateCustomerAsync([Body] CreateCustomerRequest request, CancellationToken cancellationToken = default);
 }

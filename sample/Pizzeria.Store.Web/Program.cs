@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using Lewee.Blazor;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -6,7 +5,6 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using MudBlazor.Services;
 using Pizzeria.Common;
 using Pizzeria.ServiceDefaults;
-using Pizzeria.Store.Contracts;
 using Pizzeria.Store.Web;
 using Pizzeria.Store.Web.Services;
 using Pizzeria.Store.Web.States;
@@ -26,8 +24,8 @@ builder.Services.AddAuthentication(options =>
 .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
 .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
 {
-    options.Authority = $"https://{ServiceNames.AuthServer}/realms/{Pizzeria.Common.Environments.Auth.RealmName}";
-    options.ClientId = "pizzeria-store-web";
+    options.Authority = $"http://{ServiceNames.AuthServer}/realms/{Pizzeria.Common.Environments.Auth.RealmName}";
+    options.ClientId = Pizzeria.Common.Environments.Auth.Clients.StoreWeb;
     options.ResponseType = OpenIdConnectResponseType.Code;
     options.SaveTokens = true;
     options.GetClaimsFromUserInfoEndpoint = true;
@@ -42,31 +40,6 @@ builder.Services.AddAuthentication(options =>
     options.Scope.Add("openid");
     options.Scope.Add("profile");
     options.Scope.Add("email");
-
-    // Handle user creation on first login
-    options.Events = new OpenIdConnectEvents
-    {
-        OnTokenValidated = async context =>
-        {
-            var externalUserId = context.Principal?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (!string.IsNullOrEmpty(externalUserId))
-            {
-                var apiClient = context.HttpContext.RequestServices.GetRequiredService<IPizzeriaApiClient>();
-                try
-                {
-                    // Try to create the user - if they already exist, the API will return an error which we ignore
-                    await apiClient.CreateCustomerAsync(new CreateCustomerRequest
-                    {
-                        ExternalUserId = externalUserId,
-                    });
-                }
-                catch
-                {
-                    // Ignore errors - user might already exist
-                }
-            }
-        },
-    };
 });
 
 builder.Services.AddAuthorization();
@@ -112,7 +85,6 @@ app.UseAntiforgery();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
+app.MapRazorComponents<App>();
 
 await app.RunAsync();

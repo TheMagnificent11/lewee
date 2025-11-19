@@ -64,7 +64,7 @@ internal sealed class AuthServerConfigurationService
             this.logger.LogInformation("Step 3: Testing token endpoint...");
             await this.authServerAdminClient.TestTokenEndpointAsync(
                 PizzeriaEnvironments.Auth.RealmName,
-                PizzeriaEnvironments.Auth.ApiClientId,
+                PizzeriaEnvironments.Auth.Clients.StoreApi,
                 PizzeriaEnvironments.Auth.Users.Customer1.Username,
                 PizzeriaEnvironments.Auth.Users.Customer1.Password,
                 cancellationToken);

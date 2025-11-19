@@ -91,7 +91,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         var tokenRequest = new FormUrlEncodedContent(new Dictionary<string, string>(StringComparer.Ordinal)
         {
             ["grant_type"] = "password",
-            ["client_id"] = Environments.Auth.ApiClientId,
+            ["client_id"] = Environments.Auth.Clients.StoreApi,
             ["username"] = Environments.Auth.Users.Customer1.Username,
             ["password"] = Environments.Auth.Users.Customer1.Password,
         });
