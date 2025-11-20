@@ -23,5 +23,7 @@ public static class TestContextExtensions
         testContext.Services.AddSingleton(mockLogger.Object);
         testContext.Services.AddMudServices();
         testContext.Services.AddFluxor(o => o.ScanAssemblies(typeof(OrdersState).Assembly));
+
+        testContext.JSInterop.Mode = JSRuntimeMode.Loose;
     }
 }
