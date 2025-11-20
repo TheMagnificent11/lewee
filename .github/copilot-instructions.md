@@ -172,6 +172,12 @@ dotnet format lewee.sln
 - [ ] Follows existing patterns in the codebase
 - [ ] Framework changes (`src/` directory) have at least 90% line coverage
 
+**Blazor Components:**
+- Use code-behind pattern with partial classes for Razor components
+- Create a separate `.razor.cs` file for component logic
+- Keep the `.razor` file for markup only (no `@inject` or `@code` blocks)
+- See `sample/Pizzeria.Store.Web/Pages/Home.razor` and `Home.razor.cs` for examples
+
 ### Logging
 
 - Use logging scopes where possible to provide context (as opposed to structured properties within a log message
