@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- CS1591: Missing XML documentation warnings are suppressed for test projects -->
+    <!-- CS1587: XML comment placement warnings are suppressed due to test model classes with misplaced XML comments -->
     <NoWarn>$(NoWarn);CS1591;CS1587</NoWarn>
   </PropertyGroup>
 
