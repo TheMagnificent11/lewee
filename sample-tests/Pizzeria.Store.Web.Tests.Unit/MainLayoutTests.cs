@@ -1,7 +1,5 @@
 using Bunit;
 using FluentAssertions;
-using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.DependencyInjection;
 using Pizzeria.Store.Web.Layout;
 
 namespace Pizzeria.Store.Web.Tests.Unit;
@@ -35,19 +33,16 @@ public class MainLayoutTests : TestContext
     }
 
     [Fact]
-    public void MainLayout_WhenSignOutButtonClicked_NavigatesToLogoutEndpoint()
+    public void MainLayout_WhenRendered_ShowsSignOutFormWithCorrectAction()
     {
         // Arrange
         this.Setup();
 
+        // Act
         var component = this.RenderComponent<MainLayout>();
 
-        // Act
-        var signOutButton = component.Find(MainLayout.SignOutButtonSelector);
-        signOutButton.Click();
-
         // Assert
-        var navigationManager = this.Services.GetRequiredService<NavigationManager>();
-        navigationManager.Uri.Should().Contain(Routes.SignOut);
+        component.Markup.Should().Contain($"action=\"{Routes.SignOut}\"");
+        component.Markup.Should().Contain("method=\"post\"");
     }
 }

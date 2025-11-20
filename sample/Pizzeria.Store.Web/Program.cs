@@ -1,6 +1,5 @@
 using System.Security.Claims;
 using Lewee.Blazor;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using MudBlazor.Services;
@@ -117,14 +116,18 @@ app.UseAntiforgery();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapRazorComponents<App>();
+app
+    .MapPost(Routes.SignOut, () =>
+    {
+        return TypedResults.SignOut(
+            authenticationSchemes:
+            [
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                OpenIdConnectDefaults.AuthenticationScheme,
+           ]);
+    })
+    .RequireAuthorization();
 
-// Map authentication endpoints
-app.MapGet(Routes.SignOut, async (HttpContext context) =>
-{
-    await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-    await context.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme);
-    return Results.Redirect("/");
-}).RequireAuthorization();
+app.MapRazorComponents<App>();
 
 await app.RunAsync();
