@@ -10,6 +10,7 @@ public partial class Home : FluxorComponent
 {
     [Inject]
     private IState<OrdersState> OrdersState { get; set; } = null!;
+
     [Inject]
     private IDispatcher Dispatcher { get; set; } = null!;
 

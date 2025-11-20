@@ -1,5 +1,6 @@
 using Bunit;
 using Correlate;
+using FluentAssertions;
 using Fluxor;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,7 +36,7 @@ public class MainLayoutTests : TestContext
         var component = this.RenderComponent<MainLayout>();
 
         // Assert
-        Assert.Contains("Lewee Pizzeria", component.Markup, StringComparison.Ordinal);
+        component.Markup.Should().Contain("Lewee Pizzeria");
     }
 
     [Fact]
@@ -59,7 +60,7 @@ public class MainLayoutTests : TestContext
         var component = this.RenderComponent<MainLayout>();
 
         // Assert
-        Assert.Contains("aria-label=\"sign-out\"", component.Markup, StringComparison.Ordinal);
+        component.Markup.Should().Contain("aria-label=\"sign-out\"");
     }
 
     [Fact]
@@ -87,6 +88,6 @@ public class MainLayoutTests : TestContext
 
         // Assert
         var navigationManager = this.Services.GetRequiredService<NavigationManager>();
-        Assert.Contains("/logout", navigationManager.Uri, StringComparison.Ordinal);
+        navigationManager.Uri.Should().Contain("/logout");
     }
 }

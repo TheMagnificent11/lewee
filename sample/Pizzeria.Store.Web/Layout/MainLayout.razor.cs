@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Routing;
 
 namespace Pizzeria.Store.Web.Layout;
 
-public partial class MainLayout
+public partial class MainLayout : LayoutComponentBase
 {
     [Inject]
     private NavigationManager Navigation { get; set; } = null!;

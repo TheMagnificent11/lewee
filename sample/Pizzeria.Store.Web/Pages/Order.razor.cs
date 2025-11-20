@@ -13,10 +13,13 @@ public partial class Order : FluxorComponent
 {
     [Inject]
     private IState<OrdersState> OrdersState { get; set; } = null!;
+
     [Inject]
     private IState<PizzasState> PizzasState { get; set; } = null!;
+
     [Inject]
     private IDispatcher Dispatcher { get; set; } = null!;
+
     [Inject]
     private NavigationManager Navigation { get; set; } = null!;
 
