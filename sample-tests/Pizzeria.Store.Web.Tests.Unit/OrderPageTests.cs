@@ -1,5 +1,6 @@
 using Bunit;
 using Correlate;
+using FluentAssertions;
 using Fluxor;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,7 +11,6 @@ using Pizzeria.Store.Contracts;
 using Pizzeria.Store.Web.Pages;
 using Pizzeria.Store.Web.Services;
 using Pizzeria.Store.Web.States.Orders;
-using Pizzeria.Store.Web.States.Pizzas;
 
 namespace Pizzeria.Store.Web.Tests.Unit;
 
@@ -34,7 +34,7 @@ public class OrderPageTests : TestContext
         // Act & Assert
         // Since we don't have an active order, this should show a warning about no active order
         var component = this.RenderComponent<Order>();
-        Assert.Contains("No active order found", component.Markup, StringComparison.Ordinal);
+        component.Markup.Should().Contain("No active order found");
     }
 
     [Fact]
@@ -62,7 +62,7 @@ public class OrderPageTests : TestContext
         var component = this.RenderComponent<Order>();
 
         // Assert - the component should render without throwing
-        Assert.NotNull(component);
+        component.Should().NotBeNull();
     }
 
     [Fact]
@@ -77,7 +77,7 @@ public class OrderPageTests : TestContext
         var testPizzas = new[]
         {
             new PizzaDto(Guid.NewGuid(), "Margherita", "Classic tomato and mozzarella", 12.99m),
-            new PizzaDto(Guid.NewGuid(), "Pepperoni", "Pepperoni and cheese", 14.99m)
+            new PizzaDto(Guid.NewGuid(), "Pepperoni", "Pepperoni and cheese", 14.99m),
         };
 
         mockApiClient.Setup(x => x.GetPizzasAsync(It.IsAny<CancellationToken>())).ReturnsAsync(testPizzas);
@@ -92,6 +92,7 @@ public class OrderPageTests : TestContext
         var component = this.RenderComponent<Order>();
 
         // Assert - basic component structure
-        Assert.Contains("Pizza Menu", component.Markup, StringComparison.Ordinal);
+
+        component.Markup.Should().Contain("Pizza Menu");
     }
 }

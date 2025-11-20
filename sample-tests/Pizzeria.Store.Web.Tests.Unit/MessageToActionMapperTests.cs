@@ -1,3 +1,4 @@
+using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Pizzeria.Store.Contracts;
@@ -21,18 +22,18 @@ public class MessageToActionMapperTests
             UserId = "test-user",
             StartedDateTime = DateTime.UtcNow,
             Pizzas = [],
-            TotalCost = 0
+            TotalCost = 0,
         };
 
         // Act
         var action = mapper.Map(message, correlationId);
 
         // Assert
-        Assert.NotNull(action);
-        Assert.IsType<StartOrderCompletedAction>(action);
-        var completedAction = (StartOrderCompletedAction)action;
-        Assert.Equal(orderId, completedAction.Order.Id);
-        Assert.Equal(correlationId, completedAction.CorrelationId);
+        action.Should().NotBeNull();
+        action.Should().BeOfType<StartOrderCompletedAction>();
+        var completedAction = (StartOrderCompletedAction)action!;
+        completedAction.Order.Id.Should().Be(orderId);
+        completedAction.CorrelationId.Should().Be(correlationId);
     }
 
     [Fact]
@@ -48,7 +49,7 @@ public class MessageToActionMapperTests
         var action = mapper.Map(message, correlationId);
 
         // Assert
-        Assert.Null(action);
+        action.Should().BeNull();
     }
 
     [Fact]
@@ -63,6 +64,6 @@ public class MessageToActionMapperTests
         var action = mapper.Map(null!, correlationId);
 
         // Assert
-        Assert.Null(action);
+        action.Should().BeNull();
     }
 }

@@ -171,6 +171,13 @@ dotnet format lewee.sln
 - [ ] No XML documentation for sample application code (`sample/` directory)
 - [ ] Follows existing patterns in the codebase
 - [ ] Framework changes (`src/` directory) have at least 90% line coverage
+- [ ] No magic strings for Playwright/bUnit selectors; expose a constant from the component and use that instead
+
+**Blazor Components:**
+- Use code-behind pattern with partial classes for Razor components
+- Create a separate `.razor.cs` file for component logic
+- Keep the `.razor` file for markup only (no `@inject` or `@code` blocks)
+- See `sample/Pizzeria.Store.Web/Pages/Home.razor` and `Home.razor.cs` for examples
 
 ### Logging
 
@@ -178,6 +185,11 @@ dotnet format lewee.sln
   - Prefer to inherit structured properties from the scope when they are passed in as parameters
     - Values like CorrelationId, TenantId, UserId etc that are passed in as method parameters should be added to the logging scope at the entry point of the request
 - Do not use emojis in log messages
+
+### bUnit/Playwright Testing Standards
+
+- Do not use magic strings for selectors
+  - Expose a constant from the component and use that instead
 
 ## Validation Workflows
 

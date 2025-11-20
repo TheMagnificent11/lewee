@@ -116,6 +116,18 @@ app.UseAntiforgery();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app
+    .MapPost(Routes.SignOut, () =>
+    {
+        return TypedResults.SignOut(
+            authenticationSchemes:
+            [
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                OpenIdConnectDefaults.AuthenticationScheme,
+           ]);
+    })
+    .RequireAuthorization();
+
 app.MapRazorComponents<App>();
 
 await app.RunAsync();

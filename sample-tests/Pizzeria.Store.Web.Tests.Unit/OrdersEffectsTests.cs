@@ -1,6 +1,6 @@
-using System.Diagnostics.CodeAnalysis;
 using Bunit;
 using Correlate;
+using FluentAssertions;
 using Fluxor;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,9 +10,6 @@ using Pizzeria.Store.Contracts;
 using Pizzeria.Store.Web.Services;
 using Pizzeria.Store.Web.States.Orders;
 using Pizzeria.Store.Web.States.Orders.Actions;
-
-[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Test helper class", Scope = "namespaceanddescendants", Target = "~N:Pizzeria.Store.WebClient.Tests.Unit")]
-[assembly: SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "Test helper class", Scope = "type", Target = "~T:Pizzeria.Store.WebClient.Tests.Unit.TestNavigationManager")]
 
 namespace Pizzeria.Store.Web.Tests.Unit;
 
@@ -45,7 +42,7 @@ public class OrdersEffectsTests : TestContext
             UserId = "test-user",
             StartedDateTime = DateTime.UtcNow,
             Pizzas = [],
-            TotalCost = 0
+            TotalCost = 0,
         };
         var action = new StartOrderCompletedAction(order, correlationId);
 
@@ -54,7 +51,7 @@ public class OrdersEffectsTests : TestContext
 
         // Assert
         var navMan = this.Services.GetRequiredService<NavigationManager>();
-        Assert.Contains("/order", navMan.Uri, StringComparison.Ordinal);
+        navMan.Uri.Should().Contain($"/order");
     }
 
     [Fact]
