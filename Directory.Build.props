@@ -12,6 +12,10 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <Authors>Saji Weerasingham</Authors>
     <Company>NA</Company>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <AnalysisMode>All</AnalysisMode>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
   </PropertyGroup>
 
   <PropertyGroup Condition="!$(MSBuildProjectName.Contains('.Tests.'))">

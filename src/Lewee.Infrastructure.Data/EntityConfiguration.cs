@@ -1,5 +1,4 @@
-﻿using Lewee.Domain;
-using Microsoft.EntityFrameworkCore;
+using Lewee.Domain;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Lewee.Infrastructure.Data;

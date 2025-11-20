@@ -1,6 +1,5 @@
 using Lewee.Blazor.Fluxor.Actions;
 using Lewee.Blazor.Messaging;
-using Microsoft.Extensions.Logging;
 using Pizzeria.Store.Contracts;
 using Pizzeria.Store.Web.States.Orders.Actions;
 

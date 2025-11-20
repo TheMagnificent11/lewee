@@ -3,7 +3,6 @@ using Correlate;
 using Fluxor;
 using Lewee.Blazor.Fluxor;
 using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Logging;
 using Pizzeria.Store.Web.Services;
 using Pizzeria.Store.Web.States.Orders.Actions;
 

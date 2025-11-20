@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using Lewee.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

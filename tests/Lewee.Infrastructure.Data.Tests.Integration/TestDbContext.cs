@@ -1,4 +1,3 @@
-using Lewee.Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace Lewee.Infrastructure.Data.Tests.Integration;

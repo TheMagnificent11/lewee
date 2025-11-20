@@ -1,4 +1,3 @@
-using FastEndpoints;
 using Lewee.Infrastructure.AspNet.WebApi;
 using Pizzeria.Common;
 using Pizzeria.Store.Application.Customers;
