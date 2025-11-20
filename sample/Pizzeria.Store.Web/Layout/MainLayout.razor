@@ -1,5 +1,4 @@
 ﻿@inherits LayoutComponentBase
-@inject NavigationManager Navigation
 
 <MudThemeProvider />
 <MudPopoverProvider />
@@ -20,10 +19,3 @@
         </MudContainer>
     </MudMainContent>
 </MudLayout>
-
-@code {
-    private void SignOut()
-    {
-        Navigation.NavigateTo("/logout", forceLoad: true);
-    }
-}

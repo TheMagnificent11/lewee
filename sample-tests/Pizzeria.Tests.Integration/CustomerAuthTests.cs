@@ -65,13 +65,17 @@ public sealed class CustomerAuthTests : PizzeriaTests
             var signOutButton = page.Locator("button[aria-label='sign-out']");
             await signOutButton.ClickAsync();
 
-            // Step 4: Wait for redirect to Keycloak sign-in page
-            await page.WaitForSelectorAsync("text=Sign in", new PageWaitForSelectorOptions { Timeout = 30000 });
+            // Step 4: Wait for navigation to complete and redirect to Keycloak sign-in page
+            // The sign-out triggers a navigation, so we need to wait for the URL to change
+            await page.WaitForURLAsync(url => url.Contains("auth") && url.Contains("login"), new PageWaitForURLOptions { Timeout = 30000 });
 
             // Verify we're on the Keycloak sign-in page
             var currentUrl = page.Url;
             currentUrl.Should().Contain("auth"); // Keycloak URL contains 'auth'
             currentUrl.Should().Contain("login"); // Login page
+
+            // Wait for the sign-in form to be visible
+            await page.WaitForSelectorAsync("#username", new PageWaitForSelectorOptions { Timeout = 10000 });
 
             // Step 5: Sign back in
             await page.FillAsync("#username", username);
@@ -90,8 +94,8 @@ public sealed class CustomerAuthTests : PizzeriaTests
             signOutButton = page.Locator("button[aria-label='sign-out']");
             await signOutButton.ClickAsync();
 
-            // Step 8: Verify we're back on the Keycloak sign-in page
-            await page.WaitForSelectorAsync("text=Sign in", new PageWaitForSelectorOptions { Timeout = 30000 });
+            // Step 8: Wait for navigation and verify we're back on the Keycloak sign-in page
+            await page.WaitForURLAsync(url => url.Contains("auth") && url.Contains("login"), new PageWaitForURLOptions { Timeout = 30000 });
             currentUrl = page.Url;
             currentUrl.Should().Contain("auth");
             currentUrl.Should().Contain("login");
