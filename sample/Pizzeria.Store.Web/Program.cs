@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using Lewee.Blazor;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using MudBlazor.Services;
@@ -117,5 +118,13 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorComponents<App>();
+
+// Map authentication endpoints
+app.MapPost("/logout", async (HttpContext context) =>
+{
+    await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+    await context.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme);
+    return Results.Redirect("/");
+}).RequireAuthorization();
 
 await app.RunAsync();
