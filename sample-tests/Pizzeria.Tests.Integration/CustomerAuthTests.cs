@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Microsoft.Playwright;
+using Pizzeria.Store.Web.Layout;
 using Xunit;
 
 namespace Pizzeria.Tests.Integration;
@@ -62,7 +63,7 @@ public sealed class CustomerAuthTests : PizzeriaTests
             pageContent.Should().Contain("Lewee Pizzeria");
 
             // Step 3: Sign out the user
-            var signOutButton = page.Locator("button[aria-label='sign-out']");
+            var signOutButton = page.Locator(MainLayout.SignOutButtonSelector);
             await signOutButton.ClickAsync();
 
             // Wait for navigation to Keycloak login page
@@ -91,7 +92,7 @@ public sealed class CustomerAuthTests : PizzeriaTests
             pageContent.Should().Contain("Lewee Pizzeria");
 
             // Step 7: Sign out again
-            signOutButton = page.Locator("button[aria-label='sign-out']");
+            signOutButton = page.Locator(MainLayout.SignOutButtonSelector);
             await signOutButton.ClickAsync();
 
             // Wait for navigation to Keycloak login page

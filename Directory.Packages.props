@@ -77,7 +77,7 @@
     <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="9.5.2" />
   </ItemGroup>
   <ItemGroup Label="FluentAssertions (DO NOT UPGRADE)">
-    <PackageVersion Include="FluentAssertions" Version="8.8.0" />
+    <PackageVersion Include="FluentAssertions" Version="7.2.0" />
     <PackageVersion Include="FluentAssertions.Analyzers" Version="0.34.1" />
   </ItemGroup>
   <ItemGroup Label="OpenTelemetry">

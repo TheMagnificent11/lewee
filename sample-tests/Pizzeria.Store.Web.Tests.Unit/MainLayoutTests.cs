@@ -43,11 +43,11 @@ public class MainLayoutTests : TestContext
         var component = this.RenderComponent<MainLayout>();
 
         // Act
-        var signOutButton = component.Find("button[aria-label='sign-out']");
+        var signOutButton = component.Find(MainLayout.SignOutButtonSelector);
         signOutButton.Click();
 
         // Assert
         var navigationManager = this.Services.GetRequiredService<NavigationManager>();
-        navigationManager.Uri.Should().Contain("/logout");
+        navigationManager.Uri.Should().Contain(Routes.SignOut);
     }
 }
