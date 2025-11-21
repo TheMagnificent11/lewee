@@ -15,7 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
-var databaseName = ServiceNames.GetPizzaStoreDatabaseName();
+var databaseName = ServiceNames.PizzaStoreDatabaseName;
 var isDevOrTest = builder.Environment.IsDevelopment() || Pizzeria.Common.Environments.IsIntegrationTesting;
 
 builder.Services

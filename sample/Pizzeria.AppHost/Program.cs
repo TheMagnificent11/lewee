@@ -32,7 +32,7 @@ var databaseServer = Environments.IsIntegrationTesting
         .WithDataVolume(isReadOnly: false)
         .WithPgWeb();
 
-var pizzaStoreDatabaseName = ServiceNames.GetPizzaStoreDatabaseName();
+var pizzaStoreDatabaseName = ServiceNames.PizzaStoreDatabaseName;
 var pizzaStoreDatabase = databaseServer.AddDatabase(pizzaStoreDatabaseName);
 
 var configuration = builder.AddProject<Projects.Pizzeria_Configuration>(ServiceNames.ConfigurationService)

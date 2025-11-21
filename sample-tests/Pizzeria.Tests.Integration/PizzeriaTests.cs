@@ -26,7 +26,7 @@ SELECT EXISTS
 
     public async Task InitializeAsync()
     {
-        var databaseName = ServiceNames.GetPizzaStoreDatabaseName();
+        var databaseName = ServiceNames.PizzaStoreDatabaseName;
         var connectionString = await this.factory.GetConnectionStringAsync(databaseName);
 
         await using var connection = new NpgsqlConnection(connectionString);

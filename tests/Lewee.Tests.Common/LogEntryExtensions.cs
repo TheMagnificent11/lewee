@@ -6,7 +6,7 @@ namespace Lewee.Tests.Common;
 /// <summary>
 /// Extension methods for testing log entries
 /// </summary>
-public static class LogEntryExtensions
+internal static class LogEntryExtensions
 {
     /// <summary>
     /// Asserts that a log entry has a specific scope with the expected value
@@ -16,6 +16,9 @@ public static class LogEntryExtensions
     /// <param name="scopeValue">The expected scope value</param>
     public static void ShouldHaveScope(this FakeLogRecord logEntry, string scopeName, object scopeValue)
     {
+        ArgumentNullException.ThrowIfNull(logEntry);
+        ArgumentNullException.ThrowIfNull(scopeValue);
+
         var scopeDict = logEntry.Scopes.Cast<IEnumerable<KeyValuePair<string, object>>>().FirstOrDefault();
         scopeDict.Should().NotBeNull();
 

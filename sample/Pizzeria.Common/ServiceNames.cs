@@ -16,13 +16,7 @@ public static class ServiceNames
 
     public const string ConfigurationService = "configuration-service";
 
-    public static string GetPizzaStoreDatabaseName()
-    {
-        if (Environments.IsIntegrationTesting)
-        {
-            return PizzaStoreDatabaseIntegrationTesting;
-        }
-
-        return PizzaStoreDatabase;
-    }
+    public static string PizzaStoreDatabaseName => Environments.IsIntegrationTesting
+        ? PizzaStoreDatabaseIntegrationTesting
+        : PizzaStoreDatabase;
 }

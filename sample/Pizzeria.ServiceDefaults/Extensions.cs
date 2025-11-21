@@ -18,6 +18,8 @@ public static class Extensions
 {
     public static IHostApplicationBuilder AddServiceDefaults(this IHostApplicationBuilder builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
+
         builder.ConfigureOpenTelemetry();
 
         builder.AddDefaultHealthChecks();
@@ -38,6 +40,8 @@ public static class Extensions
 
     public static IHostApplicationBuilder ConfigureOpenTelemetry(this IHostApplicationBuilder builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
+
         builder.Logging.AddOpenTelemetry(logging =>
         {
             logging.IncludeFormattedMessage = true;
@@ -66,6 +70,8 @@ public static class Extensions
 
     public static IHostApplicationBuilder AddDefaultHealthChecks(this IHostApplicationBuilder builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
+
         builder.Services
             .AddHealthChecks()
             .AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]);
@@ -75,6 +81,8 @@ public static class Extensions
 
     public static WebApplication MapDefaultEndpoints(this WebApplication app)
     {
+        ArgumentNullException.ThrowIfNull(app);
+
         // Always map health checks for Lewee.Blazor health monitoring
         // All health checks must pass for app to be considered ready to accept traffic after starting
         app.MapHealthChecks("/health");
