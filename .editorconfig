@@ -207,7 +207,7 @@ dotnet_diagnostic.CS8019.severity = error
 dotnet_diagnostic.CS8618.severity = none
 
 # IDE0005: Remove unnecessary using directives
-dotnet_diagnostic.IDE0005.severity = error
+dotnet_diagnostic.IDE0005.severity = none
 
 # IDE0090: Use 'new(...)'
 dotnet_diagnostic.IDE0090.severity = warning

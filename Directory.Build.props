@@ -39,12 +39,10 @@
 
   <PropertyGroup Condition="$(MSBuildProjectName.Contains('.Tests.'))">
     <IsPackable>false</IsPackable>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);CS1591;CS1587</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="$(MSBuildProjectName.StartsWith('Pizzeria.')) AND !$(MSBuildProjectName.Contains('.Tests.'))">
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);CS1591;CS1587</NoWarn>
   </PropertyGroup>
 
