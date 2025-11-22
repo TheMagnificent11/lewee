@@ -6,7 +6,7 @@ namespace Lewee.Tests.Common;
 /// <summary>
 /// Extension methods for testing log entries
 /// </summary>
-internal static class LogEntryExtensions
+public static class LogEntryExtensions
 {
     /// <summary>
     /// Asserts that a log entry has a specific scope with the expected value
