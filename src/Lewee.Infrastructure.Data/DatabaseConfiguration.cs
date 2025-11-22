@@ -30,6 +30,8 @@ public static class DatabaseConfiguration
         Assembly domainAssembly)
         where T : DbContext, IApplicationDbContext
     {
+        ArgumentNullException.ThrowIfNull(domainAssembly);
+
         var aggregateRootType = typeof(AggregateRoot);
         var aggregateRoots = domainAssembly.GetTypes()
             .Where(x => x.IsClass)

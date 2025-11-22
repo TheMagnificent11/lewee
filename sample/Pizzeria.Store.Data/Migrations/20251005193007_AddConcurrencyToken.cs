@@ -10,6 +10,8 @@ public partial class AddConcurrencyToken : Migration
     /// <inheritdoc />
     protected override void Up(MigrationBuilder migrationBuilder)
     {
+        ArgumentNullException.ThrowIfNull(migrationBuilder);
+
         migrationBuilder.AddColumn<uint>(
             name: "xmin",
             schema: "sto",
@@ -32,6 +34,8 @@ public partial class AddConcurrencyToken : Migration
     /// <inheritdoc />
     protected override void Down(MigrationBuilder migrationBuilder)
     {
+        ArgumentNullException.ThrowIfNull(migrationBuilder);
+
         migrationBuilder.DropColumn(
             name: "xmin",
             schema: "sto",

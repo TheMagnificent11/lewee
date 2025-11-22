@@ -1,4 +1,5 @@
-﻿using Lewee.Infrastructure.Data;
+﻿using System.Diagnostics.CodeAnalysis;
+using Lewee.Infrastructure.Data;
 using Pizzeria.Store.Domain;
 
 namespace Pizzeria.Store.Data;
@@ -12,6 +13,10 @@ public sealed class StoreSeeder : IDatabaseSeeder<StoreDbContext>
         this.dbContext = dbContext;
     }
 
+    [SuppressMessage(
+        "Reliability",
+        "CA2016:Forward the 'CancellationToken' parameter to methods",
+        Justification = "False positive")]
     public async Task RunAsync(CancellationToken cancellationToken = default)
     {
         await this.dbContext.Database.EnsureCreatedAsync(cancellationToken);

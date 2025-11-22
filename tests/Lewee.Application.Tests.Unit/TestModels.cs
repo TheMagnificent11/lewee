@@ -12,7 +12,7 @@ namespace Lewee.Application.Tests.Unit;
     Justification = "Test models file contains multiple related test classes for testing purposes")]
 internal record TestCommand(string Name, Guid CorrelationId) : ICommand
 {
-    public class Validator : AbstractValidator<TestCommand>
+    internal sealed class Validator : AbstractValidator<TestCommand>
     {
         public Validator()
         {
@@ -20,7 +20,7 @@ internal record TestCommand(string Name, Guid CorrelationId) : ICommand
         }
     }
 
-    public class Handler : IRequestHandler<TestCommand, CommandResult>
+    internal sealed class Handler : IRequestHandler<TestCommand, CommandResult>
     {
         public Task<CommandResult> Handle(TestCommand request, CancellationToken cancellationToken)
         {
@@ -35,7 +35,7 @@ internal record TestCommand(string Name, Guid CorrelationId) : ICommand
     Justification = "Test model classes are grouped together for easier test maintenance")]
 internal record TestDomainExceptionCommand(Guid CorrelationId) : ICommand
 {
-    public class Handler : IRequestHandler<TestDomainExceptionCommand, CommandResult>
+    internal sealed class Handler : IRequestHandler<TestDomainExceptionCommand, CommandResult>
     {
         public Task<CommandResult> Handle(TestDomainExceptionCommand request, CancellationToken cancellationToken)
         {
@@ -50,7 +50,7 @@ internal record TestDomainExceptionCommand(Guid CorrelationId) : ICommand
     Justification = "Test model classes are grouped together for easier test maintenance")]
 internal record TestUnhandledExceptionCommand(Guid CorrelationId) : ICommand
 {
-    public class Handler : IRequestHandler<TestUnhandledExceptionCommand, CommandResult>
+    internal sealed class Handler : IRequestHandler<TestUnhandledExceptionCommand, CommandResult>
     {
         public Task<CommandResult> Handle(TestUnhandledExceptionCommand request, CancellationToken cancellationToken)
         {
@@ -65,7 +65,7 @@ internal record TestUnhandledExceptionCommand(Guid CorrelationId) : ICommand
     Justification = "Test model classes are grouped together for easier test maintenance")]
 internal record TestQuery(Guid CorrelationId) : IQuery<TestData>
 {
-    public class Handler : IRequestHandler<TestQuery, QueryResult<TestData>>
+    internal sealed class Handler : IRequestHandler<TestQuery, QueryResult<TestData>>
     {
         public Task<QueryResult<TestData>> Handle(TestQuery request, CancellationToken cancellationToken)
         {
@@ -87,7 +87,7 @@ internal record TestData(string Value);
     Justification = "Test model classes are grouped together for easier test maintenance")]
 internal record TestTenantCommand(Guid TenantId, string Name, Guid CorrelationId) : ICommand, ITenantRequest
 {
-    public class Handler : IRequestHandler<TestTenantCommand, CommandResult>
+    internal sealed class Handler : IRequestHandler<TestTenantCommand, CommandResult>
     {
         public Task<CommandResult> Handle(TestTenantCommand request, CancellationToken cancellationToken)
         {
@@ -102,7 +102,7 @@ internal record TestTenantCommand(Guid TenantId, string Name, Guid CorrelationId
     Justification = "Test model classes are grouped together for easier test maintenance")]
 internal record TestServerErrorCommand(Guid CorrelationId) : ICommand
 {
-    public class Handler : IRequestHandler<TestServerErrorCommand, CommandResult>
+    internal sealed class Handler : IRequestHandler<TestServerErrorCommand, CommandResult>
     {
         public Task<CommandResult> Handle(TestServerErrorCommand request, CancellationToken cancellationToken)
         {
@@ -119,7 +119,7 @@ internal record TestServerErrorCommand(Guid CorrelationId) : ICommand
     Justification = "Test model classes are grouped together for easier test maintenance")]
 internal record TestBadRequestCommand(Guid CorrelationId) : ICommand
 {
-    public class Handler : IRequestHandler<TestBadRequestCommand, CommandResult>
+    internal sealed class Handler : IRequestHandler<TestBadRequestCommand, CommandResult>
     {
         public Task<CommandResult> Handle(TestBadRequestCommand request, CancellationToken cancellationToken)
         {

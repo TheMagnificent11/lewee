@@ -9,7 +9,7 @@ namespace Pizzeria.Store.Application.Orders;
 
 public record StartOrderCommand(string UserId, Guid CorrelationId) : ICommand
 {
-    internal class Validator : AbstractValidator<StartOrderCommand>
+    internal sealed class Validator : AbstractValidator<StartOrderCommand>
     {
         public Validator()
         {

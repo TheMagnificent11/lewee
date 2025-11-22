@@ -208,6 +208,10 @@ dotnet_diagnostic.S3887.severity = none
 dotnet_diagnostic.S1185.severity = none
 dotnet_diagnostic.S1481.severity = none
 
+# Blazor code-behind files
+[*.razor.cs]
+dotnet_diagnostic.CA1515.severity = none           # Consider making public types internal
+
 # Test-specific rules
 [tests/**/*.cs]
 dotnet_diagnostic.CA1707.severity = none           # Identifiers should not contain underscores

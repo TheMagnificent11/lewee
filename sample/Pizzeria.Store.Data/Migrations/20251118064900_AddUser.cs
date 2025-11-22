@@ -10,6 +10,8 @@ public partial class AddUser : Migration
     /// <inheritdoc />
     protected override void Up(MigrationBuilder migrationBuilder)
     {
+        ArgumentNullException.ThrowIfNull(migrationBuilder);
+
         migrationBuilder.CreateTable(
             name: "Users",
             schema: "sto",
@@ -40,6 +42,8 @@ public partial class AddUser : Migration
     /// <inheritdoc />
     protected override void Down(MigrationBuilder migrationBuilder)
     {
+        ArgumentNullException.ThrowIfNull(migrationBuilder);
+
         migrationBuilder.DropTable(
             name: "Users",
             schema: "sto");
