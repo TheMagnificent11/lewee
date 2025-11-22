@@ -24,6 +24,8 @@ public class CorrelationIdDelegatingHandler : DelegatingHandler
         HttpRequestMessage request,
         CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(request);
+
         if (request.Headers.Contains(RequestHeaders.CorrelationId))
         {
             return base.SendAsync(request, cancellationToken);

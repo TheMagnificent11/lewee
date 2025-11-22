@@ -1,6 +1,6 @@
 ﻿namespace Pizzeria.Auth;
 
-internal class KeycloakOptions
+internal sealed class KeycloakOptions
 {
-    public string RealmName { get; set; }
+    public string RealmName { get; set; } = string.Empty;
 }

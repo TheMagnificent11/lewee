@@ -14,6 +14,9 @@ public static class ApiExceptionExtensions
     /// <param name="logger">Logger</param>
     public static void Log(this ApiException exception, ILogger logger)
     {
+        ArgumentNullException.ThrowIfNull(exception);
+        ArgumentNullException.ThrowIfNull(logger);
+
         if (exception.StatusCode < 400)
         {
             logger.LogUnexpectedResponseStatus(exception, exception.StatusCode);

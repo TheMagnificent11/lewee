@@ -9,7 +9,7 @@ public static class EnumExtensionTests
     {
         Available = 0,
 
-        Reserved = 1,
+        Booked = 1,
 
         [System.ComponentModel.Description("In Use")]
         InUse = 2
@@ -17,9 +17,9 @@ public static class EnumExtensionTests
 
     [Theory]
     [InlineData(TableStatus.Available, "Available")]
-    [InlineData(TableStatus.Reserved, "Reserved")]
+    [InlineData(TableStatus.Booked, "Booked")]
     [InlineData(TableStatus.InUse, "In Use")]
-    public static void GetDescription_ReturnCorrectDescription(TableStatus value, string expectedDescription)
+    public static void GetDescriptionReturnCorrectDescription(TableStatus value, string expectedDescription)
     {
         var result = value.GetDescription();
 
