@@ -26,7 +26,7 @@ public class AuditableRecordConfigurationTests
         entityType.Should().NotBeNull();
         var versionProperty = entityType!.FindProperty("Version");
         versionProperty.Should().NotBeNull();
-        versionProperty!.ClrType.Should().Be(typeof(uint));
+        versionProperty!.ClrType.Should().Be<uint>();
         versionProperty.IsConcurrencyToken.Should().BeTrue();
         versionProperty.GetColumnType().Should().Be("xid");
     }
@@ -49,7 +49,7 @@ public class AuditableRecordConfigurationTests
         entityType.Should().NotBeNull();
         var versionProperty = entityType!.FindProperty("Version");
         versionProperty.Should().NotBeNull();
-        versionProperty!.ClrType.Should().Be(typeof(byte[]));
+        versionProperty!.ClrType.Should().Be<byte[]>();
         versionProperty.IsConcurrencyToken.Should().BeTrue();
     }
 
@@ -118,7 +118,7 @@ public class AuditableRecordConfigurationTests
         entityType.Should().NotBeNull();
         var primaryKey = entityType!.FindPrimaryKey();
         primaryKey.Should().NotBeNull();
-        primaryKey!.Properties.Should().HaveCount(1);
+        primaryKey!.Properties.Should().ContainSingle();
         primaryKey.Properties[0].Name.Should().Be("Id");
     }
 

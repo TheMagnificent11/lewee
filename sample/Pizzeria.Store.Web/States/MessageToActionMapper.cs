@@ -29,7 +29,7 @@ internal sealed class MessageToActionMapper : IMessageToActionMapper
         var result = message switch
         {
             OrderDto order => new StartOrderCompletedAction(order, correlationId),
-            _ => null
+            _ => null,
         };
 
         if (result != null)
