@@ -172,28 +172,18 @@ dotnet_diagnostic.CA2007.severity = none           # Do not directly await a Tas
 dotnet_diagnostic.CA2227.severity = none           # Collection properties should be read only
 dotnet_diagnostic.CA2234.severity = none           # Pass system uri objects instead of strings
 dotnet_diagnostic.CA2254.severity = warning        # Template should be a static expression
+dotnet_diagnostic.CS8019.severity = warning        # Unnecessary using directive
+dotnet_diagnostic.CS8618.severity = none           # Non-nullable field must contain a non-null value when exiting constructor
 
-# CS8019: Unnecessary using directive
-dotnet_diagnostic.CS8019.severity = warning
-
-# CS8618: Non-nullable field must contain a non-null value when exiting constructor
-dotnet_diagnostic.CS8618.severity = none
-
-# IDE0005: Remove unnecessary using directives
-dotnet_diagnostic.IDE0005.severity = none
-
-# IDE0090: Use 'new(...)'
-dotnet_diagnostic.IDE0090.severity = warning
-
-# IDE0290: Use primary constructor
-dotnet_diagnostic.IDE0290.severity = none
+# IDE Analyzers
+dotnet_diagnostic.IDE0290.severity = none          # Use primary constructor
 
 # Meziantou.Analyzer
 dotnet_diagnostic.MA0004.severity = none
 dotnet_diagnostic.MA0006.severity = none
 dotnet_diagnostic.MA0016.severity = none
 dotnet_diagnostic.MA0026.severity = none
-dotnet_diagnostic.MA0029.severity = none  # MA0029: Combine LINQ methods
+dotnet_diagnostic.MA0029.severity = none           # MA0029: Combine LINQ methods
 dotnet_diagnostic.MA0047.severity = none
 dotnet_diagnostic.MA0048.severity = none
 dotnet_diagnostic.MA0051.severity = none

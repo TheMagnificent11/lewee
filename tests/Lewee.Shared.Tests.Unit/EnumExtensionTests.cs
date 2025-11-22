@@ -1,17 +1,23 @@
-﻿using FluentAssertions;
+﻿using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using FluentAssertions;
 using Xunit;
 
 namespace Lewee.Shared.Tests.Unit;
 
 public static class EnumExtensionTests
 {
+    [SuppressMessage(
+        "Maintainability",
+        "CA1515:Consider making public types internal",
+        Justification = "False positive (needs to be public because it's used in a public method below)")]
     public enum TableStatus
     {
         Available = 0,
 
         Booked = 1,
 
-        [System.ComponentModel.Description("In Use")]
+        [Description("In Use")]
         InUse = 2
     }
 

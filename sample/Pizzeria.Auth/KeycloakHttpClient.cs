@@ -6,6 +6,10 @@ using Microsoft.Extensions.Options;
 
 namespace Pizzeria.Auth;
 
+[SuppressMessage(
+    "Design",
+    "CA1062:Validate arguments of public methods",
+    Justification = "Used via DI")]
 internal sealed class KeycloakHttpClient : IAuthServerAdminClient
 {
     private readonly HttpClient httpClient;
