@@ -4,8 +4,7 @@ using Pizzeria.Store.Web.States.Orders.Actions;
 
 namespace Pizzeria.Store.Web.States.Orders;
 
-[SuppressMessage("Performance", "CA1515:Consider making public types internal", Justification = "Fluxor requires reducer methods to be public")]
-public static class OrdersReducer
+internal static class OrdersReducer
 {
     [ReducerMethod]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1313:Parameter '_' should begin with lower-case letter", Justification = "Underscore is the standard discard pattern for unused parameters")]

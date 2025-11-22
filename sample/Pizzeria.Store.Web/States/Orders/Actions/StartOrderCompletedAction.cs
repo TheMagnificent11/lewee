@@ -1,11 +1,9 @@
-using System.Diagnostics.CodeAnalysis;
 using Lewee.Blazor.Fluxor.Actions;
 using Pizzeria.Store.Contracts;
 
 namespace Pizzeria.Store.Web.States.Orders.Actions;
 
-[SuppressMessage("Performance", "CA1515:Consider making public types internal", Justification = "Fluxor actions must be public")]
-public record StartOrderCompletedAction : IMessageReceivedAction
+internal record StartOrderCompletedAction : IMessageReceivedAction
 {
     public StartOrderCompletedAction(OrderDto order, Guid correlationId)
     {
