@@ -8,6 +8,8 @@ internal sealed class PizzaConfiguration : AggregateRootConfiguration<Pizza>
 {
     protected override void ConfigureEntity(EntityTypeBuilder<Pizza> builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
+
         builder.Property(x => x.Name)
             .IsRequired()
             .HasMaxLength(Pizza.FieldLengths.Name);

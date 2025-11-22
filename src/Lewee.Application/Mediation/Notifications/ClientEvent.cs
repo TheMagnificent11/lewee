@@ -17,6 +17,8 @@ public class ClientEvent : INotification
     /// <param name="message">Message</param>
     public ClientEvent(Guid correlationId, string? userId, object message)
     {
+        ArgumentNullException.ThrowIfNull(message);
+
         this.CorrelationId = correlationId;
         this.UserId = userId;
 

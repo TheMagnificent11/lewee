@@ -17,10 +17,10 @@ public abstract class Result
     /// <param name="errors">
     /// Error messages (keyed by request property)
     /// </param>
-    protected Result(ResultStatus status, List<ValidationFailure>? errors)
+    protected Result(ResultStatus status, IList<ValidationFailure>? errors)
     {
         this.Status = status;
-        this.Errors = errors ?? new List<ValidationFailure>();
+        this.Errors = errors ?? [];
         this.IsSuccess = status == ResultStatus.Success;
     }
 
@@ -37,7 +37,7 @@ public abstract class Result
     /// <summary>
     /// Gets a dictionary of error messages keyed by request property
     /// </summary>
-    public List<ValidationFailure> Errors { get; }
+    public IList<ValidationFailure> Errors { get; }
 
     /// <summary>
     /// Generates an error message from the <see cref="Errors"/> dictionary.
@@ -54,7 +54,10 @@ public abstract class Result
         var errorMessage = new StringBuilder();
 
         this.Errors
-            .ForEach(x => errorMessage.AppendLine($"{x.PropertyName}: {x.ErrorMessage}"));
+            .ToList()
+            .ForEach(x => errorMessage.AppendLine(
+                System.Globalization.CultureInfo.InvariantCulture,
+                $"{x.PropertyName}: {x.ErrorMessage}"));
 
         return errorMessage.ToString();
     }

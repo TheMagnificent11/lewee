@@ -104,7 +104,7 @@ public class QueryProjectionReferenceTests
         reference.Version.Should().Be(0);
     }
 
-    private class TestQueryProjection : IQueryProjection
+    private sealed class TestQueryProjection : IQueryProjection
     {
         public TestQueryProjection(Guid correlationId, string name, int count)
         {

@@ -8,7 +8,7 @@ namespace Lewee.Infrastructure.Data.Tests.Integration;
 /// </summary>
 internal sealed class TestOrderSubmittedEventHandler : INotificationHandler<TestOrderSubmittedEvent>
 {
-    private static readonly List<TestOrderSubmittedEvent> ReceivedEventsList = new();
+    private static readonly List<TestOrderSubmittedEvent> ReceivedEventsList = [];
 
     private readonly ILogger<TestOrderSubmittedEventHandler> logger;
 

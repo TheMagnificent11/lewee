@@ -15,6 +15,9 @@ public class QueryProjectionReference : ISoftDeleteEntity
     /// <param name="key">Query projection key</param>
     public QueryProjectionReference(IQueryProjection readModel, string key)
     {
+        ArgumentNullException.ThrowIfNull(readModel);
+        ArgumentNullException.ThrowIfNull(key);
+
         var (assemblyName, fullCalssName, readModelType) = readModel.GetBasicTypeInfo("Invalid query projection type");
 
         this.Id = Guid.NewGuid();
@@ -108,6 +111,8 @@ public class QueryProjectionReference : ISoftDeleteEntity
     /// <param name="readModel">New version of the query projection</param>
     public void UpdateJson(IQueryProjection readModel)
     {
+        ArgumentNullException.ThrowIfNull(readModel);
+
         this.QueryProjectionJson = JsonSerializer.Serialize(readModel, readModel.GetType());
         this.ModifiedAtUtc = DateTime.UtcNow;
     }

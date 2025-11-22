@@ -29,7 +29,7 @@ internal class CorrelationIdLoggingBehavior<TRequest, TResponse> : IPipelineBeha
             { LoggingConsts.CorrelationId, correlationId }
         }))
         {
-            return await next();
+            return await next(cancellationToken);
         }
     }
 }

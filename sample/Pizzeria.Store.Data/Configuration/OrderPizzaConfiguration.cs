@@ -8,6 +8,8 @@ internal sealed class OrderPizzaConfiguration : RelationshipConfiguration<OrderP
 {
     protected override void ConfigureRelationship(EntityTypeBuilder<OrderPizza> builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
+
         builder
             .HasOne(op => op.Order)
             .WithMany(o => o.Pizzas)

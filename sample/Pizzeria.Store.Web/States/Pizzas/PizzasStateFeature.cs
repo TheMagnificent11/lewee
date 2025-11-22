@@ -2,7 +2,7 @@ using Fluxor;
 
 namespace Pizzeria.Store.Web.States.Pizzas;
 
-public sealed class PizzasStateFeature : Feature<PizzasState>
+internal sealed class PizzasStateFeature : Feature<PizzasState>
 {
     public override string GetName() => nameof(PizzasState);
 

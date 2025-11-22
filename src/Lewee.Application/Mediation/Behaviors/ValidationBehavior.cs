@@ -28,12 +28,12 @@ internal class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequ
             .Where(x => x != null)
             .ToList();
 
-        if (failures.Any())
+        if (failures.Count > 0)
         {
             return (TResponse)GetBadRequestCommandResult(failures);
         }
 
-        return await next();
+        return await next(cancellationToken);
     }
 
     private static CommandResult GetBadRequestCommandResult(List<ValidationFailure> failures)

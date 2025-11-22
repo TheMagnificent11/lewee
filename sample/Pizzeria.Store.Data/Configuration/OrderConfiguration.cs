@@ -8,6 +8,8 @@ internal sealed class OrderConfiguration : AggregateRootConfiguration<Order>
 {
     protected override void ConfigureEntity(EntityTypeBuilder<Order> builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
+
         builder
             .Property(x => x.UserId)
             .IsRequired()

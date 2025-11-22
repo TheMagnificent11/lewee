@@ -16,6 +16,8 @@ internal sealed class TestDbContext : ApplicationDbContext<TestDbContext>
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        ArgumentNullException.ThrowIfNull(modelBuilder);
+
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.HasDefaultSchema("test");

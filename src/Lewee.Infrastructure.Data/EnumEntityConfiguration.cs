@@ -32,6 +32,8 @@ public abstract class EnumEntityConfiguration<TEnum> : IEntityTypeConfiguration<
     /// </param>
     public virtual void Configure(EntityTypeBuilder<EnumEntity<TEnum>> builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
+
         builder.ToTable(this.TableName);
 
         builder.HasKey(x => x.Id);

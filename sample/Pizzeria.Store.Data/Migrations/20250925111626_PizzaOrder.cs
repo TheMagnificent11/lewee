@@ -10,6 +10,8 @@ public partial class PizzaOrder : Migration
     /// <inheritdoc />
     protected override void Up(MigrationBuilder migrationBuilder)
     {
+        ArgumentNullException.ThrowIfNull(migrationBuilder);
+
         migrationBuilder.EnsureSchema(
             name: "sto");
 
@@ -157,6 +159,8 @@ public partial class PizzaOrder : Migration
     /// <inheritdoc />
     protected override void Down(MigrationBuilder migrationBuilder)
     {
+        ArgumentNullException.ThrowIfNull(migrationBuilder);
+
         migrationBuilder.DropTable(
             name: "DomainEventReferences",
             schema: "sto");

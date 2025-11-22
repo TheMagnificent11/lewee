@@ -58,6 +58,8 @@ public class Order : AggregateRoot
 
     public void AddPizza(Pizza pizza)
     {
+        ArgumentNullException.ThrowIfNull(pizza);
+
         var existingOrderPizza = this.pizzas.FirstOrDefault(x => x.PizzaId == pizza.Id);
         if (existingOrderPizza is null)
         {
