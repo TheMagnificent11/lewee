@@ -21,6 +21,8 @@ public class CustomerCreatedEventHandler : INotificationHandler<UserCreatedEvent
 
     public async Task Handle(UserCreatedEvent notification, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(notification);
+
         this.logger.LogHandlingCustomerCreatedEvent(notification.UserEntityId);
 
         var dto = new CustomerDto

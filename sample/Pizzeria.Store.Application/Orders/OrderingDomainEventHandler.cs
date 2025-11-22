@@ -28,6 +28,8 @@ public class OrderingDomainEventHandler : INotificationHandler<OrderStartedEvent
 
     public async Task Handle(OrderStartedEvent notification, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(notification);
+
         this.logger.LogHandlingOrderStartedEvent(notification.OrderId);
 
         // Get the order with its pizzas to create the query projection
