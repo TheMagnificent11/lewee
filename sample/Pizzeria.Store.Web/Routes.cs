@@ -1,6 +1,6 @@
 namespace Pizzeria.Store.Web;
 
-public static class Routes
+internal static class Routes
 {
     public const string Home = "/";
     public const string SignOut = "/signout";

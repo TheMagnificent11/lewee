@@ -7,8 +7,8 @@ using Microsoft.Extensions.Options;
 namespace Pizzeria.Auth;
 
 [SuppressMessage(
-    "Design",
-    "CA1062:Validate arguments of public methods",
+    "Performance",
+    "CA1812: Avoid uninstantiated internal classes",
     Justification = "Used via DI")]
 internal sealed class KeycloakHttpClient : IAuthServerAdminClient
 {

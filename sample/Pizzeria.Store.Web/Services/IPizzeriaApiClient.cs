@@ -3,7 +3,7 @@ using Refit;
 
 namespace Pizzeria.Store.Web.Services;
 
-public interface IPizzeriaApiClient
+internal interface IPizzeriaApiClient
 {
     [Get("/pizzas")]
     Task<PizzaDto[]> GetPizzasAsync(CancellationToken cancellationToken = default);
