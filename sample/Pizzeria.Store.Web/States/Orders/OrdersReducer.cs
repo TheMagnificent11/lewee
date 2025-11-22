@@ -4,6 +4,7 @@ using Pizzeria.Store.Web.States.Orders.Actions;
 
 namespace Pizzeria.Store.Web.States.Orders;
 
+[SuppressMessage("Performance", "CA1515:Consider making public types internal", Justification = "Fluxor requires reducer methods to be public")]
 public static class OrdersReducer
 {
     [ReducerMethod]

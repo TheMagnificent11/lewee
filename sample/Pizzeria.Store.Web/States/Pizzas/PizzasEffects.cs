@@ -5,6 +5,7 @@ using Pizzeria.Store.Web.States.Pizzas.Actions;
 
 namespace Pizzeria.Store.Web.States.Pizzas;
 
+[SuppressMessage("Performance", "CA1515:Consider making public types internal", Justification = "Fluxor requires effects to be public for dependency injection")]
 public class PizzasEffects
 {
     private readonly IPizzeriaApiClient apiClient;

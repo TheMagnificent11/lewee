@@ -210,7 +210,7 @@ dotnet_diagnostic.S1481.severity = none
 
 # Blazor code-behind files
 [*.razor.cs]
-dotnet_diagnostic.CA1515.severity = none           # Consider making public types internal
+dotnet_diagnostic.CA1515.severity = warning        # Consider making public types internal
 
 # Test-specific rules
 [tests/**/*.cs]

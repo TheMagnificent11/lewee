@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using Pizzeria.Store.Contracts;
 using Refit;
 
 namespace Pizzeria.Store.Web.Services;
 
-internal interface IPizzeriaApiClient
+[SuppressMessage("Performance", "CA1515:Consider making public types internal", Justification = "API client interface should be public for Refit and DI")]
+public interface IPizzeriaApiClient
 {
     [Get("/pizzas")]
     Task<PizzaDto[]> GetPizzasAsync(CancellationToken cancellationToken = default);

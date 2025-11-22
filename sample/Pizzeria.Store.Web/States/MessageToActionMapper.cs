@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Lewee.Blazor.Fluxor.Actions;
 using Lewee.Blazor.Messaging;
 using Pizzeria.Store.Contracts;
@@ -5,6 +6,7 @@ using Pizzeria.Store.Web.States.Orders.Actions;
 
 namespace Pizzeria.Store.Web.States;
 
+[SuppressMessage("Performance", "CA1515:Consider making public types internal", Justification = "Message mapper must be public for Fluxor")]
 public class MessageToActionMapper : IMessageToActionMapper
 {
     private readonly ILogger<MessageToActionMapper> logger;

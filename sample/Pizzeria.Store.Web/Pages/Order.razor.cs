@@ -9,6 +9,7 @@ using Pizzeria.Store.Web.States.Pizzas.Actions;
 
 namespace Pizzeria.Store.Web.Pages;
 
+[SuppressMessage("Performance", "CA1515:Consider making public types internal", Justification = "Blazor component code-behind must be public to match generated partial class")]
 public partial class Order : FluxorComponent
 {
     [Inject]
