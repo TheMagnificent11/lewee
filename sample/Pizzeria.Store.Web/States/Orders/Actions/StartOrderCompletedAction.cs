@@ -3,7 +3,7 @@ using Pizzeria.Store.Contracts;
 
 namespace Pizzeria.Store.Web.States.Orders.Actions;
 
-internal record StartOrderCompletedAction : IMessageReceivedAction
+internal sealed record StartOrderCompletedAction : IMessageReceivedAction
 {
     public StartOrderCompletedAction(OrderDto order, Guid correlationId)
     {

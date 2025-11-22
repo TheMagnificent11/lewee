@@ -8,7 +8,7 @@ using Pizzeria.Store.Web.States.Orders.Actions;
 
 namespace Pizzeria.Store.Web.States.Orders;
 
-internal class OrdersEffects : RequestEffects<OrdersState, StartOrderAction, StartOrderSuccessAction, StartOrderFailureAction>
+internal sealed class OrdersEffects : RequestEffects<OrdersState, StartOrderAction, StartOrderSuccessAction, StartOrderFailureAction>
 {
     private readonly IPizzeriaApiClient apiClient;
     private readonly NavigationManager navigationManager;

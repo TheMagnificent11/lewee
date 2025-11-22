@@ -5,7 +5,7 @@ using Pizzeria.Store.Web.States.Pizzas.Actions;
 
 namespace Pizzeria.Store.Web.States.Pizzas;
 
-internal class PizzasEffects
+internal sealed class PizzasEffects
 {
     private readonly IPizzeriaApiClient apiClient;
 

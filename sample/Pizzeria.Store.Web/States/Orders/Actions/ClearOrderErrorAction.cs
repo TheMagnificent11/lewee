@@ -1,3 +1,3 @@
 namespace Pizzeria.Store.Web.States.Orders.Actions;
 
-internal record ClearOrderErrorAction;
+internal sealed record ClearOrderErrorAction;
