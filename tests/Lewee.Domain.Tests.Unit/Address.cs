@@ -1,6 +1,6 @@
 namespace Lewee.Domain.Tests.Unit;
 
-internal class Address : ValueObject<Address>
+internal sealed class Address : ValueObject<Address>
 {
     public Address(int streetNumber, string streetName, string suburb, string state, string postcode)
     {

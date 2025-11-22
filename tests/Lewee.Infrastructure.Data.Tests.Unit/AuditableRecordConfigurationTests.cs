@@ -123,13 +123,13 @@ public class AuditableRecordConfigurationTests
     }
 
     // Test entity
-    private class TestEntity : AuditableRecord
+    private sealed class TestEntity : AuditableRecord
     {
         public string Name { get; set; } = string.Empty;
     }
 
     // Test configuration
-    private class TestEntityConfiguration : AuditableRecordConfiguration<TestEntity>
+    private sealed class TestEntityConfiguration : AuditableRecordConfiguration<TestEntity>
     {
         protected override void ConfigureEntity(EntityTypeBuilder<TestEntity> builder)
         {
@@ -140,7 +140,7 @@ public class AuditableRecordConfigurationTests
     }
 
     // Test contexts for different providers
-    private class TestPostgreSqlContext : DbContext
+    private sealed class TestPostgreSqlContext : DbContext
     {
         public TestPostgreSqlContext(DbContextOptions<TestPostgreSqlContext> options)
             : base(options)
@@ -156,7 +156,7 @@ public class AuditableRecordConfigurationTests
         }
     }
 
-    private class TestSqlServerContext : DbContext
+    private sealed class TestSqlServerContext : DbContext
     {
         public TestSqlServerContext(DbContextOptions<TestSqlServerContext> options)
             : base(options)
@@ -172,7 +172,7 @@ public class AuditableRecordConfigurationTests
         }
     }
 
-    private class TestInMemoryContext : DbContext
+    private sealed class TestInMemoryContext : DbContext
     {
         public TestInMemoryContext(DbContextOptions<TestInMemoryContext> options)
             : base(options)

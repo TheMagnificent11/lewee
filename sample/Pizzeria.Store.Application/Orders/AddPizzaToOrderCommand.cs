@@ -9,7 +9,7 @@ namespace Pizzeria.Store.Application.Orders;
 
 public record AddPizzaToOrderCommand(Guid OrderId, Guid PizzaId, Guid CorrelationId) : ICommand
 {
-    internal class Validator : AbstractValidator<AddPizzaToOrderCommand>
+    internal sealed class Validator : AbstractValidator<AddPizzaToOrderCommand>
     {
         public Validator()
         {
@@ -21,7 +21,7 @@ public record AddPizzaToOrderCommand(Guid OrderId, Guid PizzaId, Guid Correlatio
         }
     }
 
-    internal class Handler : IRequestHandler<AddPizzaToOrderCommand, CommandResult>
+    internal sealed class Handler : IRequestHandler<AddPizzaToOrderCommand, CommandResult>
     {
         private readonly IRepository<Order> orderRepository;
         private readonly IRepository<Pizza> pizzaRepository;

@@ -1,6 +1,6 @@
 ﻿namespace Lewee.Domain.Tests.Unit;
 
-internal class TestingDomainEvent : DomainEvent
+internal sealed class TestingDomainEvent : DomainEvent
 {
     public TestingDomainEvent(
         string name,

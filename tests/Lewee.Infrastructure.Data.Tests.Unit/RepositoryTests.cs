@@ -213,7 +213,7 @@ public class RepositoryTests
     }
 
     // Test entity
-    private class TestEntity : AggregateRoot
+    private sealed class TestEntity : AggregateRoot
     {
         public string Name { get; set; } = string.Empty;
     }
@@ -238,7 +238,7 @@ public class RepositoryTests
     }
 
     // Test context
-    private class TestDbContext : DbContext
+    private sealed class TestDbContext : DbContext
     {
         public TestDbContext(DbContextOptions<TestDbContext> options)
             : base(options)
