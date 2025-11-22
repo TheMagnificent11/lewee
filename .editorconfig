@@ -215,3 +215,7 @@ dotnet_diagnostic.CA1515.severity = warning        # Consider making public type
 # Test-specific rules
 [tests/**/*.cs]
 dotnet_diagnostic.CA1707.severity = none           # Identifiers should not contain underscores
+
+# Sample test-specific rules
+[sample-tests/**/*.cs]
+dotnet_diagnostic.CA1707.severity = none           # Identifiers should not contain underscores
