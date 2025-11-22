@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Lewee.Domain.Tests.Unit;
 
-public partial class DomainEventReferenceTests
+public static class DomainEventReferenceTests
 {
     [Fact]
     public static void Ctor()

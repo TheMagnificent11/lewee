@@ -114,7 +114,7 @@ public class DomainEventsCollectionTests
         events.Should().HaveCount(eventCount);
     }
 
-    private class TestDomainEvent : DomainEvent
+    private sealed class TestDomainEvent : DomainEvent
     {
         public TestDomainEvent(Guid correlationId)
             : base(correlationId)

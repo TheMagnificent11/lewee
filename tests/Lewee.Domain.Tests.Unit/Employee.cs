@@ -1,6 +1,6 @@
 using Lewee.Domain;
 
-public class Employee : Entity
+internal sealed class Employee : Entity
 {
     public Employee(Guid id, string givenName, string surname, DateOnly dateOfBirth, string employeeNumber)
         : base(id)

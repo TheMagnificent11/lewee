@@ -152,6 +152,7 @@ dotnet_diagnostic.SA1602.severity = none
 dotnet_diagnostic.SA1625.severity = none
 dotnet_diagnostic.SA1629.severity = none
 dotnet_diagnostic.SA1633.severity = none
+dotnet_diagnostic.S3878.severity = none            # Arrays should not be created for params parameters
 
 # Code Analysis
 dotnet_diagnostic.CA1000.severity = none           # Do not declare static members on generic types
@@ -206,3 +207,7 @@ dotnet_diagnostic.S1144.severity = none
 dotnet_diagnostic.S3887.severity = none
 dotnet_diagnostic.S1185.severity = none
 dotnet_diagnostic.S1481.severity = none
+
+# Test-specific rules
+[tests/**/*.cs]
+dotnet_diagnostic.CA1707.severity = none           # Identifiers should not contain underscores

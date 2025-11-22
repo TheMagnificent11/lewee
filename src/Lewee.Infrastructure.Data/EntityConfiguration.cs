@@ -13,6 +13,8 @@ public abstract class EntityConfiguration<TEntity> : AuditableRecordConfiguratio
     /// <inheritdoc/>
     public override void Configure(EntityTypeBuilder<TEntity> builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
+
         base.Configure(builder);
 
         builder.HasQueryFilter(x => !x.IsDeleted);

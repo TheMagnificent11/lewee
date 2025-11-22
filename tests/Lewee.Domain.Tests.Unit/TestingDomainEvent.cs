@@ -1,26 +1,23 @@
 ﻿namespace Lewee.Domain.Tests.Unit;
 
-public partial class DomainEventReferenceTests
+internal class TestingDomainEvent : DomainEvent
 {
-    public class TestingDomainEvent : DomainEvent
+    public TestingDomainEvent(
+        string name,
+        int count,
+        DateTime createdAt,
+        Guid correlationId)
+        : base(correlationId)
     {
-        public TestingDomainEvent(
-            string name,
-            int count,
-            DateTime createdAt,
-            Guid correlationId)
-            : base(correlationId)
-        {
-            this.Name = name;
-            this.Count = count;
-            this.CreatedAt = createdAt;
-            this.CorrelationId = correlationId;
-        }
-
-        public string Name { get; }
-
-        public int Count { get; }
-
-        public DateTime CreatedAt { get; }
+        this.Name = name;
+        this.Count = count;
+        this.CreatedAt = createdAt;
+        this.CorrelationId = correlationId;
     }
+
+    public string Name { get; }
+
+    public int Count { get; }
+
+    public DateTime CreatedAt { get; }
 }

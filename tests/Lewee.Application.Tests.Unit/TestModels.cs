@@ -4,14 +4,13 @@ using Lewee.Application.Mediation.Requests;
 using Lewee.Domain;
 using MediatR;
 
-[assembly: SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "Test models file contains multiple related test classes for testing purposes", Scope = "type", Target = "~T:Lewee.Application.Tests.Unit.TestCommand")]
-
 namespace Lewee.Application.Tests.Unit;
 
-/// <summary>
-/// Test command for testing pipeline behaviors
-/// </summary>
-public record TestCommand(string Name, Guid CorrelationId) : ICommand
+[SuppressMessage(
+    "StyleCop.CSharp.DocumentationRules",
+    "SA1649:File name should match first type name",
+    Justification = "Test models file contains multiple related test classes for testing purposes")]
+internal record TestCommand(string Name, Guid CorrelationId) : ICommand
 {
     public class Validator : AbstractValidator<TestCommand>
     {
@@ -30,11 +29,11 @@ public record TestCommand(string Name, Guid CorrelationId) : ICommand
     }
 }
 
-[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Test model classes are grouped together for easier test maintenance")]
-/// <summary>
-/// Test command that throws a domain exception
-/// </summary>
-public record TestDomainExceptionCommand(Guid CorrelationId) : ICommand
+[SuppressMessage(
+    "StyleCop.CSharp.MaintainabilityRules",
+    "SA1402:File may only contain a single type",
+    Justification = "Test model classes are grouped together for easier test maintenance")]
+internal record TestDomainExceptionCommand(Guid CorrelationId) : ICommand
 {
     public class Handler : IRequestHandler<TestDomainExceptionCommand, CommandResult>
     {
@@ -45,11 +44,11 @@ public record TestDomainExceptionCommand(Guid CorrelationId) : ICommand
     }
 }
 
-[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Test model classes are grouped together for easier test maintenance")]
-/// <summary>
-/// Test command that throws an unhandled exception
-/// </summary>
-public record TestUnhandledExceptionCommand(Guid CorrelationId) : ICommand
+[SuppressMessage(
+    "StyleCop.CSharp.MaintainabilityRules",
+    "SA1402:File may only contain a single type",
+    Justification = "Test model classes are grouped together for easier test maintenance")]
+internal record TestUnhandledExceptionCommand(Guid CorrelationId) : ICommand
 {
     public class Handler : IRequestHandler<TestUnhandledExceptionCommand, CommandResult>
     {
@@ -60,11 +59,11 @@ public record TestUnhandledExceptionCommand(Guid CorrelationId) : ICommand
     }
 }
 
-[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Test model classes are grouped together for easier test maintenance")]
-/// <summary>
-/// Test query for testing pipeline behaviors
-/// </summary>
-public record TestQuery(Guid CorrelationId) : IQuery<TestData>
+[SuppressMessage(
+    "StyleCop.CSharp.MaintainabilityRules",
+    "SA1402:File may only contain a single type",
+    Justification = "Test model classes are grouped together for easier test maintenance")]
+internal record TestQuery(Guid CorrelationId) : IQuery<TestData>
 {
     public class Handler : IRequestHandler<TestQuery, QueryResult<TestData>>
     {
@@ -76,17 +75,17 @@ public record TestQuery(Guid CorrelationId) : IQuery<TestData>
     }
 }
 
-[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Test model classes are grouped together for easier test maintenance")]
-/// <summary>
-/// Test data class for query responses
-/// </summary>
-public record TestData(string Value);
+[SuppressMessage(
+    "StyleCop.CSharp.MaintainabilityRules",
+    "SA1402:File may only contain a single type",
+    Justification = "Test model classes are grouped together for easier test maintenance")]
+internal record TestData(string Value);
 
-[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Test model classes are grouped together for easier test maintenance")]
-/// <summary>
-/// Test tenant command for testing tenant-specific behaviors
-/// </summary>
-public record TestTenantCommand(Guid TenantId, string Name, Guid CorrelationId) : ICommand, ITenantRequest
+[SuppressMessage(
+    "StyleCop.CSharp.MaintainabilityRules",
+    "SA1402:File may only contain a single type",
+    Justification = "Test model classes are grouped together for easier test maintenance")]
+internal record TestTenantCommand(Guid TenantId, string Name, Guid CorrelationId) : ICommand, ITenantRequest
 {
     public class Handler : IRequestHandler<TestTenantCommand, CommandResult>
     {
@@ -97,11 +96,11 @@ public record TestTenantCommand(Guid TenantId, string Name, Guid CorrelationId) 
     }
 }
 
-[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Test model classes are grouped together for easier test maintenance")]
-/// <summary>
-/// Test command that returns a server error for testing failure logging
-/// </summary>
-public record TestServerErrorCommand(Guid CorrelationId) : ICommand
+[SuppressMessage(
+    "StyleCop.CSharp.MaintainabilityRules",
+    "SA1402:File may only contain a single type",
+    Justification = "Test model classes are grouped together for easier test maintenance")]
+internal record TestServerErrorCommand(Guid CorrelationId) : ICommand
 {
     public class Handler : IRequestHandler<TestServerErrorCommand, CommandResult>
     {
@@ -114,11 +113,11 @@ public record TestServerErrorCommand(Guid CorrelationId) : ICommand
     }
 }
 
-[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Test model classes are grouped together for easier test maintenance")]
-/// <summary>
-/// Test command that returns a bad request for testing failure logging
-/// </summary>
-public record TestBadRequestCommand(Guid CorrelationId) : ICommand
+[SuppressMessage(
+    "StyleCop.CSharp.MaintainabilityRules",
+    "SA1402:File may only contain a single type",
+    Justification = "Test model classes are grouped together for easier test maintenance")]
+internal record TestBadRequestCommand(Guid CorrelationId) : ICommand
 {
     public class Handler : IRequestHandler<TestBadRequestCommand, CommandResult>
     {

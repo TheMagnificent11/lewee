@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Lewee.Infrastructure.AspNet.Auth;
 
-internal class AuthenticatedUserService : IAuthenticatedUserService
+internal sealed class AuthenticatedUserService : IAuthenticatedUserService
 {
     private readonly IHttpContextAccessor httpContextAccessor;
 

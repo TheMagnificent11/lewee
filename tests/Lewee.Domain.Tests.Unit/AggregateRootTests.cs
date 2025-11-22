@@ -41,7 +41,7 @@ public class AggregateRootTests
         aggregate.DomainEvents.Should().BeOfType<DomainEventsCollection>();
     }
 
-    private class TestAggregate : AggregateRoot
+    private sealed class TestAggregate : AggregateRoot
     {
         public TestAggregate()
             : base()

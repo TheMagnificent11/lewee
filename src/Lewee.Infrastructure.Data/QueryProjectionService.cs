@@ -48,7 +48,7 @@ internal class QueryProjectionService<TContext> : IQueryProjectionService
     private async Task<QueryProjectionReference?> RetrieveAsync<T>(string key, CancellationToken cancellationToken)
         where T : class, IQueryProjection
     {
-        var type = typeof(T) ?? throw new InvalidOperationException("Invalid read model type");
+        var type = typeof(T);
 
         if (this.dbContext.QueryProjectionReferences == null)
         {

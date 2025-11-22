@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Lewee.Infrastructure.AspNet.SignalR;
 
-internal class ClientEventHandler : INotificationHandler<ClientEvent>
+internal sealed class ClientEventHandler : INotificationHandler<ClientEvent>
 {
     private readonly IHubContext<ClientEventHub> hubContext;
     private readonly ILogger logger;
