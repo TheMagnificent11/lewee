@@ -1,6 +1,6 @@
 ﻿namespace Lewee.Blazor.Tests.Integration;
 
-public sealed class TestHttpClient
+internal sealed class TestHttpClient
 {
     private readonly HttpClient httpClient;
 

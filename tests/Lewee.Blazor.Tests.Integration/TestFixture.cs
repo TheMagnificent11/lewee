@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using Lewee.Application.Mediation.Notifications;
 using Lewee.Infrastructure.AspNet.SignalR;
 using MediatR;
@@ -13,6 +14,14 @@ using Xunit;
 
 namespace Lewee.Blazor.Tests.Integration;
 
+[SuppressMessage(
+    "Design",
+    "CA1001:Types that own disposable fields should be disposable",
+    Justification = "Disposed in `DisposeAsync`")]
+[SuppressMessage(
+    "Maintainability",
+    "CA1515:Consider making public types internal",
+    Justification = "xUnit requires this to be public")]
 public sealed class TestFixture : IAsyncLifetime
 {
     public const string CollectionName = "TestCollection";

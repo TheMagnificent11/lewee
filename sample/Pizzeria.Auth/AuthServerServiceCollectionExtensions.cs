@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -23,6 +24,10 @@ public static class AuthServerServiceCollectionExtensions
             .AddHttpMessageHandler<KeycloakAdminTokenHandler>();
     }
 
+    [SuppressMessage(
+        "Performance",
+        "CA1812: Avoid uninstantiated internal classes",
+        Justification = "Use via DI")]
     private sealed class LoggerWrapper<T> : ILogger<T>
     {
         private readonly ILogger innerLogger;

@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Microsoft.Extensions.Caching.Memory;
@@ -6,6 +7,10 @@ using Pizzeria.Common;
 
 namespace Pizzeria.Auth;
 
+[SuppressMessage(
+    "Performance",
+    "CA1812: Avoid uninstantiated internal classes",
+    Justification = "Use via DI")]
 internal sealed class KeycloakAdminTokenHandler : DelegatingHandler
 {
     private const string TokenCacheKey = "KeycloakAdminToken";

@@ -1,5 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace Pizzeria.Configuration;
 
+[SuppressMessage(
+    "Performance",
+    "CA1812: Avoid uninstantiated internal classes",
+    Justification = "Use via DI")]
 internal sealed class ConfigurationBackgroundService : BackgroundService
 {
     private readonly PizzeriaStoreDatabaseConfigurationService dbConfigService;

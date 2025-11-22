@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using FluentAssertions;
 using Xunit;
@@ -79,12 +80,19 @@ public class QuerySpecificationTests
         spec.IncludeExpressions.Should().HaveCount(2);
     }
 
-    // Test helper classes
+    [SuppressMessage(
+        "Performance",
+        "CA1812: Avoid uninstantiated internal classes",
+        Justification = "False positive")]
     private sealed class TestAggregate : AggregateRoot
     {
         public string Name { get; set; } = string.Empty;
     }
 
+    [SuppressMessage(
+        "Performance",
+        "CA1812: Avoid uninstantiated internal classes",
+        Justification = "False positive")]
     private sealed class TestRelatedAggregate : AggregateRoot
     {
         public string Description { get; set; } = string.Empty;

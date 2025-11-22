@@ -82,6 +82,8 @@ public abstract class QueryEndpoint<T> : EndpointWithoutRequest<T>
     /// <exception cref="NotSupportedException">Thrown when result status is not valid for this type of request</exception>
     protected async Task ToResponseAsync(QueryResult<T> result, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(result);
+
         switch (result.Status)
         {
             case ResultStatus.Success:

@@ -1,7 +1,12 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Pizzeria.Configuration;
 
+[SuppressMessage(
+    "Performance",
+    "CA1812: Avoid uninstantiated internal classes",
+    Justification = "Use via DI")]
 internal sealed class ConfigurationHealthCheck : IHealthCheck
 {
     private readonly ConfigurationStatusService statusService;

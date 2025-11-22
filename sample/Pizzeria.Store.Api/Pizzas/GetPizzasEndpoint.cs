@@ -5,7 +5,7 @@ using Pizzeria.Store.Contracts;
 
 namespace Pizzeria.Store.Api.Pizzas;
 
-public sealed class GetPizzasEndpoint : QueryEndpoint<PizzaDto[]>
+internal sealed class GetPizzasEndpoint : QueryEndpoint<PizzaDto[]>
 {
     protected override string Route => Endpoints.StoreApi.Pizzas;
 

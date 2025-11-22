@@ -1,4 +1,5 @@
-﻿using Lewee.Application.Mediation.Notifications;
+﻿using System.Diagnostics.CodeAnalysis;
+using Lewee.Application.Mediation.Notifications;
 using Lewee.Contracts;
 using Lewee.Shared;
 using MediatR;
@@ -7,6 +8,10 @@ using Microsoft.Extensions.Logging;
 
 namespace Lewee.Infrastructure.AspNet.SignalR;
 
+[SuppressMessage(
+    "Performance",
+    "CA1812: Avoid uninstantiated internal classes",
+    Justification = "Use via DI")]
 internal sealed class ClientEventHandler : INotificationHandler<ClientEvent>
 {
     private readonly IHubContext<ClientEventHub> hubContext;

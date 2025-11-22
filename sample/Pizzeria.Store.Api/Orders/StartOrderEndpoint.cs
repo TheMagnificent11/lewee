@@ -5,7 +5,7 @@ using Pizzeria.Store.Application.Orders;
 
 namespace Pizzeria.Store.Api.Orders;
 
-public sealed class StartOrderEndpoint : CommandEndpoint<EmptyRequest>
+internal sealed class StartOrderEndpoint : CommandEndpoint<EmptyRequest>
 {
     protected override string Route => Endpoints.StoreApi.Orders;
 

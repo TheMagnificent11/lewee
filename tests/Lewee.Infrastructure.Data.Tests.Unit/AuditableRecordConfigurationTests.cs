@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using Lewee.Domain;
 using Microsoft.EntityFrameworkCore;
@@ -122,13 +123,15 @@ public class AuditableRecordConfigurationTests
         primaryKey.Properties[0].Name.Should().Be("Id");
     }
 
-    // Test entity
+    [SuppressMessage(
+        "Performance",
+        "CA1812: Avoid uninstantiated internal classes",
+        Justification = "False positive")]
     private sealed class TestEntity : AuditableRecord
     {
         public string Name { get; set; } = string.Empty;
     }
 
-    // Test configuration
     private sealed class TestEntityConfiguration : AuditableRecordConfiguration<TestEntity>
     {
         protected override void ConfigureEntity(EntityTypeBuilder<TestEntity> builder)
@@ -139,7 +142,6 @@ public class AuditableRecordConfigurationTests
         }
     }
 
-    // Test contexts for different providers
     private sealed class TestPostgreSqlContext : DbContext
     {
         public TestPostgreSqlContext(DbContextOptions<TestPostgreSqlContext> options)

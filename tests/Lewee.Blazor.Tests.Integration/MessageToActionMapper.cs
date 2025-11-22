@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Lewee.Blazor.Tests.Integration;
 
-public class MessageToActionMapper : IMessageToActionMapper
+internal sealed class MessageToActionMapper : IMessageToActionMapper
 {
     private readonly ILogger<MessageToActionMapper> logger;
 
@@ -23,7 +23,7 @@ public class MessageToActionMapper : IMessageToActionMapper
         return message switch
         {
             PizzaOrder order => new OrderCreatedAction(order, correlationId),
-            _ => null
+            _ => null,
         };
     }
 }
