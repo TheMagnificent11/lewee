@@ -1,11 +1,13 @@
+using System.Diagnostics.CodeAnalysis;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace Lewee.Infrastructure.Data.Tests.Integration;
 
-/// <summary>
-/// Test handler for domain events to track if events are dispatched
-/// </summary>
+[SuppressMessage(
+    "Performance",
+    "CA1812: Avoid uninstantiated internal classes",
+    Justification = "Used via mediation")]
 internal sealed class TestOrderSubmittedEventHandler : INotificationHandler<TestOrderSubmittedEvent>
 {
     private readonly ILogger<TestOrderSubmittedEventHandler> logger;

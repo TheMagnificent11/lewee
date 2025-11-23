@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Lewee.Blazor.Fluxor.Actions;
 using Lewee.Blazor.Messaging;
 using Pizzeria.Store.Contracts;
@@ -5,6 +6,10 @@ using Pizzeria.Store.Web.States.Orders.Actions;
 
 namespace Pizzeria.Store.Web.States;
 
+[SuppressMessage(
+    "Performance",
+    "CA1812: Avoid uninstantiated internal classes",
+    Justification = "Used via DI")]
 internal sealed class MessageToActionMapper : IMessageToActionMapper
 {
     private readonly ILogger<MessageToActionMapper> logger;

@@ -8,6 +8,10 @@ using Pizzeria.Store.Web.States.Orders.Actions;
 
 namespace Pizzeria.Store.Web.States.Orders;
 
+[SuppressMessage(
+    "Performance",
+    "CA1812: Avoid uninstantiated internal classes",
+    Justification = "Used via Fluxor")]
 internal sealed class OrdersEffects : RequestEffects<OrdersState, StartOrderAction, StartOrderSuccessAction, StartOrderFailureAction>
 {
     private readonly IPizzeriaApiClient apiClient;

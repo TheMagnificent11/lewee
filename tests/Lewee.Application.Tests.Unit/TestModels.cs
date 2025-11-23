@@ -10,8 +10,16 @@ namespace Lewee.Application.Tests.Unit;
     "StyleCop.CSharp.DocumentationRules",
     "SA1649:File name should match first type name",
     Justification = "Test models file contains multiple related test classes for testing purposes")]
+[SuppressMessage(
+    "Performance",
+    "CA1812: Avoid uninstantiated internal classes",
+    Justification = "Used via mediation")]
 internal sealed record TestCommand(string Name, Guid CorrelationId) : ICommand
 {
+    [SuppressMessage(
+        "Performance",
+        "CA1812: Avoid uninstantiated internal classes",
+        Justification = "Used via mediation")]
     internal sealed class Validator : AbstractValidator<TestCommand>
     {
         public Validator()
@@ -20,6 +28,10 @@ internal sealed record TestCommand(string Name, Guid CorrelationId) : ICommand
         }
     }
 
+    [SuppressMessage(
+        "Performance",
+        "CA1812: Avoid uninstantiated internal classes",
+        Justification = "Used via mediation")]
     internal sealed class Handler : IRequestHandler<TestCommand, CommandResult>
     {
         public Task<CommandResult> Handle(TestCommand request, CancellationToken cancellationToken)
@@ -33,8 +45,16 @@ internal sealed record TestCommand(string Name, Guid CorrelationId) : ICommand
     "StyleCop.CSharp.MaintainabilityRules",
     "SA1402:File may only contain a single type",
     Justification = "Test model classes are grouped together for easier test maintenance")]
+[SuppressMessage(
+    "Performance",
+    "CA1812: Avoid uninstantiated internal classes",
+    Justification = "Used via mediation")]
 internal sealed record TestDomainExceptionCommand(Guid CorrelationId) : ICommand
 {
+    [SuppressMessage(
+        "Performance",
+        "CA1812: Avoid uninstantiated internal classes",
+        Justification = "Used via mediation")]
     internal sealed class Handler : IRequestHandler<TestDomainExceptionCommand, CommandResult>
     {
         public Task<CommandResult> Handle(TestDomainExceptionCommand request, CancellationToken cancellationToken)
@@ -48,8 +68,16 @@ internal sealed record TestDomainExceptionCommand(Guid CorrelationId) : ICommand
     "StyleCop.CSharp.MaintainabilityRules",
     "SA1402:File may only contain a single type",
     Justification = "Test model classes are grouped together for easier test maintenance")]
+[SuppressMessage(
+    "Performance",
+    "CA1812: Avoid uninstantiated internal classes",
+    Justification = "Used via mediation")]
 internal sealed record TestUnhandledExceptionCommand(Guid CorrelationId) : ICommand
 {
+    [SuppressMessage(
+        "Performance",
+        "CA1812: Avoid uninstantiated internal classes",
+        Justification = "Used via mediation")]
     internal sealed class Handler : IRequestHandler<TestUnhandledExceptionCommand, CommandResult>
     {
         public Task<CommandResult> Handle(TestUnhandledExceptionCommand request, CancellationToken cancellationToken)
@@ -63,8 +91,16 @@ internal sealed record TestUnhandledExceptionCommand(Guid CorrelationId) : IComm
     "StyleCop.CSharp.MaintainabilityRules",
     "SA1402:File may only contain a single type",
     Justification = "Test model classes are grouped together for easier test maintenance")]
+[SuppressMessage(
+    "Performance",
+    "CA1812: Avoid uninstantiated internal classes",
+    Justification = "Used via mediation")]
 internal sealed record TestQuery(Guid CorrelationId) : IQuery<TestData>
 {
+    [SuppressMessage(
+        "Performance",
+        "CA1812: Avoid uninstantiated internal classes",
+        Justification = "Used via mediation")]
     internal sealed class Handler : IRequestHandler<TestQuery, QueryResult<TestData>>
     {
         public Task<QueryResult<TestData>> Handle(TestQuery request, CancellationToken cancellationToken)
@@ -85,8 +121,16 @@ internal sealed record TestData(string Value);
     "StyleCop.CSharp.MaintainabilityRules",
     "SA1402:File may only contain a single type",
     Justification = "Test model classes are grouped together for easier test maintenance")]
+[SuppressMessage(
+    "Performance",
+    "CA1812: Avoid uninstantiated internal classes",
+    Justification = "Used via mediation")]
 internal sealed record TestTenantCommand(Guid TenantId, string Name, Guid CorrelationId) : ICommand, ITenantRequest
 {
+    [SuppressMessage(
+        "Performance",
+        "CA1812: Avoid uninstantiated internal classes",
+        Justification = "Used via mediation")]
     internal sealed class Handler : IRequestHandler<TestTenantCommand, CommandResult>
     {
         public Task<CommandResult> Handle(TestTenantCommand request, CancellationToken cancellationToken)
@@ -100,8 +144,16 @@ internal sealed record TestTenantCommand(Guid TenantId, string Name, Guid Correl
     "StyleCop.CSharp.MaintainabilityRules",
     "SA1402:File may only contain a single type",
     Justification = "Test model classes are grouped together for easier test maintenance")]
+[SuppressMessage(
+    "Performance",
+    "CA1812: Avoid uninstantiated internal classes",
+    Justification = "Used via mediation")]
 internal sealed record TestServerErrorCommand(Guid CorrelationId) : ICommand
 {
+    [SuppressMessage(
+        "Performance",
+        "CA1812: Avoid uninstantiated internal classes",
+        Justification = "Used via mediation")]
     internal sealed class Handler : IRequestHandler<TestServerErrorCommand, CommandResult>
     {
         public Task<CommandResult> Handle(TestServerErrorCommand request, CancellationToken cancellationToken)
@@ -117,8 +169,16 @@ internal sealed record TestServerErrorCommand(Guid CorrelationId) : ICommand
     "StyleCop.CSharp.MaintainabilityRules",
     "SA1402:File may only contain a single type",
     Justification = "Test model classes are grouped together for easier test maintenance")]
+[SuppressMessage(
+    "Performance",
+    "CA1812: Avoid uninstantiated internal classes",
+    Justification = "Used via mediation")]
 internal sealed record TestBadRequestCommand(Guid CorrelationId) : ICommand
 {
+    [SuppressMessage(
+        "Performance",
+        "CA1812: Avoid uninstantiated internal classes",
+        Justification = "Used via mediation")]
     internal sealed class Handler : IRequestHandler<TestBadRequestCommand, CommandResult>
     {
         public Task<CommandResult> Handle(TestBadRequestCommand request, CancellationToken cancellationToken)
