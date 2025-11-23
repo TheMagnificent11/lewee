@@ -167,6 +167,7 @@ dotnet_diagnostic.CA1710.severity = none           # Identifiers should have cor
 dotnet_diagnostic.CA1711.severity = none           # Identifiers should not have incorrect suffix
 dotnet_diagnostic.CA1716.severity = none           # Identifiers should not match keywords
 dotnet_diagnostic.CA1724.severity = none           # Type names should not match namespaces
+dotnet_diagnostic.CA1812.severity = none           # Avoid uninstantiated internal classes
 dotnet_diagnostic.CA1822.severity = warning        # Mark members as static
 dotnet_diagnostic.CA1848.severity = none           # Use the LoggerMessage delegates
 dotnet_diagnostic.CA2007.severity = none           # Do not directly await a Task
@@ -207,10 +208,6 @@ dotnet_diagnostic.S1144.severity = none
 dotnet_diagnostic.S3887.severity = none
 dotnet_diagnostic.S1185.severity = none
 dotnet_diagnostic.S1481.severity = none
-
-# Blazor code-behind files
-[*.razor.cs]
-dotnet_diagnostic.CA1515.severity = none           # Consider making public types internal
 
 # Test-specific rules
 [tests/**/*.cs]

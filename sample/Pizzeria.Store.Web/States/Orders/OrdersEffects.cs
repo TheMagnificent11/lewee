@@ -8,21 +8,17 @@ using Pizzeria.Store.Web.States.Orders.Actions;
 
 namespace Pizzeria.Store.Web.States.Orders;
 
-[SuppressMessage(
-    "Performance",
-    "CA1812: Avoid uninstantiated internal classes",
-    Justification = "Used via Fluxor")]
-internal sealed class OrdersEffects : RequestEffects<OrdersState, StartOrderAction, StartOrderSuccessAction, StartOrderFailureAction>
+public class OrdersEffects : RequestEffects<OrdersState, StartOrderAction, StartOrderSuccessAction, StartOrderFailureAction>
 {
     private readonly IPizzeriaApiClient apiClient;
     private readonly NavigationManager navigationManager;
 
     public OrdersEffects(
         IState<OrdersState> state,
-        ICorrelationContextAccessor correlationContextAccessor,
-        ILogger<OrdersEffects> logger,
         IPizzeriaApiClient apiClient,
-        NavigationManager navigationManager)
+        NavigationManager navigationManager,
+        ICorrelationContextAccessor correlationContextAccessor,
+        ILogger<OrdersEffects> logger)
         : base(state, correlationContextAccessor, logger)
     {
         this.apiClient = apiClient;
@@ -30,8 +26,10 @@ internal sealed class OrdersEffects : RequestEffects<OrdersState, StartOrderActi
     }
 
     [EffectMethod]
-    [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1313:Parameter '_' should begin with lower-case letter", Justification = "Underscore is the standard discard pattern for unused parameters")]
-    [SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1202:'public' members should come before 'protected' members", Justification = "Fluxor EffectMethod must be public")]
+    [SuppressMessage(
+        "StyleCop.CSharp.NamingRules",
+        "SA1313:Parameter '_' should begin with lower-case letter",
+        Justification = "Underscore is the standard discard pattern for unused parameters")]
     public Task OnStartOrderCompletedAsync(StartOrderCompletedAction _, IDispatcher __)
     {
         this.navigationManager.NavigateTo(Routes.Order);
@@ -39,7 +37,9 @@ internal sealed class OrdersEffects : RequestEffects<OrdersState, StartOrderActi
     }
 
     [EffectMethod]
-    public async Task OnAddPizzaToOrderAsync(AddPizzaToOrderAction action, IDispatcher dispatcher)
+    public async Task OnAddPizzaToOrderAsync(
+        [NotNull] AddPizzaToOrderAction action,
+        [NotNull] IDispatcher dispatcher)
     {
         try
         {
@@ -52,7 +52,9 @@ internal sealed class OrdersEffects : RequestEffects<OrdersState, StartOrderActi
         }
     }
 
-    protected override async Task ExecuteRequestAsync(StartOrderAction action, IDispatcher dispatcher)
+    protected override async Task ExecuteRequestAsync(
+        [NotNull] StartOrderAction action,
+        [NotNull] IDispatcher dispatcher)
     {
         try
         {

@@ -4,7 +4,7 @@ using Pizzeria.Store.Web.States.Pizzas.Actions;
 
 namespace Pizzeria.Store.Web.States.Pizzas;
 
-internal static class PizzasReducer
+public static class PizzasReducer
 {
     [ReducerMethod]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1313:Parameter '_' should begin with lower-case letter", Justification = "Underscore is the standard discard pattern for unused parameters")]

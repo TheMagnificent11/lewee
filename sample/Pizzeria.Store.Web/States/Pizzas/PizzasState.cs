@@ -2,9 +2,9 @@ using Pizzeria.Store.Contracts;
 
 namespace Pizzeria.Store.Web.States.Pizzas;
 
-internal sealed record PizzasState
+public record PizzasState
 {
-    public PizzaDto[] Pizzas { get; init; } = [];
+    public IEnumerable<PizzaDto> Pizzas { get; init; } = [];
     public bool IsLoading { get; init; }
     public string? ErrorMessage { get; init; }
 }

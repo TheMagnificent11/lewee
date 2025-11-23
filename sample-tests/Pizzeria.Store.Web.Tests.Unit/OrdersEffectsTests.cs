@@ -29,10 +29,10 @@ public class OrdersEffectsTests : TestContext
 
         var effects = new OrdersEffects(
             mockState.Object,
-            mockCorrelationContextAccessor.Object,
-            mockLogger.Object,
             mockApiClient.Object,
-            this.Services.GetRequiredService<NavigationManager>());
+            this.Services.GetRequiredService<NavigationManager>(),
+            mockCorrelationContextAccessor.Object,
+            mockLogger.Object);
 
         var orderId = Guid.NewGuid();
         var correlationId = Guid.NewGuid();
@@ -71,10 +71,10 @@ public class OrdersEffectsTests : TestContext
 
         var effects = new OrdersEffects(
             mockState.Object,
-            mockCorrelationContextAccessor.Object,
-            mockLogger.Object,
             mockApiClient.Object,
-            this.Services.GetRequiredService<NavigationManager>());
+            this.Services.GetRequiredService<NavigationManager>(),
+            mockCorrelationContextAccessor.Object,
+            mockLogger.Object);
 
         var correlationId = Guid.NewGuid();
         var action = new StartOrderAction { CorrelationId = correlationId };
@@ -105,10 +105,10 @@ public class OrdersEffectsTests : TestContext
 
         var effects = new OrdersEffects(
             mockState.Object,
-            mockCorrelationContextAccessor.Object,
-            mockLogger.Object,
             mockApiClient.Object,
-            this.Services.GetRequiredService<NavigationManager>());
+            this.Services.GetRequiredService<NavigationManager>(),
+            mockCorrelationContextAccessor.Object,
+            mockLogger.Object);
 
         var correlationId = Guid.NewGuid();
         var action = new StartOrderAction { CorrelationId = correlationId };

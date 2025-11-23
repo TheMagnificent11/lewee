@@ -5,11 +5,7 @@ using Pizzeria.Store.Web.States.Pizzas.Actions;
 
 namespace Pizzeria.Store.Web.States.Pizzas;
 
-[SuppressMessage(
-    "Performance",
-    "CA1812: Avoid uninstantiated internal classes",
-    Justification = "Used via Fluxor")]
-internal sealed class PizzasEffects
+public class PizzasEffects
 {
     private readonly IPizzeriaApiClient apiClient;
 
@@ -19,8 +15,13 @@ internal sealed class PizzasEffects
     }
 
     [EffectMethod]
-    [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1313:Parameter '_' should begin with lower-case letter", Justification = "Underscore is the standard discard pattern for unused parameters")]
-    public async Task OnLoadPizzasAsync(LoadPizzasAction _, IDispatcher dispatcher)
+    [SuppressMessage(
+        "StyleCop.CSharp.NamingRules",
+        "SA1313:Parameter '_' should begin with lower-case letter",
+        Justification = "Underscore is the standard discard pattern for unused parameters")]
+    public async Task OnLoadPizzasAsync(
+        LoadPizzasAction _,
+        [NotNull] IDispatcher dispatcher)
     {
         try
         {
