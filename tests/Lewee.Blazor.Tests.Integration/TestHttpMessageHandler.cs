@@ -42,10 +42,4 @@ internal sealed class TestHttpMessageHandler : HttpMessageHandler
         // Forward the new request through the HttpClient which uses the TestServer's message handler
         return await this.httpClient.SendAsync(newRequest, cancellationToken);
     }
-
-    protected override void Dispose(bool disposing)
-    {
-        // Don't dispose the HttpClient as it's managed externally
-        base.Dispose(disposing);
-    }
 }

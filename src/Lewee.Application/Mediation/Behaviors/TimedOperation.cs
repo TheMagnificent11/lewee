@@ -1,8 +1,13 @@
 ﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 
 namespace Lewee.Application.Mediation.Behaviors;
 
+[SuppressMessage(
+    "Major Code Smell",
+    "S3881:\"IDisposable\" should be implemented correctly",
+    Justification = "Nothing to dispose, just requires `IDisposable` for `using` pattern")]
 internal class TimedOperation : IDisposable
 {
     public const string BeginningOperationTemplate = "Beginning operation {TimedOperation}";

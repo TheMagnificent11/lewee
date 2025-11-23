@@ -60,7 +60,7 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
     {
         this.correlationContextAccessor.CorrelationContext = new CorrelationContext
         {
-            CorrelationId = action.CorrelationId.ToString()
+            CorrelationId = action.CorrelationId.ToString(),
         };
 
         using (this.Logger.BeginCorrelationIdScope(action.CorrelationId))

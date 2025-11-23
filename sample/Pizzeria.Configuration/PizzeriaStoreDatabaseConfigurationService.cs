@@ -34,7 +34,6 @@ internal sealed class PizzeriaStoreDatabaseConfigurationService
         catch (Exception ex)
         {
             this.logger.LogError(ex, "Database configuration failed: {Message}", ex.Message);
-            throw;
         }
     }
 }

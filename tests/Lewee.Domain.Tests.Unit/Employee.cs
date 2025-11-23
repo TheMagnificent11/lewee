@@ -1,4 +1,4 @@
-using Lewee.Domain;
+namespace Lewee.Domain.Tests.Unit;
 
 internal sealed class Employee : Entity
 {

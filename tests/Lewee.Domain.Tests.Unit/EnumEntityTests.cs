@@ -31,6 +31,10 @@ internal static class EnumDescriptions
     "StyleCop.CSharp.OrderingRules",
     "SA1201:A enum should not follow a class",
     Justification = "Test enum is logically grouped with related test components")]
+[SuppressMessage(
+    "Minor Code Smell",
+    "S2344:Enumeration type names should not have \"Flags\" or \"Enum\" suffixes",
+    Justification = "Only for test purposes")]
 internal enum TestEnum
 {
     [Description(EnumDescriptions.TestDescription1)]
@@ -63,7 +67,7 @@ public class EnumEntityTests
     public void EnumEntity_DefaultConstructor_SetsNameToEF()
     {
         // Arrange & Act
-        var enumEntity = Activator.CreateInstance(typeof(EnumEntity<TestEnum>), true) as EnumEntity<TestEnum>;
+        var enumEntity = Activator.CreateInstance(typeof(EnumEntity<TestEnum>), nonPublic: true) as EnumEntity<TestEnum>;
 
         // Assert
         enumEntity.Name.Should().Be("EF");

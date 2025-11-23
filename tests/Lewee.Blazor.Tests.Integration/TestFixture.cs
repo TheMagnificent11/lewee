@@ -26,7 +26,12 @@ public sealed class TestFixture : IAsyncLifetime
 {
     public const string CollectionName = "TestCollection";
 
+    [SuppressMessage(
+        "Minor Bug",
+        "S3887:Mutable, non-private fields should not be \"readonly\"",
+        Justification = "Only for test purposes")]
     public static readonly ConcurrentDictionary<Guid, PizzaOrder> Orders = new();
+
     private readonly TestServer server;
     private readonly TestClient client;
     private readonly HttpClient httpClient;

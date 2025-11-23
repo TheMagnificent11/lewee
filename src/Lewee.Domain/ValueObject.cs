@@ -1,9 +1,15 @@
-﻿namespace Lewee.Domain;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Lewee.Domain;
 
 /// <summary>
 /// Value Object
 /// </summary>
 /// <typeparam name="T">Value object type</typeparam>
+[SuppressMessage(
+    "Major Code Smell",
+    "S4035:Classes implementing \"IEquatable<T>\" should be sealed",
+    Justification = "Can't be sealed as it needs to be abstract")]
 public abstract class ValueObject<T> : IEquatable<T>
     where T : ValueObject<T>
 {

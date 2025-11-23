@@ -104,8 +104,6 @@ internal sealed class KeycloakHttpClient : IAuthServerAdminClient
         catch (HttpRequestException ex)
         {
             this.logger.LogError(ex, "Error creating user");
-
-            throw;
         }
     }
 

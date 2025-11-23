@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Lewee.Domain;
 
 namespace Lewee.Infrastructure.Data.Tests.Integration;
@@ -13,7 +14,10 @@ internal sealed class TestOrder : AggregateRoot
         this.OrderNumber = orderNumber;
     }
 
-    // EF constructor
+    [SuppressMessage(
+        "Major Code Smell",
+        "S1144:Unused private types or members should be removed",
+        Justification = "Needed for EF")]
     private TestOrder()
         : base(Guid.NewGuid())
     {
