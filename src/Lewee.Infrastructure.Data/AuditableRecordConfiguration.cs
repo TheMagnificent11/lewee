@@ -1,5 +1,4 @@
-using System;
-using System.Linq;
+using System.Diagnostics.CodeAnalysis;
 using Lewee.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -14,8 +13,14 @@ public abstract class AuditableRecordConfiguration<TEntity> : IEntityTypeConfigu
     where TEntity : AuditableRecord
 {
     /// <inheritdoc/>
+    [SuppressMessage(
+        "Performance",
+        "CA1851:Possible multiple enumerations of 'IEnumerable' collection",
+        Justification = "The enumerable is small in size the and performance impact is negligible")]
     public virtual void Configure(EntityTypeBuilder<TEntity> builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
+
         builder.HasKey(x => x.Id);
         builder.AddAuditUserProperties();
 
@@ -23,6 +28,13 @@ public abstract class AuditableRecordConfiguration<TEntity> : IEntityTypeConfigu
         // Detect database provider by looking at model annotations
         var model = builder.Metadata.Model;
         var annotations = model.GetAnnotations();
+
+        if (annotations == null)
+        {
+            // No concurrency token configuration for unknown providers
+            this.ConfigureEntity(builder);
+            return;
+        }
 
         var isPostgreSql = annotations
             .Any(a => a.Name.Contains("Npgsql", StringComparison.OrdinalIgnoreCase) ||

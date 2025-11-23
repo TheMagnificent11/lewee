@@ -8,9 +8,6 @@ using Xunit;
 
 namespace Lewee.Application.Tests.Unit;
 
-/// <summary>
-/// Tests for ApplicationConfiguration extension methods
-/// </summary>
 public class ApplicationConfigurationTests
 {
     [Fact]
@@ -115,13 +112,20 @@ public class ApplicationConfigurationTests
         var services = new ServiceCollection();
 
         // Act & Assert
-        var act = () => services.AddPipelineBehaviors(Array.Empty<Type>());
+        var act = () => services.AddPipelineBehaviors([]);
         act.Should().NotThrow();
     }
 }
 
-[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Test helper class grouped with test class for convenience")]
-public class TestCustomBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+[SuppressMessage(
+    "StyleCop.CSharp.MaintainabilityRules",
+    "SA1402:File may only contain a single type",
+    Justification = "Test helper class grouped with test class for convenience")]
+[SuppressMessage(
+    "Performance",
+    "CA1812: Avoid uninstantiated internal classes",
+    Justification = "Used via mediation/DI")]
+internal sealed class TestCustomBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
     public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)

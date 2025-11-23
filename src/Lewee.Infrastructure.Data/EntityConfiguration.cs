@@ -1,5 +1,4 @@
-﻿using Lewee.Domain;
-using Microsoft.EntityFrameworkCore;
+using Lewee.Domain;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Lewee.Infrastructure.Data;
@@ -14,6 +13,8 @@ public abstract class EntityConfiguration<TEntity> : AuditableRecordConfiguratio
     /// <inheritdoc/>
     public override void Configure(EntityTypeBuilder<TEntity> builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
+
         base.Configure(builder);
 
         builder.HasQueryFilter(x => !x.IsDeleted);

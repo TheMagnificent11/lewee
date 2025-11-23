@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using Xunit;
 
@@ -5,6 +6,10 @@ namespace Lewee.Domain.Tests.Unit;
 
 public class EntityTests
 {
+    [SuppressMessage(
+        "Maintainability",
+        "CA1508:Avoid dead conditional code",
+        Justification = "Required for test coverage")]
     [Fact]
     public void Equals_Null_ReturnsFalse()
     {

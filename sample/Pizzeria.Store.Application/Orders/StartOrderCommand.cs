@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using System.Diagnostics.CodeAnalysis;
+using FluentValidation;
 using Lewee.Application.Mediation.Requests;
 using Lewee.Domain;
 using MediatR;
@@ -9,7 +10,11 @@ namespace Pizzeria.Store.Application.Orders;
 
 public record StartOrderCommand(string UserId, Guid CorrelationId) : ICommand
 {
-    internal class Validator : AbstractValidator<StartOrderCommand>
+    [SuppressMessage(
+        "Performance",
+        "CA1812: Avoid uninstantiated internal classes",
+        Justification = "Used via mediation")]
+    internal sealed class Validator : AbstractValidator<StartOrderCommand>
     {
         public Validator()
         {
@@ -19,6 +24,10 @@ public record StartOrderCommand(string UserId, Guid CorrelationId) : ICommand
         }
     }
 
+    [SuppressMessage(
+        "Performance",
+        "CA1812: Avoid uninstantiated internal classes",
+        Justification = "Used via mediation")]
     internal sealed class Handler : IRequestHandler<StartOrderCommand, CommandResult>
     {
         private readonly IRepository<Order> repository;

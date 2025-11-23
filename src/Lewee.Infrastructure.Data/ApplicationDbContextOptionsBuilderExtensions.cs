@@ -19,6 +19,8 @@ public static class ApplicationDbContextOptionsBuilderExtensions
         this DbContextOptionsBuilder optionsBuilder,
         IServiceProvider serviceProvider)
     {
+        ArgumentNullException.ThrowIfNull(optionsBuilder);
+
         var authenticatedUserService = serviceProvider.GetRequiredService<IAuthenticatedUserService>();
 
         optionsBuilder.AddInterceptors(new AuditDetailsSaveChangesInterceptor(authenticatedUserService));
@@ -38,6 +40,8 @@ public static class ApplicationDbContextOptionsBuilderExtensions
         IServiceProvider serviceProvider)
         where TContext : DbContext, IApplicationDbContext
     {
+        ArgumentNullException.ThrowIfNull(optionsBuilder);
+
         var authenticatedUserService = serviceProvider.GetRequiredService<IAuthenticatedUserService>();
         var domainEventSaveChangesInterceptor = new DomainEventSaveChangesInterceptor<TContext>(authenticatedUserService);
         var domainEventDispatcherInterceptor = new DomainEventsTransactionInterceptor<TContext>(serviceProvider);

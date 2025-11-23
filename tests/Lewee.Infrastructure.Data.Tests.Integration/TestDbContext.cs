@@ -1,11 +1,12 @@
-using Lewee.Domain;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 
 namespace Lewee.Infrastructure.Data.Tests.Integration;
 
-/// <summary>
-/// Test database context for integration testing
-/// </summary>
+[SuppressMessage(
+    "Performance",
+    "CA1812: Avoid uninstantiated internal classes",
+    Justification = "Used via DI")]
 internal sealed class TestDbContext : ApplicationDbContext<TestDbContext>
 {
     public TestDbContext(DbContextOptions<TestDbContext> options)
@@ -17,6 +18,8 @@ internal sealed class TestDbContext : ApplicationDbContext<TestDbContext>
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        ArgumentNullException.ThrowIfNull(modelBuilder);
+
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.HasDefaultSchema("test");

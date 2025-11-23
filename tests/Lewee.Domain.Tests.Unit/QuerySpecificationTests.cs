@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using FluentAssertions;
 using Xunit;
@@ -13,7 +14,7 @@ public class QuerySpecificationTests
         var spec = new TestQuerySpecification(x => x.Id == Guid.NewGuid());
 
         // Assert
-        spec.WhereExpressions.Should().HaveCount(1);
+        spec.WhereExpressions.Should().ContainSingle();
         spec.WhereExpressions[0].Should().NotBeNull();
     }
 
@@ -37,7 +38,7 @@ public class QuerySpecificationTests
         var spec = new TestQuerySpecificationWithInclude();
 
         // Assert
-        spec.IncludeExpressions.Should().HaveCount(1);
+        spec.IncludeExpressions.Should().ContainSingle();
         spec.IncludeExpressions[0].IsThenInclude.Should().BeFalse();
         spec.IncludeExpressions[0].Expression.Should().NotBeNull();
     }
@@ -64,8 +65,8 @@ public class QuerySpecificationTests
         var spec = new TestQuerySpecificationWithWhereAndInclude(id);
 
         // Assert
-        spec.WhereExpressions.Should().HaveCount(1);
-        spec.IncludeExpressions.Should().HaveCount(1);
+        spec.WhereExpressions.Should().ContainSingle();
+        spec.IncludeExpressions.Should().ContainSingle();
     }
 
     [Fact]
@@ -79,12 +80,19 @@ public class QuerySpecificationTests
         spec.IncludeExpressions.Should().HaveCount(2);
     }
 
-    // Test helper classes
+    [SuppressMessage(
+        "Performance",
+        "CA1812: Avoid uninstantiated internal classes",
+        Justification = "False positive")]
     private sealed class TestAggregate : AggregateRoot
     {
         public string Name { get; set; } = string.Empty;
     }
 
+    [SuppressMessage(
+        "Performance",
+        "CA1812: Avoid uninstantiated internal classes",
+        Justification = "False positive")]
     private sealed class TestRelatedAggregate : AggregateRoot
     {
         public string Description { get; set; } = string.Empty;

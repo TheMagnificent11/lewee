@@ -149,6 +149,33 @@ Therefore, always check for existing references in packages and projects that al
 
 Furhermore, when working on application C# projects like web applications, do not add a reference if it comes in the `Microsoft.NET.Sdk.Web` web SDK.
 
+### Project File Configuration
+
+**IMPORTANT: Do NOT add build properties to individual `.csproj` files.**
+
+All build configuration is centrally managed in `Directory.Build.props` to ensure consistency across the solution. This includes:
+- `GenerateDocumentationFile` - Enabled for all projects to support IDE0005 enforcement
+- `NoWarn` - Suppressions for CS1591/CS1587 in test and sample projects
+- `AnalysisLevel`, `AnalysisMode`, `EnableNETAnalyzers` - Analyzer settings
+- `TreatWarningsAsErrors`, `CodeAnalysisTreatWarningsAsErrors` - Warning enforcement
+
+**Never add these properties to individual project files:**
+- `<GenerateDocumentationFile>`
+- `<NoWarn>`
+- `<TreatWarningsAsErrors>`
+- `<AnalysisLevel>` / `<AnalysisMode>`
+- Any other build/analyzer configuration
+
+**If you need project-specific settings:**
+1. First check if `Directory.Build.props` already provides the correct behavior through its conditional property groups
+2. If truly necessary, discuss with the repository owner before adding project-specific overrides
+
+**Why this matters:**
+- Ensures consistent build behavior across all projects
+- Makes it easier to update settings globally
+- Prevents configuration drift between projects
+- Reduces maintenance burden
+
 ### Coding Style
 
 **Format Command:**

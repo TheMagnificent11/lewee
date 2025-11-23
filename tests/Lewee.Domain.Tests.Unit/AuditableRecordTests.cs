@@ -122,7 +122,7 @@ public class AuditableRecordTests
         record.CreatedAtUtc.Should().BeCloseTo(record.ModifiedAtUtc, TimeSpan.FromSeconds(1));
     }
 
-    private class TestAuditableRecord : AuditableRecord
+    private sealed class TestAuditableRecord : AuditableRecord
     {
         public TestAuditableRecord()
             : base()

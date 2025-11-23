@@ -19,6 +19,9 @@ public static class ReducerExtensions
         where TState : RequestState
         where TAction : IRequestAction
     {
+        ArgumentNullException.ThrowIfNull(state);
+        ArgumentNullException.ThrowIfNull(action);
+
         return state with { CorrelationId = action.CorrelationId, ErrorMessage = null };
     }
 
@@ -53,6 +56,9 @@ public static class ReducerExtensions
         where TStateData : class
         where TAction : IQuerySuccessAction<TStateData>
     {
+        ArgumentNullException.ThrowIfNull(state);
+        ArgumentNullException.ThrowIfNull(action);
+
         return state with { Data = action.Data };
     }
 
@@ -68,6 +74,9 @@ public static class ReducerExtensions
         where TState : RequestState
         where TAction : IRequestErrorAction
     {
+        ArgumentNullException.ThrowIfNull(state);
+        ArgumentNullException.ThrowIfNull(action);
+
         return state with { ErrorMessage = action.ErrorMessage };
     }
 }

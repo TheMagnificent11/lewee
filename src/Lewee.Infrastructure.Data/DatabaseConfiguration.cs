@@ -30,6 +30,8 @@ public static class DatabaseConfiguration
         Assembly domainAssembly)
         where T : DbContext, IApplicationDbContext
     {
+        ArgumentNullException.ThrowIfNull(domainAssembly);
+
         var aggregateRootType = typeof(AggregateRoot);
         var aggregateRoots = domainAssembly.GetTypes()
             .Where(x => x.IsClass)
@@ -87,44 +89,42 @@ public static class DatabaseConfiguration
         CancellationToken cancellationToken = default)
         where T : DbContext
     {
-        await using (var serviceScope = serviceProvider.CreateAsyncScope())
-        await using (var dbContext = serviceScope.ServiceProvider.GetRequiredService<T>())
+        await using var serviceScope = serviceProvider.CreateAsyncScope();
+        await using var dbContext = serviceScope.ServiceProvider.GetRequiredService<T>();
+        var attempt = 0; // Used for exponential back-off
+
+        while (!cancellationToken.IsCancellationRequested)
         {
-            var attempt = 0; // Used for exponential back-off
-
-            while (!cancellationToken.IsCancellationRequested)
+            var canConnect = await dbContext.Database.CanConnectAsync(cancellationToken);
+            if (canConnect)
             {
-                var canConnect = await dbContext.Database.CanConnectAsync(cancellationToken);
-                if (canConnect)
-                {
-                    break;
-                }
-
-                var delayTimeSpan = CalculateExponentialBackoffDelay(attempt);
-
-                await Task.Delay(delayTimeSpan, cancellationToken);
+                break;
             }
 
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return;
-            }
+            var delayTimeSpan = CalculateExponentialBackoffDelay(attempt);
 
-            await dbContext.Database.MigrateAsync(cancellationToken);
-
-            if (!seedData)
-            {
-                return;
-            }
-
-            var seeder = serviceScope.ServiceProvider.GetService<IDatabaseSeeder<T>>();
-            if (seeder == null)
-            {
-                return;
-            }
-
-            await seeder.RunAsync(cancellationToken);
+            await Task.Delay(delayTimeSpan, cancellationToken);
         }
+
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return;
+        }
+
+        await dbContext.Database.MigrateAsync(cancellationToken);
+
+        if (!seedData)
+        {
+            return;
+        }
+
+        var seeder = serviceScope.ServiceProvider.GetService<IDatabaseSeeder<T>>();
+        if (seeder == null)
+        {
+            return;
+        }
+
+        await seeder.RunAsync(cancellationToken);
     }
 
     private static TimeSpan CalculateExponentialBackoffDelay(int attempt) =>

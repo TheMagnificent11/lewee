@@ -104,6 +104,8 @@ public abstract class CommandEndpoint<TRequest> : Endpoint<TRequest, EmptyRespon
     /// <exception cref="NotSupportedException">Thrown when result status is not valid for this type of request</exception>
     protected async Task ToResponseAsync(CommandResult result, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(result);
+
         switch (result.Status)
         {
             case ResultStatus.Success:
@@ -111,7 +113,7 @@ public abstract class CommandEndpoint<TRequest> : Endpoint<TRequest, EmptyRespon
                 return;
 
             case ResultStatus.BadRequest:
-                result.Errors.ForEach(x => this.AddError(x));
+                result.Errors.ToList().ForEach(x => this.AddError(x));
                 this.ThrowIfAnyErrors();
                 break;
 

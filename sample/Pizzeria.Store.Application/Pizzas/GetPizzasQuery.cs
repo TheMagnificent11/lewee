@@ -1,4 +1,5 @@
-﻿using Lewee.Application.Mediation.Requests;
+﻿using System.Diagnostics.CodeAnalysis;
+using Lewee.Application.Mediation.Requests;
 using Lewee.Domain;
 using MediatR;
 using Pizzeria.Store.Contracts;
@@ -15,6 +16,10 @@ public sealed class GetPizzasQuery : IQuery<PizzaDto[]>
 
     public Guid CorrelationId { get; }
 
+    [SuppressMessage(
+        "Performance",
+        "CA1812: Avoid uninstantiated internal classes",
+        Justification = "Used via mediation")]
     internal sealed class Handler : IRequestHandler<GetPizzasQuery, QueryResult<PizzaDto[]>>
     {
         private readonly IRepository<Pizza> repository;

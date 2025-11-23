@@ -17,12 +17,12 @@ public sealed class CustomerAuthTests : PizzeriaTests
     public async Task Should_BeAbleToSignInAndSignOut()
     {
         // Arrange
-        var webClientUrl = await this.factory.GetWebClientBaseUrlAsync();
+        var webClientUrl = await this.Factory.GetWebClientBaseUrlAsync();
         var username = $"testuser-{Guid.NewGuid()}";
         var password = "TestPassword123!";
         var email = $"{username}@example.com";
 
-        var playwright = await this.factory.GetPlaywrightAsync();
+        var playwright = await this.Factory.GetPlaywrightAsync();
         var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
             Headless = true,

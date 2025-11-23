@@ -1,25 +1,31 @@
-﻿using FluentAssertions;
+﻿using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using FluentAssertions;
 using Xunit;
 
 namespace Lewee.Shared.Tests.Unit;
 
 public static class EnumExtensionTests
 {
+    [SuppressMessage(
+        "Maintainability",
+        "CA1515:Consider making public types internal",
+        Justification = "False positive (needs to be public because it's used in a public method below)")]
     public enum TableStatus
     {
         Available = 0,
 
-        Reserved = 1,
+        Booked = 1,
 
-        [System.ComponentModel.Description("In Use")]
+        [Description("In Use")]
         InUse = 2
     }
 
     [Theory]
     [InlineData(TableStatus.Available, "Available")]
-    [InlineData(TableStatus.Reserved, "Reserved")]
+    [InlineData(TableStatus.Booked, "Booked")]
     [InlineData(TableStatus.InUse, "In Use")]
-    public static void GetDescription_ReturnCorrectDescription(TableStatus value, string expectedDescription)
+    public static void GetDescriptionReturnCorrectDescription(TableStatus value, string expectedDescription)
     {
         var result = value.GetDescription();
 

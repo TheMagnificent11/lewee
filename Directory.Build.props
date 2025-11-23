@@ -12,6 +12,10 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <Authors>Saji Weerasingham</Authors>
     <Company>NA</Company>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <AnalysisMode>All</AnalysisMode>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
   </PropertyGroup>
 
   <PropertyGroup Condition="!$(MSBuildProjectName.Contains('.Tests.'))">
@@ -35,6 +39,11 @@
 
   <PropertyGroup Condition="$(MSBuildProjectName.Contains('.Tests.'))">
     <IsPackable>false</IsPackable>
+    <NoWarn>$(NoWarn);CS1591;CS1587</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$(MSBuildProjectName.StartsWith('Pizzeria.')) AND !$(MSBuildProjectName.Contains('.Tests.'))">
+    <NoWarn>$(NoWarn);CS1591;CS1587</NoWarn>
   </PropertyGroup>
 
   <ItemGroup Condition="!$(MSBuildProjectName.Contains('.Tests.')) AND !$(MSBuildProjectName.StartsWith('Pizzeria.'))">

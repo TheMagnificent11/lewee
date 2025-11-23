@@ -34,6 +34,8 @@ public class Repository<TAggregate, TContext> : IRepository<TAggregate>
         QuerySpecification<TAggregate> querySpecification,
         CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(querySpecification);
+
         var query = this.ApplySpecification(querySpecification);
         return await query.ToListAsync(cancellationToken);
     }
@@ -43,6 +45,8 @@ public class Repository<TAggregate, TContext> : IRepository<TAggregate>
         QuerySpecification<TAggregate> querySpecification,
         CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(querySpecification);
+
         var query = this.ApplySpecification(querySpecification);
         return await query.FirstOrDefaultAsync(cancellationToken);
     }

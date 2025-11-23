@@ -1,10 +1,15 @@
-﻿using Npgsql;
+﻿using System.Diagnostics.CodeAnalysis;
+using Npgsql;
 using Pizzeria.Common;
 using Respawn;
 using Xunit;
 
 namespace Pizzeria.Tests.Integration;
 
+[SuppressMessage(
+    "Maintainability",
+    "CA1515:Consider making public types internal",
+    Justification = "xUnit requires this to be public")]
 public abstract class PizzeriaTests : IAsyncLifetime
 {
     protected const string TableExistsSql = @"
@@ -15,19 +20,17 @@ SELECT EXISTS
     WHERE table_schema NOT IN ('pg_catalog','information_schema')
 );";
 
-#pragma warning disable SA1401 // Field should be private - This field must be protected to be accessible by derived test classes
-    protected readonly PizzeriaApplicationFactory factory;
-#pragma warning restore SA1401
-
     protected PizzeriaTests(PizzeriaApplicationFactory factory)
     {
-        this.factory = factory;
+        this.Factory = factory;
     }
+
+    protected PizzeriaApplicationFactory Factory { get; }
 
     public async Task InitializeAsync()
     {
-        var databaseName = ServiceNames.GetPizzaStoreDatabaseName();
-        var connectionString = await this.factory.GetConnectionStringAsync(databaseName);
+        var databaseName = ServiceNames.PizzaStoreDatabaseName;
+        var connectionString = await this.Factory.GetConnectionStringAsync(databaseName);
 
         await using var connection = new NpgsqlConnection(connectionString);
         await connection.OpenAsync();
@@ -60,7 +63,7 @@ SELECT EXISTS
 
         while (DateTime.UtcNow - startTime < timeout)
         {
-            var undispatchedCount = await this.factory.GetUndispatchedDomainEventCountAsync();
+            var undispatchedCount = await this.Factory.GetUndispatchedDomainEventCountAsync();
 
             if (undispatchedCount == 0)
             {
@@ -70,7 +73,7 @@ SELECT EXISTS
             await Task.Delay(delay);
         }
 
-        var finalCount = await this.factory.GetUndispatchedDomainEventCountAsync();
+        var finalCount = await this.Factory.GetUndispatchedDomainEventCountAsync();
         throw new TimeoutException($"Timed out waiting for domain events to be dispatched. {finalCount} events remain undispatched after {timeout.TotalSeconds} seconds.");
     }
 

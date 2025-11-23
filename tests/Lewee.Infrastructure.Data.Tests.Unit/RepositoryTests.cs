@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using Lewee.Domain;
 using Microsoft.EntityFrameworkCore;
@@ -28,7 +29,7 @@ public class RepositoryTests
         var results = await repository.QueryAsync(spec);
 
         // Assert
-        results.Should().HaveCount(1);
+        results.Should().ContainSingle();
         results[0].Id.Should().Be(entity1.Id);
     }
 
@@ -54,7 +55,7 @@ public class RepositoryTests
         var results = await repository.QueryAsync(spec);
 
         // Assert
-        results.Should().HaveCount(1);
+        results.Should().ContainSingle();
         results[0].Name.Should().Be("Test1");
     }
 
@@ -188,7 +189,7 @@ public class RepositoryTests
 
         // Assert
         var allEntities = await context.TestEntities.ToListAsync();
-        allEntities.Should().HaveCount(1);
+        allEntities.Should().ContainSingle();
         allEntities[0].Name.Should().Be("Test1");
     }
 
@@ -212,13 +213,11 @@ public class RepositoryTests
         changeCount.Should().Be(1);
     }
 
-    // Test entity
-    private class TestEntity : AggregateRoot
+    private sealed class TestEntity : AggregateRoot
     {
         public string Name { get; set; } = string.Empty;
     }
 
-    // Test specifications
     private sealed class TestWhereSpecification : QuerySpecification<TestEntity>
     {
         public TestWhereSpecification(Guid id)
@@ -237,8 +236,11 @@ public class RepositoryTests
         }
     }
 
-    // Test context
-    private class TestDbContext : DbContext
+    [SuppressMessage(
+        "Performance",
+        "CA1812: Avoid uninstantiated internal classes",
+        Justification = "False positive")]
+    private sealed class TestDbContext : DbContext
     {
         public TestDbContext(DbContextOptions<TestDbContext> options)
             : base(options)

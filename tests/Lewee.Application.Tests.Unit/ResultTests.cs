@@ -136,7 +136,7 @@ public class ResultTests
     public void ResultStatus_ShouldHaveExpectedValues(ResultStatus status)
     {
         // Act & Assert
-        Enum.IsDefined(typeof(ResultStatus), status).Should().BeTrue();
+        Enum.IsDefined(status).Should().BeTrue();
     }
 
     [Fact]

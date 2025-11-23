@@ -2,7 +2,6 @@ using Bunit;
 using Correlate;
 using FluentAssertions;
 using Fluxor;
-using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -22,7 +21,6 @@ public class OrderPageTests : TestContext
         // Arrange
         var mockApiClient = new Mock<IPizzeriaApiClient>();
         var mockCorrelationContextAccessor = new Mock<ICorrelationContextAccessor>();
-        var mockNavigationManager = new Mock<NavigationManager>();
         var mockLogger = new Mock<ILogger<OrdersEffects>>();
 
         this.Services.AddSingleton(mockApiClient.Object);
@@ -43,7 +41,6 @@ public class OrderPageTests : TestContext
         // Arrange
         var mockApiClient = new Mock<IPizzeriaApiClient>();
         var mockCorrelationContextAccessor = new Mock<ICorrelationContextAccessor>();
-        var mockNavigationManager = new Mock<NavigationManager>();
         var mockLogger = new Mock<ILogger<OrdersEffects>>();
 
         this.Services.AddSingleton(mockApiClient.Object);
@@ -71,7 +68,6 @@ public class OrderPageTests : TestContext
         // Arrange
         var mockApiClient = new Mock<IPizzeriaApiClient>();
         var mockCorrelationContextAccessor = new Mock<ICorrelationContextAccessor>();
-        var mockNavigationManager = new Mock<NavigationManager>();
         var mockLogger = new Mock<ILogger<OrdersEffects>>();
 
         var testPizzas = new[]

@@ -3,7 +3,6 @@ using Correlate;
 using Fluxor;
 using Lewee.Blazor.Fluxor;
 using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Logging;
 using Pizzeria.Store.Web.Services;
 using Pizzeria.Store.Web.States.Orders.Actions;
 
@@ -16,10 +15,10 @@ public class OrdersEffects : RequestEffects<OrdersState, StartOrderAction, Start
 
     public OrdersEffects(
         IState<OrdersState> state,
-        ICorrelationContextAccessor correlationContextAccessor,
-        ILogger<OrdersEffects> logger,
         IPizzeriaApiClient apiClient,
-        NavigationManager navigationManager)
+        NavigationManager navigationManager,
+        ICorrelationContextAccessor correlationContextAccessor,
+        ILogger<OrdersEffects> logger)
         : base(state, correlationContextAccessor, logger)
     {
         this.apiClient = apiClient;
@@ -27,8 +26,10 @@ public class OrdersEffects : RequestEffects<OrdersState, StartOrderAction, Start
     }
 
     [EffectMethod]
-    [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1313:Parameter '_' should begin with lower-case letter", Justification = "Underscore is the standard discard pattern for unused parameters")]
-    [SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1202:'public' members should come before 'protected' members", Justification = "Fluxor EffectMethod must be public")]
+    [SuppressMessage(
+        "StyleCop.CSharp.NamingRules",
+        "SA1313:Parameter '_' should begin with lower-case letter",
+        Justification = "Underscore is the standard discard pattern for unused parameters")]
     public Task OnStartOrderCompletedAsync(StartOrderCompletedAction _, IDispatcher __)
     {
         this.navigationManager.NavigateTo(Routes.Order);
@@ -36,7 +37,9 @@ public class OrdersEffects : RequestEffects<OrdersState, StartOrderAction, Start
     }
 
     [EffectMethod]
-    public async Task OnAddPizzaToOrderAsync(AddPizzaToOrderAction action, IDispatcher dispatcher)
+    public async Task OnAddPizzaToOrderAsync(
+        [NotNull] AddPizzaToOrderAction action,
+        [NotNull] IDispatcher dispatcher)
     {
         try
         {
@@ -49,7 +52,9 @@ public class OrdersEffects : RequestEffects<OrdersState, StartOrderAction, Start
         }
     }
 
-    protected override async Task ExecuteRequestAsync(StartOrderAction action, IDispatcher dispatcher)
+    protected override async Task ExecuteRequestAsync(
+        [NotNull] StartOrderAction action,
+        [NotNull] IDispatcher dispatcher)
     {
         try
         {

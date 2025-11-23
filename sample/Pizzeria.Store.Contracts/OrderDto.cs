@@ -9,6 +9,6 @@ public record OrderDto
     public DateTime? PreparedDateTime { get; init; }
     public DateTime? CompletedDateTime { get; init; }
     public string? DeliveryAddress { get; init; }
-    public OrderPizzaDto[] Pizzas { get; init; } = [];
+    public IReadOnlyList<OrderPizzaDto> Pizzas { get; init; } = [];
     public decimal TotalCost { get; init; }
 }

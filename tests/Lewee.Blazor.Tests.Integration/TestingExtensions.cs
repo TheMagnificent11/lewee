@@ -1,21 +1,15 @@
+using System.Diagnostics.CodeAnalysis;
 using Lewee.Blazor.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Lewee.Blazor.Tests.Integration;
 
-/// <summary>
-/// Extensions for testing Lewee Blazor components
-/// </summary>
-public static class TestingExtensions
+internal static class TestingExtensions
 {
-    /// <summary>
-    /// Adds and configures Blazor with a Fluxor and SignalR message handling for integration testing
-    /// </summary>
-    /// <typeparam name="TMapper">Mapper type</typeparam>
-    /// <param name="services">Service collection</param>
-    /// <param name="testHttpClient">Test HTTP client from TestServer</param>
-    /// <param name="useReduxDevTools">Whether to use Redux Dev Tools</param>
-    /// <returns>The updated service collection</returns>
+    [SuppressMessage(
+        "Reliability",
+        "CA2000:Dispose objects before losing scope",
+        Justification = "Only test code (this would normally handled by the DI container)")]
     public static IServiceCollection AddLeweeBlazorForTesting<TMapper>(
         this IServiceCollection services,
         HttpClient testHttpClient,

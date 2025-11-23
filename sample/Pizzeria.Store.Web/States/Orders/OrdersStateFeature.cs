@@ -1,8 +1,13 @@
+using System.Diagnostics.CodeAnalysis;
 using Fluxor;
 
 namespace Pizzeria.Store.Web.States.Orders;
 
-public sealed class OrdersStateFeature : Feature<OrdersState>
+[SuppressMessage(
+    "Performance",
+    "CA1812: Avoid uninstantiated internal classes",
+    Justification = "Used via Fluxor")]
+public class OrdersStateFeature : Feature<OrdersState>
 {
     public override string GetName() => nameof(OrdersState);
 

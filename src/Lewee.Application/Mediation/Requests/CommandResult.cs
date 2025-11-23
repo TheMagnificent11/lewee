@@ -7,7 +7,7 @@ namespace Lewee.Application.Mediation.Requests;
 /// </summary>
 public class CommandResult : Result
 {
-    private CommandResult(ResultStatus status, List<ValidationFailure>? errors)
+    private CommandResult(ResultStatus status, IList<ValidationFailure>? errors)
         : base(status, errors)
     {
     }
@@ -62,8 +62,10 @@ public class CommandResult : Result
     /// <exception cref="InvalidOperationException">
     /// Thrown if <see cref="ResultStatus"/> is <see cref="ResultStatus.Success"/> or <see cref="ResultStatus.NotApplicable"/>
     /// </exception>
-    public static CommandResult Fail(ResultStatus status, List<ValidationFailure> errors)
+    public static CommandResult Fail(ResultStatus status, IList<ValidationFailure> errors)
     {
+        ArgumentNullException.ThrowIfNull(errors);
+
         CheckIfFailure(status);
 
         return new CommandResult(status, errors);

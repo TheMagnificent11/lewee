@@ -33,7 +33,7 @@ public partial class Order : FluxorComponent
             return;
         }
 
-        if (this.PizzasState.Value.Pizzas.Length == 0 && !this.PizzasState.Value.IsLoading)
+        if (this.PizzasState.Value.Pizzas.Any() && !this.PizzasState.Value.IsLoading)
         {
             this.Dispatcher.Dispatch(new LoadPizzasAction());
         }

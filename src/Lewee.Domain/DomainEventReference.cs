@@ -22,6 +22,8 @@ public class DomainEventReference
     /// </exception>
     public DomainEventReference(DomainEvent domainEvent, string? userId = null)
     {
+        ArgumentNullException.ThrowIfNull(domainEvent);
+
         var (assemblyName, fullClassName, domainEventType) = domainEvent.GetBasicTypeInfo("Invalid domain event type");
 
         this.Id = Guid.NewGuid();

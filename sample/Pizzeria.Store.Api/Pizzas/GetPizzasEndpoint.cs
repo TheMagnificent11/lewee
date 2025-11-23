@@ -1,11 +1,16 @@
-﻿using Lewee.Infrastructure.AspNet.WebApi;
+﻿using System.Diagnostics.CodeAnalysis;
+using Lewee.Infrastructure.AspNet.WebApi;
 using Pizzeria.Common;
 using Pizzeria.Store.Application.Pizzas;
 using Pizzeria.Store.Contracts;
 
 namespace Pizzeria.Store.Api.Pizzas;
 
-public sealed class GetPizzasEndpoint : QueryEndpoint<PizzaDto[]>
+[SuppressMessage(
+    "Performance",
+    "CA1812: Avoid uninstantiated internal classes",
+    Justification = "Used via DI/FastEndpoints")]
+internal sealed class GetPizzasEndpoint : QueryEndpoint<PizzaDto[]>
 {
     protected override string Route => Endpoints.StoreApi.Pizzas;
 

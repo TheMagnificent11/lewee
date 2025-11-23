@@ -47,6 +47,6 @@ public sealed class Tests
         actionToMapperLogs.Should().NotBeNullOrEmpty();
         actionToMapperLogs.Should().ContainSingle(x => x.Message.Contains("SignalR message received"));
 
-        var log = actionToMapperLogs.FirstOrDefault();
+        _ = actionToMapperLogs.FirstOrDefault();
     }
 }

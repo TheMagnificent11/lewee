@@ -37,6 +37,8 @@ public abstract class ApplicationDbContext<TContext> : DbContext, IApplicationDb
     /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        ArgumentNullException.ThrowIfNull(modelBuilder);
+
         base.OnModelCreating(modelBuilder);
 
         if (!string.IsNullOrWhiteSpace(this.Schema))

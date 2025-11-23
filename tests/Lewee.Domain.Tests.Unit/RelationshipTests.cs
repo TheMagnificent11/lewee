@@ -42,7 +42,7 @@ public class RelationshipTests
         relationship.ModifiedAtUtc.Should().BeOnOrAfter(beforeCreation);
     }
 
-    private class TestRelationship : Relationship
+    private sealed class TestRelationship : Relationship
     {
         public TestRelationship()
             : base()

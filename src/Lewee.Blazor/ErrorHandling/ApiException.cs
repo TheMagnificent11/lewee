@@ -11,6 +11,32 @@ public partial class ApiException : Exception
     /// <summary>
     /// Initializes a new instance of the <see cref="ApiException"/> class
     /// </summary>
+    public ApiException()
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ApiException"/> class
+    /// </summary>
+    /// <param name="message">Error message</param>
+    public ApiException(string message)
+        : base(message)
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ApiException"/> class
+    /// </summary>
+    /// <param name="message">Error message</param>
+    /// <param name="innerException">Inner exception</param>
+    public ApiException(string message, Exception innerException)
+        : base(message, innerException)
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ApiException"/> class
+    /// </summary>
     /// <param name="message">Error message</param>
     /// <param name="statusCode">HTTP status code</param>
     /// <param name="response">Response</param>
@@ -51,7 +77,7 @@ public partial class ApiException : Exception
     /// <inheritdoc />
     public override string ToString()
     {
-        return string.Format("HTTP Response: \n\n{0}\n\n{1}", this.Response, base.ToString());
+        return string.Format(System.Globalization.CultureInfo.InvariantCulture, "HTTP Response: \n\n{0}\n\n{1}", this.Response, base.ToString());
     }
 
     private static string GetResponsePreview(string response)
@@ -72,6 +98,32 @@ public partial class ApiException : Exception
 /// <typeparam name="TResult">Result type</typeparam>
 public partial class ApiException<TResult> : ApiException
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ApiException{TResult}"/> class
+    /// </summary>
+    public ApiException()
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ApiException{TResult}"/> class
+    /// </summary>
+    /// <param name="message">Error message</param>
+    public ApiException(string message)
+        : base(message)
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ApiException{TResult}"/> class
+    /// </summary>
+    /// <param name="message">Error message</param>
+    /// <param name="innerException">Inner exception</param>
+    public ApiException(string message, Exception innerException)
+        : base(message, innerException)
+    {
+    }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ApiException{TResult}"/> class
     /// </summary>

@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Lewee.Blazor.Messaging;
 using Lewee.Contracts;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -7,7 +8,7 @@ using Microsoft.Extensions.Logging.Testing;
 
 namespace Lewee.Blazor.Tests.Integration;
 
-public sealed class TestClient : IDisposable
+internal sealed class TestClient : IDisposable
 {
     private readonly ServiceProvider serviceProvider;
     private readonly ILogger<TestClient> logger;
@@ -93,8 +94,13 @@ public sealed class TestClient : IDisposable
         return this.fakeLogCollector.GetSnapshot();
     }
 
+    [SuppressMessage(
+        "Usage",
+        "VSTHRD002:Avoid problematic synchronous waits",
+        Justification = "Only test code")]
     public void Dispose()
     {
+        this.hub.DisposeAsync().AsTask().GetAwaiter().GetResult();
         this.serviceProvider?.Dispose();
     }
 }

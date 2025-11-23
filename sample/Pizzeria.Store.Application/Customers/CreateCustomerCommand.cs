@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using FluentValidation;
 using Lewee.Application.Mediation.Requests;
 using Lewee.Domain;
@@ -9,7 +10,11 @@ namespace Pizzeria.Store.Application.Customers;
 
 public record CreateCustomerCommand(string ExternalUserId, Guid CorrelationId) : ICommand
 {
-    internal class Validator : AbstractValidator<CreateCustomerCommand>
+    [SuppressMessage(
+        "Performance",
+        "CA1812: Avoid uninstantiated internal classes",
+        Justification = "Used via mediation")]
+    internal sealed class Validator : AbstractValidator<CreateCustomerCommand>
     {
         public Validator()
         {
@@ -19,6 +24,10 @@ public record CreateCustomerCommand(string ExternalUserId, Guid CorrelationId) :
         }
     }
 
+    [SuppressMessage(
+        "Performance",
+        "CA1812: Avoid uninstantiated internal classes",
+        Justification = "Used via mediation")]
     internal sealed class Handler : IRequestHandler<CreateCustomerCommand, CommandResult>
     {
         private readonly IRepository<User> repository;

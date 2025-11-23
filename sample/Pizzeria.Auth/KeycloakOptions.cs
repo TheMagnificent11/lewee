@@ -1,6 +1,12 @@
-﻿namespace Pizzeria.Auth;
+﻿using System.Diagnostics.CodeAnalysis;
 
-internal class KeycloakOptions
+namespace Pizzeria.Auth;
+
+[SuppressMessage(
+    "Performance",
+    "CA1812: Avoid uninstantiated internal classes",
+    Justification = "Used via DI")]
+internal sealed class KeycloakOptions
 {
-    public string RealmName { get; set; }
+    public string RealmName { get; set; } = string.Empty;
 }

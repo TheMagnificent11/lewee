@@ -1,15 +1,15 @@
+using System.Diagnostics.CodeAnalysis;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace Lewee.Infrastructure.Data.Tests.Integration;
 
-/// <summary>
-/// Test handler for domain events to track if events are dispatched
-/// </summary>
+[SuppressMessage(
+    "Performance",
+    "CA1812: Avoid uninstantiated internal classes",
+    Justification = "Used via mediation")]
 internal sealed class TestOrderSubmittedEventHandler : INotificationHandler<TestOrderSubmittedEvent>
 {
-    private static readonly List<TestOrderSubmittedEvent> ReceivedEventsList = new();
-
     private readonly ILogger<TestOrderSubmittedEventHandler> logger;
 
     public TestOrderSubmittedEventHandler(ILogger<TestOrderSubmittedEventHandler> logger)
@@ -17,17 +17,17 @@ internal sealed class TestOrderSubmittedEventHandler : INotificationHandler<Test
         this.logger = logger;
     }
 
-    public static List<TestOrderSubmittedEvent> ReceivedEvents => ReceivedEventsList;
+    public static List<TestOrderSubmittedEvent> ReceivedEvents { get; } = [];
 
     public static void Reset()
     {
-        ReceivedEventsList.Clear();
+        ReceivedEvents.Clear();
     }
 
     public Task Handle(TestOrderSubmittedEvent notification, CancellationToken cancellationToken)
     {
         this.logger.LogInformation("Received TestOrderSubmittedEvent for Order {OrderId}", notification.OrderId);
-        ReceivedEventsList.Add(notification);
+        ReceivedEvents.Add(notification);
         return Task.CompletedTask;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using Lewee.Application.Mediation.Notifications;
 using Lewee.Infrastructure.AspNet.SignalR;
 using MediatR;
@@ -13,11 +14,24 @@ using Xunit;
 
 namespace Lewee.Blazor.Tests.Integration;
 
+[SuppressMessage(
+    "Design",
+    "CA1001:Types that own disposable fields should be disposable",
+    Justification = "Disposed in `DisposeAsync`")]
+[SuppressMessage(
+    "Maintainability",
+    "CA1515:Consider making public types internal",
+    Justification = "xUnit requires this to be public")]
 public sealed class TestFixture : IAsyncLifetime
 {
     public const string CollectionName = "TestCollection";
 
+    [SuppressMessage(
+        "Minor Bug",
+        "S3887:Mutable, non-private fields should not be \"readonly\"",
+        Justification = "Only for test purposes")]
     public static readonly ConcurrentDictionary<Guid, PizzaOrder> Orders = new();
+
     private readonly TestServer server;
     private readonly TestClient client;
     private readonly HttpClient httpClient;

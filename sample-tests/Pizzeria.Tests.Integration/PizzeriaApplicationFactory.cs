@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Net.Http.Json;
 using Aspire.Hosting;
 using Aspire.Hosting.ApplicationModel;
 using Aspire.Hosting.Testing;
@@ -15,6 +16,10 @@ using Xunit;
 
 namespace Pizzeria.Tests.Integration;
 
+[SuppressMessage(
+    "Maintainability",
+    "CA1515:Consider making public types internal",
+    Justification = "xUnit requires this to be public")]
 public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 {
     public const string CollectionName = "PizzeriaCollection";
@@ -38,7 +43,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         var exitCode = Program.Main(["install", "chromium"]);
         if (exitCode != 0)
         {
-            throw new Exception($"Failed to install Playwright browsers. Exit code: {exitCode}");
+            throw new InvalidOperationException($"Failed to install Playwright browsers. Exit code: {exitCode}");
         }
 
         // https://learn.microsoft.com/en-us/dotnet/aspire/testing/manage-app-host?pivots=xunit
@@ -56,7 +61,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
             .WaitAsync(TimeSpan.FromMinutes(10)); // To allow Aspire to pull Docker images
 
         // Get auth server base URL for token requests using CreateHttpClient
-        var authServerHttpClient = this.app.CreateHttpClient(ServiceNames.AuthServer);
+        using var authServerHttpClient = this.app.CreateHttpClient(ServiceNames.AuthServer);
         var baseAddress = authServerHttpClient.BaseAddress!.ToString().TrimEnd('/');
 
         // If the scheme is tcp, replace it with http (Aspire Keycloak might return tcp scheme)
@@ -80,7 +85,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
             .WaitForResourceAsync(ServiceNames.PizzaStoreApi, KnownResourceStates.Running)
             .WaitAsync(TimeSpan.FromMinutes(10)); // To allow Aspire to pull Docker images
 
-        var databaseName = ServiceNames.GetPizzaStoreDatabaseName();
+        var databaseName = ServiceNames.PizzaStoreDatabaseName;
         var storeDbConnectionString = await this.app.GetConnectionStringAsync(databaseName);
 
         // Setup service provider
@@ -103,7 +108,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         using var httpClient = new HttpClient();
         var tokenEndpoint = $"{this.keycloakBaseUrl}/realms/{Environments.Auth.RealmName}/protocol/openid-connect/token";
 
-        var tokenRequest = new FormUrlEncodedContent(new Dictionary<string, string>(StringComparer.Ordinal)
+        using var tokenRequest = new FormUrlEncodedContent(new Dictionary<string, string>(StringComparer.Ordinal)
         {
             ["grant_type"] = "password",
             ["client_id"] = Environments.Auth.Clients.StoreApi,
@@ -111,10 +116,11 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
             ["password"] = password,
         });
 
-        var response = await httpClient.PostAsync(tokenEndpoint, tokenRequest);
+        using var response = await httpClient.PostAsync(tokenEndpoint, tokenRequest);
         response.EnsureSuccessStatusCode();
 
         var tokenResponse = await response.Content.ReadFromJsonAsync<KeycloakTokenResponse>();
+
         return tokenResponse!.AccessToken;
     }
 
@@ -215,7 +221,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
     public async Task<string> GetWebClientBaseUrlAsync()
     {
-        var httpClient = await this.GetServiceClientAsync(ServiceNames.PizzaStoreWebClient);
+        using var httpClient = await this.GetServiceClientAsync(ServiceNames.PizzaStoreWebClient);
         var baseAddress = httpClient.BaseAddress!.ToString().TrimEnd('/');
 
         // If the scheme is tcp, replace it with http (Aspire might return tcp scheme)

@@ -6,6 +6,10 @@ using Microsoft.Extensions.Options;
 
 namespace Pizzeria.Auth;
 
+[SuppressMessage(
+    "Performance",
+    "CA1812: Avoid uninstantiated internal classes",
+    Justification = "Used via DI")]
 internal sealed class KeycloakHttpClient : IAuthServerAdminClient
 {
     private readonly HttpClient httpClient;
@@ -100,8 +104,6 @@ internal sealed class KeycloakHttpClient : IAuthServerAdminClient
         catch (HttpRequestException ex)
         {
             this.logger.LogError(ex, "Error creating user");
-
-            throw;
         }
     }
 

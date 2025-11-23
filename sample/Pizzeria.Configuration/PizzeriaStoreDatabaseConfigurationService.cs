@@ -1,8 +1,13 @@
+using System.Diagnostics.CodeAnalysis;
 using Lewee.Infrastructure.Data;
 using Pizzeria.Store.Data;
 
 namespace Pizzeria.Configuration;
 
+[SuppressMessage(
+    "Performance",
+    "CA1812: Avoid uninstantiated internal classes",
+    Justification = "Use via DI")]
 internal sealed class PizzeriaStoreDatabaseConfigurationService
 {
     private readonly IServiceProvider serviceProvider;
@@ -29,7 +34,6 @@ internal sealed class PizzeriaStoreDatabaseConfigurationService
         catch (Exception ex)
         {
             this.logger.LogError(ex, "Database configuration failed: {Message}", ex.Message);
-            throw;
         }
     }
 }

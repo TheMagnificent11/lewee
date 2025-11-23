@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using Xunit;
 
@@ -34,6 +35,10 @@ public class ValueObjectTests
     }
 
     [Fact]
+    [SuppressMessage(
+        "Maintainability",
+        "CA1508:Avoid dead conditional code",
+        Justification = "Required for test coverage")]
     public void Equals_ReturnsFalse_WhenOtherIsNull()
     {
         // Arrange

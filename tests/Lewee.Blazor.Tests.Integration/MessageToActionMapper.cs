@@ -1,10 +1,15 @@
+using System.Diagnostics.CodeAnalysis;
 using Lewee.Blazor.Fluxor.Actions;
 using Lewee.Blazor.Messaging;
 using Microsoft.Extensions.Logging;
 
 namespace Lewee.Blazor.Tests.Integration;
 
-public class MessageToActionMapper : IMessageToActionMapper
+[SuppressMessage(
+    "Performance",
+    "CA1812: Avoid uninstantiated internal classes",
+    Justification = "Used via DI")]
+internal sealed class MessageToActionMapper : IMessageToActionMapper
 {
     private readonly ILogger<MessageToActionMapper> logger;
 
@@ -23,7 +28,7 @@ public class MessageToActionMapper : IMessageToActionMapper
         return message switch
         {
             PizzaOrder order => new OrderCreatedAction(order, correlationId),
-            _ => null
+            _ => null,
         };
     }
 }

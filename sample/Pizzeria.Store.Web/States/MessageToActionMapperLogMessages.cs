@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Logging;
-
 namespace Pizzeria.Store.Web.States;
 
 internal static partial class MessageToActionMapperLogMessages

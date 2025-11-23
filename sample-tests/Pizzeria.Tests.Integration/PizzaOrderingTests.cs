@@ -19,10 +19,10 @@ public sealed class PizzaOrderingTests : PizzeriaTests
     public async Task Should_CreateOrder_When_OrderIsPlacedAsync()
     {
         // Arrange
-        using var httpClient = await this.factory.GetServiceClientAsync(ServiceNames.PizzaStoreApi);
+        using var httpClient = await this.Factory.GetServiceClientAsync(ServiceNames.PizzaStoreApi);
 
         // TODO: TNeed to register a customer user first and obtain a valid JWT for that user to call the Pizza Store API.
-        var token = await this.factory.GetJwtAsync("user", "password");
+        var token = await this.Factory.GetJwtAsync("user", "password");
         using var request = new HttpRequestMessage(HttpMethod.Post, Endpoints.StoreApi.Orders);
         request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
@@ -33,10 +33,10 @@ public sealed class PizzaOrderingTests : PizzeriaTests
         // Assert
         response.EnsureSuccessStatusCode();
 
-        var order = await this.factory.GetLatestOrderAsync();
+        var order = await this.Factory.GetLatestOrderAsync();
         order.Should().NotBeNull();
 
-        var orderProjection = await this.factory.GetQueryProjectionAsync<OrderQueryProjection>(order.Id.ToString());
+        var orderProjection = await this.Factory.GetQueryProjectionAsync<OrderQueryProjection>(order.Id.ToString());
 
         orderProjection.Should().NotBeNull();
         orderProjection.Order.Should().NotBeNull();
@@ -47,17 +47,17 @@ public sealed class PizzaOrderingTests : PizzeriaTests
     public async Task Should_AddPizzaToOrder_When_PizzaIsAddedAsync()
     {
         // Arrange
-        using var httpClient = await this.factory.GetServiceClientAsync(ServiceNames.PizzaStoreApi);
+        using var httpClient = await this.Factory.GetServiceClientAsync(ServiceNames.PizzaStoreApi);
 
         // TODO: TNeed to register a customer user first and obtain a valid JWT for that user to call the Pizza Store API.
-        var token = await this.factory.GetJwtAsync("user", "password");
+        var token = await this.Factory.GetJwtAsync("user", "password");
 
         using var createOrderRequest = new HttpRequestMessage(HttpMethod.Post, Endpoints.StoreApi.Orders);
         createOrderRequest.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
         using var createOrderResponse = await httpClient.SendAsync(createOrderRequest);
 
         createOrderResponse.EnsureSuccessStatusCode();
-        var order = await this.factory.GetLatestOrderAsync();
+        var order = await this.Factory.GetLatestOrderAsync();
         order.Should().NotBeNull();
 
         using var addPizzaRequest = new HttpRequestMessage(
@@ -71,7 +71,7 @@ public sealed class PizzaOrderingTests : PizzeriaTests
         // Assert
         addPizzaResponse.EnsureSuccessStatusCode();
 
-        order = await this.factory.GetOrderAsync(order.Id);
+        order = await this.Factory.GetOrderAsync(order.Id);
         order.Should().NotBeNull();
         order.Pizzas.Should().NotBeNull();
         order.Pizzas.Should().ContainSingle();

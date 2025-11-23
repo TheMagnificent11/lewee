@@ -14,6 +14,8 @@ public abstract class RelationshipConfiguration<T> : IEntityTypeConfiguration<T>
     /// <inheritdoc />
     public void Configure(EntityTypeBuilder<T> builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
+
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Id)

@@ -11,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
 
 // Get the database connection string via service discovery
-var databaseName = ServiceNames.GetPizzaStoreDatabaseName();
+var databaseName = ServiceNames.PizzaStoreDatabaseName;
 
 // Register database context - connection string will be resolved at runtime via service discovery
 builder.Services.AddDbContext<StoreDbContext>((serviceProvider, options) =>

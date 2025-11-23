@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using Lewee.Domain;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +27,7 @@ public class AuditableRecordConfigurationTests
         entityType.Should().NotBeNull();
         var versionProperty = entityType!.FindProperty("Version");
         versionProperty.Should().NotBeNull();
-        versionProperty!.ClrType.Should().Be(typeof(uint));
+        versionProperty!.ClrType.Should().Be<uint>();
         versionProperty.IsConcurrencyToken.Should().BeTrue();
         versionProperty.GetColumnType().Should().Be("xid");
     }
@@ -49,7 +50,7 @@ public class AuditableRecordConfigurationTests
         entityType.Should().NotBeNull();
         var versionProperty = entityType!.FindProperty("Version");
         versionProperty.Should().NotBeNull();
-        versionProperty!.ClrType.Should().Be(typeof(byte[]));
+        versionProperty!.ClrType.Should().Be<byte[]>();
         versionProperty.IsConcurrencyToken.Should().BeTrue();
     }
 
@@ -118,18 +119,20 @@ public class AuditableRecordConfigurationTests
         entityType.Should().NotBeNull();
         var primaryKey = entityType!.FindPrimaryKey();
         primaryKey.Should().NotBeNull();
-        primaryKey!.Properties.Should().HaveCount(1);
+        primaryKey!.Properties.Should().ContainSingle();
         primaryKey.Properties[0].Name.Should().Be("Id");
     }
 
-    // Test entity
-    private class TestEntity : AuditableRecord
+    [SuppressMessage(
+        "Performance",
+        "CA1812: Avoid uninstantiated internal classes",
+        Justification = "False positive")]
+    private sealed class TestEntity : AuditableRecord
     {
         public string Name { get; set; } = string.Empty;
     }
 
-    // Test configuration
-    private class TestEntityConfiguration : AuditableRecordConfiguration<TestEntity>
+    private sealed class TestEntityConfiguration : AuditableRecordConfiguration<TestEntity>
     {
         protected override void ConfigureEntity(EntityTypeBuilder<TestEntity> builder)
         {
@@ -139,8 +142,7 @@ public class AuditableRecordConfigurationTests
         }
     }
 
-    // Test contexts for different providers
-    private class TestPostgreSqlContext : DbContext
+    private sealed class TestPostgreSqlContext : DbContext
     {
         public TestPostgreSqlContext(DbContextOptions<TestPostgreSqlContext> options)
             : base(options)
@@ -156,7 +158,7 @@ public class AuditableRecordConfigurationTests
         }
     }
 
-    private class TestSqlServerContext : DbContext
+    private sealed class TestSqlServerContext : DbContext
     {
         public TestSqlServerContext(DbContextOptions<TestSqlServerContext> options)
             : base(options)
@@ -172,7 +174,7 @@ public class AuditableRecordConfigurationTests
         }
     }
 
-    private class TestInMemoryContext : DbContext
+    private sealed class TestInMemoryContext : DbContext
     {
         public TestInMemoryContext(DbContextOptions<TestInMemoryContext> options)
             : base(options)

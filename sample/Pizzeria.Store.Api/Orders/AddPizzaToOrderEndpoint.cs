@@ -1,11 +1,16 @@
-﻿using FastEndpoints;
+﻿using System.Diagnostics.CodeAnalysis;
+using FastEndpoints;
 using Lewee.Infrastructure.AspNet.WebApi;
 using Pizzeria.Common;
 using Pizzeria.Store.Application.Orders;
 
 namespace Pizzeria.Store.Api.Orders;
 
-public sealed class AddPizzaToOrderEndpoint : CommandEndpoint<EmptyRequest>
+[SuppressMessage(
+    "Performance",
+    "CA1812: Avoid uninstantiated internal classes",
+    Justification = "Used via DI/FastEndpoints")]
+internal sealed class AddPizzaToOrderEndpoint : CommandEndpoint<EmptyRequest>
 {
     protected override string Route => Endpoints.StoreApi.AddPizzaToOrder;
 
