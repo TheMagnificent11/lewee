@@ -15,4 +15,10 @@
     <ProjectReference Include="..\Pizzeria.Store.Contracts\Pizzeria.Store.Contracts.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Pizzeria.Store.Web.Tests.Unit</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
 </Project>

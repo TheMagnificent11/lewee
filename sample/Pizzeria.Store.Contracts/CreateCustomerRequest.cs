@@ -6,7 +6,7 @@ namespace Pizzeria.Store.Contracts;
     "Performance",
     "CA1812: Avoid uninstantiated internal classes",
     Justification = "Used via DI")]
-public record CreateCustomerRequest
+public sealed record CreateCustomerRequest
 {
     public string ExternalUserId { get; init; }
 }

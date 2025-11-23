@@ -99,7 +99,7 @@ public class OrdersEffectsTests : TestContext
         var mockLogger = new Mock<ILogger<OrdersEffects>>();
         var mockApiClient = new Mock<IPizzeriaApiClient>();
         mockApiClient.Setup(c => c.StartOrderAsync(It.IsAny<CancellationToken>()))
-            .ThrowsAsync(new Exception("API error"));
+            .ThrowsAsync(new InvalidOperationException("API error"));
 
         var mockDispatcher = new Mock<IDispatcher>();
 

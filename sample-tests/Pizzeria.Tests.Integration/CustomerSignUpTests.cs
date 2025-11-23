@@ -16,12 +16,12 @@ public sealed class CustomerSignUpTests : PizzeriaTests
     public async Task Should_CreateCustomer_When_UserRegistersViaKeycloak()
     {
         // Arrange
-        var webClientUrl = await this.factory.GetWebClientBaseUrlAsync();
+        var webClientUrl = await this.Factory.GetWebClientBaseUrlAsync();
         var username = $"testuser-{Guid.NewGuid()}";
         var password = "TestPassword123!";
         var email = $"{username}@example.com";
 
-        var playwright = await this.factory.GetPlaywrightAsync();
+        var playwright = await this.Factory.GetPlaywrightAsync();
         var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
             Headless = true,
@@ -63,8 +63,8 @@ public sealed class CustomerSignUpTests : PizzeriaTests
             await this.WaitForDomainEventsToBeDispatchedAsync();
 
             // Assert - Verify the user was created in the database
-            var keycloakUserId = await this.factory.GetKeycloakUserIdAsync(username);
-            var customer = await this.factory.GetCustomerByExternalIdAsync(keycloakUserId);
+            var keycloakUserId = await this.Factory.GetKeycloakUserIdAsync(username);
+            var customer = await this.Factory.GetCustomerByExternalIdAsync(keycloakUserId);
             customer.Should().NotBeNull();
             customer.ExternalId.Should().Be(keycloakUserId);
             customer.Id.Should().NotBeEmpty();
@@ -80,12 +80,12 @@ public sealed class CustomerSignUpTests : PizzeriaTests
     public async Task Should_NavigateToHomePage_When_UserSuccessfullyRegisters()
     {
         // Arrange
-        var webClientUrl = await this.factory.GetWebClientBaseUrlAsync();
+        var webClientUrl = await this.Factory.GetWebClientBaseUrlAsync();
         var username = $"testuser-{Guid.NewGuid()}";
         var password = "TestPassword123!";
         var email = $"{username}@example.com";
 
-        var playwright = await this.factory.GetPlaywrightAsync();
+        var playwright = await this.Factory.GetPlaywrightAsync();
         var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
             Headless = true,

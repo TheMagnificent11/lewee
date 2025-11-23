@@ -10,7 +10,7 @@ using Pizzeria.Store.Web.States.Orders;
 
 namespace Pizzeria.Store.Web.Tests.Unit;
 
-public static class TestContextExtensions
+internal static class TestContextExtensions
 {
     public static void Setup(this TestContext testContext)
     {

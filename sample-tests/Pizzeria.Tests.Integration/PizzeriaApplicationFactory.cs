@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Net.Http.Json;
 using Aspire.Hosting;
 using Aspire.Hosting.ApplicationModel;
 using Aspire.Hosting.Testing;
@@ -15,7 +16,11 @@ using Xunit;
 
 namespace Pizzeria.Tests.Integration;
 
-internal sealed class PizzeriaApplicationFactory : IAsyncLifetime
+[SuppressMessage(
+    "Maintainability",
+    "CA1515:Consider making public types internal",
+    Justification = "xUnit requires this to be public")]
+public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 {
     public const string CollectionName = "PizzeriaCollection";
 
