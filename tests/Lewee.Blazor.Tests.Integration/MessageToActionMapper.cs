@@ -1,9 +1,14 @@
+using System.Diagnostics.CodeAnalysis;
 using Lewee.Blazor.Fluxor.Actions;
 using Lewee.Blazor.Messaging;
 using Microsoft.Extensions.Logging;
 
 namespace Lewee.Blazor.Tests.Integration;
 
+[SuppressMessage(
+    "Performance",
+    "CA1812: Avoid uninstantiated internal classes",
+    Justification = "Used via DI")]
 internal sealed class MessageToActionMapper : IMessageToActionMapper
 {
     private readonly ILogger<MessageToActionMapper> logger;

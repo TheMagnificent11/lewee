@@ -5,6 +5,10 @@ using Pizzeria.Store.Web.States.Pizzas.Actions;
 
 namespace Pizzeria.Store.Web.States.Pizzas;
 
+[SuppressMessage(
+    "Performance",
+    "CA1812: Avoid uninstantiated internal classes",
+    Justification = "Used via Fluxor")]
 internal sealed class PizzasEffects
 {
     private readonly IPizzeriaApiClient apiClient;
