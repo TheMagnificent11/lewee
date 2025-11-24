@@ -133,28 +133,6 @@ dotnet_naming_symbols.non_field_members.applicable_kinds = property, event, meth
 dotnet_naming_symbols.non_field_members.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
 dotnet_naming_symbols.non_field_members.required_modifiers =
 
-# StyleCop
-dotnet_diagnostic.SA0001.severity = none           # XML comment analysis is disabled due to project configuration
-dotnet_diagnostic.SA1000.severity = none           # Keywords should be spaced correctly
-dotnet_diagnostic.SA1005.severity = none           # Single line comments should begin with single space
-dotnet_diagnostic.SA1011.severity = none           # Closing square brackets should be spaced correctly
-dotnet_diagnostic.SA1200.severity = none           # Using directives should be placed correctly
-dotnet_diagnostic.SA1407.severity = none           # Arithmetic expressions should declare precedence
-dotnet_diagnostic.SA1500.max_line_length = 120
-dotnet_diagnostic.SA1500 = warn                    # Braces for multi-line statements should not share line
-dotnet_diagnostic.SA1512.severity = none           # Single-line comments should not be followed by blank line
-dotnet_diagnostic.SA1413.severity = none           # Use trailing comma in multi-line initializers
-dotnet_diagnostic.SA1515.severity = none           # Single-line comment should be preceded by blank line
-dotnet_diagnostic.SA1516.severity = none           # Elements should be separated by blank line
-dotnet_diagnostic.SA1600.severity = none           # Elements should be documented
-dotnet_diagnostic.SA1601.severity = none           # Partial elements should be documented
-dotnet_diagnostic.SA1602.severity = none           # Enumeration items should be documented
-dotnet_diagnostic.SA1625.severity = none           # Element documentation should not be copied and pasted
-dotnet_diagnostic.SA1629.severity = none           # Documentation text should end with a period
-dotnet_diagnostic.SA1633.severity = none           # File should have header
-dotnet_diagnostic.S1135.severity = none            # Track uses of "TODO" tags
-dotnet_diagnostic.S3878.severity = none            # Arrays should not be created for params parameters
-
 # Code Analysis
 dotnet_diagnostic.CA1000.severity = none           # Do not declare static members on generic types
 dotnet_diagnostic.CA1030.severity = none           # Use events where appropriate
@@ -178,8 +156,9 @@ dotnet_diagnostic.CA2254.severity = warning        # Template should be a static
 dotnet_diagnostic.CS8019.severity = warning        # Unnecessary using directive
 dotnet_diagnostic.CS8618.severity = none           # Non-nullable field must contain a non-null value when exiting constructor
 
-# IDE Analyzers
-dotnet_diagnostic.IDE0290.severity = none          # Use primary constructor
+# SonarAnalyzer
+dotnet_diagnostic.S1135.severity = none            # Track uses of "TODO" tags
+dotnet_diagnostic.S3878.severity = none            # Arrays should not be created for params parameters
 
 # Meziantou.Analyzer
 dotnet_diagnostic.MA0004.severity = none           # Use Task.ConfigureAwait
@@ -192,6 +171,37 @@ dotnet_diagnostic.MA0048.severity = none           # File name must match type n
 dotnet_diagnostic.MA0051.severity = none           # Method is too long
 dotnet_diagnostic.MA0076.severity = none           # Do not use implicit culture-sensitive ToString in interpolated strings
 dotnet_diagnostic.MA0158.severity = none           # Use System.Threading.Lock
+
+# StyleCop
+dotnet_diagnostic.SA0001.severity = none           # XML comment analysis is disabled due to project configuration
+dotnet_diagnostic.SA1000.severity = none           # Keywords should be spaced correctly
+dotnet_diagnostic.SA1005.severity = none           # Single line comments should begin with single space
+dotnet_diagnostic.SA1011.severity = none           # Closing square brackets should be spaced correctly
+dotnet_diagnostic.SA1200.severity = none           # Using directives should be placed correctly
+dotnet_diagnostic.SA1407.severity = none           # Arithmetic expressions should declare precedence
+dotnet_diagnostic.SA1500.max_line_length = 120
+dotnet_diagnostic.SA1500 = warn                    # Braces for multi-line statements should not share line
+dotnet_diagnostic.SA1512.severity = none           # Single-line comments should not be followed by blank line
+dotnet_diagnostic.SA1413.severity = none           # Use trailing comma in multi-line initializers
+dotnet_diagnostic.SA1515.severity = none           # Single-line comment should be preceded by blank line
+dotnet_diagnostic.SA1516.severity = none           # Elements should be separated by blank line
+dotnet_diagnostic.SA1600.severity = none           # Elements should be documented
+dotnet_diagnostic.SA1601.severity = none           # Partial elements should be documented
+dotnet_diagnostic.SA1602.severity = none           # Enumeration items should be documented
+dotnet_diagnostic.SA1625.severity = none           # Element documentation should not be copied and pasted
+dotnet_diagnostic.SA1629.severity = none           # Documentation text should end with a period
+dotnet_diagnostic.SA1633.severity = none           # File should have header
+
+# IDE Analyzers
+dotnet_diagnostic.IDE0290.severity = none          # Use primary constructor
+
+# Sample Web App Effects rules
+[sample/**/*Effects.cs]
+dotnet_diagnostic.SA1313.severity = none           # Parameter names should begin with lower-case letter
+
+# Sample Web App Effects rules
+[sample/**/*Reducer.cs]
+dotnet_diagnostic.SA1313.severity = none           # Parameter names should begin with lower-case letter
 
 # Test-specific rules
 [tests/**/*.cs]

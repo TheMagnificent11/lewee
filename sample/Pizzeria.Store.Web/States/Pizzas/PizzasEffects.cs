@@ -15,10 +15,6 @@ public class PizzasEffects
     }
 
     [EffectMethod]
-    [SuppressMessage(
-        "StyleCop.CSharp.NamingRules",
-        "SA1313:Parameter '_' should begin with lower-case letter",
-        Justification = "Underscore is the standard discard pattern for unused parameters")]
     public async Task OnLoadPizzasAsync(
         LoadPizzasAction _,
         [NotNull] IDispatcher dispatcher)

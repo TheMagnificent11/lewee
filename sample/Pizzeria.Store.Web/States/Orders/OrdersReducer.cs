@@ -7,10 +7,6 @@ namespace Pizzeria.Store.Web.States.Orders;
 public static class OrdersReducer
 {
     [ReducerMethod]
-    [SuppressMessage(
-        "StyleCop.CSharp.NamingRules",
-        "SA1313:Parameter '_' should begin with lower-case letter",
-        Justification = "Underscore is the standard discard pattern for unused parameters")]
     public static OrdersState OnStartOrder(
         [NotNull] OrdersState state,
         [NotNull] StartOrderAction action)
@@ -62,10 +58,6 @@ public static class OrdersReducer
     }
 
     [ReducerMethod]
-    [SuppressMessage(
-        "StyleCop.CSharp.NamingRules",
-        "SA1313:Parameter '_' should begin with lower-case letter",
-        Justification = "Underscore is the standard discard pattern for unused parameters")]
     public static OrdersState OnAddPizzaToOrderSuccess(
         [NotNull] OrdersState state,
         [NotNull] AddPizzaToOrderSuccessAction _)
@@ -88,10 +80,6 @@ public static class OrdersReducer
     }
 
     [ReducerMethod]
-    [SuppressMessage(
-        "StyleCop.CSharp.NamingRules",
-        "SA1313:Parameter '_' should begin with lower-case letter",
-        Justification = "Underscore is the standard discard pattern for unused parameters")]
     public static OrdersState OnClearOrderError(
         [NotNull] OrdersState state,
         ClearOrderErrorAction _)
