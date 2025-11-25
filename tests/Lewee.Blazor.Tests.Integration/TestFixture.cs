@@ -32,14 +32,16 @@ public sealed class TestFixture : IAsyncLifetime
         Justification = "Only for test purposes")]
     public static readonly ConcurrentDictionary<Guid, PizzaOrder> Orders = new();
 
-    private readonly TestServer server;
-    private readonly TestClient client;
-    private readonly HttpClient httpClient;
-    private readonly FakeLogCollector serverLogCollector;
+    private TestServer server;
+    private TestClient client;
+    private HttpClient httpClient;
+    private FakeLogCollector serverLogCollector;
+    private WebApplication app;
 
-    public TestFixture()
+    public async Task InitializeAsync()
     {
         var builder = WebApplication.CreateBuilder();
+        builder.WebHost.UseTestServer();
         builder.Services
             .AddFakeLogging()
             .AddRouting()
@@ -48,13 +50,13 @@ public sealed class TestFixture : IAsyncLifetime
         builder.Services.AddMediatR(options => options.RegisterServicesFromAssembly(typeof(ClientEvent).Assembly));
         builder.Services.AddHealthChecks();
 
-        var app = builder.Build();
-        app.UseRouting();
+        this.app = builder.Build();
+        this.app.UseRouting();
 
-        app.MapHealthChecks("/health");
-        app.MapHub<ClientEventHub>("/events");
+        this.app.MapHealthChecks("/health");
+        this.app.MapHub<ClientEventHub>("/events");
 
-        app.MapPost("/api/orders", async (CreateOrderRequest request, IMediator mediator) =>
+        this.app.MapPost("/api/orders", async (CreateOrderRequest request, IMediator mediator) =>
         {
             var order = new PizzaOrder
             {
@@ -70,21 +72,19 @@ public sealed class TestFixture : IAsyncLifetime
             return Results.Ok();
         });
 
-        app.MapGet("/api/orders/{id}", (Guid id) =>
+        this.app.MapGet("/api/orders/{id}", (Guid id) =>
         {
             return Orders.TryGetValue(id, out var order)
                 ? Results.Ok(order)
                 : Results.NotFound();
         });
 
-        this.server = new TestServer(app.Services);
+        await this.app.StartAsync();
+        this.server = this.app.GetTestServer();
         this.httpClient = this.server.CreateClient();
         this.client = new TestClient(this.httpClient);
-        this.serverLogCollector = app.Services.GetRequiredService<FakeLogCollector>();
-    }
+        this.serverLogCollector = this.app.Services.GetRequiredService<FakeLogCollector>();
 
-    public async Task InitializeAsync()
-    {
         await this.client.ConnectAsync();
     }
 
@@ -94,6 +94,8 @@ public sealed class TestFixture : IAsyncLifetime
         this.client.Dispose();
         this.httpClient.Dispose();
         this.server.Dispose();
+        await this.app.StopAsync();
+        await this.app.DisposeAsync();
     }
 
     public IReadOnlyList<FakeLogRecord> GetServerLogs() => this.serverLogCollector.GetSnapshot();

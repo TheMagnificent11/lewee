@@ -24,7 +24,7 @@ public class PipelineBehaviorTests
     public async Task ValidationBehavior_WithInvalidCommand_ShouldReturnBadRequestAsync()
     {
         // Arrange
-        using var testServer = CreateTestServer(endpoints =>
+        using var testServer = await CreateTestServerAsync(endpoints =>
         {
             endpoints.MapPost("/test-command", async (TestCommand command, IMediator mediator, CancellationToken ct) =>
             {
@@ -53,7 +53,7 @@ public class PipelineBehaviorTests
     public async Task ValidationBehavior_WithValidCommand_ShouldReturnOkAsync()
     {
         // Arrange
-        using var testServer = CreateTestServer(endpoints =>
+        using var testServer = await CreateTestServerAsync(endpoints =>
         {
             endpoints.MapPost("/test-command", async (TestCommand command, IMediator mediator, CancellationToken ct) =>
             {
@@ -82,7 +82,7 @@ public class PipelineBehaviorTests
     public async Task DomainExceptionBehavior_WithDomainException_ShouldReturnBadRequestAsync()
     {
         // Arrange
-        using var testServer = CreateTestServer(endpoints =>
+        using var testServer = await CreateTestServerAsync(endpoints =>
         {
             endpoints.MapPost("/test-domain-exception", async (TestDomainExceptionCommand command, IMediator mediator, CancellationToken ct) =>
             {
@@ -111,7 +111,7 @@ public class PipelineBehaviorTests
     public async Task PerformanceBehavior_ShouldLogTimingAsync()
     {
         // Arrange
-        using var testServer = CreateTestServer(endpoints =>
+        using var testServer = await CreateTestServerAsync(endpoints =>
         {
             endpoints.MapPost("/test-command", async (TestCommand command, IMediator mediator, CancellationToken ct) =>
             {
@@ -142,6 +142,7 @@ public class PipelineBehaviorTests
     {
         // Arrange
         var builder = WebApplication.CreateBuilder();
+        builder.WebHost.UseTestServer();
         builder.Services.AddRouting();
         builder.Services.AddFakeLogging();
         var applicationAssembly = typeof(TestBadRequestCommand).Assembly;
@@ -157,7 +158,8 @@ public class PipelineBehaviorTests
             return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);
         });
 
-        using var testServer = new TestServer(app.Services);
+        await app.StartAsync();
+        using var testServer = app.GetTestServer();
         using var client = testServer.CreateClient();
         var logCollector = app.Services.GetRequiredService<FakeLogCollector>();
         var command = new TestBadRequestCommand(Guid.NewGuid());
@@ -178,7 +180,7 @@ public class PipelineBehaviorTests
     public async Task Query_ShouldReturnSuccessResultAsync()
     {
         // Arrange
-        using var testServer = CreateTestServer(endpoints =>
+        using var testServer = await CreateTestServerAsync(endpoints =>
         {
             endpoints.MapGet("/test-query", async (IMediator mediator, CancellationToken ct) =>
             {
@@ -275,9 +277,10 @@ public class PipelineBehaviorTests
         logCollector.Should().NotBeNull();
     }
 
-    private static TestServer CreateTestServer(Action<IEndpointRouteBuilder> configureEndpoints)
+    private static async Task<TestServer> CreateTestServerAsync(Action<IEndpointRouteBuilder> configureEndpoints)
     {
         var builder = WebApplication.CreateBuilder();
+        builder.WebHost.UseTestServer();
         builder.Services.AddRouting();
         builder.Services.AddFakeLogging();
         var applicationAssembly = typeof(TestCommand).Assembly;
@@ -289,6 +292,7 @@ public class PipelineBehaviorTests
         app.UseRouting();
         configureEndpoints(app);
 
-        return new TestServer(app.Services);
+        await app.StartAsync();
+        return app.GetTestServer();
     }
 }
