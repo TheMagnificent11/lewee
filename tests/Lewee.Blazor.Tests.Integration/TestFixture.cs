@@ -32,11 +32,11 @@ public sealed class TestFixture : IAsyncLifetime
         Justification = "Only for test purposes")]
     public static readonly ConcurrentDictionary<Guid, PizzaOrder> Orders = new();
 
-    private TestServer server;
-    private TestClient client;
-    private HttpClient httpClient;
-    private FakeLogCollector serverLogCollector;
-    private WebApplication app;
+    private TestServer server = null!;
+    private TestClient client = null!;
+    private HttpClient httpClient = null!;
+    private FakeLogCollector serverLogCollector = null!;
+    private WebApplication app = null!;
 
     public async Task InitializeAsync()
     {

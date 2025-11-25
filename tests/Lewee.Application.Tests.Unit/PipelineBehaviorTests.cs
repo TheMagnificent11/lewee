@@ -24,7 +24,7 @@ public class PipelineBehaviorTests
     public async Task ValidationBehavior_WithInvalidCommand_ShouldReturnBadRequestAsync()
     {
         // Arrange
-        using var testServer = await CreateTestServerAsync(endpoints =>
+        await using var testServer = await CreateTestServerAsync(endpoints =>
         {
             endpoints.MapPost("/test-command", async (TestCommand command, IMediator mediator, CancellationToken ct) =>
             {
@@ -53,7 +53,7 @@ public class PipelineBehaviorTests
     public async Task ValidationBehavior_WithValidCommand_ShouldReturnOkAsync()
     {
         // Arrange
-        using var testServer = await CreateTestServerAsync(endpoints =>
+        await using var testServer = await CreateTestServerAsync(endpoints =>
         {
             endpoints.MapPost("/test-command", async (TestCommand command, IMediator mediator, CancellationToken ct) =>
             {
@@ -82,7 +82,7 @@ public class PipelineBehaviorTests
     public async Task DomainExceptionBehavior_WithDomainException_ShouldReturnBadRequestAsync()
     {
         // Arrange
-        using var testServer = await CreateTestServerAsync(endpoints =>
+        await using var testServer = await CreateTestServerAsync(endpoints =>
         {
             endpoints.MapPost("/test-domain-exception", async (TestDomainExceptionCommand command, IMediator mediator, CancellationToken ct) =>
             {
@@ -111,7 +111,7 @@ public class PipelineBehaviorTests
     public async Task PerformanceBehavior_ShouldLogTimingAsync()
     {
         // Arrange
-        using var testServer = await CreateTestServerAsync(endpoints =>
+        await using var testServer = await CreateTestServerAsync(endpoints =>
         {
             endpoints.MapPost("/test-command", async (TestCommand command, IMediator mediator, CancellationToken ct) =>
             {
@@ -180,7 +180,7 @@ public class PipelineBehaviorTests
     public async Task Query_ShouldReturnSuccessResultAsync()
     {
         // Arrange
-        using var testServer = await CreateTestServerAsync(endpoints =>
+        await using var testServer = await CreateTestServerAsync(endpoints =>
         {
             endpoints.MapGet("/test-query", async (IMediator mediator, CancellationToken ct) =>
             {
@@ -277,7 +277,7 @@ public class PipelineBehaviorTests
         logCollector.Should().NotBeNull();
     }
 
-    private static async Task<TestServer> CreateTestServerAsync(Action<IEndpointRouteBuilder> configureEndpoints)
+    private static async Task<TestServerWrapper> CreateTestServerAsync(Action<IEndpointRouteBuilder> configureEndpoints)
     {
         var builder = WebApplication.CreateBuilder();
         builder.WebHost.UseTestServer();
@@ -293,6 +293,22 @@ public class PipelineBehaviorTests
         configureEndpoints(app);
 
         await app.StartAsync();
-        return app.GetTestServer();
+        return new TestServerWrapper(app);
+    }
+
+    private sealed class TestServerWrapper(WebApplication app) : IAsyncDisposable
+    {
+        public TestServer Server { get; } = app.GetTestServer();
+
+        public IServiceProvider Services => this.Server.Services;
+
+        public HttpClient CreateClient() => this.Server.CreateClient();
+
+        public async ValueTask DisposeAsync()
+        {
+            this.Server.Dispose();
+            await app.StopAsync();
+            await app.DisposeAsync();
+        }
     }
 }
