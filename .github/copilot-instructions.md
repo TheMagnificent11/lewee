@@ -31,7 +31,7 @@ However, the C# projects are named so that test projects appear next to their co
 
 | Component | Version | Installation Command | Verification |
 |-----------|---------|---------------------|--------------|
-| .NET SDK | 9.0+ | `curl -sSL https://dotnet.microsoft.com/download/dotnet/scripts/v1/dotnet-install.sh \| bash /dev/stdin --channel 9.0 --install-dir ~/.dotnet` | `dotnet --version` |
+| .NET SDK | 10.0+ | `curl -sSL https://dotnet.microsoft.com/download/dotnet/scripts/v1/dotnet-install.sh \| bash /dev/stdin --channel 10.0 --install-dir ~/.dotnet` | `dotnet --version` |
 | .NET Aspire | Latest | `dotnet workload install aspire` | `dotnet workload list` |
 | Docker Desktop | Latest | Platform-specific | `docker --version` |
 
@@ -40,7 +40,7 @@ However, the C# projects are named so that test projects appear next to their co
 export PATH="~/.dotnet:$PATH"
 ```
 
-**Critical:** The repository targets .NET 9.0 and will not build with older versions.
+**Critical:** The repository targets .NET 10.0 and will not build with older versions.
 
 ## Build and Test Commands
 
@@ -145,9 +145,11 @@ The solution uses Central Package Management via `Directory.Packages.props`.
 
 Do not unnecessarily add package and project references; use implicit references where possible.
 
-Therefore, always check for existing references in packages and projects that already referenced implicitly in a C# project before adding new ones.
+Therefore, always check for existing references in packages and projects that are already referenced implicitly in a C# project before adding new ones.
 
-Furhermore, when working on application C# projects like web applications, do not add a reference if it comes in the `Microsoft.NET.Sdk.Web` web SDK.
+Furthermore, when working on application C# projects like web applications, do not add a reference if it comes in the `Microsoft.NET.Sdk.Web` web SDK.
+
+**Exception:** During major framework upgrades (e.g., .NET 9 to .NET 10), explicit package references may be temporarily required to resolve version conflicts with third-party packages that have hard upper-bound constraints. These should be documented and removed once the third-party packages are updated for the new framework version.
 
 ### Project File Configuration
 
@@ -346,7 +348,7 @@ lewee/
 | File | Purpose | When to Edit |
 |------|---------|-------------|
 | `lewee.sln` | Solution with all projects | Adding/removing projects |
-| `Directory.Build.props` | Global MSBuild properties (targets .NET 9.0) | Changing build configuration |
+| `Directory.Build.props` | Global MSBuild properties (targets .NET 10.0) | Changing build configuration |
 | `Directory.Packages.props` | Central Package Management (CPM) | Adding/updating NuGet packages |
 | `.editorconfig` | Code style rules | Adjusting code formatting |
 | `sample/Pizzeria.AppHost/Program.cs` | Aspire orchestration | Configuring services |

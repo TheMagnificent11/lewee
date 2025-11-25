@@ -32,66 +32,59 @@ public sealed class TestFixture : IAsyncLifetime
         Justification = "Only for test purposes")]
     public static readonly ConcurrentDictionary<Guid, PizzaOrder> Orders = new();
 
-    private readonly TestServer server;
-    private readonly TestClient client;
-    private readonly HttpClient httpClient;
-    private readonly FakeLogCollector serverLogCollector;
-
-    public TestFixture()
-    {
-        var builder = new WebHostBuilder()
-            .ConfigureServices(services =>
-            {
-                services
-                    .AddFakeLogging()
-                    .AddRouting()
-                    .AddLeweeSignalR();
-
-                services.AddMediatR(options => options.RegisterServicesFromAssembly(typeof(ClientEvent).Assembly));
-                services.AddHealthChecks();
-            })
-            .Configure(app =>
-            {
-                app.UseRouting();
-                app.UseEndpoints(endpoints =>
-                {
-                    endpoints.MapHealthChecks("/health");
-
-                    endpoints.MapHub<ClientEventHub>("/events");
-
-                    endpoints.MapPost("/api/orders", async (CreateOrderRequest request, IMediator mediator) =>
-                    {
-                        var order = new PizzaOrder
-                        {
-                            Id = Guid.NewGuid(),
-                            CustomerName = "Test User",
-                            CreatedAt = DateTime.UtcNow,
-                        };
-
-                        Orders.TryAdd(order.Id, order);
-
-                        await mediator.Publish(new ClientEvent(Guid.NewGuid(), userId: null, order));
-
-                        return Results.Ok();
-                    });
-
-                    endpoints.MapGet("/api/orders/{id}", (Guid id) =>
-                    {
-                        return Orders.TryGetValue(id, out var order)
-                            ? Results.Ok(order)
-                            : Results.NotFound();
-                    });
-                });
-            });
-
-        this.server = new TestServer(builder);
-        this.httpClient = this.server.CreateClient();
-        this.client = new TestClient(this.httpClient);
-        this.serverLogCollector = this.server.Services.GetRequiredService<FakeLogCollector>();
-    }
+    private TestServer server = null!;
+    private TestClient client = null!;
+    private HttpClient httpClient = null!;
+    private FakeLogCollector serverLogCollector = null!;
+    private WebApplication app = null!;
 
     public async Task InitializeAsync()
     {
+        var builder = WebApplication.CreateBuilder();
+        builder.WebHost.UseTestServer();
+        builder.Services
+            .AddFakeLogging()
+            .AddRouting()
+            .AddLeweeSignalR();
+
+        builder.Services.AddMediatR(options => options.RegisterServicesFromAssembly(typeof(ClientEvent).Assembly));
+        builder.Services.AddHealthChecks();
+
+        this.app = builder.Build();
+        this.app.UseRouting();
+
+        this.app.MapHealthChecks("/health");
+        this.app.MapHub<ClientEventHub>("/events");
+
+        this.app.MapPost("/api/orders", async (CreateOrderRequest request, IMediator mediator) =>
+        {
+            var order = new PizzaOrder
+            {
+                Id = Guid.NewGuid(),
+                CustomerName = "Test User",
+                CreatedAt = DateTime.UtcNow,
+            };
+
+            Orders.TryAdd(order.Id, order);
+
+            await mediator.Publish(new ClientEvent(Guid.NewGuid(), userId: null, order));
+
+            return Results.Ok();
+        });
+
+        this.app.MapGet("/api/orders/{id}", (Guid id) =>
+        {
+            return Orders.TryGetValue(id, out var order)
+                ? Results.Ok(order)
+                : Results.NotFound();
+        });
+
+        await this.app.StartAsync();
+        this.server = this.app.GetTestServer();
+        this.httpClient = this.server.CreateClient();
+        this.client = new TestClient(this.httpClient);
+        this.serverLogCollector = this.app.Services.GetRequiredService<FakeLogCollector>();
+
         await this.client.ConnectAsync();
     }
 
@@ -101,6 +94,8 @@ public sealed class TestFixture : IAsyncLifetime
         this.client.Dispose();
         this.httpClient.Dispose();
         this.server.Dispose();
+        await this.app.StopAsync();
+        await this.app.DisposeAsync();
     }
 
     public IReadOnlyList<FakeLogRecord> GetServerLogs() => this.serverLogCollector.GetSnapshot();

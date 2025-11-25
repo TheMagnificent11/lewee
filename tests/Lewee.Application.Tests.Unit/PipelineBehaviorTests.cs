@@ -24,7 +24,7 @@ public class PipelineBehaviorTests
     public async Task ValidationBehavior_WithInvalidCommand_ShouldReturnBadRequestAsync()
     {
         // Arrange
-        using var testServer = CreateTestServer(endpoints =>
+        await using var testServer = await CreateTestServerAsync(endpoints =>
         {
             endpoints.MapPost("/test-command", async (TestCommand command, IMediator mediator, CancellationToken ct) =>
             {
@@ -53,7 +53,7 @@ public class PipelineBehaviorTests
     public async Task ValidationBehavior_WithValidCommand_ShouldReturnOkAsync()
     {
         // Arrange
-        using var testServer = CreateTestServer(endpoints =>
+        await using var testServer = await CreateTestServerAsync(endpoints =>
         {
             endpoints.MapPost("/test-command", async (TestCommand command, IMediator mediator, CancellationToken ct) =>
             {
@@ -82,7 +82,7 @@ public class PipelineBehaviorTests
     public async Task DomainExceptionBehavior_WithDomainException_ShouldReturnBadRequestAsync()
     {
         // Arrange
-        using var testServer = CreateTestServer(endpoints =>
+        await using var testServer = await CreateTestServerAsync(endpoints =>
         {
             endpoints.MapPost("/test-domain-exception", async (TestDomainExceptionCommand command, IMediator mediator, CancellationToken ct) =>
             {
@@ -111,7 +111,7 @@ public class PipelineBehaviorTests
     public async Task PerformanceBehavior_ShouldLogTimingAsync()
     {
         // Arrange
-        using var testServer = CreateTestServer(endpoints =>
+        await using var testServer = await CreateTestServerAsync(endpoints =>
         {
             endpoints.MapPost("/test-command", async (TestCommand command, IMediator mediator, CancellationToken ct) =>
             {
@@ -141,31 +141,27 @@ public class PipelineBehaviorTests
     public async Task FailureLoggingBehavior_WithFailure_ShouldLogFailureAsync()
     {
         // Arrange
-        using var testServer = new TestServer(new WebHostBuilder()
-            .ConfigureServices(services =>
-            {
-                services.AddRouting(); // Required for UseRouting()
-                services.AddFakeLogging();
-                var applicationAssembly = typeof(TestBadRequestCommand).Assembly;
-                var domainAssembly = typeof(Lewee.Domain.Entity).Assembly;
-                services.AddApplication(applicationAssembly, domainAssembly);
-                services.AddPipelineBehaviors(); // This includes FailureLoggingBehavior
-            })
-            .Configure(app =>
-            {
-                app.UseRouting();
-                app.UseEndpoints(endpoints =>
-                {
-                    endpoints.MapPost("/test-bad-request", async (TestBadRequestCommand command, IMediator mediator, CancellationToken ct) =>
-                    {
-                        var result = await mediator.Send(command, ct);
-                        return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);
-                    });
-                });
-            }));
+        var builder = WebApplication.CreateBuilder();
+        builder.WebHost.UseTestServer();
+        builder.Services.AddRouting();
+        builder.Services.AddFakeLogging();
+        var applicationAssembly = typeof(TestBadRequestCommand).Assembly;
+        var domainAssembly = typeof(Lewee.Domain.Entity).Assembly;
+        builder.Services.AddApplication(applicationAssembly, domainAssembly);
+        builder.Services.AddPipelineBehaviors(); // This includes FailureLoggingBehavior
 
+        var app = builder.Build();
+        app.UseRouting();
+        app.MapPost("/test-bad-request", async (TestBadRequestCommand command, IMediator mediator, CancellationToken ct) =>
+        {
+            var result = await mediator.Send(command, ct);
+            return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);
+        });
+
+        await app.StartAsync();
+        using var testServer = app.GetTestServer();
         using var client = testServer.CreateClient();
-        var logCollector = testServer.Services.GetRequiredService<FakeLogCollector>();
+        var logCollector = app.Services.GetRequiredService<FakeLogCollector>();
         var command = new TestBadRequestCommand(Guid.NewGuid());
 
         // Act
@@ -184,7 +180,7 @@ public class PipelineBehaviorTests
     public async Task Query_ShouldReturnSuccessResultAsync()
     {
         // Arrange
-        using var testServer = CreateTestServer(endpoints =>
+        await using var testServer = await CreateTestServerAsync(endpoints =>
         {
             endpoints.MapGet("/test-query", async (IMediator mediator, CancellationToken ct) =>
             {
@@ -281,24 +277,38 @@ public class PipelineBehaviorTests
         logCollector.Should().NotBeNull();
     }
 
-    private static TestServer CreateTestServer(Action<IEndpointRouteBuilder> configureEndpoints)
+    private static async Task<TestServerWrapper> CreateTestServerAsync(Action<IEndpointRouteBuilder> configureEndpoints)
     {
-        var builder = new WebHostBuilder()
-            .ConfigureServices(services =>
-            {
-                services.AddRouting(); // Required for UseRouting()
-                services.AddFakeLogging();
-                var applicationAssembly = typeof(TestCommand).Assembly;
-                var domainAssembly = typeof(Lewee.Domain.Entity).Assembly;
-                services.AddApplication(applicationAssembly, domainAssembly);
-                services.AddPipelineBehaviors();
-            })
-            .Configure(app =>
-            {
-                app.UseRouting();
-                app.UseEndpoints(configureEndpoints);
-            });
+        var builder = WebApplication.CreateBuilder();
+        builder.WebHost.UseTestServer();
+        builder.Services.AddRouting();
+        builder.Services.AddFakeLogging();
+        var applicationAssembly = typeof(TestCommand).Assembly;
+        var domainAssembly = typeof(Lewee.Domain.Entity).Assembly;
+        builder.Services.AddApplication(applicationAssembly, domainAssembly);
+        builder.Services.AddPipelineBehaviors();
 
-        return new TestServer(builder);
+        var app = builder.Build();
+        app.UseRouting();
+        configureEndpoints(app);
+
+        await app.StartAsync();
+        return new TestServerWrapper(app);
+    }
+
+    private sealed class TestServerWrapper(WebApplication app) : IAsyncDisposable
+    {
+        public TestServer Server { get; } = app.GetTestServer();
+
+        public IServiceProvider Services => this.Server.Services;
+
+        public HttpClient CreateClient() => this.Server.CreateClient();
+
+        public async ValueTask DisposeAsync()
+        {
+            this.Server.Dispose();
+            await app.StopAsync();
+            await app.DisposeAsync();
+        }
     }
 }

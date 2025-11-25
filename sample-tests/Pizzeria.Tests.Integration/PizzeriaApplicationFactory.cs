@@ -40,7 +40,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         this.playwright = await Playwright.CreateAsync();
 
         // Install browsers if not already installed (for CI/CD environments)
-        var exitCode = Program.Main(["install", "chromium"]);
+        var exitCode = Microsoft.Playwright.Program.Main(["install", "chromium"]);
         if (exitCode != 0)
         {
             throw new InvalidOperationException($"Failed to install Playwright browsers. Exit code: {exitCode}");
