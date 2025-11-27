@@ -23,7 +23,7 @@ Did you change framework code (Lewee.*)?
 
 **Commands:**
 ```bash
-dotnet build lewee.sln --configuration Release --nologo
+dotnet build --configuration Release --nologo
 ```
 
 **Success Criteria:**
@@ -37,7 +37,7 @@ dotnet build lewee.sln --configuration Release --nologo
 
 **Commands:**
 ```bash
-dotnet test lewee.sln --filter "FullyQualifiedName!~Integration" --configuration Release --no-build --nologo
+dotnet test --filter "FullyQualifiedName!~Integration" --configuration Release --no-build --nologo
 ```
 
 **Success Criteria:**
@@ -51,7 +51,7 @@ dotnet test lewee.sln --filter "FullyQualifiedName!~Integration" --configuration
 
 **Commands:**
 ```bash
-dotnet test lewee.sln --filter "FullyQualifiedName~Integration" --configuration Release --no-build --nologo
+dotnet test --filter "FullyQualifiedName~Integration" --configuration Release --no-build --nologo
 ```
 
 **Prerequisites:**
@@ -71,7 +71,7 @@ dotnet test lewee.sln --filter "FullyQualifiedName~Integration" --configuration 
 
 **Commands:**
 ```bash
-dotnet pack lewee.sln --configuration Release --nologo --no-build
+dotnet pack --configuration Release --nologo --no-build
 ```
 
 **Success Criteria:**

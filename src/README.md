@@ -34,8 +34,8 @@ For development guidance in this directory, see the following instruction files:
 
 ```bash
 # Build framework packages
-dotnet build lewee.sln --configuration Release --nologo
+dotnet build --configuration Release --nologo
 
 # Run framework tests
-dotnet test lewee.sln --filter "FullyQualifiedName!~Integration" --configuration Release --no-build --nologo
+dotnet test --filter "FullyQualifiedName!~Integration" --configuration Release --no-build --nologo
 ```

@@ -9,12 +9,10 @@ The sample pizzeria application demonstrates Lewee framework usage with a multi-
 
 **Current State:**
 - Pizzeria Store API (operational)
+- Pizzeria Store Web (Blazor WebAssembly front-end)
 - PostgreSQL database (managed by Aspire)
-
-**Future Roadmap:**
-- Pizzeria Kitchen service
-- Pizzeria Delivery service
-- RabbitMQ message bus integration
+- Authentication services (Pizzeria.Auth)
+- Shared configuration (Pizzeria.Configuration)
 
 ## Running the Sample
 
@@ -38,8 +36,8 @@ dotnet run --project ./sample/Pizzeria.AppHost/
 **For Framework Changes:**
 ```bash
 # Make changes to Lewee.* projects
-dotnet build lewee.sln --configuration Release --nologo
-dotnet test lewee.sln --configuration Release --no-build --nologo
+dotnet build --configuration Release --nologo
+dotnet test --configuration Release --no-build --nologo
 ```
 
 **For Sample App Changes:**

@@ -2,6 +2,8 @@
 
 This file provides an overview and links to detailed Copilot instructions for different aspects of development in this repository.
 
+**Important:** Please keep this file and the instruction files in the `.github/instructions/` directory up-to-date as the codebase evolves. When making changes to the repository structure, build process, coding standards, or other documented aspects, update the relevant instruction files to ensure they remain accurate and helpful.
+
 ## Instruction Files
 
 The following instruction files are available in the `.github/instructions/` directory. Each file contains detailed guidance for specific areas:
@@ -40,13 +42,13 @@ Your changes should:
 ### Key Commands
 ```bash
 # Build
-dotnet build lewee.sln --configuration Release --nologo
+dotnet build --configuration Release --nologo
 
 # Test (unit tests only)
-dotnet test lewee.sln --filter "FullyQualifiedName!~Integration" --configuration Release --no-build --nologo
+dotnet test --filter "FullyQualifiedName!~Integration" --configuration Release --no-build --nologo
 
 # Format
-dotnet format lewee.sln
+dotnet format
 ```
 
 ## Directory-Specific README Files

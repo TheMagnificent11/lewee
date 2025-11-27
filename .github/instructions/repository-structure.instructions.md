@@ -63,7 +63,7 @@ lewee/
 
 | File | Purpose | When to Edit |
 |------|---------|-------------|
-| `lewee.sln` | Solution with all projects | Adding/removing projects |
+| `lewee.slnx` | Solution with all projects | Adding/removing projects |
 | `Directory.Build.props` | Global MSBuild properties (targets .NET 10.0) | Changing global build settings |
 | `src/Directory.Build.props` | Framework package properties | Changing framework-specific settings |
 | `tests/Directory.Build.props` | Test project properties | Changing test-specific settings |
@@ -82,10 +82,10 @@ lewee/
 
 | Task | Command | Use Case |
 |------|---------|----------|
-| Clean artifacts | `dotnet clean lewee.sln` | Remove build outputs |
-| Full rebuild | `dotnet build lewee.sln --configuration Release --no-incremental` | After major changes |
+| Clean artifacts | `dotnet clean` | Remove build outputs |
+| Full rebuild | `dotnet build --configuration Release --no-incremental` | After major changes |
 | Run specific tests | `dotnet test tests/Lewee.Domain.Tests.Unit/` | Test single project |
 | Run sample app | `dotnet run --project sample/Pizzeria.AppHost/` | Manual testing |
 | Check outdated packages | `dotnet list package --outdated` | Dependency updates |
-| Format code | `dotnet format lewee.sln` | Fix style issues |
-| Create packages | `dotnet pack lewee.sln --configuration Release --nologo` | Prepare for release |
+| Format code | `dotnet format` | Fix style issues |
+| Create packages | `dotnet pack --configuration Release --nologo` | Prepare for release |

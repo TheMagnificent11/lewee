@@ -55,6 +55,57 @@ public partial class Home
 
 See `sample/Pizzeria.Store.Web/Pages/Home.razor` and `Home.razor.cs` for a complete example of the code-behind pattern in action.
 
+## State Management with Fluxor
+
+This project uses [Fluxor](https://github.com/mrpmorris/Fluxor) to implement the Redux pattern in Blazor applications.
+
+### Key Concepts
+
+- **State**: Immutable objects that represent the current state of a feature (e.g., `OrdersState`)
+- **Actions**: Objects that describe what happened (e.g., `StartOrderAction`, `ClearOrderErrorAction`)
+- **Reducers**: Pure functions that take the current state and an action, returning a new state
+- **Effects**: Handle side effects like API calls, triggered by actions
+
+### Project Structure
+
+States are organized in the `States/` directory:
+```
+States/
+├── Orders/
+│   ├── OrdersState.cs           # State definition
+│   ├── OrdersFeature.cs         # Feature registration
+│   ├── OrdersReducers.cs        # State reducers
+│   ├── OrdersEffects.cs         # Side effects (API calls)
+│   └── Actions/
+│       ├── StartOrderAction.cs
+│       └── ClearOrderErrorAction.cs
+```
+
+### Component Integration
+
+Components inherit from `FluxorComponent` and inject state and dispatcher:
+
+```razor
+@inherits FluxorComponent
+
+@inject IState<OrdersState> State
+@inject IDispatcher Dispatcher
+```
+
+### Dispatching Actions
+
+```csharp
+// In code-behind
+private void StartNewOrder()
+{
+    this.Dispatcher.Dispatch(new StartOrderAction());
+}
+```
+
+### Subscribing to State Changes
+
+State changes automatically trigger component re-renders when using `@inherits FluxorComponent`.
+
 ## Testing Standards
 
 ### bUnit/Playwright Testing
