@@ -30,11 +30,12 @@ public class OrdersEffects : RequestEffects<OrdersState, StartOrderAction, Start
         [NotNull] StartOrderCompletedAction action,
         [NotNull] IDispatcher _)
     {
-        if (string.IsNullOrEmpty(action.Order?.Id))
+        if (action.Order is null || action.Order.Id == Guid.Empty)
         {
             this.Logger?.LogWarning("Order ID is null or empty. Navigation to order details page aborted.");
             return Task.CompletedTask;
         }
+
         this.navigationManager.NavigateTo($"/orders/{action.Order.Id}");
 
         return Task.CompletedTask;
