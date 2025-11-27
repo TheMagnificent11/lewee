@@ -1,6 +1,13 @@
 ﻿@page "/"
+
+@using Pizzeria.Store.Web.States.Orders
+
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
 @inherits FluxorComponent
+
+@inject IState<OrdersState> State
+@inject IDispatcher Dispatcher
+@inject NavigationManager NavigationManager
 
 <PageTitle>Pizzeria Store</PageTitle>
 
@@ -8,7 +15,7 @@
     Welcome to Lewee Pizzeria
 </MudText>
 
-@if (OrdersState.Value.CurrentOrder == null)
+@if (this.State.Value.CurrentOrder == null)
 {
     <MudGrid Justify="Justify.Center">
         <MudItem xs="12" sm="6" md="4">
@@ -27,8 +34,8 @@
                                Size="Size.Large"
                                FullWidth="true"
                                OnClick="StartNewOrder"
-                               Disabled="OrdersState.Value.IsStartingOrder">
-                        @if (OrdersState.Value.IsStartingOrder)
+                               Disabled="this.State.Value.IsStartingOrder">
+                        @if (this.State.Value.IsStartingOrder)
                         {
                             <MudProgressCircular Size="Size.Small" Indeterminate="true" />
                             <MudText Class="ml-2">Starting Order...</MudText>
@@ -54,12 +61,12 @@ else
     </MudAlert>
 }
 
-@if (!string.IsNullOrEmpty(OrdersState.Value.ErrorMessage))
+@if (!string.IsNullOrEmpty(State.Value.ErrorMessage))
 {
     <MudAlert Severity="Severity.Error" 
               Class="mt-4" 
               ShowCloseIcon="true" 
               CloseIconClicked="ClearError">
-        @OrdersState.Value.ErrorMessage
+        @this.State.Value.ErrorMessage
     </MudAlert>
 }

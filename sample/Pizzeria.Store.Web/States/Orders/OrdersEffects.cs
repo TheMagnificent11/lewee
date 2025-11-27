@@ -26,13 +26,18 @@ public class OrdersEffects : RequestEffects<OrdersState, StartOrderAction, Start
     }
 
     [EffectMethod]
-    [SuppressMessage(
-        "StyleCop.CSharp.NamingRules",
-        "SA1313:Parameter '_' should begin with lower-case letter",
-        Justification = "Underscore is the standard discard pattern for unused parameters")]
-    public Task OnStartOrderCompletedAsync(StartOrderCompletedAction _, IDispatcher __)
+    public Task OnStartOrderCompletedAsync(
+        [NotNull] StartOrderCompletedAction action,
+        [NotNull] IDispatcher _)
     {
-        this.navigationManager.NavigateTo(Routes.Order);
+        if (action.Order is null || action.Order.Id == Guid.Empty)
+        {
+            this.Logger?.LogWarning("Order ID is null or empty. Navigation to order details page aborted.");
+            return Task.CompletedTask;
+        }
+
+        this.navigationManager.NavigateTo($"/orders/{action.Order.Id}");
+
         return Task.CompletedTask;
     }
 

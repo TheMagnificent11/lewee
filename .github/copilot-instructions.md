@@ -25,6 +25,8 @@ There are directory folders for the `src`, `tests`, `sample` and `sample-tests` 
 
 However, the C# projects are named so that test projects appear next to their corresponding source projects in the Visual Studio Solution Explorer.
 
+**Solution File:** The repository uses `lewee.slnx`.
+
 ## Environment Setup
 
 ### Prerequisites (Required)
@@ -155,28 +157,66 @@ Furthermore, when working on application C# projects like web applications, do n
 
 **IMPORTANT: Do NOT add build properties to individual `.csproj` files.**
 
-All build configuration is centrally managed in `Directory.Build.props` to ensure consistency across the solution. This includes:
-- `GenerateDocumentationFile` - Enabled for all projects to support IDE0005 enforcement
-- `NoWarn` - Suppressions for CS1591/CS1587 in test and sample projects
-- `AnalysisLevel`, `AnalysisMode`, `EnableNETAnalyzers` - Analyzer settings
-- `TreatWarningsAsErrors`, `CodeAnalysisTreatWarningsAsErrors` - Warning enforcement
+All build configuration is centrally managed through a hierarchy of configuration files to ensure consistency across the solution.
+
+#### Configuration File Hierarchy
+
+**Root Configuration Files:**
+- `Directory.Build.props` - Global MSBuild properties applied to all projects
+- `Tests.props` - Shared test project configuration
+- `.editorconfig` - Global code style rules and analyzer settings
+
+**Directory-Specific Configuration:**
+- `src/Directory.Build.props` - Framework package-specific properties (inherits from root)
+- `tests/Directory.Build.props` - Test project properties (inherits from root and Tests.props)
+- `sample/Directory.Build.props` - Sample application properties (inherits from root)
+- `sample-tests/Directory.Build.props` - Sample test properties (inherits from root and Tests.props)
+- `tests/.editorconfig` - Test-specific analyzer rules (inherits from root)
+- `sample/.editorconfig` - Sample-specific analyzer rules (inherits from root)
+- `sample-tests/.editorconfig` - Sample test-specific analyzer rules (inherits from root)
+
+**Root `Directory.Build.props` Contains:**
+- Target framework (.NET 10.0) and language version
+- Global build settings (warnings as errors, code style enforcement)
+- Repository metadata (URL, authors, etc.)
+- Analyzer package references (Meziantou, SonarAnalyzer, StyleCop, etc.)
+
+**`Tests.props` Contains:**
+- Test framework package references (xUnit, FluentAssertions, etc.)
+- Test-specific property settings
+- Code coverage exclusion attributes
+
+**Directory-Specific `Directory.Build.props` Files:**
+- `src/` - Package generation, XML documentation, symbol packages, nullable reference types
+- `tests/` - Imports Tests.props for test-specific configuration
+- `sample/` - Nullable reference types, warning suppressions, code coverage exclusion
+- `sample-tests/` - Imports Tests.props for test-specific configuration
+
+**Directory-Specific `.editorconfig` Files:**
+- `tests/` - CA1707 suppression for underscores in test method names
+- `sample/` - SA1313 suppressions for Effects and Reducer parameter naming
+- `sample-tests/` - CA1707 suppression for underscores in sample test method names
 
 **Never add these properties to individual project files:**
 - `<GenerateDocumentationFile>`
 - `<NoWarn>`
 - `<TreatWarningsAsErrors>`
 - `<AnalysisLevel>` / `<AnalysisMode>`
+- `<Nullable>`
+- `<IsPackable>`
 - Any other build/analyzer configuration
 
 **If you need project-specific settings:**
-1. First check if `Directory.Build.props` already provides the correct behavior through its conditional property groups
-2. If truly necessary, discuss with the repository owner before adding project-specific overrides
+1. First check if the appropriate directory-level `Directory.Build.props` already provides the correct behavior
+2. If the setting should apply to all projects in a directory, add it to that directory's `Directory.Build.props`
+3. If truly project-specific, discuss with the repository owner before adding
 
 **Why this matters:**
 - Ensures consistent build behavior across all projects
-- Makes it easier to update settings globally
+- Makes it easier to update settings globally or by directory
 - Prevents configuration drift between projects
 - Reduces maintenance burden
+- Provides clear separation between framework, test, and sample configurations
 
 ### Coding Style
 
@@ -186,7 +226,7 @@ dotnet format lewee.sln
 ```
 
 **Configuration:**
-- Defined in `.editorconfig`
+- Defined in `.editorconfig` (root and directory-specific)
 - Enforced during build
 - Must be applied before committing
 
@@ -205,7 +245,8 @@ dotnet format lewee.sln
 **Blazor Components:**
 - Use code-behind pattern with partial classes for Razor components
 - Create a separate `.razor.cs` file for component logic
-- Keep the `.razor` file for markup only (no `@inject` or `@code` blocks)
+- Do not add `@code` blocks directly in `.razor` files, use code-behind instead (partial classes named `[ComponentName].razor.cs`)
+  - All other `@` directives (e.g. ``@attribute`, `@inherits `@inject`, `@using`, etc.) should remain in the `.razor` file
 - See `sample/Pizzeria.Store.Web/Pages/Home.razor` and `Home.razor.cs` for examples
 
 ### Logging
@@ -305,6 +346,7 @@ dotnet pack lewee.sln --configuration Release --nologo --no-build
 lewee/
 │
 ├── src/                          # Framework packages (core product)
+│   ├── Directory.Build.props     # Framework-specific build properties
 │   ├── Lewee.Domain/             # Domain layer abstractions and base classes
 │   ├── Lewee.Application/        # Application layer with CQRS and validation
 │   ├── Lewee.Shared/             # Cross-cutting utilities and constants
@@ -313,10 +355,11 @@ lewee/
 │   ├── Lewee.Infrastructure.PostgreSQL/     # PostgreSQL-specific features
 │   ├── Lewee.Infrastructure.AspNet/         # ASP.NET Core integration
 │   ├── Lewee.Infrastructure.AspNet.WebApi/  # Web API utilities
-│   ├── Lewee.Blazor/             # Blazor component library
-│   └── Lewee.IntegrationTests/   # Integration testing utilities
+│   └── Lewee.Blazor/             # Blazor component library
 │
 ├── sample/                       # Example application (demonstrates usage)
+│   ├── Directory.Build.props     # Sample-specific build properties
+│   ├── .editorconfig             # Sample-specific analyzer rules
 │   ├── Pizzeria.AppHost/         # .NET Aspire orchestration entry point
 │   ├── Pizzeria.ServiceDefaults/ # Shared Aspire configurations
 │   ├── Pizzeria.Common/          # Shared utilities and constants
@@ -327,11 +370,20 @@ lewee/
 │   └── Pizzeria.Store.Api/       # FastEndpoints Web API
 │
 ├── tests/                        # Framework unit tests
+│   ├── Directory.Build.props     # Test-specific build properties
+│   ├── .editorconfig             # Test-specific analyzer rules
 │   └── [Project].Tests.Unit/
 │
-└── sample-tests/                 # Sample application tests
-    ├── Pizzeria.Tests.Integration/  # End-to-end integration tests
-    └── Pizzeria.Store.Domain.Tests/ # Domain unit tests
+├── sample-tests/                 # Sample application tests
+│   ├── Directory.Build.props     # Sample test-specific build properties
+│   ├── .editorconfig             # Sample test-specific analyzer rules
+│   ├── Pizzeria.Tests.Integration/  # End-to-end integration tests
+│   └── Pizzeria.Store.Domain.Tests/ # Domain unit tests
+│
+├── Directory.Build.props         # Root build properties (all projects)
+├── Directory.Packages.props      # Central Package Management
+├── Tests.props                   # Shared test configuration
+└── .editorconfig                 # Root code style rules
 ```
 
 ### Key Architecture Layers
@@ -348,9 +400,17 @@ lewee/
 | File | Purpose | When to Edit |
 |------|---------|-------------|
 | `lewee.sln` | Solution with all projects | Adding/removing projects |
-| `Directory.Build.props` | Global MSBuild properties (targets .NET 10.0) | Changing build configuration |
+| `Directory.Build.props` | Global MSBuild properties (targets .NET 10.0) | Changing global build settings |
+| `src/Directory.Build.props` | Framework package properties | Changing framework-specific settings |
+| `tests/Directory.Build.props` | Test project properties | Changing test-specific settings |
+| `sample/Directory.Build.props` | Sample application properties | Changing sample-specific settings |
+| `sample-tests/Directory.Build.props` | Sample test properties | Changing sample test-specific settings |
 | `Directory.Packages.props` | Central Package Management (CPM) | Adding/updating NuGet packages |
-| `.editorconfig` | Code style rules | Adjusting code formatting |
+| `Tests.props` | Shared test configuration | Changing test framework or packages |
+| `.editorconfig` | Global code style rules | Adjusting global code formatting |
+| `tests/.editorconfig` | Test-specific analyzer rules | Adjusting test-specific rules |
+| `sample/.editorconfig` | Sample-specific analyzer rules | Adjusting sample-specific rules |
+| `sample-tests/.editorconfig` | Sample test-specific analyzer rules | Adjusting sample test-specific rules |
 | `sample/Pizzeria.AppHost/Program.cs` | Aspire orchestration | Configuring services |
 | `.github/workflows/ci.yml` | CI/CD pipeline | Modifying build/test process |
 
@@ -372,7 +432,7 @@ lewee/
 
 | Symptom | Likely Cause | Solution |
 |---------|-------------|----------|
-| Build fails with "NETSDK1045" | Wrong .NET version | Install .NET 9.0 SDK (see Environment Setup) |
+| Build fails with "NETSDK1045" | Wrong .NET version | Install .NET 10.0 SDK (see Environment Setup) |
 | Integration tests fail to start | Aspire workload missing | `dotnet workload install aspire` |
 | Aspire services won't start | Port conflicts | Check port availability, restart Docker |
 | Unexplained build errors | Stale build artifacts | `dotnet clean lewee.sln` |
@@ -383,7 +443,7 @@ lewee/
 ### Debug Checklist
 
 **Before asking for help:**
-1. [ ] Verified .NET 9.0 SDK is installed (`dotnet --version`)
+1. [ ] Verified .NET 10.0 SDK is installed (`dotnet --version`)
 2. [ ] Ran `dotnet clean lewee.sln`
 3. [ ] Checked Docker Desktop is running (for integration tests)
 4. [ ] Reviewed error message carefully
@@ -393,8 +453,8 @@ lewee/
 
 **Build Errors:**
 ```
-NETSDK1045: The current .NET SDK does not support targeting .NET 9.0
-→ Solution: Install .NET 9.0 SDK
+NETSDK1045: The current .NET SDK does not support targeting .NET 10.0
+→ Solution: Install .NET 10.0 SDK
 ```
 
 **Test Errors:**
@@ -543,10 +603,10 @@ What are you testing?
 
 | Technology | Version | Purpose | Documentation |
 |------------|---------|---------|---------------|
-| .NET | 9.0 | Runtime and SDK | [docs.microsoft.com](https://docs.microsoft.com/dotnet) |
+| .NET | 10.0 | Runtime and SDK | [docs.microsoft.com](https://docs.microsoft.com/dotnet) |
 | .NET Aspire | Latest | Service orchestration | [learn.microsoft.com/aspire](https://learn.microsoft.com/dotnet/aspire) |
 | PostgreSQL | Latest | Primary database | [postgresql.org](https://postgresql.org) |
-| Entity Framework Core | 9.0 | ORM | [docs.microsoft.com/ef](https://docs.microsoft.com/ef/core) |
+| Entity Framework Core | 10.0 | ORM | [docs.microsoft.com/ef](https://docs.microsoft.com/ef/core) |
 | MediatR | 12.5.0 | Mediator pattern (free version) | [mediatr.io](https://mediatr.io) |
 | FastEndpoints | Latest | API endpoints | [fast-endpoints.com](https://fast-endpoints.com) |
 | FluentValidation | 8.7.0 | Validation (free version) | [fluentvalidation.net](https://fluentvalidation.net) |
