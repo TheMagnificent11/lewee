@@ -9,10 +9,10 @@ The sample pizzeria application demonstrates Lewee framework usage with a multi-
 
 **Current State:**
 - Pizzeria Store API (operational)
-- Pizzeria Store Web (Blazor WebAssembly front-end)
+- Pizzeria Store Web (`Pizzeria.Store.Web` - Blazor WebAssembly front-end)
 - PostgreSQL database (managed by Aspire)
-- Authentication services (Pizzeria.Auth)
-- Shared configuration (Pizzeria.Configuration)
+- Authentication services (`Pizzeria.Auth`)
+- Shared configuration (`Pizzeria.Configuration`)
 
 ## Running the Sample
 
