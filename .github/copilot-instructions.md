@@ -245,7 +245,8 @@ dotnet format lewee.sln
 **Blazor Components:**
 - Use code-behind pattern with partial classes for Razor components
 - Create a separate `.razor.cs` file for component logic
-- Keep the `.razor` file for markup and injections only (`@inject` is allowed but no `@code` blocks)
+- Do not add `@code` blocks directly in `.razor` files, use code-behind instead (partial classes named `[ComponentName].razor.cs`)
+  - All other `@` directives (e.g. ``@attribute`, `@inherits `@inject`, `@using`, etc.) should remain in the `.razor` file
 - See `sample/Pizzeria.Store.Web/Pages/Home.razor` and `Home.razor.cs` for examples
 
 ### Logging
