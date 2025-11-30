@@ -1,4 +1,4 @@
-root = false
+﻿[*.cs]
 
 # Sample Web App Effects rules
 [**/*Effects.cs]
