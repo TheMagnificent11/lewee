@@ -52,6 +52,7 @@
   <Project Path="sample/Pizzeria.Store.Contracts/Pizzeria.Store.Contracts.csproj" />
   <Project Path="sample/Pizzeria.Store.Data/Pizzeria.Store.Data.csproj" />
   <Project Path="sample/Pizzeria.Store.Domain/Pizzeria.Store.Domain.csproj" />
+  <Project Path="sample/Pizzeria.Store.Web/Pizzeria.Store.Web.csproj" Id="ad4622bc-2f6b-4908-8519-b9d0a5425795" />
   <Project Path="src/Lewee.Application/Lewee.Application.csproj" />
   <Project Path="src/Lewee.Blazor/Lewee.Blazor.csproj" />
   <Project Path="src/Lewee.Contracts/Lewee.Contracts.csproj" />
