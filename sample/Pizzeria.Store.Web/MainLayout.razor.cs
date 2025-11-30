@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Components;
 
-namespace Pizzeria.Store.Web.Components.Layout;
+namespace Pizzeria.Store.Web;
 
 public partial class MainLayout : LayoutComponentBase
 {

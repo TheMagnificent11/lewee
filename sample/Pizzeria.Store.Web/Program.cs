@@ -1,6 +1,6 @@
 using MudBlazor.Services;
 using Pizzeria.ServiceDefaults;
-using Pizzeria.Store.Web.Components;
+using Pizzeria.Store.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
