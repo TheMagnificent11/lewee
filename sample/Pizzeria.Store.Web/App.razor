@@ -12,6 +12,9 @@
 </head>
 
 <body>
+    <Fluxor.Blazor.Web.StoreInitializer />
+    <Lewee.Blazor.Messaging.MessageReceiverInitializer />
+
     <Routes @rendermode="InteractiveServer" />
     <script src="_framework/blazor.web.js"></script>
     <script src=@Assets["_content/MudBlazor/MudBlazor.min.js"]></script>
