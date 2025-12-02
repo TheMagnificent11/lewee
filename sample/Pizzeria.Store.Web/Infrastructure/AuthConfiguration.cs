@@ -73,4 +73,21 @@ internal static class AuthConfiguration
 
         return services;
     }
+
+    public static WebApplication MapSignOut(this WebApplication app)
+    {
+        app
+            .MapPost(PageRoutes.SignOut, () =>
+            {
+                return TypedResults.SignOut(
+                    authenticationSchemes:
+                    [
+                        CookieAuthenticationDefaults.AuthenticationScheme,
+                        OpenIdConnectDefaults.AuthenticationScheme,
+                   ]);
+            })
+            .RequireAuthorization();
+
+        return app;
+    }
 }

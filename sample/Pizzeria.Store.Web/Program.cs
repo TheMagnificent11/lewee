@@ -5,7 +5,6 @@ using Pizzeria.Store.Web.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add Aspire service defaults
 builder.AddServiceDefaults();
 
 builder.Services
@@ -19,7 +18,6 @@ builder.Services
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler(PageRoutes.Error, createScopeForErrors: true);
@@ -28,9 +26,17 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
-app.UseAntiforgery();
+app
+    .UseHttpsRedirection()
+    .UseAntiforgery()
+    .UseAuthentication()
+    .UseAuthorization();
+
 app.MapStaticAssets();
-app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
+
+app
+    .MapSignOut()
+    .MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode();
 
 await app.RunAsync();
