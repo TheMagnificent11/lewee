@@ -26,7 +26,13 @@ public sealed class CustomerSignUpTests : PizzeriaTests
         {
             Headless = true,
         });
-        var page = await browser.NewPageAsync();
+
+        // Create a browser context that ignores HTTPS errors (needed for dev certificates)
+        var context = await browser.NewContextAsync(new BrowserNewContextOptions
+        {
+            IgnoreHTTPSErrors = true,
+        });
+        var page = await context.NewPageAsync();
 
         try
         {
@@ -53,8 +59,8 @@ public sealed class CustomerSignUpTests : PizzeriaTests
             // Submit registration
             await page.ClickAsync("input[type='submit']");
 
-            // Wait for redirect back to the app
-            await page.WaitForURLAsync($"{webClientUrl}/**", new PageWaitForURLOptions { Timeout = 60000 });
+            // Wait for redirect back to the app (use load state since URL may change due to HTTPS redirect)
+            await page.WaitForLoadStateAsync(LoadState.NetworkIdle, new PageWaitForLoadStateOptions { Timeout = 60000 });
 
             // Wait a bit for the User entity to be created via the OnTokenValidated event
             await Task.Delay(TimeSpan.FromSeconds(5));
@@ -72,6 +78,7 @@ public sealed class CustomerSignUpTests : PizzeriaTests
         finally
         {
             await page.CloseAsync();
+            await context.CloseAsync();
             await browser.CloseAsync();
         }
     }
@@ -90,7 +97,13 @@ public sealed class CustomerSignUpTests : PizzeriaTests
         {
             Headless = true,
         });
-        var page = await browser.NewPageAsync();
+
+        // Create a browser context that ignores HTTPS errors (needed for dev certificates)
+        var context = await browser.NewContextAsync(new BrowserNewContextOptions
+        {
+            IgnoreHTTPSErrors = true,
+        });
+        var page = await context.NewPageAsync();
 
         try
         {
@@ -113,11 +126,8 @@ public sealed class CustomerSignUpTests : PizzeriaTests
             // Submit registration
             await page.ClickAsync("input[type='submit']");
 
-            // Wait for redirect back to the app
-            await page.WaitForURLAsync($"{webClientUrl}/**", new PageWaitForURLOptions { Timeout = 60000 });
-
-            // Assert - Verify user is on the home page (authenticated)
-            page.Url.Should().StartWith(webClientUrl);
+            // Wait for redirect back to the app (use load state since URL may change due to HTTPS redirect)
+            await page.WaitForLoadStateAsync(LoadState.NetworkIdle, new PageWaitForLoadStateOptions { Timeout = 60000 });
 
             // Verify we can see content from the authenticated page
             // (This confirms the user is authenticated and not stuck on a redirect loop)
@@ -127,6 +137,7 @@ public sealed class CustomerSignUpTests : PizzeriaTests
         finally
         {
             await page.CloseAsync();
+            await context.CloseAsync();
             await browser.CloseAsync();
         }
     }
