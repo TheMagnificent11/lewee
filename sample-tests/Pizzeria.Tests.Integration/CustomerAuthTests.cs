@@ -1,6 +1,6 @@
 using FluentAssertions;
 using Microsoft.Playwright;
-using Pizzeria.Store.Web.Layout;
+using Pizzeria.Store.Web;
 using Xunit;
 
 namespace Pizzeria.Tests.Integration;
