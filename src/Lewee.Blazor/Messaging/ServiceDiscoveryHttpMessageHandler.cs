@@ -1,8 +1,5 @@
 namespace Lewee.Blazor.Messaging;
 
-/// <summary>
-/// HTTP message handler that uses service discovery through a named HttpClient
-/// </summary>
 internal sealed class ServiceDiscoveryHttpMessageHandler : HttpMessageHandler
 {
     private readonly IHttpClientFactory httpClientFactory;
@@ -16,10 +13,7 @@ internal sealed class ServiceDiscoveryHttpMessageHandler : HttpMessageHandler
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        // Create a new HttpClient instance for each request to ensure proper service discovery
         using var httpClient = this.httpClientFactory.CreateClient(this.httpClientName);
-
-        // Create a new request message to avoid "request already sent" errors
         using var newRequest = new HttpRequestMessage(request.Method, request.RequestUri);
 
         // Copy headers
