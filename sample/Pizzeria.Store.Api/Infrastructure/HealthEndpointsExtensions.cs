@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
-namespace Pizzeria.Store.Api.Startup;
+namespace Pizzeria.Store.Api.Infrastructure;
 
 internal static class HealthEndpointsExtensions
 {

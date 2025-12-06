@@ -1,6 +1,6 @@
 ﻿using Pizzeria.Store.Data;
 
-namespace Pizzeria.Store.Api.Startup;
+namespace Pizzeria.Store.Api.Infrastructure;
 
 internal static class StartupConfiguration
 {

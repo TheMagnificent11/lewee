@@ -10,9 +10,13 @@ internal static class ApiCientConfiguration
 
     public static IServiceCollection AddApiClient(this IServiceCollection services)
     {
+        services.AddHttpContextAccessor();
+        services.AddTransient<AuthTokenDelegatingHandler>();
+
         services
             .AddRefitClient<IPizzeriaApiClient>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri($"https://{ServiceNames.PizzaStoreApi}"))
+            .AddHttpMessageHandler<AuthTokenDelegatingHandler>()
             .AddCorrelationIdDelegationHandler();
 
         services.AddHttpClient(ApiClientName, c => c.BaseAddress = new Uri($"https://{ServiceNames.PizzaStoreApi}"));

@@ -6,7 +6,7 @@ using Pizzeria.Store.Contracts;
 
 namespace Pizzeria.Store.Web.Infrastructure;
 
-internal static class AuthConfiguration
+internal static class ClientAuthConfiguration
 {
     public static IServiceCollection AddAuth(this IServiceCollection services)
     {
