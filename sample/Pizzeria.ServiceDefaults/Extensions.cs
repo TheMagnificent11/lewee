@@ -1,4 +1,4 @@
-#pragma warning disable S125 // Sections of code should not be commented out
+using Azure.Monitor.OpenTelemetry.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,7 +29,18 @@ public static class Extensions
         builder.Services.ConfigureHttpClientDefaults(http =>
         {
             // Turn on resilience by default
-            http.AddStandardResilienceHandler();
+            http.AddStandardResilienceHandler(options =>
+            {
+                if (builder.Environment.IsDevelopment())
+                {
+                    // Extend timeouts for debugging in development
+                    var debugTimeout = TimeSpan.FromMinutes(3);
+
+                    options.AttemptTimeout.Timeout = debugTimeout;
+                    options.TotalRequestTimeout.Timeout = debugTimeout;
+                    options.CircuitBreaker.SamplingDuration = debugTimeout * 2;
+                }
+            });
 
             // Turn on service discovery by default
             http.AddServiceDiscovery();
@@ -108,12 +119,12 @@ public static class Extensions
             builder.Services.AddOpenTelemetry().UseOtlpExporter();
         }
 
-        // Uncomment the following lines to enable the Azure Monitor exporter (requires the Azure.Monitor.OpenTelemetry.AspNetCore package)
-        //if (!string.IsNullOrEmpty(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]))
-        //{
-        //    builder.Services.AddOpenTelemetry()
-        //       .UseAzureMonitor();
-        //}
+        if (!string.IsNullOrEmpty(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]))
+        {
+            builder.Services
+                .AddOpenTelemetry()
+                .UseAzureMonitor();
+        }
 
         return builder;
     }
