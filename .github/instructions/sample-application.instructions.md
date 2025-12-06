@@ -5,6 +5,7 @@ applyTo: "sample/**/*"
 # Sample Application
 
 ## Overview
+
 The sample pizzeria application demonstrates Lewee framework usage with a multi-service architecture.
 
 **Current State:**
@@ -52,6 +53,10 @@ dotnet run --project ./sample/Pizzeria.AppHost/
 # Use integration tests (preferred method)
 dotnet test sample-tests/Pizzeria.Tests.Integration/
 ```
+
+## Code Quality
+
+Follow [code quality instructions](./code-quality.instructions.md), especially for logging, dependency injection and ASP.NET application standards.
 
 ## Architecture Notes
 

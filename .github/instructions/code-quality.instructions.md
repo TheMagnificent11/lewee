@@ -116,10 +116,22 @@ dotnet format lewee.sln
 
 ## Logging
 
-- Use logging scopes where possible to provide context (as opposed to structured properties within a log message
+- Use logging scopes where possible to provide context as opposed to structured properties within a log message
   - Prefer to inherit structured properties from the scope when they are passed in as parameters
     - Values like CorrelationId, TenantId, UserId etc that are passed in as method parameters should be added to the logging scope at the entry point of the request
 - Do not use emojis in log messages
+
+## Dependency Injection
+
+- Interface are public but implementations are internal by default
+  - Register implementations in DI within the same assembly and expose an `IServiceCollection` extension method for registration
+  - There may be a user case for public implementations, discuss with repository owner if needed
+
+## ASP.NET HTTP Application Standards
+
+- `Program.cs` should be minimal, only containing service registrations and middleware registrations
+  - Do not add any logic to `Program.cs`
+- Use extension methods on `IServiceCollection` and `IApplicationBuilder` to organize service and middleware registrations respectively
 
 ## bUnit/Playwright Testing Standards
 
