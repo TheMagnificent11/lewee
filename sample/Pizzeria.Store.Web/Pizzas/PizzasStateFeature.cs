@@ -1,6 +1,6 @@
 using Fluxor;
 
-namespace Pizzeria.Store.Web.States.Pizzas;
+namespace Pizzeria.Store.Web.Pizzas;
 
 public class PizzasStateFeature : Feature<PizzasState>
 {

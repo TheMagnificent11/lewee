@@ -2,12 +2,11 @@ using System.Diagnostics.CodeAnalysis;
 using Fluxor;
 using Fluxor.Blazor.Web.Components;
 using Microsoft.AspNetCore.Components;
-using Pizzeria.Store.Web.States.Orders;
-using Pizzeria.Store.Web.States.Orders.Actions;
-using Pizzeria.Store.Web.States.Pizzas;
-using Pizzeria.Store.Web.States.Pizzas.Actions;
+using Pizzeria.Store.Web.Orders.Actions;
+using Pizzeria.Store.Web.Pizzas;
+using Pizzeria.Store.Web.Pizzas.Actions;
 
-namespace Pizzeria.Store.Web.Pages;
+namespace Pizzeria.Store.Web.Orders;
 
 public partial class Order : FluxorComponent
 {
@@ -29,7 +28,7 @@ public partial class Order : FluxorComponent
 
         if (this.OrdersState.Value.CurrentOrder == null)
         {
-            this.Navigation.NavigateTo(Routes.Home);
+            this.Navigation.NavigateTo(PageRoutes.Home);
             return;
         }
 

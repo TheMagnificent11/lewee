@@ -38,9 +38,6 @@
     <File Path="sample-tests/Directory.Build.props" />
     <File Path="sample-tests/README.md" />
   </Folder>
-  <Folder Name="/Temp/">
-    <Project Path="sample-temp/Pizzeria.Store.Web/Pizzeria.Store.Web.csproj" />
-  </Folder>
   <Project Path="sample-tests/Pizzeria.Store.Application.Tests.Unit/Pizzeria.Store.Application.Tests.Unit.csproj" />
   <Project Path="sample-tests/Pizzeria.Store.Domain.Tests/Pizzeria.Store.Domain.Tests.csproj" />
   <Project Path="sample-tests/Pizzeria.Store.Web.Tests.Unit/Pizzeria.Store.Web.Tests.Unit.csproj" />

@@ -1,7 +1,7 @@
 using Fluxor;
-using Pizzeria.Store.Web.States.Pizzas.Actions;
+using Pizzeria.Store.Web.Pizzas.Actions;
 
-namespace Pizzeria.Store.Web.States.Pizzas;
+namespace Pizzeria.Store.Web.Pizzas;
 
 public static class PizzasReducer
 {

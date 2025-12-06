@@ -1,6 +1,6 @@
 using Pizzeria.Store.Contracts;
 
-namespace Pizzeria.Store.Web.States.Pizzas;
+namespace Pizzeria.Store.Web.Pizzas;
 
 public record PizzasState
 {

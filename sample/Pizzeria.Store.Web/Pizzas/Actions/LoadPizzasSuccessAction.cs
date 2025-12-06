@@ -1,5 +1,5 @@
 using Pizzeria.Store.Contracts;
 
-namespace Pizzeria.Store.Web.States.Pizzas.Actions;
+namespace Pizzeria.Store.Web.Pizzas.Actions;
 
 public record LoadPizzasSuccessAction(IEnumerable<PizzaDto> Pizzas);
