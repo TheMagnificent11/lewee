@@ -15,12 +15,17 @@ internal class DomainEventsTransactionInterceptor<TContext> : DbTransactionInter
         this.serviceProvider = serviceProvider;
     }
 
-    public override async Task TransactionCommittedAsync(DbTransaction transaction, TransactionEndEventData eventData, CancellationToken cancellationToken = default)
+    public override async Task TransactionCommittedAsync(
+        DbTransaction transaction,
+        TransactionEndEventData eventData,
+        CancellationToken cancellationToken = default)
     {
         await using var scope = this.serviceProvider.CreateAsyncScope();
 
         var dispatcher = scope.ServiceProvider.GetRequiredService<DomainEventDispatcher<TContext>>();
 
-        await dispatcher.DispatchEventsAsync(cancellationToken);
+        // Use CancellationToken.None to ensure domain events are dispatched
+        // even if the original request is cancelled after the transaction commits
+        await dispatcher.DispatchEventsAsync(CancellationToken.None);
     }
 }

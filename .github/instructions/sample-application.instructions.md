@@ -58,6 +58,10 @@ dotnet test sample-tests/Pizzeria.Tests.Integration/
 
 Follow [code quality instructions](./code-quality.instructions.md), especially for logging, dependency injection and ASP.NET application standards.
 
+## Code Style
+
+No need for XML documentation in sample application code. Follow existing patterns and maintain readability.
+
 ## Architecture Notes
 
 - **Orchestration**: .NET Aspire manages all services and containers

@@ -33,6 +33,22 @@
     <File Path="sample/Directory.Build.props" />
     <File Path="sample/README.md" />
   </Folder>
+  <Folder Name="/Solution Items/.github/instructions/">
+    <File Path=".github/instructions/blazor.instructions.md" />
+    <File Path=".github/instructions/build-and-test.instructions.md" />
+    <File Path=".github/instructions/code-quality.instructions.md" />
+    <File Path=".github/instructions/decision-making.instructions.md" />
+    <File Path=".github/instructions/development-focus.instructions.md" />
+    <File Path=".github/instructions/environment-setup.instructions.md" />
+    <File Path=".github/instructions/how-to-use.instructions.md" />
+    <File Path=".github/instructions/overview.instructions.md" />
+    <File Path=".github/instructions/repository-structure.instructions.md" />
+    <File Path=".github/instructions/sample-application.instructions.md" />
+    <File Path=".github/instructions/technology-stack.instructions.md" />
+    <File Path=".github/instructions/troubleshooting.instructions.md" />
+    <File Path=".github/instructions/validation-workflows.instructions.md" />
+    <File Path=".github/instructions/visual-studio-solution.instructions.md" />
+  </Folder>
   <Folder Name="/Solution Items/sample-tests/">
     <File Path="sample-tests/.editorconfig" />
     <File Path="sample-tests/Directory.Build.props" />

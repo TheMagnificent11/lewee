@@ -113,6 +113,7 @@ dotnet format lewee.sln
 - [ ] Follows existing patterns in the codebase
 - [ ] Framework changes (`src/` directory) have at least 90% line coverage
 - [ ] No magic strings for Playwright/bUnit selectors; expose a constant from the component and use that instead
+- [ ] Limit lines to a maximum of 120 characters where possible, using one parameter or statement per line
 
 ## Logging
 
