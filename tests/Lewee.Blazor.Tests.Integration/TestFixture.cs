@@ -1,6 +1,10 @@
 ﻿using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
+using Aspire.Hosting;
+using Aspire.Hosting.ApplicationModel;
+using Aspire.Hosting.Testing;
 using Lewee.Application.Mediation.Notifications;
+using Lewee.Blazor.Tests.App;
 using Lewee.Infrastructure.AspNet.SignalR;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -31,20 +35,39 @@ public sealed class TestFixture : IAsyncLifetime
         Justification = "Only for test purposes")]
     public static readonly ConcurrentDictionary<Guid, PizzaOrder> Orders = new();
 
+    private IDistributedApplicationTestingBuilder aspireBuilder;
+    private DistributedApplication aspireApp;
+
     private TestServer server = null!;
     private TestClient client = null!;
     private HttpClient httpClient = null!;
     private FakeLogCollector serverLogCollector = null!;
     private WebApplication app = null!;
 
+    [SuppressMessage(
+        "Usage",
+        "MA0040:Forward the CancellationToken parameter to methods that take one",
+        Justification = "The suggested cancellation token is from `app`, but it hasn't been created yet")]
     public async Task InitializeAsync()
     {
+        this.aspireBuilder = await DistributedApplicationTestingBuilder.CreateAsync<Projects.Lewee_Blazor_Tests_App>();
+        this.aspireApp = await this.aspireBuilder.BuildAsync();
+        var resourceNotificationService = this.aspireApp.Services.GetRequiredService<ResourceNotificationService>();
+
+        await this.aspireApp.StartAsync();
+
+        await resourceNotificationService
+            .WaitForResourceAsync(ServiceNames.SignalR, KnownResourceStates.Running)
+            .WaitAsync(TimeSpan.FromMinutes(5));
+
+        var signalRConnectionString = await this.aspireApp.GetConnectionStringAsync(ServiceNames.SignalR);
+
         var builder = WebApplication.CreateBuilder();
         builder.WebHost.UseTestServer();
         builder.Services
             .AddFakeLogging()
             .AddRouting()
-            .AddLeweeSignalR();
+            .AddLeweeSignalR(signalRConnectionString);
 
         builder.Services.AddMediatR(options => options.RegisterServicesFromAssembly(typeof(ClientEvent).Assembly));
         builder.Services.AddHealthChecks();
@@ -53,16 +76,14 @@ public sealed class TestFixture : IAsyncLifetime
         this.app.UseRouting();
 
         this.app.MapHealthChecks("/health");
-        this.app.MapHub<ClientEventHub>("/events");
+        this.app.MapLeweeSignalRNegotiateEndpoint();
 
         this.app.MapPost("/api/orders", async (CreateOrderRequest request, IMediator mediator) =>
         {
-            var order = new PizzaOrder
-            {
-                Id = Guid.NewGuid(),
-                CustomerName = "Test User",
-                CreatedAt = DateTime.UtcNow,
-            };
+            var order = new PizzaOrder(
+                Id: Guid.NewGuid(),
+                CustomerName: "Test User",
+                CreatedAt: DateTime.UtcNow);
 
             Orders.TryAdd(order.Id, order);
 
@@ -87,6 +108,10 @@ public sealed class TestFixture : IAsyncLifetime
         await this.client.ConnectAsync();
     }
 
+    [SuppressMessage(
+        "Usage",
+        "MA0040:Forward the CancellationToken parameter to methods that take one",
+        Justification = "False positive")]
     public async Task DisposeAsync()
     {
         await this.client.DisconnectAsync();
@@ -95,6 +120,8 @@ public sealed class TestFixture : IAsyncLifetime
         this.server.Dispose();
         await this.app.StopAsync();
         await this.app.DisposeAsync();
+        await this.aspireApp.DisposeAsync();
+        await this.aspireBuilder.DisposeAsync();
     }
 
     public IReadOnlyList<FakeLogRecord> GetServerLogs() => this.serverLogCollector.GetSnapshot();

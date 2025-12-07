@@ -31,7 +31,7 @@ public class ClientEventHub : Hub
 
         if (!string.IsNullOrWhiteSpace(userId))
         {
-            await this.Groups.AddToGroupAsync(this.Context.ConnectionId, userId);
+            await this.Groups.AddToGroupAsync(this.Context.ConnectionId, userId, this.Context.ConnectionAborted);
             this.logger.LogDebug("Client added to SignalR group for user {UserId}", userId);
         }
         else

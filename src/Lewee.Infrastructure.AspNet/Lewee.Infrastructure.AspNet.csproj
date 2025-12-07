@@ -2,7 +2,7 @@
 
   <ItemGroup>
     <PackageReference Include="Correlate.AspNetCore" />
-    <PackageReference Include="Microsoft.Azure.SignalR" />
+    <PackageReference Include="Microsoft.Azure.SignalR.Management" />
   </ItemGroup>
 
   <ItemGroup>

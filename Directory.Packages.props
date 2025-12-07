@@ -32,7 +32,7 @@
   <ItemGroup Label="Azure">
     <PackageVersion Include="Azure.Identity" Version="1.17.1" />
     <PackageVersion Include="Azure.Monitor.OpenTelemetry.AspNetCore" Version="1.4.0" />
-    <PackageVersion Include="Microsoft.Azure.SignalR" Version="1.32.0" />
+    <PackageVersion Include="Microsoft.Azure.SignalR.Management" Version="1.32.0" />
   </ItemGroup>
   <ItemGroup Label="Correlate">
     <PackageVersion Include="Correlate.AspNetCore" Version="6.1.1" />

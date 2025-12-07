@@ -130,10 +130,10 @@ public sealed class DomainEventDispatchingTests : IAsyncLifetime
         // Assert - Domain event reference should be marked as dispatched
         var eventReferences = await dbContext.DomainEventReferences!
             .Where(e => !e.Dispatched)
-   .ToListAsync();
+            .ToListAsync();
 
         eventReferences.Should().BeEmpty("all events should be dispatched");
-    }
+     }
 
     [Fact]
     public async Task MultipleDomainEvents_ShouldAllBeDispatchedAsync()

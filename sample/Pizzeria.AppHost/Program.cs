@@ -1,3 +1,4 @@
+using Aspire.Hosting.Azure;
 using Pizzeria.Common;
 
 var builder = DistributedApplication.CreateBuilder(args);
@@ -36,9 +37,11 @@ var databaseServer = Environments.IsIntegrationTesting
 var pizzaStoreDatabaseName = ServiceNames.PizzaStoreDatabaseName;
 var pizzaStoreDatabase = databaseServer.AddDatabase(pizzaStoreDatabaseName);
 
-var signalR = isDevOrTest
-    ? builder.AddAzureSignalR(ServiceNames.SignalR).RunAsEmulator()
-    : builder.AddAzureSignalR(ServiceNames.SignalR);
+var signalR = builder.AddAzureSignalR(ServiceNames.SignalR, AzureSignalRServiceMode.Serverless);
+if (isDevOrTest)
+{
+    signalR = signalR.RunAsEmulator();
+}
 
 var configuration = builder.AddProject<Projects.Pizzeria_Configuration>(ServiceNames.ConfigurationService)
     .WithReference(authServer)

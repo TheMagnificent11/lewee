@@ -28,7 +28,7 @@ builder.Services
     .AddPizzaStoreApplication()
     .AddCorrelationIdServices()
     .AddAuth(isDevOrTest)
-    .AddLeweeSignalR(ServiceNames.SignalR)
+    .AddLeweeSignalR(builder.Configuration.GetConnectionString(ServiceNames.SignalR)!)
     .AddFastEndpoints()
     .AddEndpointsApiExplorer()
     .AddSwaggerGen()
@@ -39,7 +39,7 @@ var app = builder.Build();
 app.UseHealthEndpoints();
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapHub<ClientEventHub>("/events");
+app.MapLeweeSignalRNegotiateEndpoint();
 app.UseFastEndpoints();
 app.UseCorrelationIdMiddleware();
 

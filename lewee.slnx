@@ -79,6 +79,7 @@
   <Project Path="src/Lewee.Infrastructure.PostgreSQL/Lewee.Infrastructure.PostgreSQL.csproj" />
   <Project Path="src/Lewee.Shared/Lewee.Shared.csproj" />
   <Project Path="tests/Lewee.Application.Tests.Unit/Lewee.Application.Tests.Unit.csproj" />
+  <Project Path="tests/Lewee.Blazor.Tests.App/Lewee.Blazor.Tests.App.csproj" Id="c3ba5566-8f18-4dc5-b63b-9ed9daa49ca1" />
   <Project Path="tests/Lewee.Blazor.Tests.Integration/Lewee.Blazor.Tests.Integration.csproj" />
   <Project Path="tests/Lewee.Domain.Tests.Unit/Lewee.Domain.Tests.Unit.csproj" />
   <Project Path="tests/Lewee.Infrastructure.Data.Tests.App/Lewee.Infrastructure.Data.Tests.App.csproj" />
