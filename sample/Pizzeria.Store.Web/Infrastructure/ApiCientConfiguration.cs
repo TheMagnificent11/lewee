@@ -6,8 +6,6 @@ namespace Pizzeria.Store.Web.Infrastructure;
 
 internal static class ApiCientConfiguration
 {
-    public const string ApiClientName = "PizzeriaApi";
-
     public static IServiceCollection AddApiClient(this IServiceCollection services)
     {
         services.AddHttpContextAccessor();
@@ -18,8 +16,6 @@ internal static class ApiCientConfiguration
             .ConfigureHttpClient(c => c.BaseAddress = new Uri($"https://{ServiceNames.PizzaStoreApi}"))
             .AddHttpMessageHandler<AuthTokenDelegatingHandler>()
             .AddCorrelationIdDelegationHandler();
-
-        services.AddHttpClient(ApiClientName, c => c.BaseAddress = new Uri($"https://{ServiceNames.PizzaStoreApi}"));
 
         return services;
     }

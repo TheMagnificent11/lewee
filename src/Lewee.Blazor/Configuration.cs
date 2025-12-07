@@ -37,18 +37,18 @@ public static class Configuration
     /// </summary>
     /// <typeparam name="TMapper">Mapper type</typeparam>
     /// <param name="services">Service collection</param>
-    /// <param name="httpClientName">Name of the HttpClient configured with service discovery</param>
+    /// <param name="apiAspireServiceName">Name of the HttpClient configured with service discovery</param>
     /// <param name="useReduxDevTools">Whether to use Redux Dev Tools</param>
     /// <returns>The updated service collection</returns>
     public static IServiceCollection AddLeweeBlazor<TMapper>(
         this IServiceCollection services,
-        string httpClientName,
+        string apiAspireServiceName,
         bool useReduxDevTools)
         where TMapper : class, IMessageToActionMapper
     {
         return services
             .AddTransient<CorrelationIdDelegatingHandler>()
-            .AddMessageReceiverWithServiceDiscovery<TMapper>(httpClientName)
+            .AddMessageReceiverWithServiceDiscovery<TMapper>(apiAspireServiceName)
             .AddFluxor(useReduxDevTools);
     }
 

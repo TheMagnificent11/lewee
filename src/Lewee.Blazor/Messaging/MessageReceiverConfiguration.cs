@@ -68,40 +68,30 @@ public static class MessageReceiverConfiguration
     /// </summary>
     /// <typeparam name="TMapper">Mapper type</typeparam>
     /// <param name="services">Services collection</param>
-    /// <param name="httpClientName">Name of the HttpClient configured with service discovery</param>
+    /// <param name="apiAspireServiceName">Name of the Aspire API service to connect to</param>
     /// <returns>Updated services collection</returns>
     public static IServiceCollection AddMessageReceiverWithServiceDiscovery<TMapper>(
         this IServiceCollection services,
-        string httpClientName)
+        string apiAspireServiceName)
         where TMapper : class, IMessageToActionMapper
     {
-        // Register HubConnection as a factory that uses the named HttpClient
+        var apiUri = new Uri($"https://{apiAspireServiceName}");
+
         services.AddSingleton(serviceProvider =>
         {
-            var httpClientFactory = serviceProvider.GetRequiredService<IHttpClientFactory>();
-            var httpClient = httpClientFactory.CreateClient(httpClientName);
-
-            if (httpClient.BaseAddress == null)
-            {
-                throw new InvalidOperationException($"HttpClient '{httpClientName}' must have a BaseAddress configured for service discovery");
-            }
-
-            var hubUri = httpClient.BaseAddress.AppendPathSegment("events");
+            var hubUri = apiUri.AppendPathSegment("events");
 
             return new HubConnectionBuilder()
-                .WithUrl(hubUri.ToString(), options =>
-                {
-                    // Use a factory that creates the service discovery handler for each connection
-                    options.HttpMessageHandlerFactory = _ => new ServiceDiscoveryHttpMessageHandler(httpClientFactory, httpClientName);
-                })
+                .WithUrl(hubUri.ToString())
                 .WithAutomaticReconnect()
                 .Build();
         });
 
         services
             .AddTransient<IMessageToActionMapper, TMapper>()
-            .AddTransient<MessageDeserializer>()
-            .AddHttpClient<HealthCheckService>(httpClientName); // Use the same named client for health checks
+            .AddTransient<MessageDeserializer>();
+
+        services.AddHttpClient<HealthCheckService>(c => c.BaseAddress = apiUri);
 
         return services;
     }
