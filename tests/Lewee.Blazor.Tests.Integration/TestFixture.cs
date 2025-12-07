@@ -4,7 +4,6 @@ using Lewee.Application.Mediation.Notifications;
 using Lewee.Infrastructure.AspNet.SignalR;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
