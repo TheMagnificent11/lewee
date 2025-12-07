@@ -16,27 +16,12 @@ public static class MessageReceiverConfiguration
     /// <typeparam name="TMapper">Mapper type</typeparam>
     /// <param name="services">Services collection</param>
     /// <param name="serverBaseAddress">Server base address</param>
-    /// <returns>Updated services collection</returns>
-    public static IServiceCollection AddMessageReceiver<TMapper>(
-        this IServiceCollection services,
-        Uri serverBaseAddress)
-        where TMapper : class, IMessageToActionMapper
-    {
-        return services.AddMessageReceiver<TMapper>(serverBaseAddress, httpMessageHandler: null);
-    }
-
-    /// <summary>
-    /// Configures application to receive messages over SignalR
-    /// </summary>
-    /// <typeparam name="TMapper">Mapper type</typeparam>
-    /// <param name="services">Services collection</param>
-    /// <param name="serverBaseAddress">Server base address</param>
     /// <param name="httpMessageHandler">Optional HTTP message handler for testing scenarios</param>
     /// <returns>Updated services collection</returns>
     public static IServiceCollection AddMessageReceiver<TMapper>(
         this IServiceCollection services,
         Uri serverBaseAddress,
-        HttpMessageHandler? httpMessageHandler)
+        HttpMessageHandler? httpMessageHandler = null)
         where TMapper : class, IMessageToActionMapper
     {
         var hubUri = serverBaseAddress.AppendPathSegment("events");
@@ -70,29 +55,13 @@ public static class MessageReceiverConfiguration
     /// <param name="services">Services collection</param>
     /// <param name="apiAspireServiceName">Name of the Aspire API service to connect to</param>
     /// <returns>Updated services collection</returns>
-    public static IServiceCollection AddMessageReceiverWithServiceDiscovery<TMapper>(
+    public static IServiceCollection AddMessageReceiver<TMapper>(
         this IServiceCollection services,
         string apiAspireServiceName)
         where TMapper : class, IMessageToActionMapper
     {
         var apiUri = new Uri($"https://{apiAspireServiceName}");
 
-        services.AddSingleton(serviceProvider =>
-        {
-            var hubUri = apiUri.AppendPathSegment("events");
-
-            return new HubConnectionBuilder()
-                .WithUrl(hubUri.ToString())
-                .WithAutomaticReconnect()
-                .Build();
-        });
-
-        services
-            .AddTransient<IMessageToActionMapper, TMapper>()
-            .AddTransient<MessageDeserializer>();
-
-        services.AddHttpClient<HealthCheckService>(c => c.BaseAddress = apiUri);
-
-        return services;
+        return services.AddMessageReceiver<TMapper>(apiUri);
     }
 }

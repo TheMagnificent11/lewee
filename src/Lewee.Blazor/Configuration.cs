@@ -48,7 +48,7 @@ public static class Configuration
     {
         return services
             .AddTransient<CorrelationIdDelegatingHandler>()
-            .AddMessageReceiverWithServiceDiscovery<TMapper>(apiAspireServiceName)
+            .AddMessageReceiver<TMapper>(apiAspireServiceName)
             .AddFluxor(useReduxDevTools);
     }
 
