@@ -1,6 +1,4 @@
 ﻿using Lewee.Application.Mediation.Notifications;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Lewee.Infrastructure.AspNet.SignalR;
@@ -14,14 +12,21 @@ public static class SignalRConfiguration
     /// Configures SignalR
     /// </summary>
     /// <param name="services">Services collection</param>
+    /// <param name="aspireSignalRServiceName">Aspire SignalR service name</param>
     /// <returns>The updated services collection</returns>
-    public static IServiceCollection AddLeweeSignalR(this IServiceCollection services)
+    public static IServiceCollection AddLeweeSignalR(
+        this IServiceCollection services,
+        string? aspireSignalRServiceName = null)
     {
-        services.AddSignalR();
-        services.AddResponseCompression(opts =>
+        if (string.IsNullOrWhiteSpace(aspireSignalRServiceName))
         {
-            opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(["application/octet-stream"]);
-        });
+            services.AddSignalR();
+        }
+        else
+        {
+            services.AddSignalR().AddNamedAzureSignalR(aspireSignalRServiceName);
+        }
+
         services.AddMediatR(config => config.RegisterServicesFromAssemblies(
             typeof(ClientEvent).Assembly,
             typeof(ClientEventHandler).Assembly));

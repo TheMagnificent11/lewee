@@ -16,6 +16,8 @@ public static class ServiceNames
 
     public const string ConfigurationService = "configuration-service";
 
+    public const string SignalR = "signalr";
+
     public static string PizzaStoreDatabaseName => Environments.IsIntegrationTesting
         ? PizzaStoreDatabaseIntegrationTesting
         : PizzaStoreDatabase;

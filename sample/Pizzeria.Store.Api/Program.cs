@@ -28,7 +28,7 @@ builder.Services
     .AddPizzaStoreApplication()
     .AddCorrelationIdServices()
     .AddAuth(isDevOrTest)
-    .AddLeweeSignalR()
+    .AddLeweeSignalR(ServiceNames.SignalR)
     .AddFastEndpoints()
     .AddEndpointsApiExplorer()
     .AddSwaggerGen()
