@@ -79,7 +79,9 @@
   <Project Path="src/Lewee.Infrastructure.PostgreSQL/Lewee.Infrastructure.PostgreSQL.csproj" />
   <Project Path="src/Lewee.Shared/Lewee.Shared.csproj" />
   <Project Path="tests/Lewee.Application.Tests.Unit/Lewee.Application.Tests.Unit.csproj" />
+  <Project Path="tests/Lewee.Blazor.Tests.Api/Lewee.Blazor.Tests.Api.csproj" />
   <Project Path="tests/Lewee.Blazor.Tests.App/Lewee.Blazor.Tests.App.csproj" Id="c3ba5566-8f18-4dc5-b63b-9ed9daa49ca1" />
+  <Project Path="tests/Lewee.Blazor.Tests.Contracts/Lewee.Blazor.Tests.Contracts.csproj" Id="da8c040f-c6c7-4b70-b13c-5ceec146f39c" />
   <Project Path="tests/Lewee.Blazor.Tests.Integration/Lewee.Blazor.Tests.Integration.csproj" />
   <Project Path="tests/Lewee.Domain.Tests.Unit/Lewee.Domain.Tests.Unit.csproj" />
   <Project Path="tests/Lewee.Infrastructure.Data.Tests.App/Lewee.Infrastructure.Data.Tests.App.csproj" />
@@ -87,4 +89,5 @@
   <Project Path="tests/Lewee.Infrastructure.Data.Tests.Unit/Lewee.Infrastructure.Data.Tests.Unit.csproj" />
   <Project Path="tests/Lewee.Shared.Tests.Unit/Lewee.Shared.Tests.Unit.csproj" />
   <Project Path="tests/Lewee.Tests.Common/Lewee.Tests.Common.csproj" />
+  <Project Path="tests/Lewee.Tests.ServiceDefaults/Lewee.Tests.ServiceDefaults.csproj" Id="26d5f0fd-5182-4b2a-9615-4c9475fe0f13" />
 </Solution>

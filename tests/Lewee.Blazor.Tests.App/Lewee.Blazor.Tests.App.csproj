@@ -13,4 +13,9 @@
     <PackageReference Include="Aspire.Hosting.Azure.SignalR" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Lewee.Blazor.Tests.Api\Lewee.Blazor.Tests.Api.csproj" />
+    <ProjectReference Include="..\Lewee.Blazor.Tests.Contracts\Lewee.Blazor.Tests.Contracts.csproj" IsAspireProjectResource="false" />
+  </ItemGroup>
+
 </Project>

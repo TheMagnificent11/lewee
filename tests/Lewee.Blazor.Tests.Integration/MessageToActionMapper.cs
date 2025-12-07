@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Lewee.Blazor.Fluxor.Actions;
 using Lewee.Blazor.Messaging;
+using Lewee.Blazor.Tests.Contracts;
 using Microsoft.Extensions.Logging;
 
 namespace Lewee.Blazor.Tests.Integration;
