@@ -1,13 +1,9 @@
-﻿using System.Collections.Concurrent;
-using System.Diagnostics.CodeAnalysis;
-using Lewee.Application.Mediation.Notifications;
-using Lewee.Infrastructure.AspNet.SignalR;
-using MediatR;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.TestHost;
+﻿using System.Diagnostics.CodeAnalysis;
+using Aspire.Hosting;
+using Aspire.Hosting.ApplicationModel;
+using Aspire.Hosting.Testing;
+using Lewee.Blazor.Tests.Contracts;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Testing;
 using Xunit;
 
@@ -25,65 +21,30 @@ public sealed class TestFixture : IAsyncLifetime
 {
     public const string CollectionName = "TestCollection";
 
-    [SuppressMessage(
-        "Minor Bug",
-        "S3887:Mutable, non-private fields should not be \"readonly\"",
-        Justification = "Only for test purposes")]
-    public static readonly ConcurrentDictionary<Guid, PizzaOrder> Orders = new();
-
-    private TestServer server = null!;
-    private TestClient client = null!;
-    private HttpClient httpClient = null!;
-    private FakeLogCollector serverLogCollector = null!;
-    private WebApplication app = null!;
+    private IDistributedApplicationTestingBuilder builder;
+    private DistributedApplication app;
+    private HttpClient httpClient;
+    private TestClient client;
 
     public async Task InitializeAsync()
     {
-        var builder = WebApplication.CreateBuilder();
-        builder.WebHost.UseTestServer();
-        builder.Services
-            .AddFakeLogging()
-            .AddRouting()
-            .AddLeweeSignalR();
-
-        builder.Services.AddMediatR(options => options.RegisterServicesFromAssembly(typeof(ClientEvent).Assembly));
-        builder.Services.AddHealthChecks();
-
-        this.app = builder.Build();
-        this.app.UseRouting();
-
-        this.app.MapHealthChecks("/health");
-        this.app.MapHub<ClientEventHub>("/events");
-
-        this.app.MapPost("/api/orders", async (CreateOrderRequest request, IMediator mediator) =>
-        {
-            var order = new PizzaOrder
-            {
-                Id = Guid.NewGuid(),
-                CustomerName = "Test User",
-                CreatedAt = DateTime.UtcNow,
-            };
-
-            Orders.TryAdd(order.Id, order);
-
-            await mediator.Publish(new ClientEvent(Guid.NewGuid(), userId: null, order));
-
-            return Results.Ok();
-        });
-
-        this.app.MapGet("/api/orders/{id}", (Guid id) =>
-        {
-            return Orders.TryGetValue(id, out var order)
-                ? Results.Ok(order)
-                : Results.NotFound();
-        });
+        this.builder = await DistributedApplicationTestingBuilder.CreateAsync<Projects.Lewee_Blazor_Tests_App>();
+        this.app = await this.builder.BuildAsync();
+        var resourceNotificationService = this.app.Services.GetRequiredService<ResourceNotificationService>();
 
         await this.app.StartAsync();
-        this.server = this.app.GetTestServer();
-        this.httpClient = this.server.CreateClient();
-        this.client = new TestClient(this.httpClient);
-        this.serverLogCollector = this.app.Services.GetRequiredService<FakeLogCollector>();
 
+        await resourceNotificationService
+            .WaitForResourceAsync(ServiceNames.WebApi, KnownResourceStates.Running)
+            .WaitAsync(TimeSpan.FromMinutes(5));
+
+        this.httpClient = this.app.CreateHttpClient(ServiceNames.WebApi);
+
+        await this.WaitForHealthAsync(TimeSpan.FromMinutes(1));
+
+        this.client = new TestClient(this.httpClient);
+
+        // Connect the SignalR hub
         await this.client.ConnectAsync();
     }
 
@@ -92,12 +53,9 @@ public sealed class TestFixture : IAsyncLifetime
         await this.client.DisconnectAsync();
         this.client.Dispose();
         this.httpClient.Dispose();
-        this.server.Dispose();
-        await this.app.StopAsync();
         await this.app.DisposeAsync();
+        await this.builder.DisposeAsync();
     }
-
-    public IReadOnlyList<FakeLogRecord> GetServerLogs() => this.serverLogCollector.GetSnapshot();
 
     public IReadOnlyList<FakeLogRecord> GetClientLogs() => this.client.GetLogs();
 
@@ -109,5 +67,30 @@ public sealed class TestFixture : IAsyncLifetime
     public async Task<bool> TestCreatePizzaOrderAsync()
     {
         return await this.client.CreatePizzaOrderAsync();
+    }
+
+    private async Task WaitForHealthAsync(TimeSpan timeout)
+    {
+        var endTime = DateTime.UtcNow.Add(timeout);
+
+        while (DateTime.UtcNow < endTime)
+        {
+            try
+            {
+                using var response = await this.httpClient.GetAsync("/health");
+                if (response.IsSuccessStatusCode)
+                {
+                    return;
+                }
+            }
+            catch
+            {
+                // Ignore exceptions and continue polling
+            }
+
+            await Task.Delay(TimeSpan.FromSeconds(2));
+        }
+
+        throw new TimeoutException($"Health check timed out after {timeout.TotalMinutes} minutes. The /health endpoint did not return a successful response.");
     }
 }

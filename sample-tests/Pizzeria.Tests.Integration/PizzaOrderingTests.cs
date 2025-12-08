@@ -42,42 +42,4 @@ public sealed class PizzaOrderingTests : PizzeriaTests
         orderProjection.Order.Should().NotBeNull();
         orderProjection.Order.Id.Should().Be(order.Id);
     }
-
-    [Fact(Skip = SkipReason)]
-    public async Task Should_AddPizzaToOrder_When_PizzaIsAddedAsync()
-    {
-        // Arrange
-        using var httpClient = await this.Factory.GetServiceClientAsync(ServiceNames.PizzaStoreApi);
-
-        // TODO: TNeed to register a customer user first and obtain a valid JWT for that user to call the Pizza Store API.
-        var token = await this.Factory.GetJwtAsync("user", "password");
-
-        using var createOrderRequest = new HttpRequestMessage(HttpMethod.Post, Endpoints.StoreApi.Orders);
-        createOrderRequest.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-        using var createOrderResponse = await httpClient.SendAsync(createOrderRequest);
-
-        createOrderResponse.EnsureSuccessStatusCode();
-        var order = await this.Factory.GetLatestOrderAsync();
-        order.Should().NotBeNull();
-
-        using var addPizzaRequest = new HttpRequestMessage(
-            HttpMethod.Put,
-            Endpoints.StoreApi.GetAddPizzaToOrderEndpoint(order.Id, Menu.PizzaIds.QuattroFormaggi));
-        addPizzaRequest.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-
-        // Act
-        using var addPizzaResponse = await httpClient.SendAsync(addPizzaRequest);
-
-        // Assert
-        addPizzaResponse.EnsureSuccessStatusCode();
-
-        order = await this.Factory.GetOrderAsync(order.Id);
-        order.Should().NotBeNull();
-        order.Pizzas.Should().NotBeNull();
-        order.Pizzas.Should().ContainSingle();
-
-        var pizzaInOrder = order.Pizzas.First();
-        pizzaInOrder.PizzaId.Should().Be(Menu.PizzaIds.QuattroFormaggi);
-        pizzaInOrder.Quantity.Should().Be(1);
-    }
 }

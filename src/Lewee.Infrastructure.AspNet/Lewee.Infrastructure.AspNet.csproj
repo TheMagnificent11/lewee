@@ -1,11 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Correlate.AspNetCore" />
+    <PackageReference Include="Microsoft.Azure.SignalR.Management" />
   </ItemGroup>
 
   <ItemGroup>

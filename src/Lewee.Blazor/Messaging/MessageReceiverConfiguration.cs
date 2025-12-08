@@ -10,6 +10,8 @@ namespace Lewee.Blazor.Messaging;
 /// </summary>
 public static class MessageReceiverConfiguration
 {
+    private const string SignalRHttpClientName = "LeweeSignalR";
+
     /// <summary>
     /// Configures application to receive messages over SignalR
     /// </summary>
@@ -24,26 +26,52 @@ public static class MessageReceiverConfiguration
         HttpMessageHandler? httpMessageHandler = null)
         where TMapper : class, IMessageToActionMapper
     {
-        var hubUri = serverBaseAddress.AppendPathSegment("events");
-        var hubConnectionBuilder = new HubConnectionBuilder()
-            .WithUrl(hubUri.ToString(), options =>
-            {
-                if (httpMessageHandler != null)
+        // Configure base path so the SignalR client will POST to /signalr/negotiate
+        var hubUri = serverBaseAddress.AppendPathSegment("signalr");
+
+        if (httpMessageHandler != null)
+        {
+            // For testing scenarios, build the HubConnection directly with the provided handler
+            var hubConnection = new HubConnectionBuilder()
+                .WithUrl(hubUri.ToString(), options =>
                 {
-                    // For testing scenarios, use the provided message handler and long polling
                     options.HttpMessageHandlerFactory = _ => httpMessageHandler;
                     options.Transports = Microsoft.AspNetCore.Http.Connections.HttpTransportType.LongPolling;
-                }
-            })
-            .WithAutomaticReconnect();
+                })
+                .WithAutomaticReconnect()
+                .Build();
 
-        var hubConnection = hubConnectionBuilder.Build();
+            services.AddSingleton(hubConnection);
+        }
+        else
+        {
+            // Register a named HttpClient for SignalR that will use service discovery (configured via ConfigureHttpClientDefaults)
+            services.AddHttpClient(SignalRHttpClientName, client =>
+            {
+                client.BaseAddress = serverBaseAddress;
+            });
+
+            // Register HubConnection as a factory to build it at runtime with service discovery
+            services.AddSingleton(sp =>
+            {
+                var httpMessageHandlerFactory = sp.GetRequiredService<IHttpMessageHandlerFactory>();
+
+                var hubConnectionBuilder = new HubConnectionBuilder()
+                    .WithUrl(hubUri.ToString(), options =>
+                    {
+                        options.HttpMessageHandlerFactory = _ =>
+                            httpMessageHandlerFactory.CreateHandler(SignalRHttpClientName);
+                    })
+                    .WithAutomaticReconnect();
+
+                return hubConnectionBuilder.Build();
+            });
+        }
 
         services
-            .AddSingleton(hubConnection)
             .AddTransient<IMessageToActionMapper, TMapper>()
             .AddTransient<MessageDeserializer>()
-            .AddHttpClient<HealthCheckService>(sp => sp.BaseAddress = serverBaseAddress);
+            .AddHttpClient<HealthCheckService>(client => client.BaseAddress = serverBaseAddress);
 
         return services;
     }
