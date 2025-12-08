@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Lewee.Playwright;
+using Pizzeria.Tests.Integration.Infrastructure;
 using Xunit;
 
 namespace Pizzeria.Tests.Integration;

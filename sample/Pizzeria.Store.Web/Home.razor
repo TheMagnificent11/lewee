@@ -28,13 +28,18 @@
                         Start a new order to browse our delicious pizza menu and add your favorites to your cart.
                     </MudText>
                 </MudCardContent>
+
                 <MudCardActions>
-                    <MudButton Variant="Variant.Filled"
-                               Color="Color.Primary"
-                               Size="Size.Large"
-                               FullWidth="true"
-                               OnClick="StartNewOrder"
-                               Disabled="this.State.Value.IsStartingOrder">
+                    <MudButton
+                        role="button"
+                        aria-label="@Home.AriaLabels.StartOrder"
+                        Variant="Variant.Filled"
+                        Color="Color.Primary"
+                        Size="Size.Large"
+                        FullWidth="true"
+                        OnClick="StartNewOrder"
+                        Disabled="this.State.Value.IsStartingOrder">
+
                         @if (this.State.Value.IsStartingOrder)
                         {
                             <MudProgressCircular Size="Size.Small" Indeterminate="true" />

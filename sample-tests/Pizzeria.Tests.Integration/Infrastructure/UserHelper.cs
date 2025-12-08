@@ -1,4 +1,4 @@
-﻿namespace Pizzeria.Tests.Integration;
+﻿namespace Pizzeria.Tests.Integration.Infrastructure;
 
 internal static class UserHelper
 {
