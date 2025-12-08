@@ -24,7 +24,8 @@ public static class MessageReceiverConfiguration
         HttpMessageHandler? httpMessageHandler = null)
         where TMapper : class, IMessageToActionMapper
     {
-        var hubUri = serverBaseAddress.AppendPathSegment("events");
+        // Configure base path so the SignalR client will POST to /signalr/negotiate
+        var hubUri = serverBaseAddress.AppendPathSegment("signalr");
         var hubConnectionBuilder = new HubConnectionBuilder()
             .WithUrl(hubUri.ToString(), options =>
             {

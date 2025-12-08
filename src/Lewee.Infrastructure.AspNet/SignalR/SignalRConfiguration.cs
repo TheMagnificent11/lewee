@@ -13,6 +13,8 @@ namespace Lewee.Infrastructure.AspNet.SignalR;
 /// </summary>
 public static class SignalRConfiguration
 {
+    internal const string EventsHubName = "events";
+
     /// <summary>
     /// Configures SignalR
     /// </summary>
@@ -44,11 +46,11 @@ public static class SignalRConfiguration
     /// <returns>The updated web application builder</returns>
     public static WebApplication MapLeweeSignalRNegotiateEndpoint(this WebApplication app)
     {
-        app.MapPost("/negotiate", async (string? userId, ServiceManager sm, CancellationToken token) =>
+        // SignalR client will POST to /signalr/negotiate when configured with base /signalr
+        app.MapPost("/signalr/negotiate", async (string? userId, ServiceManager sm, CancellationToken token) =>
         {
-            // The creation of the ServiceHubContext is expensive, so it's recommended to
-            // only create it once per named context / per app run if possible.
-            var context = await sm.CreateHubContextAsync<ClientEventHub>(ClientEventHub.HubName, token);
+            // Use non-generic CreateHubContextAsync - the generic version expects a client interface type
+            var context = await sm.CreateHubContextAsync(EventsHubName, token);
 
             var negotiateResponse = await context.NegotiateAsync(
                 new NegotiationOptions

@@ -33,7 +33,9 @@ internal sealed class ClientEventHandler : INotificationHandler<ClientEvent>
             { LoggingConsts.CorrelationId, notification.CorrelationId },
         }))
         {
-            var hubContext = await this.serviceManager.CreateHubContextAsync(ClientEventHub.HubName, cancellationToken);
+            var hubContext = await this.serviceManager.CreateHubContextAsync(
+                SignalRConfiguration.EventsHubName,
+                cancellationToken);
             var clientMessage = notification.ToClientMessage();
 
             if (string.IsNullOrWhiteSpace(notification.UserId))

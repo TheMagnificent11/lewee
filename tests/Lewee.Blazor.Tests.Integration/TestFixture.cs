@@ -43,10 +43,15 @@ public sealed class TestFixture : IAsyncLifetime
         await this.WaitForHealthAsync(TimeSpan.FromMinutes(1));
 
         this.client = new TestClient(this.httpClient);
+
+        // Connect the SignalR hub
+        await this.client.ConnectAsync();
     }
 
     public async Task DisposeAsync()
     {
+        await this.client.DisconnectAsync();
+        this.client.Dispose();
         this.httpClient.Dispose();
         await this.app.DisposeAsync();
         await this.builder.DisposeAsync();
