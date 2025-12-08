@@ -11,6 +11,8 @@ namespace Lewee.Infrastructure.AspNet.SignalR;
 [AllowAnonymous]
 public class ClientEventHub : Hub
 {
+    internal const string HubName = "events";
+
     private readonly ILogger logger;
 
     /// <summary>

@@ -38,10 +38,9 @@ public sealed class TestFixture : IAsyncLifetime
             .WaitForResourceAsync(ServiceNames.WebApi, KnownResourceStates.Running)
             .WaitAsync(TimeSpan.FromMinutes(5));
 
-        this.httpClient = new HttpClient
-        {
-            BaseAddress = this.app.GetEndpoint(ServiceNames.WebApi),
-        };
+        this.httpClient = this.app.CreateHttpClient(ServiceNames.WebApi);
+
+        await this.WaitForHealthAsync(TimeSpan.FromMinutes(1));
 
         this.client = new TestClient(this.httpClient);
     }
@@ -63,5 +62,30 @@ public sealed class TestFixture : IAsyncLifetime
     public async Task<bool> TestCreatePizzaOrderAsync()
     {
         return await this.client.CreatePizzaOrderAsync();
+    }
+
+    private async Task WaitForHealthAsync(TimeSpan timeout)
+    {
+        var endTime = DateTime.UtcNow.Add(timeout);
+
+        while (DateTime.UtcNow < endTime)
+        {
+            try
+            {
+                using var response = await this.httpClient.GetAsync("/health");
+                if (response.IsSuccessStatusCode)
+                {
+                    return;
+                }
+            }
+            catch
+            {
+                // Ignore exceptions and continue polling
+            }
+
+            await Task.Delay(TimeSpan.FromSeconds(2));
+        }
+
+        throw new TimeoutException($"Health check timed out after {timeout.TotalMinutes} minutes. The /health endpoint did not return a successful response.");
     }
 }

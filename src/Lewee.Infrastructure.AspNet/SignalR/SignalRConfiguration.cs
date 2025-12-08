@@ -48,7 +48,7 @@ public static class SignalRConfiguration
         {
             // The creation of the ServiceHubContext is expensive, so it's recommended to
             // only create it once per named context / per app run if possible.
-            var context = await sm.CreateHubContextAsync<ClientEventHub>("events", token);
+            var context = await sm.CreateHubContextAsync<ClientEventHub>(ClientEventHub.HubName, token);
 
             var negotiateResponse = await context.NegotiateAsync(
                 new NegotiationOptions
