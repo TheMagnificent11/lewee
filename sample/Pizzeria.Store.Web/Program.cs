@@ -17,13 +17,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
-var databaseName = ServiceNames.PizzaStoreDatabaseName;
-
 // Server services
 builder.Services
     .AddAuthenticatedUserService()
     .AddLeweePostgreSQL<StoreDbContext>(
-        builder.Configuration.GetConnectionString(databaseName)!,
+        builder.Configuration.GetConnectionString(ServiceNames.PizzaStoreDatabaseName)!,
         typeof(Pizza).Assembly,
         StoreDbContext.SchemaName)
     .AddLeweeDatabaseServices<StoreDbContext>(typeof(Pizza).Assembly)
