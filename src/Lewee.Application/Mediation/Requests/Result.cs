@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text;
 using FluentValidation.Results;
 
 namespace Lewee.Application.Mediation.Requests;
@@ -53,13 +54,29 @@ public abstract class Result
 
         var errorMessage = new StringBuilder();
 
+        if (this.Errors.Count == 1)
+        {
+            return GenerateErrorMessage(this.Errors[0]);
+        }
+
         this.Errors
             .ToList()
-            .ForEach(x => errorMessage.AppendLine(
-                System.Globalization.CultureInfo.InvariantCulture,
-                $"{x.PropertyName}: {x.ErrorMessage}"));
+            .ForEach(x => errorMessage.AppendLine(GenerateErrorMessage(x)));
 
         return errorMessage.ToString();
+
+        [SuppressMessage(
+            "Minor Code Smell",
+            "S3241:Methods should not return values that are never used",
+            Justification = "False positive")]
+        static string GenerateErrorMessage(ValidationFailure failure)
+        {
+            var message = string.IsNullOrWhiteSpace(failure.PropertyName)
+                ? failure.ErrorMessage
+                : $"{failure.PropertyName}: {failure.ErrorMessage}";
+
+            return message;
+        }
     }
 
     /// <summary>
