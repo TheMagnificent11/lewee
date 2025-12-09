@@ -35,6 +35,7 @@
     <PackageVersion Include="Microsoft.Azure.SignalR.Management" Version="1.32.0" />
   </ItemGroup>
   <ItemGroup Label="Correlate">
+    <PackageVersion Include="Correlate" Version="6.1.1" />
     <PackageVersion Include="Correlate.AspNetCore" Version="6.1.1" />
     <PackageVersion Include="Correlate.DependencyInjection" Version="6.1.1" />
   </ItemGroup>
@@ -42,6 +43,7 @@
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.0" />
   </ItemGroup>
   <ItemGroup Label="Fluxor">
+    <PackageVersion Include="Fluxor" Version="6.9.0" />
     <PackageVersion Include="Fluxor.Blazor.Web" Version="6.9.0" />
     <PackageVersion Include="Fluxor.Blazor.Web.ReduxDevTools" Version="6.9.0" />
   </ItemGroup>

@@ -1,5 +1,5 @@
-using Lewee.Blazor.Fluxor.Actions;
 using Lewee.Blazor.Tests.Contracts;
+using Lewee.Contracts.StateManagement;
 
 namespace Lewee.Blazor.Tests.Integration;
 

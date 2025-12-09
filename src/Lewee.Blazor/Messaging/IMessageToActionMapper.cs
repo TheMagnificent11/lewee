@@ -1,4 +1,4 @@
-﻿using Lewee.Blazor.Fluxor.Actions;
+﻿using Lewee.Contracts.StateManagement;
 
 namespace Lewee.Blazor.Messaging;
 

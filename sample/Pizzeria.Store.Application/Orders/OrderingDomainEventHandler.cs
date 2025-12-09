@@ -2,7 +2,7 @@ using Lewee.Application.Mediation.Notifications;
 using Lewee.Domain;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Pizzeria.Store.Contracts;
+using Pizzeria.Store.Contracts.Orders;
 using Pizzeria.Store.Domain;
 
 namespace Pizzeria.Store.Application.Orders;

@@ -65,9 +65,11 @@
   <Project Path="sample/Pizzeria.ServiceDefaults/Pizzeria.ServiceDefaults.csproj" />
   <Project Path="sample/Pizzeria.Store.Api/Pizzeria.Store.Api.csproj" />
   <Project Path="sample/Pizzeria.Store.Application/Pizzeria.Store.Application.csproj" />
+  <Project Path="sample/Pizzeria.Store.Components/Pizzeria.Store.Components.csproj" Id="06d166f3-ea17-4b19-92ba-470e7a2b139d" />
   <Project Path="sample/Pizzeria.Store.Contracts/Pizzeria.Store.Contracts.csproj" />
   <Project Path="sample/Pizzeria.Store.Data/Pizzeria.Store.Data.csproj" />
   <Project Path="sample/Pizzeria.Store.Domain/Pizzeria.Store.Domain.csproj" />
+  <Project Path="sample/Pizzeria.Store.StateManagement/Pizzeria.Store.StateManagement.csproj" Id="869afdf2-5c67-4cba-af44-cd881282d7c6" />
   <Project Path="sample/Pizzeria.Store.Web/Pizzeria.Store.Web.csproj" Id="ad4622bc-2f6b-4908-8519-b9d0a5425795" />
   <Project Path="src/Lewee.Application/Lewee.Application.csproj" />
   <Project Path="src/Lewee.Blazor/Lewee.Blazor.csproj" />
@@ -79,6 +81,7 @@
   <Project Path="src/Lewee.Infrastructure.PostgreSQL/Lewee.Infrastructure.PostgreSQL.csproj" />
   <Project Path="src/Lewee.Playwright/Lewee.Playwright.csproj" Id="fbfb60b0-2de6-4a97-864f-8fe1589b37da" />
   <Project Path="src/Lewee.Shared/Lewee.Shared.csproj" />
+  <Project Path="src/Lewee.StateManagement/Lewee.StateManagement.csproj" Id="656af98e-e16c-493b-bece-3b6195ffd62b" />
   <Project Path="tests/Lewee.Application.Tests.Unit/Lewee.Application.Tests.Unit.csproj" />
   <Project Path="tests/Lewee.Blazor.Tests.Api/Lewee.Blazor.Tests.Api.csproj" />
   <Project Path="tests/Lewee.Blazor.Tests.App/Lewee.Blazor.Tests.App.csproj" Id="c3ba5566-8f18-4dc5-b63b-9ed9daa49ca1" />

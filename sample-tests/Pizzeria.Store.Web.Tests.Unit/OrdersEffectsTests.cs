@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Pizzeria.Store.Contracts;
+using Pizzeria.Store.Contracts.Orders.Actions;
 using Pizzeria.Store.Web.Infrastructure;
 using Pizzeria.Store.Web.Orders;
 using Pizzeria.Store.Web.Orders.Actions;

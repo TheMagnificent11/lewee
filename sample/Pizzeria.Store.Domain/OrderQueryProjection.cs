@@ -1,5 +1,5 @@
 using Lewee.Domain;
-using Pizzeria.Store.Contracts;
+using Pizzeria.Store.Contracts.Orders;
 
 namespace Pizzeria.Store.Domain;
 

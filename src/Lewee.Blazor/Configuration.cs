@@ -1,6 +1,7 @@
-﻿using Lewee.Blazor.Fluxor;
-using Lewee.Blazor.Http;
+﻿using Lewee.Blazor.Http;
 using Lewee.Blazor.Messaging;
+using Lewee.Blazor.Messaging.Health;
+using Lewee.StateManagement;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Lewee.Blazor;
@@ -29,7 +30,7 @@ public static class Configuration
         return services
             .AddTransient<CorrelationIdDelegatingHandler>()
             .AddMessageReceiver<TMapper>(serverBaseAddress, httpMessageHandler)
-            .AddFluxor(useReduxDevTools);
+            .AddLeweeFluxor(useReduxDevTools, typeof(ServerHealthState).Assembly);
     }
 
     /// <summary>
@@ -49,7 +50,7 @@ public static class Configuration
         return services
             .AddTransient<CorrelationIdDelegatingHandler>()
             .AddMessageReceiver<TMapper>(apiAspireServiceName)
-            .AddFluxor(useReduxDevTools);
+            .AddLeweeFluxor(useReduxDevTools, typeof(ServerHealthState).Assembly);
     }
 
     /// <summary>

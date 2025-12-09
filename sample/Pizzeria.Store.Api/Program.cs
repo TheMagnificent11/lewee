@@ -32,7 +32,7 @@ builder.Services
     .AddFastEndpoints()
     .AddEndpointsApiExplorer()
     .AddSwaggerGen()
-    .AddStartupConfiguration();
+    .AddDatabaseHealthCheck();
 
 var app = builder.Build();
 
