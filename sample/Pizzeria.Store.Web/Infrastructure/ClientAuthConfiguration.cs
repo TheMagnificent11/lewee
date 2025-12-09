@@ -10,7 +10,7 @@ namespace Pizzeria.Store.Web.Infrastructure;
 
 internal static class ClientAuthConfiguration
 {
-    public static IServiceCollection AddAuth(this IServiceCollection services)
+    public static IServiceCollection AddClientAuth(this IServiceCollection services)
     {
         services
             .AddAuthentication(options =>

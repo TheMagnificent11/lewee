@@ -65,7 +65,6 @@
   <Project Path="sample/Pizzeria.Common/Pizzeria.Common.csproj" />
   <Project Path="sample/Pizzeria.Configuration/Pizzeria.Configuration.csproj" />
   <Project Path="sample/Pizzeria.ServiceDefaults/Pizzeria.ServiceDefaults.csproj" />
-  <Project Path="sample/Pizzeria.Store.Api/Pizzeria.Store.Api.csproj" />
   <Project Path="sample/Pizzeria.Store.Application/Pizzeria.Store.Application.csproj" />
   <Project Path="sample/Pizzeria.Store.Components/Pizzeria.Store.Components.csproj" Id="06d166f3-ea17-4b19-92ba-470e7a2b139d" />
   <Project Path="sample/Pizzeria.Store.Contracts/Pizzeria.Store.Contracts.csproj" />

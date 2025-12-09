@@ -1,4 +1,3 @@
-using Aspire.Hosting.Azure;
 using Pizzeria.Common;
 
 var builder = DistributedApplication.CreateBuilder(args);
@@ -37,12 +36,6 @@ var databaseServer = Environments.IsIntegrationTesting
 var pizzaStoreDatabaseName = ServiceNames.PizzaStoreDatabaseName;
 var pizzaStoreDatabase = databaseServer.AddDatabase(pizzaStoreDatabaseName);
 
-var signalR = builder.AddAzureSignalR(ServiceNames.SignalR, AzureSignalRServiceMode.Serverless);
-if (isDevOrTest)
-{
-    signalR = signalR.RunAsEmulator();
-}
-
 var configuration = builder.AddProject<Projects.Pizzeria_Configuration>(ServiceNames.ConfigurationService)
     .WithReference(authServer)
     .WithReference(pizzaStoreDatabase)
@@ -50,18 +43,11 @@ var configuration = builder.AddProject<Projects.Pizzeria_Configuration>(ServiceN
     .WaitFor(pizzaStoreDatabase)
     .WithHttpHealthCheck("/health");
 
-var storeApi = builder.AddProject<Projects.Pizzeria_Store_Api>(ServiceNames.PizzaStoreApi)
+builder.AddProject<Projects.Pizzeria_Store_Web>(ServiceNames.PizzaStoreWeb)
     .WithReference(pizzaStoreDatabase)
     .WithReference(authServer)
-    .WithReference(signalR)
     .WaitFor(configuration)
-    .WaitFor(signalR)
     .WithHttpHealthCheck("/health");
-
-builder.AddProject<Projects.Pizzeria_Store_Web>(ServiceNames.PizzaStoreWebClient)
-    .WithReference(authServer)
-    .WithReference(storeApi)
-    .WaitFor(storeApi);
 
 var app = builder.Build();
 

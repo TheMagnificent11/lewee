@@ -1,6 +1,14 @@
+using Lewee.Infrastructure.AspNet.Auth;
+using Lewee.Infrastructure.AspNet.Observability;
+using Lewee.Infrastructure.Data;
+using Lewee.Infrastructure.PostgreSQL;
 using MudBlazor.Services;
+using Pizzeria.Common;
 using Pizzeria.ServiceDefaults;
+using Pizzeria.Store.Application;
 using Pizzeria.Store.Components;
+using Pizzeria.Store.Data;
+using Pizzeria.Store.Domain;
 using Pizzeria.Store.Web;
 using Pizzeria.Store.Web.Infrastructure;
 
@@ -8,9 +16,25 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
+var databaseName = ServiceNames.PizzaStoreDatabaseName;
+var isDevOrTest = builder.Environment.IsDevelopment() || Pizzeria.Common.Environments.IsIntegrationTesting;
+
+// Server services
 builder.Services
-    .AddAuth()
-    .AddCascadingAuthenticationState()
+    .AddAuthenticatedUserService()
+    .AddLeweePostgreSQL<StoreDbContext>(
+        builder.Configuration.GetConnectionString(databaseName)!,
+        typeof(Pizza).Assembly,
+        StoreDbContext.SchemaName)
+    .AddLeweeDatabaseServices<StoreDbContext>(typeof(Pizza).Assembly)
+    .AddPizzaStoreApplication()
+    .AddCorrelationIdServices()
+    .AddServerAuth(isDevOrTest)
+    .AddDatabaseHealthCheck();
+
+// Client services
+builder.Services
+    .AddClientAuth()
     .AddMudServices()
     .AddRazorComponents()
     .AddInteractiveServerComponents();
@@ -27,6 +51,7 @@ if (!app.Environment.IsDevelopment())
 
 app
     .UseHttpsRedirection()
+    .UseCorrelationIdMiddleware()
     .UseAntiforgery()
     .UseAuthentication()
     .UseAuthorization();

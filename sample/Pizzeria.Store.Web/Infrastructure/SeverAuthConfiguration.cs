@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Pizzeria.Common;
 
-namespace Pizzeria.Store.Api.Infrastructure;
+namespace Pizzeria.Store.Web.Infrastructure;
 
 internal static class SeverAuthConfiguration
 {
-    public static IServiceCollection AddAuth(this IServiceCollection services, bool isDevOrTest)
+    public static IServiceCollection AddServerAuth(this IServiceCollection services, bool isDevOrTest)
     {
         services
             .AddAuthentication()
