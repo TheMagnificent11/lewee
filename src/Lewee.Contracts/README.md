@@ -23,10 +23,6 @@ The `ClientMessage` class is the primary data transfer object used to transport 
 - **`ContractFullClassName`** (`string`) - Gets or sets the full class name (including namespace) of the JSON contract class for message deserialization  
 - **`MessageJson`** (`string`) - Gets or sets the serialized JSON representation of the actual message payload
 
-### IClientMessageContract
-
-The `IClientMessageContract` interface serves as a marker interface for types that can be sent as client messages. This interface provides compile-time type safety and helps identify classes that are intended to be serialized and sent to client applications.
-
 ## Usage
 
 ### Basic Message Creation
