@@ -9,7 +9,7 @@ namespace Lewee.StateManagement;
 /// <summary>
 /// Fluxor Configuration
 /// </summary>
-public static class FluxorConfiguration
+public static class StateManagementConfiguration
 {
     /// <summary>
     /// Configures Fluxor

@@ -9,6 +9,7 @@ using Pizzeria.Store.Application;
 using Pizzeria.Store.Components;
 using Pizzeria.Store.Data;
 using Pizzeria.Store.Domain;
+using Pizzeria.Store.StateManagement;
 using Pizzeria.Store.Web;
 using Pizzeria.Store.Web.Infrastructure;
 
@@ -33,6 +34,7 @@ builder.Services
 
 // Client services
 builder.Services
+    .AddStoreState(builder.Environment.IsDevelopment())
     .AddMudServices()
     .AddRazorComponents()
     .AddInteractiveServerComponents();
@@ -61,6 +63,7 @@ app.MapStaticAssets();
 app
     .MapSignOut()
     .MapRazorComponents<App>()
+    .AddAdditionalAssemblies(typeof(Pizzeria.Store.Components._Imports).Assembly)
     .AddInteractiveServerRenderMode();
 
 await app.RunAsync();
