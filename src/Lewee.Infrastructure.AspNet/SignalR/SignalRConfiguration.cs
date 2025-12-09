@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 using Lewee.Application.Mediation.Notifications;
+using Lewee.Contracts;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -29,6 +30,10 @@ public static class SignalRConfiguration
         {
             opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(["application/octet-stream"]);
         });
+
+        // Register the channel as singleton so all circuits can read from it
+        services.AddSingleton<ClientEventChannel>();
+
         services.AddTransient<INotificationHandler<ClientEvent>, ClientEventHandler>();
 
         return services;

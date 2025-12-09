@@ -15,19 +15,21 @@ namespace Lewee.Infrastructure.AspNet.SignalR;
 internal sealed class ClientEventHandler : INotificationHandler<ClientEvent>
 {
     private readonly IHubContext<ClientEventHub> hubContext;
+    private readonly ClientEventChannel eventChannel;
     private readonly ILogger logger;
 
     public ClientEventHandler(
         IHubContext<ClientEventHub> hubContext,
+        ClientEventChannel eventChannel,
         ILogger<ClientEventHandler> logger)
     {
         this.hubContext = hubContext;
+        this.eventChannel = eventChannel;
         this.logger = logger;
     }
 
     public async Task Handle(ClientEvent notification, CancellationToken cancellationToken)
     {
-        // TODO: using notification behavior to enrich log context
         using (this.logger.BeginScope(new Dictionary<string, object>(StringComparer.Ordinal)
         {
             { LoggingConsts.CorrelationId, notification.CorrelationId },
@@ -35,6 +37,11 @@ internal sealed class ClientEventHandler : INotificationHandler<ClientEvent>
         {
             var clientMessage = notification.ToClientMessage();
 
+            // Write to channel for Blazor Server circuits to consume
+            await this.eventChannel.Writer.WriteAsync(clientMessage, cancellationToken);
+            this.logger.LogDebug("Client event written to channel");
+
+            // Also send via SignalR hub for any external clients
             if (string.IsNullOrWhiteSpace(notification.UserId))
             {
                 await this.hubContext
