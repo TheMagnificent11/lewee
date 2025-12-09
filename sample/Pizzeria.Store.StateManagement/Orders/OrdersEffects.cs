@@ -34,7 +34,7 @@ public class OrdersEffects : RequestEffects<OrdersState, StartOrderAction, Start
     {
         if (action.Order is null || action.Order.Id == Guid.Empty)
         {
-            this.Logger?.LogWarning("Order ID is null or empty. Navigation to order details page aborted.");
+            this.Logger.LogWarning("Order ID is null or empty. Navigation to order details page aborted.");
             return Task.CompletedTask;
         }
 
@@ -59,7 +59,9 @@ public class OrdersEffects : RequestEffects<OrdersState, StartOrderAction, Start
         }
         catch (Exception ex)
         {
-            dispatcher.Dispatch(new AddPizzaToOrderFailureAction(action.PizzaId, $"Failed to add pizza: {ex.Message}"));
+            dispatcher.Dispatch(new AddPizzaToOrderFailureAction(
+                action.PizzaId,
+                $"Failed to add pizza: {ex.Message}"));
         }
     }
 
@@ -69,12 +71,23 @@ public class OrdersEffects : RequestEffects<OrdersState, StartOrderAction, Start
     {
         try
         {
-            await this.mediator.Send(new StartOrderCommand(action.CorrelationId));
-            dispatcher.Dispatch(new StartOrderSuccessAction { CorrelationId = action.CorrelationId });
+            var result = await this.mediator.Send(new StartOrderCommand(action.CorrelationId));
+
+            if (result.IsSuccess)
+            {
+                dispatcher.Dispatch(new StartOrderSuccessAction { CorrelationId = action.CorrelationId });
+                return;
+            }
+
+            dispatcher.Dispatch(new StartOrderFailureAction(
+                action.CorrelationId,
+                result.GenerateErrorMessage()));
         }
         catch (Exception ex)
         {
-            dispatcher.Dispatch(new StartOrderFailureAction(action.CorrelationId, $"Failed to start order: {ex.Message}"));
+            dispatcher.Dispatch(new StartOrderFailureAction(
+                action.CorrelationId,
+                $"Failed to start order: {ex.Message}"));
         }
     }
 }

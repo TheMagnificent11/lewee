@@ -55,8 +55,10 @@
     <File Path="sample-tests/README.md" />
   </Folder>
   <Project Path="sample-tests/Pizzeria.Store.Application.Tests.Unit/Pizzeria.Store.Application.Tests.Unit.csproj" />
+  <Project Path="sample-tests/Pizzeria.Store.Components.Tests.Unit/Pizzeria.Store.Components.Tests.Unit.csproj" />
   <Project Path="sample-tests/Pizzeria.Store.Domain.Tests/Pizzeria.Store.Domain.Tests.csproj" />
-  <Project Path="sample-tests/Pizzeria.Store.Web.Tests.Unit/Pizzeria.Store.Web.Tests.Unit.csproj" />
+  <Project Path="sample-tests/Pizzeria.Store.StateManagement.Tests.Unit/Pizzeria.Store.StateManagement.Tests.Unit.csproj" Id="2f1831e1-ce4a-4976-a27a-c5d7480dc5ee" />
+  <Project Path="sample-tests/Pizzeria.Store.Web.Tests.Unit/Pizzeria.Store.Web.Tests.Unit.csproj" Id="6f381be0-8ed9-4529-b936-2b554f32475c" />
   <Project Path="sample-tests/Pizzeria.Tests.Integration/Pizzeria.Tests.Integration.csproj" />
   <Project Path="sample/Pizzeria.AppHost/Pizzeria.AppHost.csproj" />
   <Project Path="sample/Pizzeria.Auth/Pizzeria.Auth.csproj" />

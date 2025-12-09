@@ -6,7 +6,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\sample\Pizzeria.Store.Web\Pizzeria.Store.Web.csproj" />
+    <ProjectReference Include="..\..\sample\Pizzeria.Store.Components\Pizzeria.Store.Components.csproj" />
   </ItemGroup>
 
 </Project>
