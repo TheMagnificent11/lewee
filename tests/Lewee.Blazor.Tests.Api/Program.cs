@@ -10,14 +10,14 @@ builder.AddServiceDefaults();
 
 builder.Services
     .AddRouting()
-    .AddLeweeSignalR(builder.Configuration.GetConnectionString(ServiceNames.SignalR));
+    .AddLeweeAzureSignalR(builder.Configuration.GetConnectionString(ServiceNames.SignalR));
 
 var app = builder.Build();
 
 app.UseHttpsRedirection();
 app.UseRouting();
 app.MapDefaultEndpoints();
-app.MapLeweeSignalRNegotiateEndpoint();
+app.MapLeweeAzureSignalRNegotiateEndpoint();
 
 app.MapPost("/api/orders", async (CreateOrderRequest request, IMediator mediator) =>
 {

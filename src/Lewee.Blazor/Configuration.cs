@@ -29,7 +29,7 @@ public static class Configuration
     {
         return services
             .AddTransient<CorrelationIdDelegatingHandler>()
-            .AddMessageReceiver<TMapper>(serverBaseAddress, httpMessageHandler)
+            .AddAzureSignalRMessageReceiver<TMapper>(serverBaseAddress, httpMessageHandler)
             .AddLeweeFluxor(useReduxDevTools, typeof(ServerHealthState).Assembly);
     }
 
@@ -49,7 +49,7 @@ public static class Configuration
     {
         return services
             .AddTransient<CorrelationIdDelegatingHandler>()
-            .AddMessageReceiver<TMapper>(apiAspireServiceName)
+            .AddAzureSignalRMessageReceiver<TMapper>(apiAspireServiceName)
             .AddLeweeFluxor(useReduxDevTools, typeof(ServerHealthState).Assembly);
     }
 

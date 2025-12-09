@@ -43,7 +43,6 @@
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.0" />
   </ItemGroup>
   <ItemGroup Label="Fluxor">
-    <PackageVersion Include="Fluxor" Version="6.9.0" />
     <PackageVersion Include="Fluxor.Blazor.Web" Version="6.9.0" />
     <PackageVersion Include="Fluxor.Blazor.Web.ReduxDevTools" Version="6.9.0" />
   </ItemGroup>

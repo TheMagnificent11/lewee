@@ -20,7 +20,7 @@ public static class MessageReceiverConfiguration
     /// <param name="serverBaseAddress">Server base address</param>
     /// <param name="httpMessageHandler">Optional HTTP message handler for testing scenarios</param>
     /// <returns>Updated services collection</returns>
-    public static IServiceCollection AddMessageReceiver<TMapper>(
+    public static IServiceCollection AddAzureSignalRMessageReceiver<TMapper>(
         this IServiceCollection services,
         Uri serverBaseAddress,
         HttpMessageHandler? httpMessageHandler = null)
@@ -83,13 +83,30 @@ public static class MessageReceiverConfiguration
     /// <param name="services">Services collection</param>
     /// <param name="apiAspireServiceName">Name of the Aspire API service to connect to</param>
     /// <returns>Updated services collection</returns>
-    public static IServiceCollection AddMessageReceiver<TMapper>(
+    public static IServiceCollection AddAzureSignalRMessageReceiver<TMapper>(
         this IServiceCollection services,
         string apiAspireServiceName)
         where TMapper : class, IMessageToActionMapper
     {
         var apiUri = new Uri($"https://{apiAspireServiceName}");
 
-        return services.AddMessageReceiver<TMapper>(apiUri);
+        return services.AddAzureSignalRMessageReceiver<TMapper>(apiUri);
+    }
+
+    /// <summary>
+    /// Add SignalR Message Receiver
+    /// </summary>
+    /// <typeparam name="TMapper">Mapper type</typeparam>
+    /// <param name="services">Services collection</param>
+    /// <returns>Updated services collection</returns>
+    public static IServiceCollection AddSignalRMessageReceiver<TMapper>(
+        this IServiceCollection services)
+        where TMapper : class, IMessageToActionMapper
+    {
+        services
+            .AddTransient<IMessageToActionMapper, TMapper>()
+            .AddTransient<MessageDeserializer>();
+
+        return services;
     }
 }

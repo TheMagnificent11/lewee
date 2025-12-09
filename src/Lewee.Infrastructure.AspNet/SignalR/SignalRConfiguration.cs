@@ -1,8 +1,10 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 using Lewee.Application.Mediation.Notifications;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Azure.SignalR.Management;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -19,9 +21,26 @@ public static class SignalRConfiguration
     /// Configures SignalR
     /// </summary>
     /// <param name="services">Services collection</param>
+    /// <returns>The updated services collection</returns>
+    public static IServiceCollection AddLeweeSignalR(this IServiceCollection services)
+    {
+        services.AddSignalR();
+        services.AddResponseCompression(opts =>
+        {
+            opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(["application/octet-stream"]);
+        });
+        services.AddTransient<INotificationHandler<ClientEvent>, ClientEventHandler>();
+
+        return services;
+    }
+
+    /// <summary>
+    /// Configures Azure SignalR
+    /// </summary>
+    /// <param name="services">Services collection</param>
     /// <param name="connectionString">Azure SignalR connection string (serverless SignalR, not default)</param>
     /// <returns>The updated services collection</returns>
-    public static IServiceCollection AddLeweeSignalR(
+    public static IServiceCollection AddLeweeAzureSignalR(
         this IServiceCollection services,
         string connectionString)
     {
@@ -32,11 +51,21 @@ public static class SignalRConfiguration
                 .BuildServiceManager();
         });
 
-        services.AddMediatR(config => config.RegisterServicesFromAssemblies(
-            typeof(ClientEvent).Assembly,
-            typeof(ClientEventHandler).Assembly));
+        services.AddTransient<INotificationHandler<ClientEvent>, AzureSignalRClientEventHandler>();
 
         return services;
+    }
+
+    /// <summary>
+    /// Maps the SignalR hub endpoint
+    /// </summary>
+    /// <param name="app">Web application</param>
+    /// <returns>The updated web application</returns>
+    public static WebApplication MapLeweeSignalRHub(this WebApplication app)
+    {
+        app.MapHub<ClientEventHub>(ClientEventHub.HubPath);
+
+        return app;
     }
 
     /// <summary>
@@ -44,7 +73,7 @@ public static class SignalRConfiguration
     /// </summary>
     /// <param name="app">Web application builder</param>
     /// <returns>The updated web application builder</returns>
-    public static WebApplication MapLeweeSignalRNegotiateEndpoint(this WebApplication app)
+    public static WebApplication MapLeweeAzureSignalRNegotiateEndpoint(this WebApplication app)
     {
         // SignalR client will POST to /signalr/negotiate when configured with base /signalr
         app.MapPost("/signalr/negotiate", async (string? userId, ServiceManager sm, CancellationToken token) =>

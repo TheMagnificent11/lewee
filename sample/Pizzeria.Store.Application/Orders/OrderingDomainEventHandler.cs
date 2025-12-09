@@ -1,10 +1,9 @@
-using Fluxor;
+using Lewee.Application.Mediation.Notifications;
 using Lewee.Domain;
 using Lewee.Shared;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Pizzeria.Store.Contracts.Orders;
-using Pizzeria.Store.Contracts.Orders.Actions;
 using Pizzeria.Store.Domain;
 
 namespace Pizzeria.Store.Application.Orders;
@@ -13,18 +12,18 @@ public class OrderingDomainEventHandler : INotificationHandler<OrderStartedEvent
 {
     private readonly IRepository<Order> orderRepository;
     private readonly IQueryProjectionService queryProjectionService;
-    private readonly IDispatcher dispatcher;
+    private readonly IMediator mediator;
     private readonly ILogger<OrderingDomainEventHandler> logger;
 
     public OrderingDomainEventHandler(
         IRepository<Order> orderRepository,
         IQueryProjectionService queryProjectionService,
-        IDispatcher dispatcher,
+        IMediator mediator,
         ILogger<OrderingDomainEventHandler> logger)
     {
         this.orderRepository = orderRepository;
         this.queryProjectionService = queryProjectionService;
-        this.dispatcher = dispatcher;
+        this.mediator = mediator;
         this.logger = logger;
     }
 
@@ -36,9 +35,10 @@ public class OrderingDomainEventHandler : INotificationHandler<OrderStartedEvent
         {
             { LoggingConsts.CorrelationId, notification.CorrelationId },
             { "OrderId", notification.OrderId },
+            { "DomainEventName", nameof(OrderStartedEvent) },
         }))
         {
-            this.logger.LogInformation("Handling {EventName}", nameof(OrderStartedEvent));
+            this.logger.LogInformation("Started handling domain event");
 
             // Get the order with its pizzas to create the query projection
             var spec = new GetOrderQuerySpec(notification.OrderId);
@@ -91,13 +91,11 @@ public class OrderingDomainEventHandler : INotificationHandler<OrderStartedEvent
                 order.Id.ToString(),
                 cancellationToken);
 
-            var action = new StartOrderCompletedAction(dto, notification.CorrelationId);
+            var clientEvent = new ClientEvent(notification.CorrelationId, notification.UserId, dto);
 
-            this.dispatcher.Dispatch(action);
+            await this.mediator.Publish(clientEvent, cancellationToken);
 
-            this.logger.LogInformation(
-                "{Action} dispatched",
-                nameof(StartOrderCompletedAction));
+            this.logger.LogInformation("Completed handling domain event");
         }
     }
 }

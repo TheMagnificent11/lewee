@@ -1,5 +1,7 @@
+using Lewee.Blazor.Messaging;
 using Lewee.Infrastructure.AspNet.Auth;
 using Lewee.Infrastructure.AspNet.Observability;
+using Lewee.Infrastructure.AspNet.SignalR;
 using Lewee.Infrastructure.Data;
 using Lewee.Infrastructure.PostgreSQL;
 using MudBlazor.Services;
@@ -28,11 +30,13 @@ builder.Services
     .AddPizzaStoreApplication()
     .AddCorrelationIdServices()
     .AddAuth()
+    .AddLeweeSignalR()
     .AddDatabaseHealthCheck();
 
 // Client services
 builder.Services
     .AddStoreState(builder.Environment.IsDevelopment())
+    .AddSignalRMessageReceiver<MessageToActionMapper>()
     .AddMudServices()
     .AddRazorComponents()
     .AddInteractiveServerComponents();
@@ -55,6 +59,8 @@ app
     .UseCorrelationIdMiddleware()
     .UseAuthentication()
     .UseAuthorization();
+
+app.MapLeweeSignalRHub();
 
 app.MapStaticAssets();
 

@@ -2,7 +2,6 @@
 
   <ItemGroup>
     <PackageReference Include="Correlate" />
-    <PackageReference Include="Fluxor" />
   </ItemGroup>
 
   <ItemGroup>
