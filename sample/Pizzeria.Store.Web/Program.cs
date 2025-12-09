@@ -39,7 +39,7 @@ builder.Services
 
 var app = builder.Build();
 
-app.MapDefaultEndpoints();
+app.UseHealthEndpoints();
 
 if (!app.Environment.IsDevelopment())
 {
