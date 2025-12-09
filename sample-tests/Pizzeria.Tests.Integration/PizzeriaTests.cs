@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Npgsql;
 using Pizzeria.Common;
+using Pizzeria.Tests.Integration.Infrastructure;
 using Respawn;
 using Xunit;
 

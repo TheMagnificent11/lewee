@@ -113,15 +113,30 @@ dotnet format lewee.sln
 - [ ] Follows existing patterns in the codebase
 - [ ] Framework changes (`src/` directory) have at least 90% line coverage
 - [ ] No magic strings for Playwright/bUnit selectors; expose a constant from the component and use that instead
+- [ ] Limit lines to a maximum of 120 characters where possible, using one parameter or statement per line
 
 ## Logging
 
-- Use logging scopes where possible to provide context (as opposed to structured properties within a log message
+- Use logging scopes where possible to provide context as opposed to structured properties within a log message
   - Prefer to inherit structured properties from the scope when they are passed in as parameters
     - Values like CorrelationId, TenantId, UserId etc that are passed in as method parameters should be added to the logging scope at the entry point of the request
 - Do not use emojis in log messages
 
-## bUnit/Playwright Testing Standards
+## Dependency Injection
+
+- Interface are public but implementations are internal by default
+  - Register implementations in DI within the same assembly and expose an `IServiceCollection` extension method for registration
+  - There may be a user case for public implementations, discuss with repository owner if needed
+
+## ASP.NET HTTP Application Standards
+
+- `Program.cs` should be minimal, only containing service registrations and middleware registrations
+  - Do not add any logic to `Program.cs`
+- Use extension methods on `IServiceCollection` and `IApplicationBuilder` to organize service and middleware registrations respectively
+
+## Playwright/bUnit Testing Standards
 
 - Do not use magic strings for selectors
-  - Expose a constant from the component and use that instead
+  - Expose a constant from the component and use that instead e.g. `MainLayout.Selectors.SignOutButton`
+  - Selector should use structural and semantic attributes where possible, avoid relying on CSS classes or element hierarchy
+    - For example `[role='heading'][aria-level='1']`

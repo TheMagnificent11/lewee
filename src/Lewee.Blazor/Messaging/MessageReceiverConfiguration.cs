@@ -10,20 +10,7 @@ namespace Lewee.Blazor.Messaging;
 /// </summary>
 public static class MessageReceiverConfiguration
 {
-    /// <summary>
-    /// Configures application to receive messages over SignalR
-    /// </summary>
-    /// <typeparam name="TMapper">Mapper type</typeparam>
-    /// <param name="services">Services collection</param>
-    /// <param name="serverBaseAddress">Server base address</param>
-    /// <returns>Updated services collection</returns>
-    public static IServiceCollection AddMessageReceiver<TMapper>(
-        this IServiceCollection services,
-        Uri serverBaseAddress)
-        where TMapper : class, IMessageToActionMapper
-    {
-        return services.AddMessageReceiver<TMapper>(serverBaseAddress, httpMessageHandler: null);
-    }
+    private const string SignalRHttpClientName = "LeweeSignalR";
 
     /// <summary>
     /// Configures application to receive messages over SignalR
@@ -36,29 +23,55 @@ public static class MessageReceiverConfiguration
     public static IServiceCollection AddMessageReceiver<TMapper>(
         this IServiceCollection services,
         Uri serverBaseAddress,
-        HttpMessageHandler? httpMessageHandler)
+        HttpMessageHandler? httpMessageHandler = null)
         where TMapper : class, IMessageToActionMapper
     {
-        var hubUri = serverBaseAddress.AppendPathSegment("events");
-        var hubConnectionBuilder = new HubConnectionBuilder()
-            .WithUrl(hubUri.ToString(), options =>
-            {
-                if (httpMessageHandler != null)
+        // Configure base path so the SignalR client will POST to /signalr/negotiate
+        var hubUri = serverBaseAddress.AppendPathSegment("signalr");
+
+        if (httpMessageHandler != null)
+        {
+            // For testing scenarios, build the HubConnection directly with the provided handler
+            var hubConnection = new HubConnectionBuilder()
+                .WithUrl(hubUri.ToString(), options =>
                 {
-                    // For testing scenarios, use the provided message handler and long polling
                     options.HttpMessageHandlerFactory = _ => httpMessageHandler;
                     options.Transports = Microsoft.AspNetCore.Http.Connections.HttpTransportType.LongPolling;
-                }
-            })
-            .WithAutomaticReconnect();
+                })
+                .WithAutomaticReconnect()
+                .Build();
 
-        var hubConnection = hubConnectionBuilder.Build();
+            services.AddSingleton(hubConnection);
+        }
+        else
+        {
+            // Register a named HttpClient for SignalR that will use service discovery (configured via ConfigureHttpClientDefaults)
+            services.AddHttpClient(SignalRHttpClientName, client =>
+            {
+                client.BaseAddress = serverBaseAddress;
+            });
+
+            // Register HubConnection as a factory to build it at runtime with service discovery
+            services.AddSingleton(sp =>
+            {
+                var httpMessageHandlerFactory = sp.GetRequiredService<IHttpMessageHandlerFactory>();
+
+                var hubConnectionBuilder = new HubConnectionBuilder()
+                    .WithUrl(hubUri.ToString(), options =>
+                    {
+                        options.HttpMessageHandlerFactory = _ =>
+                            httpMessageHandlerFactory.CreateHandler(SignalRHttpClientName);
+                    })
+                    .WithAutomaticReconnect();
+
+                return hubConnectionBuilder.Build();
+            });
+        }
 
         services
-            .AddSingleton(hubConnection)
             .AddTransient<IMessageToActionMapper, TMapper>()
             .AddTransient<MessageDeserializer>()
-            .AddHttpClient<HealthCheckService>(sp => sp.BaseAddress = serverBaseAddress);
+            .AddHttpClient<HealthCheckService>(client => client.BaseAddress = serverBaseAddress);
 
         return services;
     }
@@ -68,41 +81,15 @@ public static class MessageReceiverConfiguration
     /// </summary>
     /// <typeparam name="TMapper">Mapper type</typeparam>
     /// <param name="services">Services collection</param>
-    /// <param name="httpClientName">Name of the HttpClient configured with service discovery</param>
+    /// <param name="apiAspireServiceName">Name of the Aspire API service to connect to</param>
     /// <returns>Updated services collection</returns>
-    public static IServiceCollection AddMessageReceiverWithServiceDiscovery<TMapper>(
+    public static IServiceCollection AddMessageReceiver<TMapper>(
         this IServiceCollection services,
-        string httpClientName)
+        string apiAspireServiceName)
         where TMapper : class, IMessageToActionMapper
     {
-        // Register HubConnection as a factory that uses the named HttpClient
-        services.AddSingleton(serviceProvider =>
-        {
-            var httpClientFactory = serviceProvider.GetRequiredService<IHttpClientFactory>();
-            var httpClient = httpClientFactory.CreateClient(httpClientName);
+        var apiUri = new Uri($"https://{apiAspireServiceName}");
 
-            if (httpClient.BaseAddress == null)
-            {
-                throw new InvalidOperationException($"HttpClient '{httpClientName}' must have a BaseAddress configured for service discovery");
-            }
-
-            var hubUri = httpClient.BaseAddress.AppendPathSegment("events");
-
-            return new HubConnectionBuilder()
-                .WithUrl(hubUri.ToString(), options =>
-                {
-                    // Use a factory that creates the service discovery handler for each connection
-                    options.HttpMessageHandlerFactory = _ => new ServiceDiscoveryHttpMessageHandler(httpClientFactory, httpClientName);
-                })
-                .WithAutomaticReconnect()
-                .Build();
-        });
-
-        services
-            .AddTransient<IMessageToActionMapper, TMapper>()
-            .AddTransient<MessageDeserializer>()
-            .AddHttpClient<HealthCheckService>(httpClientName); // Use the same named client for health checks
-
-        return services;
+        return services.AddMessageReceiver<TMapper>(apiUri);
     }
 }

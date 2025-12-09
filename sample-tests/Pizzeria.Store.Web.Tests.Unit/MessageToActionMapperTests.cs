@@ -2,8 +2,8 @@ using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Pizzeria.Store.Contracts;
-using Pizzeria.Store.Web.States;
-using Pizzeria.Store.Web.States.Orders.Actions;
+using Pizzeria.Store.Web.Infrastructure;
+using Pizzeria.Store.Web.Orders.Actions;
 
 namespace Pizzeria.Store.Web.Tests.Unit;
 
@@ -14,8 +14,8 @@ public class MessageToActionMapperTests
     {
         // Arrange
         var mapper = new MessageToActionMapper(Mock.Of<ILogger<MessageToActionMapper>>());
-        var orderId = Guid.NewGuid();
         var correlationId = Guid.NewGuid();
+        var orderId = Guid.NewGuid();
         var message = new OrderDto
         {
             Id = orderId,

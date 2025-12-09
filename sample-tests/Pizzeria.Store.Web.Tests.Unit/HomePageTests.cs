@@ -1,6 +1,5 @@
 ﻿using Bunit;
 using FluentAssertions;
-using Pizzeria.Store.Web.Pages;
 
 namespace Pizzeria.Store.Web.Tests.Unit;
 

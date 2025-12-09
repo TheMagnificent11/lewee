@@ -4,6 +4,7 @@ using Lewee.Contracts;
 using Lewee.Shared;
 using MediatR;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Azure.SignalR.Management;
 using Microsoft.Extensions.Logging;
 
 namespace Lewee.Infrastructure.AspNet.SignalR;
@@ -14,30 +15,32 @@ namespace Lewee.Infrastructure.AspNet.SignalR;
     Justification = "Use via DI")]
 internal sealed class ClientEventHandler : INotificationHandler<ClientEvent>
 {
-    private readonly IHubContext<ClientEventHub> hubContext;
+    private readonly ServiceManager serviceManager;
     private readonly ILogger logger;
 
     public ClientEventHandler(
-        IHubContext<ClientEventHub> hubContext,
+        ServiceManager serviceManager,
         ILogger<ClientEventHandler> logger)
     {
-        this.hubContext = hubContext;
+        this.serviceManager = serviceManager;
         this.logger = logger;
     }
 
     public async Task Handle(ClientEvent notification, CancellationToken cancellationToken)
     {
-        // TODO: using notification behavior to enrich log context
         using (this.logger.BeginScope(new Dictionary<string, object>(StringComparer.Ordinal)
         {
             { LoggingConsts.CorrelationId, notification.CorrelationId },
         }))
         {
+            var hubContext = await this.serviceManager.CreateHubContextAsync(
+                SignalRConfiguration.EventsHubName,
+                cancellationToken);
             var clientMessage = notification.ToClientMessage();
 
             if (string.IsNullOrWhiteSpace(notification.UserId))
             {
-                await this.hubContext
+                await hubContext
                     .Clients
                     .All
                     .SendAsync(nameof(ClientMessage), clientMessage, cancellationToken);
@@ -47,12 +50,12 @@ internal sealed class ClientEventHandler : INotificationHandler<ClientEvent>
                 return;
             }
 
-            await this.hubContext
+            await hubContext
                 .Clients
-                .Group(notification.UserId)
+                .User(notification.UserId)
                 .SendAsync(nameof(ClientMessage), clientMessage, cancellationToken);
 
-            this.logger.LogDebug("Published message to specific client(s)");
+            this.logger.LogDebug("Published message to user {UserId}", notification.UserId);
         }
     }
 }

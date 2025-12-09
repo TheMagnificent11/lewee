@@ -1,24 +1,26 @@
+using Aspire.Hosting.Azure;
 using Pizzeria.Common;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-var setDefaultAuthServerAdminCredentials = Environments.IsIntegrationTesting;
+var isTest = Environments.IsIntegrationTesting;
+var isDevOrTest = isTest;
 
 #if DEBUG
-setDefaultAuthServerAdminCredentials = true;
+isDevOrTest = true;
 #endif
 
 var authServer = builder.AddKeycloak(ServiceNames.AuthServer)
     .WithRealmImport($"keycloak/{Environments.Auth.RealmName}-realm.json");
 
-if (setDefaultAuthServerAdminCredentials)
+if (isDevOrTest)
 {
     authServer = authServer
         .WithEnvironment("KC_BOOTSTRAP_ADMIN_USERNAME", Environments.Auth.DefaultAdminCredentialsForTesting.Username)
         .WithEnvironment("KC_BOOTSTRAP_ADMIN_PASSWORD", Environments.Auth.DefaultAdminCredentialsForTesting.Password);
 }
 
-if (!Environments.IsIntegrationTesting)
+if (!isTest)
 {
     authServer = authServer
         .WithLifetime(ContainerLifetime.Persistent)
@@ -35,6 +37,12 @@ var databaseServer = Environments.IsIntegrationTesting
 var pizzaStoreDatabaseName = ServiceNames.PizzaStoreDatabaseName;
 var pizzaStoreDatabase = databaseServer.AddDatabase(pizzaStoreDatabaseName);
 
+var signalR = builder.AddAzureSignalR(ServiceNames.SignalR, AzureSignalRServiceMode.Serverless);
+if (isDevOrTest)
+{
+    signalR = signalR.RunAsEmulator();
+}
+
 var configuration = builder.AddProject<Projects.Pizzeria_Configuration>(ServiceNames.ConfigurationService)
     .WithReference(authServer)
     .WithReference(pizzaStoreDatabase)
@@ -45,7 +53,9 @@ var configuration = builder.AddProject<Projects.Pizzeria_Configuration>(ServiceN
 var storeApi = builder.AddProject<Projects.Pizzeria_Store_Api>(ServiceNames.PizzaStoreApi)
     .WithReference(pizzaStoreDatabase)
     .WithReference(authServer)
+    .WithReference(signalR)
     .WaitFor(configuration)
+    .WaitFor(signalR)
     .WithHttpHealthCheck("/health");
 
 builder.AddProject<Projects.Pizzeria_Store_Web>(ServiceNames.PizzaStoreWebClient)

@@ -1,13 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
   
-  <Sdk Name="Aspire.AppHost.Sdk" Version="13.0.0" />
+  <Sdk Name="Aspire.AppHost.Sdk" Version="13.0.2" />
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <IsAspireHost>true</IsAspireHost>
     <IsTestProject>false</IsTestProject>
-    <AssemblyName>Lewee.Infrastructure.Data.IntegrationAppHost</AssemblyName>
-    <RootNamespace>Lewee.Infrastructure.Data.IntegrationAppHost</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,6 +1,5 @@
 using Bunit;
 using FluentAssertions;
-using Pizzeria.Store.Web.Layout;
 
 namespace Pizzeria.Store.Web.Tests.Unit;
 
@@ -42,7 +41,7 @@ public class MainLayoutTests : TestContext
         var component = this.RenderComponent<MainLayout>();
 
         // Assert
-        component.Markup.Should().Contain($"action=\"{Routes.SignOut}\"");
+        component.Markup.Should().Contain($"action=\"{PageRoutes.SignOut}\"");
         component.Markup.Should().Contain("method=\"post\"");
     }
 }

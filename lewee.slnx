@@ -21,19 +21,38 @@
     <File Path=".github/workflows/build-and-test.yml" />
   </Folder>
   <Folder Name="/Solution Items/src/">
-    <File Path="/Solution Items/src/Directory.Build.props" />
+    <File Path="src/Directory.Build.props" />
+    <File Path="src/README.md" />
   </Folder>
   <Folder Name="/Solution Items/tests/">
-    <File Path="/Solution Items/tests/.editorconfig" />
-    <File Path="/Solution Items/tests/Directory.Build.props" />
+    <File Path="tests/.editorconfig" />
+    <File Path="tests/Directory.Build.props" />
   </Folder>
   <Folder Name="/Solution Items/sample/">
-    <File Path="/Solution Items/sample/.editorconfig" />
-    <File Path="/Solution Items/sample/Directory.Build.props" />
+    <File Path="sample/.editorconfig" />
+    <File Path="sample/Directory.Build.props" />
+    <File Path="sample/README.md" />
+  </Folder>
+  <Folder Name="/Solution Items/.github/instructions/">
+    <File Path=".github/instructions/blazor.instructions.md" />
+    <File Path=".github/instructions/build-and-test.instructions.md" />
+    <File Path=".github/instructions/code-quality.instructions.md" />
+    <File Path=".github/instructions/decision-making.instructions.md" />
+    <File Path=".github/instructions/development-focus.instructions.md" />
+    <File Path=".github/instructions/environment-setup.instructions.md" />
+    <File Path=".github/instructions/how-to-use.instructions.md" />
+    <File Path=".github/instructions/overview.instructions.md" />
+    <File Path=".github/instructions/repository-structure.instructions.md" />
+    <File Path=".github/instructions/sample-application.instructions.md" />
+    <File Path=".github/instructions/technology-stack.instructions.md" />
+    <File Path=".github/instructions/troubleshooting.instructions.md" />
+    <File Path=".github/instructions/validation-workflows.instructions.md" />
+    <File Path=".github/instructions/visual-studio-solution.instructions.md" />
   </Folder>
   <Folder Name="/Solution Items/sample-tests/">
-    <File Path="/Solution Items/sample-tests/.editorconfig" />
-    <File Path="/Solution Items/sample-tests/Directory.Build.props" />
+    <File Path="sample-tests/.editorconfig" />
+    <File Path="sample-tests/Directory.Build.props" />
+    <File Path="sample-tests/README.md" />
   </Folder>
   <Project Path="sample-tests/Pizzeria.Store.Application.Tests.Unit/Pizzeria.Store.Application.Tests.Unit.csproj" />
   <Project Path="sample-tests/Pizzeria.Store.Domain.Tests/Pizzeria.Store.Domain.Tests.csproj" />
@@ -49,7 +68,7 @@
   <Project Path="sample/Pizzeria.Store.Contracts/Pizzeria.Store.Contracts.csproj" />
   <Project Path="sample/Pizzeria.Store.Data/Pizzeria.Store.Data.csproj" />
   <Project Path="sample/Pizzeria.Store.Domain/Pizzeria.Store.Domain.csproj" />
-  <Project Path="sample/Pizzeria.Store.Web/Pizzeria.Store.Web.csproj" />
+  <Project Path="sample/Pizzeria.Store.Web/Pizzeria.Store.Web.csproj" Id="ad4622bc-2f6b-4908-8519-b9d0a5425795" />
   <Project Path="src/Lewee.Application/Lewee.Application.csproj" />
   <Project Path="src/Lewee.Blazor/Lewee.Blazor.csproj" />
   <Project Path="src/Lewee.Contracts/Lewee.Contracts.csproj" />
@@ -58,8 +77,12 @@
   <Project Path="src/Lewee.Infrastructure.AspNet/Lewee.Infrastructure.AspNet.csproj" />
   <Project Path="src/Lewee.Infrastructure.Data/Lewee.Infrastructure.Data.csproj" />
   <Project Path="src/Lewee.Infrastructure.PostgreSQL/Lewee.Infrastructure.PostgreSQL.csproj" />
+  <Project Path="src/Lewee.Playwright/Lewee.Playwright.csproj" Id="fbfb60b0-2de6-4a97-864f-8fe1589b37da" />
   <Project Path="src/Lewee.Shared/Lewee.Shared.csproj" />
   <Project Path="tests/Lewee.Application.Tests.Unit/Lewee.Application.Tests.Unit.csproj" />
+  <Project Path="tests/Lewee.Blazor.Tests.Api/Lewee.Blazor.Tests.Api.csproj" />
+  <Project Path="tests/Lewee.Blazor.Tests.App/Lewee.Blazor.Tests.App.csproj" Id="c3ba5566-8f18-4dc5-b63b-9ed9daa49ca1" />
+  <Project Path="tests/Lewee.Blazor.Tests.Contracts/Lewee.Blazor.Tests.Contracts.csproj" Id="da8c040f-c6c7-4b70-b13c-5ceec146f39c" />
   <Project Path="tests/Lewee.Blazor.Tests.Integration/Lewee.Blazor.Tests.Integration.csproj" />
   <Project Path="tests/Lewee.Domain.Tests.Unit/Lewee.Domain.Tests.Unit.csproj" />
   <Project Path="tests/Lewee.Infrastructure.Data.Tests.App/Lewee.Infrastructure.Data.Tests.App.csproj" />
@@ -67,4 +90,5 @@
   <Project Path="tests/Lewee.Infrastructure.Data.Tests.Unit/Lewee.Infrastructure.Data.Tests.Unit.csproj" />
   <Project Path="tests/Lewee.Shared.Tests.Unit/Lewee.Shared.Tests.Unit.csproj" />
   <Project Path="tests/Lewee.Tests.Common/Lewee.Tests.Common.csproj" />
+  <Project Path="tests/Lewee.Tests.ServiceDefaults/Lewee.Tests.ServiceDefaults.csproj" Id="26d5f0fd-5182-4b2a-9615-4c9475fe0f13" />
 </Solution>

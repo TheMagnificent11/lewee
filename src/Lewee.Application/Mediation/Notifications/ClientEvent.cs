@@ -65,7 +65,7 @@ public class ClientEvent : INotification
             CorrelationId = this.CorrelationId,
             ContractAssemblyName = this.ContractAssemblyName,
             ContractFullClassName = this.ContractFullClassName,
-            MessageJson = this.MessageJson
+            MessageJson = this.MessageJson,
         };
     }
 }

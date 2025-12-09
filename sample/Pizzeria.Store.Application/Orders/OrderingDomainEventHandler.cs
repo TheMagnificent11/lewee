@@ -83,9 +83,7 @@ public class OrderingDomainEventHandler : INotificationHandler<OrderStartedEvent
             order.Id.ToString(),
             cancellationToken);
 
-        // For anonymous users (demo app), send to all clients by passing null userId
-        // In production with authentication, pass the actual order.UserId
-        var clientEvent = new ClientEvent(notification.CorrelationId, userId: null, dto);
+        var clientEvent = new ClientEvent(notification.CorrelationId, notification.UserId, dto);
 
         await this.mediator.Publish(clientEvent, cancellationToken);
 

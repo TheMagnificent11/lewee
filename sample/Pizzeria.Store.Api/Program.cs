@@ -6,7 +6,7 @@ using Lewee.Infrastructure.Data;
 using Lewee.Infrastructure.PostgreSQL;
 using Pizzeria.Common;
 using Pizzeria.ServiceDefaults;
-using Pizzeria.Store.Api.Startup;
+using Pizzeria.Store.Api.Infrastructure;
 using Pizzeria.Store.Application;
 using Pizzeria.Store.Data;
 using Pizzeria.Store.Domain;
@@ -27,29 +27,8 @@ builder.Services
     .AddLeweeDatabaseServices<StoreDbContext>(typeof(Pizza).Assembly)
     .AddPizzaStoreApplication()
     .AddCorrelationIdServices()
-    .AddLeweeSignalR();
-
-builder.Services
-    .AddAuthentication()
-    .AddKeycloakJwtBearer(
-        serviceName: ServiceNames.AuthServer,
-        realm: Pizzeria.Common.Environments.Auth.RealmName,
-        options =>
-        {
-            // Disable HTTPS metadata requirement for local/containerized Keycloak
-            options.RequireHttpsMetadata = !isDevOrTest;
-
-            // TODO: Integration tests are currently failing with 401 Unauthorized
-            // This appears to be an issue with JWT validation in the Aspire testing environment
-            // Possible causes:
-            // 1. Service discovery URL mismatch between token issuer and API authority
-            // 2. JWKS endpoint not reachable from API container
-            // 3. Timing issue with Keycloak readiness
-        });
-
-builder.Services.AddAuthorizationBuilder();
-
-builder.Services
+    .AddAuth(isDevOrTest)
+    .AddLeweeSignalR(builder.Configuration.GetConnectionString(ServiceNames.SignalR)!)
     .AddFastEndpoints()
     .AddEndpointsApiExplorer()
     .AddSwaggerGen()
@@ -60,7 +39,7 @@ var app = builder.Build();
 app.UseHealthEndpoints();
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapHub<ClientEventHub>("/events");
+app.MapLeweeSignalRNegotiateEndpoint();
 app.UseFastEndpoints();
 app.UseCorrelationIdMiddleware();
 

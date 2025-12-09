@@ -1,12 +1,22 @@
 {
   "profiles": {
-    "Pizzeria.Configuration": {
+    "http": {
       "commandName": "Project",
+      "dotnetRunMessages": true,
       "launchBrowser": true,
+      "applicationUrl": "http://pizzeria-configuration.dev.localhost:5976",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "https://localhost:59975;http://localhost:59976"
+      }
+    },
+    "https": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "applicationUrl": "https://pizzeria-configuration.dev.localhost:7976;http://pizzeria-configuration.dev.localhost:5976",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
     }
   }
 }
