@@ -6,9 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 using MudBlazor.Services;
-using Pizzeria.Store.Contracts;
-using Pizzeria.Store.Web.Infrastructure;
-using Pizzeria.Store.Web.Orders;
 
 namespace Pizzeria.Store.Web.Tests.Unit;
 

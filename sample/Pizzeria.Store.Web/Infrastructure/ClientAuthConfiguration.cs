@@ -1,8 +1,10 @@
 ﻿using System.Security.Claims;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Pizzeria.Common;
-using Pizzeria.Store.Contracts.Users;
+using Pizzeria.Store.Application.Customers;
+using Pizzeria.Store.Components;
 
 namespace Pizzeria.Store.Web.Infrastructure;
 
@@ -47,16 +49,14 @@ internal static class ClientAuthConfiguration
                             var externalUserId = context.Principal?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                             if (!string.IsNullOrEmpty(externalUserId))
                             {
-                                var apiClient = context.HttpContext.RequestServices.GetRequiredService<IPizzeriaApiClient>();
+                                var mediator = context.HttpContext.RequestServices.GetRequiredService<IMediator>();
+                                var createCustomerCommand = new CreateCustomerCommand(
+                                    externalUserId,
+                                    CorrelationId: Guid.NewGuid());
+
                                 try
                                 {
-                                    // Create user entity in database if it doesn't exist
-                                    await apiClient.CreateCustomerAsync(
-                                        new CreateCustomerRequest
-                                        {
-                                            ExternalUserId = externalUserId,
-                                        },
-                                        context.HttpContext.RequestAborted);
+                                    _ = await mediator.Send(createCustomerCommand, context.HttpContext.RequestAborted);
                                 }
                                 catch
                                 {

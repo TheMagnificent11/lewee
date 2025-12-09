@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
 using Lewee.Playwright;
 using Microsoft.Playwright;
+using Pizzeria.Store.Components;
 using Pizzeria.Store.Domain;
-using Pizzeria.Store.Web;
 using Pizzeria.Tests.Integration.Infrastructure;
 using Xunit;
 

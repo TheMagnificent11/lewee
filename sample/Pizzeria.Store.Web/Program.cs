@@ -1,5 +1,6 @@
 using MudBlazor.Services;
 using Pizzeria.ServiceDefaults;
+using Pizzeria.Store.Components;
 using Pizzeria.Store.Web;
 using Pizzeria.Store.Web.Infrastructure;
 
@@ -9,9 +10,7 @@ builder.AddServiceDefaults();
 
 builder.Services
     .AddAuth()
-    .AddApiClient()
     .AddCascadingAuthenticationState()
-    .AddSignalRMessaging(builder.Environment.IsDevelopment())
     .AddMudServices()
     .AddRazorComponents()
     .AddInteractiveServerComponents();

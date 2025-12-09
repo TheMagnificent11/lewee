@@ -2,10 +2,10 @@ using System.Diagnostics.CodeAnalysis;
 using Fluxor;
 using Fluxor.Blazor.Web.Components;
 using Microsoft.AspNetCore.Components;
-using Pizzeria.Store.Web.Orders;
-using Pizzeria.Store.Web.Orders.Actions;
-using Pizzeria.Store.Web.Pizzas;
-using Pizzeria.Store.Web.Pizzas.Actions;
+using Pizzeria.Store.Contracts.Orders.Actions;
+using Pizzeria.Store.Contracts.Pizzas.Actions;
+using Pizzeria.Store.StateManagement.Orders;
+using Pizzeria.Store.StateManagement.Pizzas;
 
 namespace Pizzeria.Store.Components;
 
@@ -43,7 +43,11 @@ public partial class Order : FluxorComponent
     {
         if (this.OrdersState.Value.CurrentOrder != null)
         {
-            this.Dispatcher.Dispatch(new AddPizzaToOrderAction(this.OrdersState.Value.CurrentOrder.Id, pizzaId));
+            this.Dispatcher.Dispatch(new AddPizzaToOrderAction
+            {
+                OrderId = this.OrdersState.Value.CurrentOrder.Id,
+                PizzaId = pizzaId,
+            });
         }
     }
 
