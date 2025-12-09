@@ -8,9 +8,9 @@ using Pizzeria.Store.Components;
 
 namespace Pizzeria.Store.Web.Infrastructure;
 
-internal static class ClientAuthConfiguration
+internal static class AuthConfiguration
 {
-    public static IServiceCollection AddClientAuth(this IServiceCollection services)
+    public static IServiceCollection AddAuth(this IServiceCollection services)
     {
         services
             .AddAuthentication(options =>

@@ -17,7 +17,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
 
 var databaseName = ServiceNames.PizzaStoreDatabaseName;
-var isDevOrTest = builder.Environment.IsDevelopment() || Pizzeria.Common.Environments.IsIntegrationTesting;
 
 // Server services
 builder.Services
@@ -29,17 +28,18 @@ builder.Services
     .AddLeweeDatabaseServices<StoreDbContext>(typeof(Pizza).Assembly)
     .AddPizzaStoreApplication()
     .AddCorrelationIdServices()
-    .AddServerAuth(isDevOrTest)
+    .AddAuth()
     .AddDatabaseHealthCheck();
 
 // Client services
 builder.Services
-    .AddClientAuth()
     .AddMudServices()
     .AddRazorComponents()
     .AddInteractiveServerComponents();
 
 var app = builder.Build();
+
+app.MapDefaultEndpoints();
 
 if (!app.Environment.IsDevelopment())
 {
@@ -50,9 +50,9 @@ if (!app.Environment.IsDevelopment())
 }
 
 app
+    .UseAntiforgery()
     .UseHttpsRedirection()
     .UseCorrelationIdMiddleware()
-    .UseAntiforgery()
     .UseAuthentication()
     .UseAuthorization();
 
