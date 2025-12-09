@@ -134,7 +134,9 @@ dotnet format lewee.sln
   - Do not add any logic to `Program.cs`
 - Use extension methods on `IServiceCollection` and `IApplicationBuilder` to organize service and middleware registrations respectively
 
-## bUnit/Playwright Testing Standards
+## Playwright/bUnit Testing Standards
 
 - Do not use magic strings for selectors
-  - Expose a constant from the component and use that instead
+  - Expose a constant from the component and use that instead e.g. `MainLayout.Selectors.SignOutButton`
+  - Selector should use structural and semantic attributes where possible, avoid relying on CSS classes or element hierarchy
+    - For example `[role='heading'][aria-level='1']`
