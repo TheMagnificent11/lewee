@@ -54,7 +54,6 @@
     <File Path="sample-tests/Directory.Build.props" />
     <File Path="sample-tests/README.md" />
   </Folder>
-  <Project Path="sample-tests/Pizzeria.Store.Application.Tests.Unit/Pizzeria.Store.Application.Tests.Unit.csproj" />
   <Project Path="sample-tests/Pizzeria.Store.Components.Tests.Unit/Pizzeria.Store.Components.Tests.Unit.csproj" />
   <Project Path="sample-tests/Pizzeria.Store.Domain.Tests/Pizzeria.Store.Domain.Tests.csproj" />
   <Project Path="sample-tests/Pizzeria.Store.StateManagement.Tests.Unit/Pizzeria.Store.StateManagement.Tests.Unit.csproj" Id="2f1831e1-ce4a-4976-a27a-c5d7480dc5ee" />
