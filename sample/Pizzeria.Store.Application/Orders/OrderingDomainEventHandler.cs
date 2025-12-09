@@ -1,8 +1,10 @@
-using Lewee.Application.Mediation.Notifications;
+using Fluxor;
 using Lewee.Domain;
+using Lewee.Shared;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Pizzeria.Store.Contracts.Orders;
+using Pizzeria.Store.Contracts.Orders.Actions;
 using Pizzeria.Store.Domain;
 
 namespace Pizzeria.Store.Application.Orders;
@@ -11,18 +13,18 @@ public class OrderingDomainEventHandler : INotificationHandler<OrderStartedEvent
 {
     private readonly IRepository<Order> orderRepository;
     private readonly IQueryProjectionService queryProjectionService;
-    private readonly IMediator mediator;
+    private readonly IDispatcher dispatcher;
     private readonly ILogger<OrderingDomainEventHandler> logger;
 
     public OrderingDomainEventHandler(
         IRepository<Order> orderRepository,
         IQueryProjectionService queryProjectionService,
-        IMediator mediator,
+        IDispatcher dispatcher,
         ILogger<OrderingDomainEventHandler> logger)
     {
         this.orderRepository = orderRepository;
         this.queryProjectionService = queryProjectionService;
-        this.mediator = mediator;
+        this.dispatcher = dispatcher;
         this.logger = logger;
     }
 
@@ -30,63 +32,72 @@ public class OrderingDomainEventHandler : INotificationHandler<OrderStartedEvent
     {
         ArgumentNullException.ThrowIfNull(notification);
 
-        this.logger.LogHandlingOrderStartedEvent(notification.OrderId);
-
-        // Get the order with its pizzas to create the query projection
-        var spec = new GetOrderQuerySpec(notification.OrderId);
-        var order = await this.orderRepository.QueryOneAsync(spec, cancellationToken);
-
-        if (order is null)
+        using (this.logger.BeginScope(new Dictionary<string, object>(StringComparer.Ordinal)
         {
-            this.logger.LogOrderNotFound(notification.OrderId);
-            return;
-        }
+            { LoggingConsts.CorrelationId, notification.CorrelationId },
+            { "OrderId", notification.OrderId },
+        }))
+        {
+            this.logger.LogInformation("Handling {EventName}", nameof(OrderStartedEvent));
 
-        // Build the pizza DTOs with joined data
-        var orderLines = order.Pizzas
-            .Select(op => new OrderPizzaDto
+            // Get the order with its pizzas to create the query projection
+            var spec = new GetOrderQuerySpec(notification.OrderId);
+            var order = await this.orderRepository.QueryOneAsync(spec, cancellationToken);
+
+            if (order is null)
             {
-                Id = op.Id,
-                PizzaId = op.PizzaId,
-                PizzaName = op.Pizza.Name,
-                PizzaPrice = op.Pizza.Price,
-                Quantity = op.Quantity,
-                LineTotal = op.Pizza.Price * op.Quantity,
-            })
-            .ToArray();
+                this.logger.LogError("Order not found");
+                return;
+            }
 
-        var totalCost = orderLines.Sum(p => p.LineTotal);
+            // Build the pizza DTOs with joined data
+            var orderLines = order.Pizzas
+                .Select(op => new OrderPizzaDto
+                {
+                    Id = op.Id,
+                    PizzaId = op.PizzaId,
+                    PizzaName = op.Pizza.Name,
+                    PizzaPrice = op.Pizza.Price,
+                    Quantity = op.Quantity,
+                    LineTotal = op.Pizza.Price * op.Quantity,
+                })
+                .ToArray();
 
-        // Create the DTO for SignalR
-        var dto = new OrderDto
-        {
-            Id = order.Id,
-            UserId = order.UserId,
-            StartedDateTime = order.StartedDateTime,
-            SubmittedDateTime = order.SubmittedDateTime,
-            PreparedDateTime = order.PreparedDateTime,
-            CompletedDateTime = order.CompletedDateTime,
-            DeliveryAddress = order.DeliveryAddress,
-            Pizzas = orderLines,
-            TotalCost = totalCost,
-        };
+            var totalCost = orderLines.Sum(p => p.LineTotal);
 
-        // Create or update the query projection
-        var queryProjection = new OrderQueryProjection
-        {
-            CorrelationId = notification.CorrelationId,
-            Order = dto,
-        };
+            // Create the DTO for SignalR
+            var dto = new OrderDto
+            {
+                Id = order.Id,
+                UserId = order.UserId,
+                StartedDateTime = order.StartedDateTime,
+                SubmittedDateTime = order.SubmittedDateTime,
+                PreparedDateTime = order.PreparedDateTime,
+                CompletedDateTime = order.CompletedDateTime,
+                DeliveryAddress = order.DeliveryAddress,
+                Pizzas = orderLines,
+                TotalCost = totalCost,
+            };
 
-        await this.queryProjectionService.AddOrUpdateAsync(
-            queryProjection,
-            order.Id.ToString(),
-            cancellationToken);
+            // Create or update the query projection
+            var queryProjection = new OrderQueryProjection
+            {
+                CorrelationId = notification.CorrelationId,
+                Order = dto,
+            };
 
-        var clientEvent = new ClientEvent(notification.CorrelationId, notification.UserId, dto);
+            await this.queryProjectionService.AddOrUpdateAsync(
+                queryProjection,
+                order.Id.ToString(),
+                cancellationToken);
 
-        await this.mediator.Publish(clientEvent, cancellationToken);
+            var action = new StartOrderCompletedAction(dto, notification.CorrelationId);
 
-        this.logger.LogPublishedOrderDto(notification.OrderId);
+            this.dispatcher.Dispatch(action);
+
+            this.logger.LogInformation(
+                "{Action} dispatched",
+                nameof(StartOrderCompletedAction));
+        }
     }
 }
