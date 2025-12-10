@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Lewee.StateManagement\Lewee.StateManagement.csproj" />
+    <ProjectReference Include="..\Pizzeria.Store.Application\Pizzeria.Store.Application.csproj" />
+    <ProjectReference Include="..\Pizzeria.Store.Contracts\Pizzeria.Store.Contracts.csproj" />
+  </ItemGroup>
+  
+</Project>

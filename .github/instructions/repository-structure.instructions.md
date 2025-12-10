@@ -14,7 +14,8 @@ lewee/
 │   ├── Lewee.Domain/             # Domain layer abstractions and base classes
 │   ├── Lewee.Application/        # Application layer with CQRS and validation
 │   ├── Lewee.Shared/             # Cross-cutting utilities and constants
-│   ├── Lewee.Contracts/          # API contract definitions
+│   ├── Lewee.Contracts/          # Client-server communication contracts
+│   ├── Lewee.StateManagement/    # Fluxor state management and action interfaces
 │   ├── Lewee.Infrastructure.Data/           # Entity Framework core integration
 │   ├── Lewee.Infrastructure.PostgreSQL/     # PostgreSQL-specific features
 │   ├── Lewee.Infrastructure.AspNet/         # ASP.NET Core integration

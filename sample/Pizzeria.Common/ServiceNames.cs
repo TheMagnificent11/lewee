@@ -8,9 +8,7 @@ public static class ServiceNames
 
     public const string PizzaStoreDatabaseIntegrationTesting = "pizza-store-integration-testing-database";
 
-    public const string PizzaStoreApi = "pizza-store-api";
-
-    public const string PizzaStoreWebClient = "pizza-store-web-client";
+    public const string PizzaStoreWeb = "pizza-store-web";
 
     public const string AuthServer = "auth-server";
 

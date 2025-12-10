@@ -4,7 +4,6 @@ using Lewee.Contracts;
 using Lewee.Shared;
 using MediatR;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.Azure.SignalR.Management;
 using Microsoft.Extensions.Logging;
 
 namespace Lewee.Infrastructure.AspNet.SignalR;
@@ -15,14 +14,17 @@ namespace Lewee.Infrastructure.AspNet.SignalR;
     Justification = "Use via DI")]
 internal sealed class ClientEventHandler : INotificationHandler<ClientEvent>
 {
-    private readonly ServiceManager serviceManager;
+    private readonly IHubContext<ClientEventHub> hubContext;
+    private readonly ClientEventChannel eventChannel;
     private readonly ILogger logger;
 
     public ClientEventHandler(
-        ServiceManager serviceManager,
+        IHubContext<ClientEventHub> hubContext,
+        ClientEventChannel eventChannel,
         ILogger<ClientEventHandler> logger)
     {
-        this.serviceManager = serviceManager;
+        this.hubContext = hubContext;
+        this.eventChannel = eventChannel;
         this.logger = logger;
     }
 
@@ -33,14 +35,16 @@ internal sealed class ClientEventHandler : INotificationHandler<ClientEvent>
             { LoggingConsts.CorrelationId, notification.CorrelationId },
         }))
         {
-            var hubContext = await this.serviceManager.CreateHubContextAsync(
-                SignalRConfiguration.EventsHubName,
-                cancellationToken);
             var clientMessage = notification.ToClientMessage();
 
+            // Write to channel for Blazor Server circuits to consume
+            await this.eventChannel.Writer.WriteAsync(clientMessage, cancellationToken);
+            this.logger.LogDebug("Client event written to channel");
+
+            // Also send via SignalR hub for any external clients
             if (string.IsNullOrWhiteSpace(notification.UserId))
             {
-                await hubContext
+                await this.hubContext
                     .Clients
                     .All
                     .SendAsync(nameof(ClientMessage), clientMessage, cancellationToken);
@@ -50,12 +54,12 @@ internal sealed class ClientEventHandler : INotificationHandler<ClientEvent>
                 return;
             }
 
-            await hubContext
+            await this.hubContext
                 .Clients
-                .User(notification.UserId)
+                .Group(notification.UserId)
                 .SendAsync(nameof(ClientMessage), clientMessage, cancellationToken);
 
-            this.logger.LogDebug("Published message to user {UserId}", notification.UserId);
+            this.logger.LogDebug("Published message to specific client(s)");
         }
     }
 }

@@ -13,40 +13,8 @@
   "accessTokenLifespan": 300,
   "clients": [
     {
-      "clientId": "pizzeria-store-api",
-      "name": "Pizzeria Store API Client",
-      "enabled": true,
-      "publicClient": true,
-      "directAccessGrantsEnabled": true,
-      "standardFlowEnabled": true,
-      "implicitFlowEnabled": false,
-      "serviceAccountsEnabled": false,
-      "fullScopeAllowed": true,
-      "bearerOnly": false,
-      "consentRequired": false,
-      "protocol": "openid-connect",
-      "redirectUris": ["*"],
-      "webOrigins": ["*"],
-      "attributes": {
-        "access.token.lifespan": "300"
-      },
-      "protocolMappers": [
-        {
-          "name": "audience-mapper",
-          "protocol": "openid-connect",
-          "protocolMapper": "oidc-audience-mapper",
-          "consentRequired": false,
-          "config": {
-            "included.client.audience": "pizzeria-store-api",
-            "id.token.claim": "false",
-            "access.token.claim": "true"
-          }
-        }
-      ]
-    },
-    {
       "clientId": "pizzeria-store-web",
-      "name": "Pizzeria Store Web Client",
+      "name": "Pizzeria Store Web",
       "enabled": true,
       "publicClient": true,
       "directAccessGrantsEnabled": false,

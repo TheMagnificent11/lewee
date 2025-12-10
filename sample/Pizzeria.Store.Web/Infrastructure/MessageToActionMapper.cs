@@ -1,7 +1,9 @@
-using Lewee.Blazor.Fluxor.Actions;
+﻿using System.Diagnostics.CodeAnalysis;
 using Lewee.Blazor.Messaging;
-using Pizzeria.Store.Contracts;
-using Pizzeria.Store.Web.Orders.Actions;
+using Lewee.Shared;
+using Lewee.StateManagement;
+using Pizzeria.Store.Contracts.Orders;
+using Pizzeria.Store.StateManagement.Orders.Actions;
 
 namespace Pizzeria.Store.Web.Infrastructure;
 
@@ -14,35 +16,36 @@ public class MessageToActionMapper : IMessageToActionMapper
         this.logger = logger;
     }
 
-    public IMessageReceivedAction? Map(object message, Guid correlationId)
+    public IMessageReceivedAction? Map([NotNull] object message, Guid correlationId)
     {
-        if (message == null)
+        var messageType = message.GetType().FullName;
+
+        using (this.logger.BeginScope(new Dictionary<string, object>(StringComparer.Ordinal)
         {
-            this.logger.LogReceivedNullMessage(correlationId);
-            return null;
+            [LoggingConsts.CorrelationId] = correlationId,
+            ["MessageType"] = messageType!,
+        }))
+        {
+            this.logger.LogInformation("Mapping message");
+
+            var result = message switch
+            {
+                OrderDto order => new StartOrderCompletedAction(order, correlationId),
+                _ => null,
+            };
+
+            if (result == null)
+            {
+                this.logger.LogInformation("No mapping found for message");
+            }
+            else
+            {
+                this.logger.LogInformation(
+                    "Successfully mapped message to {ActionType}",
+                    result.GetType().FullName);
+            }
+
+            return result;
         }
-
-        this.logger.LogMappingMessage(
-            message.GetType().FullName,
-            correlationId);
-
-        var result = message switch
-        {
-            OrderDto order => new StartOrderCompletedAction(order, correlationId),
-            _ => null,
-        };
-
-        if (result != null)
-        {
-            this.logger.LogSuccessfullyMapped(
-                message.GetType().Name,
-                result.GetType().Name);
-        }
-        else
-        {
-            this.logger.LogNoMappingFound(message.GetType().FullName);
-        }
-
-        return result;
     }
 }

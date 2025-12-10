@@ -15,24 +15,32 @@ This package has minimal dependencies and only relies on the .NET Base Class Lib
 ### Constants
 
 #### RequestHeaders
+
 Contains standardized HTTP request header names used across Lewee applications:
+
 - `CorrelationId` - The HTTP header name for correlation ID (`"X-Correlation-ID"`)
 
 #### LoggingConsts
+
 Provides consistent property names for structured logging:
+
 - `CorrelationId` - Property name for correlation ID in logs (`"CorrelationId"`)
 - `CorrelationIdHeaderKey` - Header key for correlation ID in logging context (`"correlationId"`)
 - `TenantId` - Property name for tenant ID in multi-tenant applications (`"TenantId"`)
 - `RequestType` - Property name for request type classification (`"RequestType"`)
 
 #### HttpContextConsts
+
 Contains constants for HTTP context items:
+
 - `ClientId` - Key for storing SignalR client ID in HTTP context (`"SignalR-Client-Id"`)
 
 ### Extension Methods
 
 #### EnumExtensions
+
 Utility methods for working with enum values:
+
 - `GetDescription(this Enum value)` - Gets the `DescriptionAttribute` description from an enum value if it exists, otherwise returns `ToString()` of the value
 - `IsEquivalentToZero<TEnum>(this TEnum value)` - Determines whether the enum value is equivalent to zero
 
@@ -48,10 +56,10 @@ public enum OrderStatus
 {
     [Description("Order Pending")]
     Pending = 0,
-    
+
     [Description("Order Confirmed")]
     Confirmed = 1,
-    
+
     Cancelled = 2
 }
 
@@ -139,12 +147,14 @@ public string? GetSignalRClientId(HttpContext context)
 ## Integration with Other Lewee Packages
 
 This package is referenced by other Lewee packages to ensure consistent:
+
 - Correlation ID handling across HTTP requests and logging
 - Multi-tenant logging patterns
 - SignalR client identification
 - Enum description handling
 
 The constants defined here are used by:
+
 - `Lewee.Application` for correlation ID and tenant logging behaviors
 - `Lewee.Infrastructure.AspNet` for HTTP context management
 - Other Lewee packages for consistent cross-cutting concerns
