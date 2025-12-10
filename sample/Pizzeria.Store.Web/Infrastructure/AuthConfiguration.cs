@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Pizzeria.Common;
 using Pizzeria.Store.Application.Customers;
-using Pizzeria.Store.Components;
+using Pizzeria.Store.Contracts;
 
 namespace Pizzeria.Store.Web.Infrastructure;
 

@@ -1,4 +1,5 @@
-﻿@attribute [Route(PageRoutes.Home)]
+﻿@using Pizzeria.Store.Contracts
+@attribute [Route(PageRoutes.Home)]
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
 
 @inherits FluxorComponent
@@ -53,15 +54,6 @@
             </MudCard>
         </MudItem>
     </MudGrid>
-}
-else
-{
-    <MudAlert Severity="Severity.Success" Class="mb-4">
-        <MudText Typo="Typo.body1">
-            Order started successfully!
-            <MudLink Href="@PageRoutes.Order" Color="Color.Primary">Continue to menu</MudLink>
-        </MudText>
-    </MudAlert>
 }
 
 @if (!string.IsNullOrEmpty(State.Value.ErrorMessage))

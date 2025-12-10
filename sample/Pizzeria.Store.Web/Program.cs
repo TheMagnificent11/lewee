@@ -8,7 +8,7 @@ using MudBlazor.Services;
 using Pizzeria.Common;
 using Pizzeria.ServiceDefaults;
 using Pizzeria.Store.Application;
-using Pizzeria.Store.Components;
+using Pizzeria.Store.Contracts;
 using Pizzeria.Store.Data;
 using Pizzeria.Store.Domain;
 using Pizzeria.Store.StateManagement;

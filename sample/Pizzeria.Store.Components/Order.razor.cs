@@ -2,6 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using Fluxor;
 using Fluxor.Blazor.Web.Components;
 using Microsoft.AspNetCore.Components;
+using Pizzeria.Store.Contracts;
 using Pizzeria.Store.Contracts.Orders.Actions;
 using Pizzeria.Store.Contracts.Pizzas.Actions;
 using Pizzeria.Store.StateManagement.Orders;
@@ -33,7 +34,7 @@ public partial class Order : FluxorComponent
             return;
         }
 
-        if (this.PizzasState.Value.Pizzas.Any() && !this.PizzasState.Value.IsLoading)
+        if (!this.PizzasState.Value.Pizzas.Any() && !this.PizzasState.Value.IsLoading)
         {
             this.Dispatcher.Dispatch(new LoadPizzasAction());
         }

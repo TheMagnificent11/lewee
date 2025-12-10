@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 using MudBlazor.Services;
-using Pizzeria.Store.Components;
+using Pizzeria.Store.Contracts;
 using Pizzeria.Store.StateManagement.Orders;
 using Xunit;
 
