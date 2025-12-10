@@ -4,16 +4,43 @@ Fluxor state management configuration and base classes for Blazor applications i
 
 ## Purpose
 
-This package provides the foundational state management infrastructure for Blazor applications using [Fluxor](https://github.com/mrpmorris/Fluxor). It includes base state classes, reducer extension methods, effect base classes, and logging utilities for consistent state management patterns.
+This package provides the foundational state management infrastructure for Blazor applications using [Fluxor](https://github.com/mrpmorris/Fluxor). It includes base state classes, reducer extension methods, effect base classes, action interfaces, and logging utilities for consistent state management patterns.
 
 ## Dependencies
 
 - `Fluxor.Blazor.Web.ReduxDevTools` - Fluxor with Redux DevTools support
 - `Correlate.DependencyInjection` - Correlation ID support
-- `Lewee.Contracts` - State management action interfaces
+- `Lewee.Contracts` - Client-server communication contracts
 - `Lewee.Shared` - Logging constants
 
 ## Components
+
+### State Management Interfaces
+
+These interfaces define contracts for Fluxor actions used in client-side state management:
+
+| Interface | Description |
+|-----------|-------------|
+| `IRequestAction` | Base interface for actions that initiate a request, containing a `CorrelationId` |
+| `IRequestSuccessAction` | Interface for actions indicating successful request completion with `CorrelationId` |
+| `IQuerySuccessAction<T>` | Generic interface for successful query actions carrying `Data` of type `T` |
+| `IRequestErrorAction` | Interface for failed request actions with `CorrelationId` and `ErrorMessage` |
+| `IMessageReceivedAction` | Interface for actions dispatched when a server message is received |
+
+**Usage:**
+
+```csharp
+// Request action to initiate a query
+public record GetOrdersAction(Guid CorrelationId) : IRequestAction;
+
+// Success action with query data
+public record GetOrdersSuccessAction(Guid CorrelationId, OrderDto[] Data)
+    : IQuerySuccessAction<OrderDto[]>;
+
+// Error action for failures
+public record GetOrdersErrorAction(Guid CorrelationId, string ErrorMessage)
+    : IRequestErrorAction;
+```
 
 ### State Classes
 
@@ -163,9 +190,9 @@ The `AddLeweeFluxor` method:
 
 | Package | Integration |
 |---------|-------------|
-| `Lewee.Contracts` | Uses `IRequestAction`, `IRequestSuccessAction`, `IRequestErrorAction`, `IQuerySuccessAction<T>` |
+| `Lewee.Contracts` | Used for client-server communication contracts |
 | `Lewee.Shared` | Uses `LoggingConsts` for consistent logging property names |
-| `Lewee.Blazor` | References this package for state management configuration |
+| `Lewee.Blazor` | References this package for state management configuration and uses action interfaces |
 
 ## Sample Application
 

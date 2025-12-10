@@ -1,5 +1,5 @@
 using Fluxor;
-using Pizzeria.Store.Contracts.Pizzas.Actions;
+using Pizzeria.Store.StateManagement.Pizzas.Actions;
 
 namespace Pizzeria.Store.StateManagement.Pizzas;
 

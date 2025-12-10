@@ -1,4 +1,4 @@
-﻿namespace Lewee.Contracts.StateManagement;
+﻿namespace Lewee.StateManagement;
 
 /// <summary>
 /// Request Error Action Interface

@@ -1,4 +1,4 @@
-﻿namespace Lewee.Contracts.StateManagement;
+﻿namespace Lewee.StateManagement;
 
 /// <summary>
 /// Query Success Action Interface

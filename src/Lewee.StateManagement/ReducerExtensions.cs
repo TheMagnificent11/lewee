@@ -1,7 +1,4 @@
-﻿using Lewee.Contracts.StateManagement;
-using Lewee.StateManagement;
-
-namespace Lewee.StateManagement;
+﻿namespace Lewee.StateManagement;
 
 /// <summary>
 /// Reducer Extension Methods

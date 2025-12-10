@@ -4,9 +4,6 @@ using Xunit;
 
 namespace Lewee.Blazor.Tests.Integration;
 
-/// <summary>
-/// Tests for Blazor Server (in-process SignalR via channel) messaging scenario
-/// </summary>
 [Collection(BlazorServerTestFixture.CollectionName)]
 public sealed class BlazorServerSignalRTests
 {

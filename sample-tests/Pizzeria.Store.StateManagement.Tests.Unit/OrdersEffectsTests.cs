@@ -10,8 +10,8 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Pizzeria.Store.Application.Orders;
 using Pizzeria.Store.Contracts.Orders;
-using Pizzeria.Store.Contracts.Orders.Actions;
 using Pizzeria.Store.StateManagement.Orders;
+using Pizzeria.Store.StateManagement.Orders.Actions;
 using Xunit;
 
 namespace Pizzeria.Store.StateManagement.Tests.Unit;

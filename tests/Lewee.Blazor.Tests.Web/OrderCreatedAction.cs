@@ -1,5 +1,5 @@
 using Lewee.Blazor.Tests.Contracts;
-using Lewee.Contracts.StateManagement;
+using Lewee.StateManagement;
 
 namespace Lewee.Blazor.Tests.Web;
 

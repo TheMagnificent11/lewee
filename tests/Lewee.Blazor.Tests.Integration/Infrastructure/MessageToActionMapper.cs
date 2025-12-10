@@ -1,7 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Lewee.Blazor.Messaging;
 using Lewee.Blazor.Tests.Contracts;
-using Lewee.Contracts.StateManagement;
+using Lewee.StateManagement;
 using Microsoft.Extensions.Logging;
 
 namespace Lewee.Blazor.Tests.Integration.Infrastructure;

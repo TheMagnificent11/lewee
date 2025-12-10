@@ -56,8 +56,8 @@
   </Folder>
   <Project Path="sample-tests/Pizzeria.Store.Components.Tests.Unit/Pizzeria.Store.Components.Tests.Unit.csproj" />
   <Project Path="sample-tests/Pizzeria.Store.Domain.Tests/Pizzeria.Store.Domain.Tests.csproj" />
-  <Project Path="sample-tests/Pizzeria.Store.StateManagement.Tests.Unit/Pizzeria.Store.StateManagement.Tests.Unit.csproj" Id="2f1831e1-ce4a-4976-a27a-c5d7480dc5ee" />
-  <Project Path="sample-tests/Pizzeria.Store.Web.Tests.Unit/Pizzeria.Store.Web.Tests.Unit.csproj" Id="6f381be0-8ed9-4529-b936-2b554f32475c" />
+  <Project Path="sample-tests/Pizzeria.Store.StateManagement.Tests.Unit/Pizzeria.Store.StateManagement.Tests.Unit.csproj" />
+  <Project Path="sample-tests/Pizzeria.Store.Web.Tests.Unit/Pizzeria.Store.Web.Tests.Unit.csproj" />
   <Project Path="sample-tests/Pizzeria.Tests.Integration/Pizzeria.Tests.Integration.csproj" />
   <Project Path="sample/Pizzeria.AppHost/Pizzeria.AppHost.csproj" />
   <Project Path="sample/Pizzeria.Auth/Pizzeria.Auth.csproj" />
@@ -65,12 +65,12 @@
   <Project Path="sample/Pizzeria.Configuration/Pizzeria.Configuration.csproj" />
   <Project Path="sample/Pizzeria.ServiceDefaults/Pizzeria.ServiceDefaults.csproj" />
   <Project Path="sample/Pizzeria.Store.Application/Pizzeria.Store.Application.csproj" />
-  <Project Path="sample/Pizzeria.Store.Components/Pizzeria.Store.Components.csproj" Id="06d166f3-ea17-4b19-92ba-470e7a2b139d" />
+  <Project Path="sample/Pizzeria.Store.Components/Pizzeria.Store.Components.csproj" />
   <Project Path="sample/Pizzeria.Store.Contracts/Pizzeria.Store.Contracts.csproj" />
   <Project Path="sample/Pizzeria.Store.Data/Pizzeria.Store.Data.csproj" />
   <Project Path="sample/Pizzeria.Store.Domain/Pizzeria.Store.Domain.csproj" />
-  <Project Path="sample/Pizzeria.Store.StateManagement/Pizzeria.Store.StateManagement.csproj" Id="869afdf2-5c67-4cba-af44-cd881282d7c6" />
-  <Project Path="sample/Pizzeria.Store.Web/Pizzeria.Store.Web.csproj" Id="ad4622bc-2f6b-4908-8519-b9d0a5425795" />
+  <Project Path="sample/Pizzeria.Store.StateManagement/Pizzeria.Store.StateManagement.csproj" />
+  <Project Path="sample/Pizzeria.Store.Web/Pizzeria.Store.Web.csproj" />
   <Project Path="src/Lewee.Application/Lewee.Application.csproj" />
   <Project Path="src/Lewee.Blazor/Lewee.Blazor.csproj" />
   <Project Path="src/Lewee.Contracts/Lewee.Contracts.csproj" />
@@ -79,13 +79,13 @@
   <Project Path="src/Lewee.Infrastructure.AspNet/Lewee.Infrastructure.AspNet.csproj" />
   <Project Path="src/Lewee.Infrastructure.Data/Lewee.Infrastructure.Data.csproj" />
   <Project Path="src/Lewee.Infrastructure.PostgreSQL/Lewee.Infrastructure.PostgreSQL.csproj" />
-  <Project Path="src/Lewee.Playwright/Lewee.Playwright.csproj" Id="fbfb60b0-2de6-4a97-864f-8fe1589b37da" />
+  <Project Path="src/Lewee.Playwright/Lewee.Playwright.csproj" />
   <Project Path="src/Lewee.Shared/Lewee.Shared.csproj" />
-  <Project Path="src/Lewee.StateManagement/Lewee.StateManagement.csproj" Id="656af98e-e16c-493b-bece-3b6195ffd62b" />
+  <Project Path="src/Lewee.StateManagement/Lewee.StateManagement.csproj" />
   <Project Path="tests/Lewee.Application.Tests.Unit/Lewee.Application.Tests.Unit.csproj" />
   <Project Path="tests/Lewee.Blazor.Tests.Api/Lewee.Blazor.Tests.Api.csproj" />
-  <Project Path="tests/Lewee.Blazor.Tests.App/Lewee.Blazor.Tests.App.csproj" Id="c3ba5566-8f18-4dc5-b63b-9ed9daa49ca1" />
-  <Project Path="tests/Lewee.Blazor.Tests.Contracts/Lewee.Blazor.Tests.Contracts.csproj" Id="da8c040f-c6c7-4b70-b13c-5ceec146f39c" />
+  <Project Path="tests/Lewee.Blazor.Tests.App/Lewee.Blazor.Tests.App.csproj" />
+  <Project Path="tests/Lewee.Blazor.Tests.Contracts/Lewee.Blazor.Tests.Contracts.csproj" />
   <Project Path="tests/Lewee.Blazor.Tests.Integration/Lewee.Blazor.Tests.Integration.csproj" />
   <Project Path="tests/Lewee.Blazor.Tests.Web/Lewee.Blazor.Tests.Web.csproj" />
   <Project Path="tests/Lewee.Domain.Tests.Unit/Lewee.Domain.Tests.Unit.csproj" />
@@ -94,5 +94,5 @@
   <Project Path="tests/Lewee.Infrastructure.Data.Tests.Unit/Lewee.Infrastructure.Data.Tests.Unit.csproj" />
   <Project Path="tests/Lewee.Shared.Tests.Unit/Lewee.Shared.Tests.Unit.csproj" />
   <Project Path="tests/Lewee.Tests.Common/Lewee.Tests.Common.csproj" />
-  <Project Path="tests/Lewee.Tests.ServiceDefaults/Lewee.Tests.ServiceDefaults.csproj" Id="26d5f0fd-5182-4b2a-9615-4c9475fe0f13" />
+  <Project Path="tests/Lewee.Tests.ServiceDefaults/Lewee.Tests.ServiceDefaults.csproj" />
 </Solution>

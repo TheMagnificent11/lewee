@@ -1,6 +1,7 @@
-using Lewee.Contracts.StateManagement;
+using Lewee.StateManagement;
+using Pizzeria.Store.Contracts.Orders;
 
-namespace Pizzeria.Store.Contracts.Orders.Actions;
+namespace Pizzeria.Store.StateManagement.Orders.Actions;
 
 public record StartOrderCompletedAction : IMessageReceivedAction
 {

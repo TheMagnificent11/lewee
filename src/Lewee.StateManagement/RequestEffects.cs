@@ -1,8 +1,7 @@
 ﻿using Correlate;
 using Fluxor;
-using Lewee.Contracts.StateManagement;
 using Lewee.StateManagement.Logging;
-using Microsoft.Extensions.Logging; // TODO (https://github.com/TheMagnificent11/lewee/issues/15): switch to Serilog
+using Microsoft.Extensions.Logging;
 
 namespace Lewee.StateManagement;
 

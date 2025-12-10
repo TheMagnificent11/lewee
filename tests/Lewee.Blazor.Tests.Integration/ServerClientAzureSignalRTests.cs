@@ -4,9 +4,6 @@ using Xunit;
 
 namespace Lewee.Blazor.Tests.Integration;
 
-/// <summary>
-/// Tests for Azure SignalR (server-client) messaging scenario
-/// </summary>
 [Collection(AzureSignalRTestFixture.CollectionName)]
 public sealed class ServerClientAzureSignalRTests
 {

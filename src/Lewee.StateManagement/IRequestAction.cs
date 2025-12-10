@@ -1,9 +1,9 @@
-﻿namespace Lewee.Contracts.StateManagement;
+﻿namespace Lewee.StateManagement;
 
 /// <summary>
-/// Request Success Action Interface
+/// Query Action
 /// </summary>
-public interface IRequestSuccessAction
+public interface IRequestAction
 {
     /// <summary>
     /// Gets the correlation ID

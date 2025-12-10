@@ -3,10 +3,10 @@ using Fluxor;
 using Fluxor.Blazor.Web.Components;
 using Microsoft.AspNetCore.Components;
 using Pizzeria.Store.Contracts;
-using Pizzeria.Store.Contracts.Orders.Actions;
-using Pizzeria.Store.Contracts.Pizzas.Actions;
 using Pizzeria.Store.StateManagement.Orders;
+using Pizzeria.Store.StateManagement.Orders.Actions;
 using Pizzeria.Store.StateManagement.Pizzas;
+using Pizzeria.Store.StateManagement.Pizzas.Actions;
 
 namespace Pizzeria.Store.Components;
 

@@ -6,13 +6,10 @@
   <ItemGroup>
     <PackageVersion Include="bunit.web" Version="1.40.0" />
     <PackageVersion Include="CSharpFunctionalExtensions" Version="3.6.0" />
+    <PackageVersion Include="EntityFrameworkCore.Exceptions.PostgreSQL" Version="8.1.3" />
     <PackageVersion Include="FastEndpoints" Version="6.2.0" />
     <PackageVersion Include="Flurl" Version="4.0.0" />
     <PackageVersion Include="Meziantou.Analyzer" Version="2.0.250" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.0" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
-    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
-    <PackageVersion Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.14.15" />
     <PackageVersion Include="Moq" Version="4.20.72" />
     <PackageVersion Include="MudBlazor" Version="8.14.0" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
@@ -32,7 +29,6 @@
   <ItemGroup Label="Azure">
     <PackageVersion Include="Azure.Identity" Version="1.17.1" />
     <PackageVersion Include="Azure.Monitor.OpenTelemetry.AspNetCore" Version="1.4.0" />
-    <PackageVersion Include="Microsoft.Azure.SignalR.Management" Version="1.32.0" />
   </ItemGroup>
   <ItemGroup Label="Correlate">
     <PackageVersion Include="Correlate" Version="6.1.1" />
@@ -60,7 +56,6 @@
     <PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="10.0.0" />
   </ItemGroup>
   <ItemGroup Label="Microsoft.EntityFramework">
-    <PackageVersion Include="EntityFrameworkCore.Exceptions.PostgreSQL" Version="8.1.3" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.0" />
@@ -79,6 +74,14 @@
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0" />
     <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="10.0.0" />
   </ItemGroup>
+  <ItemGroup Label="Microsoft (Other)">
+  <PackageVersion Include="Microsoft.Azure.SignalR.Management" Version="1.32.0" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
+    <PackageVersion Include="Microsoft.Playwright" Version="1.51.0" />
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.14.15" />
+  </ItemGroup>
   <ItemGroup Label="FluentAssertions (DO NOT UPGRADE)">
     <PackageVersion Include="FluentAssertions" Version="7.2.0" />
     <PackageVersion Include="FluentAssertions.Analyzers" Version="0.34.1" />
@@ -90,11 +93,7 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.14.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.14.0" />
   </ItemGroup>
-  <ItemGroup Label="Refit">
-    <PackageVersion Include="Refit.HttpClientFactory" Version="8.0.0" />
-  </ItemGroup>
   <ItemGroup Label="xunit">
-    <PackageVersion Include="Microsoft.Playwright" Version="1.51.0" />
     <PackageVersion Include="xunit" Version="2.9.3" />
     <PackageVersion Include="xunit.analyzers" Version="1.25.0" />
     <PackageVersion Include="xunit.core" Version="2.9.3" />

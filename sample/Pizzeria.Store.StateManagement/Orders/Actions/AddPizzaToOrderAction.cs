@@ -1,4 +1,4 @@
-namespace Pizzeria.Store.Contracts.Orders.Actions;
+namespace Pizzeria.Store.StateManagement.Orders.Actions;
 
 public record AddPizzaToOrderAction
 {

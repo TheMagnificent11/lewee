@@ -2,7 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using Fluxor;
 using MediatR;
 using Pizzeria.Store.Application.Pizzas;
-using Pizzeria.Store.Contracts.Pizzas.Actions;
+using Pizzeria.Store.StateManagement.Pizzas.Actions;
 
 namespace Pizzeria.Store.StateManagement.Pizzas;
 

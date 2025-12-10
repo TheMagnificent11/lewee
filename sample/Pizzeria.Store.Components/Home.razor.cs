@@ -1,4 +1,4 @@
-using Pizzeria.Store.Contracts.Orders.Actions;
+using Pizzeria.Store.StateManagement.Orders.Actions;
 
 namespace Pizzeria.Store.Components;
 

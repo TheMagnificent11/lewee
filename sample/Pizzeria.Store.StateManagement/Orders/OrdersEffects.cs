@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
 using Pizzeria.Store.Application.Orders;
 using Pizzeria.Store.Contracts;
-using Pizzeria.Store.Contracts.Orders.Actions;
+using Pizzeria.Store.StateManagement.Orders.Actions;
 
 namespace Pizzeria.Store.StateManagement.Orders;
 

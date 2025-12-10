@@ -1,4 +1,4 @@
-﻿using Lewee.Contracts.StateManagement;
+﻿using Lewee.StateManagement;
 
 namespace Lewee.Blazor.Messaging;
 

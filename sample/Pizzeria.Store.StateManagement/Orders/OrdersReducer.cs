@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using Fluxor;
-using Pizzeria.Store.Contracts.Orders.Actions;
+using Pizzeria.Store.StateManagement.Orders.Actions;
 
 namespace Pizzeria.Store.StateManagement.Orders;
 

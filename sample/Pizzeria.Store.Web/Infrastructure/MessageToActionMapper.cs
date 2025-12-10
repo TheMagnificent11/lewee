@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Lewee.Blazor.Messaging;
-using Lewee.Contracts.StateManagement;
 using Lewee.Shared;
+using Lewee.StateManagement;
 using Pizzeria.Store.Contracts.Orders;
-using Pizzeria.Store.Contracts.Orders.Actions;
+using Pizzeria.Store.StateManagement.Orders.Actions;
 
 namespace Pizzeria.Store.Web.Infrastructure;
 
