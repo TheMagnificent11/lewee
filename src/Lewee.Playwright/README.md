@@ -47,6 +47,7 @@ await playwrightPage.Page.GotoAsync("https://localhost:5001");
 ```
 
 The `PlaywrightPage` wrapper:
+
 - Launches a headless Chromium browser
 - Creates a new browser context with HTTPS errors ignored (useful for development certificates)
 - Creates a new page ready for navigation
@@ -113,6 +114,7 @@ public class HomePageTests : IAsyncLifetime
 The [PlaywrightPage](./PlaywrightPage.cs) class is a wrapper around the Playwright browser, context, and page. It implements `IAsyncDisposable` to ensure proper cleanup of all browser resources.
 
 **Properties:**
+
 - `Page`: The underlying `IPage` instance for browser automation
 
 ### PlaywrightExtensions
@@ -120,6 +122,7 @@ The [PlaywrightPage](./PlaywrightPage.cs) class is a wrapper around the Playwrig
 The [PlaywrightExtensions](./PlaywrightExtensions.cs) class provides the `CreatePlaywritePageAsync` extension method for `IPlaywright` instances.
 
 **Default Configuration:**
+
 - **Headless**: `true` - Browser runs without a visible window
 - **IgnoreHTTPSErrors**: `true` - Useful for development certificates
 
@@ -128,6 +131,7 @@ The [PlaywrightExtensions](./PlaywrightExtensions.cs) class provides the `Create
 The [PageExtensions](./PageExtensions.cs) class provides FluentAssertions-based assertion methods for `IPage` instances.
 
 **Methods:**
+
 - `ShouldHave(selector)`: Asserts that an element matching the CSS selector exists on the page
 
 ## Integration with Test Frameworks

@@ -263,6 +263,7 @@ services
 ```
 
 The correlation ID flows through:
+
 1. Fluxor actions (via `IRequestAction.CorrelationId`)
 2. HTTP requests (via `X-Correlation-ID` header)
 3. Server-side logging (via [Lewee.Application](../Lewee.Application/README.md))
@@ -284,10 +285,10 @@ catch (ApiException ex)
 {
     // Automatically extracts error message from API response
     var errorMessage = ex.GetErrorMessage();
-    
+
     // Log with structured logging
     this.logger.LogApiException(ex, correlationId);
-    
+
     dispatcher.Dispatch(new CreateOrderErrorAction(errorMessage, correlationId));
 }
 ```
@@ -318,32 +319,35 @@ This package integrates seamlessly with other Lewee packages:
 - **[Lewee.Contracts](../Lewee.Contracts/README.md)**: Shared DTOs for API requests/responses and SignalR messages
 - **[Lewee.Shared](../Lewee.Shared/README.md)**: Common constants for correlation IDs and request headers
 
-## Key Components
+## Components
 
-### Configuration
-- **[Configuration.cs](./Configuration.cs)**: Main entry point with `AddLeweeBlazor` extension methods
-
-### Fluxor
-- **[RequestState.cs](./Fluxor/RequestState.cs)**: Base state class with correlation ID and error handling
-- **[QueryState.cs](./Fluxor/QueryState.cs)**: Base state for query operations with data property
-- **[RequestEffects.cs](./Fluxor/RequestEffects.cs)**: Base effects class for API calls
-- **[ReducerExtensions.cs](./Fluxor/ReducerExtensions.cs)**: Helper extensions for reducers
-- **Actions/**: Interfaces for standardized action types
+**[Configuration.cs](./Configuration.cs)**: Main entry point with `AddLeweeBlazor` extension methods
 
 ### Messaging
+
 - **[IMessageToActionMapper.cs](./Messaging/IMessageToActionMapper.cs)**: Interface for mapping SignalR messages to Fluxor actions
 - **[MessageReceiverConfiguration.cs](./Messaging/MessageReceiverConfiguration.cs)**: SignalR connection configuration
-- **[MessageReceiverInitializer.cs](./Messaging/MessageReceiverInitializer.cs)**: Initializes SignalR connection on startup
+- **[MessageDeserializer.cs](./Messaging/MessageDeserializer.cs)**: Deserializes `ClientMessage` objects to typed messages
+- **[BlazorServerMessageReceiver.cs](./Messaging/BlazorServerMessageReceiver.cs)**: Blazor component for receiving SignalR messages
+- **[Health/](./Messaging/Health/)**: Server health monitoring with Fluxor state
 
 ### HTTP
+
 - **[CorrelationIdDelegatingHandler.cs](./Http/CorrelationIdDelegatingHandler.cs)**: Adds correlation ID to all HTTP requests
 
 ### Error Handling
+
 - **[ApiException.cs](./ErrorHandling/ApiException.cs)**: Exception class for API errors (NSwag-compatible)
 - **[ApiExceptionExtensions.cs](./ErrorHandling/ApiExceptionExtensions.cs)**: Helper methods to extract error messages
 
-### Logging
-- **[LoggingExtensions.cs](./Logging/LoggingExtensions.cs)**: Structured logging helpers with correlation ID support
+### State Management (via Lewee.StateManagement)
+
+This package references [Lewee.StateManagement](../Lewee.StateManagement/README.md) which provides:
+
+- **RequestState**: Base state class with correlation ID and error handling
+- **QueryState\<T>**: Base state for query operations with data property
+- **RequestEffects**: Base effects class for API calls
+- **ReducerExtensions**: Helper extensions for reducers
 
 ## Best Practices
 
@@ -360,6 +364,7 @@ This package integrates seamlessly with other Lewee packages:
 ### SignalR Connection Issues
 
 Check the browser console for SignalR connection errors. Ensure:
+
 - The server has `ClientEventHub` mapped at `/events`
 - CORS is properly configured on the server
 - The base URL is correct

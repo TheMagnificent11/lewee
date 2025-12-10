@@ -2,14 +2,15 @@
 
 This package is used configure infrastructure that is available in ASP.Net.
 
-Specifically, it assist with configuring an [AuthenticatedUserService](./Auth/AuthenticatedUserService.cs) and a handler to send specific events/messages via `SignalR`.
+Specifically, it assists with configuring an [AuthenticatedUserService](./Auth/AuthenticatedUserService.cs), handlers to send specific events/messages via `SignalR`, and correlation ID middleware.
 
 ## Dependencies
 
 - `Microsoft.AspNetCore.App` (framework reference, not package reference)
-- [Serilog](https://github.com/serilog/serilog)
-- [Correlate](https://github.com/skwasjer/Correlate) (for correlation ID functionality)
+- [Correlate.AspNetCore](https://github.com/skwasjer/Correlate) (for correlation ID functionality)
+- [Microsoft.Azure.SignalR.Management](https://learn.microsoft.com/en-us/azure/azure-signalr/) (for Azure SignalR integration)
 - [Lewee.Application](../Lewee.Application/README.md)
+- [Lewee.Contracts](../Lewee.Contracts/README.md)
 
 ## Configuration
 
@@ -62,11 +63,13 @@ Publishing a [ClientEvent](../Lewee.Application/Mediation/Notifications/ClientEv
 The `AddCorrelationIdServices` method configures correlation ID middleware using the [Correlate](https://github.com/skwasjer/Correlate) library. This enables request correlation tracking throughout your application.
 
 **Configuration:**
+
 - Uses the `X-Correlation-ID` header (defined in [Lewee.Shared.RequestHeaders](../Lewee.Shared/README.md#constants))
 - Automatically generates correlation IDs for requests that don't include the header
 - Makes correlation IDs available via `ICorrelationContextAccessor` for logging and tracing
 
 **Usage in logging:**
+
 ```cs
 // The correlation ID will be automatically included in log scopes
 // when using structured logging with correlation-aware loggers

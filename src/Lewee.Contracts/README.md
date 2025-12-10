@@ -1,92 +1,95 @@
 # Lewee.Contracts
 
-This package provides message contract definitions used for client-server messaging throughout the Lewee framework, particularly for real-time communication via SignalR.
+Shared contracts for client-server communication and Fluxor state management in Lewee framework applications.
 
 ## Purpose
 
-`Lewee.Contracts` defines the standardized message format and contracts used for sending structured messages from server-side domain events to client applications. This enables real-time updates and notifications in client applications when domain events occur on the server.
+This package provides the foundational contracts used for:
+
+- Message passing between servers and Blazor clients via SignalR
+- Interfaces for Fluxor state management actions
 
 ## Dependencies
 
-This package has no external dependencies and only relies on the .NET Base Class Library (BCL).
+- `System.Threading.Channels` - For the `ClientEventChannel` implementation
 
 ## Components
 
-### ClientMessage
+### Client Messaging
+
+#### ClientMessage
 
 The `ClientMessage` class is the primary data transfer object used to transport messages between server and client applications.
 
-#### Properties
+| Property | Type | Description |
+|----------|------|-------------|
+| `CorrelationId` | `Guid` | Tracks the message through the system for logging and debugging |
+| `ContractAssemblyName` | `string` | Assembly name containing the JSON contract class for deserialization |
+| `ContractFullClassName` | `string` | Full class name (including namespace) of the JSON contract class |
+| `MessageJson` | `string` | Serialized JSON representation of the message payload |
 
-- **`CorrelationId`** (`Guid`) - Gets or sets the correlation ID that tracks the message through the system for logging and debugging purposes
-- **`ContractAssemblyName`** (`string`) - Gets or sets the assembly name containing the JSON contract class for message deserialization
-- **`ContractFullClassName`** (`string`) - Gets or sets the full class name (including namespace) of the JSON contract class for message deserialization  
-- **`MessageJson`** (`string`) - Gets or sets the serialized JSON representation of the actual message payload
+#### ClientEventChannel
+
+Thread-safe unbounded channel for passing client events to Blazor circuits. Uses `System.Threading.Channels` to enable multiple readers and writers.
+
+```csharp
+// Singleton channel for all circuits
+services.AddSingleton<ClientEventChannel>();
+
+// Write events from SignalR handler
+await channel.Writer.WriteAsync(clientMessage);
+
+// Read events in Blazor circuit
+await foreach (var message in channel.Reader.ReadAllAsync(cancellationToken))
+{
+    // Process message
+}
+```
+
+### State Management Interfaces
+
+These interfaces define contracts for Fluxor actions used in client-side state management:
+
+| Interface | Description |
+|-----------|-------------|
+| `IRequestAction` | Base interface for actions that initiate a request, containing a `CorrelationId` |
+| `IRequestSuccessAction` | Interface for actions indicating successful request completion with `CorrelationId` |
+| `IQuerySuccessAction<T>` | Generic interface for successful query actions carrying `Data` of type `T` |
+| `IRequestErrorAction` | Interface for failed request actions with `CorrelationId` and `ErrorMessage` |
+| `IMessageReceivedAction` | Interface for actions dispatched when a server message is received |
 
 ## Usage
 
-### Basic Message Creation
+### Implementing State Management Actions
 
-The `ClientMessage` is typically created automatically by the framework when domain events are raised. Here's how it works conceptually:
+```csharp
+// Request action to initiate a query
+public record GetOrdersAction(Guid CorrelationId) : IRequestAction;
 
-```cs
-// Domain event occurs on server
-var domainEvent = new OrderCompletedEvent(orderId, customerId);
+// Success action with query data
+public record GetOrdersSuccessAction(Guid CorrelationId, OrderDto[] Data)
+    : IQuerySuccessAction<OrderDto[]>;
 
-// Framework converts to ClientEvent (in Lewee.Application)
-var clientEvent = new ClientEvent(correlationId, userId, domainEvent);
-
-// ClientEvent is converted to ClientMessage for transport
-var clientMessage = clientEvent.ToClientMessage();
-// Results in:
-// {
-//   CorrelationId: correlationId,
-//   ContractAssemblyName: "MyApp.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-//   ContractFullClassName: "MyApp.Contracts.OrderCompletedEvent",
-//   MessageJson: "{\"OrderId\":\"123\",\"CustomerId\":\"456\"}"
-// }
-```
-
-### Implementing Message Contracts
-
-To create messages that can be sent to clients, implement the `IClientMessageContract` interface:
-
-```cs
-using Lewee.Contracts;
-
-public class OrderStatusChangedEvent : IClientMessageContract
-{
-    public Guid OrderId { get; set; }
-    public string Status { get; set; }
-    public DateTime ChangedAt { get; set; }
-}
+// Error action for failures
+public record GetOrdersErrorAction(Guid CorrelationId, string ErrorMessage)
+    : IRequestErrorAction;
 ```
 
 ### Client-Side Message Deserialization
 
-On the client side (typically in Blazor applications), the `ClientMessage` is deserialized back to the original type:
+On the client side (in Blazor applications), `ClientMessage` is deserialized back to the original type:
 
-```cs
-// Framework deserializes using the contract information
+```csharp
 var assembly = Assembly.Load(clientMessage.ContractAssemblyName);
 var targetType = assembly.GetType(clientMessage.ContractFullClassName);
 var messageBody = JsonSerializer.Deserialize(clientMessage.MessageJson, targetType);
-
-// messageBody is now the original domain event object
 ```
 
 ## Integration with Other Lewee Packages
 
-This package is used by several other Lewee packages:
-
-- **`Lewee.Application`**: The `ClientEvent` class uses `ClientMessage` as its transport format when converting domain events for client notifications
-- **`Lewee.Infrastructure.AspNet`**: The SignalR `ClientEventHandler` sends `ClientMessage` objects to connected clients via SignalR hubs
-- **`Lewee.Blazor`**: The `MessageDeserializer` processes incoming `ClientMessage` objects and reconstructs the original message types for client-side handling
-
-## Architecture Benefits
-
-- **Type Safety**: The `IClientMessageContract` marker interface provides compile-time verification
-- **Serialization Independence**: Message payload is pre-serialized as JSON, allowing for flexible transport mechanisms
-- **Traceability**: Correlation IDs enable end-to-end tracking of messages through the system
-- **Reflection-based Deserialization**: Contract assembly and class name information enables precise type reconstruction on the client
-- **Decoupling**: Separates message transport concerns from the actual message content
+| Package | Integration |
+|---------|-------------|
+| `Lewee.Application` | `ClientEvent` uses `ClientMessage` as transport format for domain event notifications |
+| `Lewee.Infrastructure.AspNet` | `ClientEventHandler` sends `ClientMessage` objects via SignalR hubs |
+| `Lewee.Blazor` | `MessageDeserializer` processes `ClientMessage` objects and maps them to Fluxor actions |
+| `Lewee.StateManagement` | `ReducerExtensions` work with the state management interfaces for reducer patterns |

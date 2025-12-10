@@ -1,42 +1,199 @@
 # Lewee.Domain
 
-This package assist with implementing the domain logic of an application (architected using domain-driven design principles).
+Domain layer abstractions for implementing applications using Domain-Driven Design (DDD) principles.
 
-## Entity
+## Purpose
 
-The [Entity](./Entity.cs) class contains some common properties that developers usually like to capture.
+This package provides the foundational building blocks for creating domain models following DDD patterns, including entities, aggregate roots, value objects, domain events, specifications, and repository interfaces.
 
-All the properties are read-only, but have protected setters.
+## Dependencies
 
-For example, it contains audit properties:
+- `MediatR` - For domain event notification support
 
-- `CreatedBy`
-- `CreatedAtUtc`
-- `ModifiedBy`
-- `ModifiedAtUtc`
+## Components
 
-It also a `Timestamp` property to assist with version tracking.
+### Base Classes
 
-The `Id` property is a `Guid`.
+#### AuditableRecord
 
-Finally, regarding properties, it includes an `IsDeleted` property to support soft-delete tracking.
+Base class for records that track audit information:
 
-It overrides the `Equals` method.  This returns `true` if the `Id` properties are equal or there is full referential equality.
+| Property | Type | Description |
+|----------|------|-------------|
+| `Id` | `Guid` | Unique identifier |
+| `CreatedBy` | `string` | User who created the record |
+| `CreatedAtUtc` | `DateTime` | UTC timestamp of creation |
+| `ModifiedBy` | `string` | User who last modified the record |
+| `ModifiedAtUtc` | `DateTime` | UTC timestamp of last modification |
 
-It also overrides the `GetHashCode` method to return the string hash code after the string concatenation of the type and `Id`.
+#### Entity
 
-There are also some methods to allow marking and un-marking the entity as deleted, and for setting the audit fields.
+Extends `AuditableRecord` with soft-delete support via the `ISoftDeleteEntity` interface:
 
-## AggregateRoot, DomainEventsCollection & DomainEvent
+- `IsDeleted` property for soft-delete tracking
+- `Delete()` and `Undelete()` methods
+- Equality based on `Id` property
+- Hash code based on type and `Id`
 
-The [AggregateRoot](./AggregateRoot.cs) class inherits of the `Entity` class and contains a [DomainEventsCollection](./DomainEventsCollection.cs).
+#### AggregateRoot
 
-The `DomainEventsCollection` has a `Raise` method that allows you to raise a [DomainEvent](./DomainEvent.cs).
+Extends `Entity` with domain event support:
 
-The [Lewee.Infrastructure.Data](../Lewee.Infrastructure.Data/README.md) package contains a [DomainEventDispatcherService](../Lewee.Infrastructure.Data/DomainEventDispatcherService.cs) that dispatches the domain events stored in the database every 2500 ms; it's an [outbox pattern](https://learn.microsoft.com/en-us/azure/architecture/best-practices/transactional-outbox-cosmos).
+```csharp
+public class Order : AggregateRoot
+{
+    public void Complete()
+    {
+        this.Status = OrderStatus.Completed;
+        this.DomainEvents.Raise(new OrderCompletedEvent(correlationId, this.Id));
+    }
+}
+```
 
-## DomainException
+The `DomainEventsCollection` stores raised events until they are dispatched by `Lewee.Infrastructure.Data`.
 
-The [DomainException](./DomainException.cs`) class can be used to raise errors when domain rules are violated.
+#### ValueObject\<T>
 
-The [Lewee.Application](../Lewee.Application/README.md) package contains has a [DomainExceptionBehavior](../Lewee.Application/Mediation/Behaviors/DomainExceptionBehavior.cs) that catches these exceptions, logs them as an informational log entry and returns a failure result.
+Base class for immutable value objects with equality based on component values:
+
+```csharp
+public class Address : ValueObject<Address>
+{
+    public string Street { get; }
+    public string City { get; }
+    
+    protected override IEnumerable<object> GetEqualityComponents()
+    {
+        yield return Street;
+        yield return City;
+    }
+}
+```
+
+#### Relationship
+
+Base class for many-to-many relationship entities, extending `AuditableRecord`.
+
+#### EnumEntity\<TKey>
+
+Represents an enum value as a database entity with `Id` and `Name` properties, useful for lookup tables.
+
+### Domain Events
+
+#### DomainEvent
+
+Base class for domain events implementing MediatR's `INotification`:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `CorrelationId` | `Guid` | Request correlation ID for tracing |
+| `UserId` | `string?` | Optional user ID who triggered the event |
+| `EventDateTime` | `DateTime` | When the event occurred |
+
+#### DomainEventsCollection
+
+Collection for raising and storing domain events on aggregate roots:
+
+```csharp
+this.DomainEvents.Raise(new OrderCreatedEvent(correlationId));
+```
+
+#### DomainEventReference
+
+Serialized reference to a domain event stored in the database for the outbox pattern.
+
+### Interfaces
+
+#### IRepository\<T>
+
+Repository interface for aggregate root data access:
+
+```csharp
+public interface IRepository<T> where T : AggregateRoot
+{
+    Task<T?> RetrieveByIdAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<List<T>> AllAsync(CancellationToken cancellationToken = default);
+    Task<List<T>> QueryAsync(QuerySpecification<T> spec, CancellationToken cancellationToken = default);
+    Task<T?> QueryOneAsync(QuerySpecification<T> spec, CancellationToken cancellationToken = default);
+    Task AddAsync(T entity, CancellationToken cancellationToken = default);
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+}
+```
+
+#### ISpecification\<T>
+
+Generic specification pattern interface for business rule validation:
+
+```csharp
+public class OrderCanBeShippedSpecification : ISpecification<Order>
+{
+    public bool IsValid(Order order) => order.Status == OrderStatus.Paid;
+}
+```
+
+#### IAuthenticatedUserService
+
+Interface for accessing the current authenticated user's ID.
+
+#### IQueryProjection
+
+Marker interface for query projections with a correlation ID.
+
+#### IQueryProjectionService
+
+Service interface for executing query projections.
+
+#### ISoftDeleteEntity
+
+Marker interface for entities supporting soft delete.
+
+#### IServiceBusEvent
+
+Marker interface for events that should be published to a service bus.
+
+### Query Specifications
+
+#### QuerySpecification\<T>
+
+Fluent builder for repository queries with filtering and eager loading:
+
+```csharp
+public class ActiveOrdersByCustomerSpec : QuerySpecification<Order>
+{
+    public ActiveOrdersByCustomerSpec(Guid customerId)
+    {
+        Query
+            .Where(o => o.CustomerId == customerId)
+            .Where(o => !o.IsDeleted)
+            .Include(o => o.Items)
+            .ThenInclude<OrderItem, Product>(i => i.Product);
+    }
+}
+```
+
+### Exceptions
+
+#### DomainException
+
+Exception for domain rule violations, caught by `DomainExceptionBehavior` in `Lewee.Application`:
+
+```csharp
+throw new DomainException("Order cannot be modified after completion");
+```
+
+## Integration with Other Lewee Packages
+
+| Package | Integration |
+|---------|-------------|
+| `Lewee.Application` | `DomainExceptionBehavior` handles `DomainException` in MediatR pipeline |
+| `Lewee.Infrastructure.Data` | Implements `IRepository<T>`, dispatches domain events via outbox pattern |
+| `Lewee.Infrastructure.AspNet` | Implements `IAuthenticatedUserService` |
+
+## Architecture Benefits
+
+- **Clean Domain Model**: Entities focus on business logic, not infrastructure
+- **Event-Driven**: Domain events enable decoupled reactions to state changes
+- **Outbox Pattern**: Domain events are persisted for reliable async dispatch
+- **Specification Pattern**: Encapsulate and reuse query logic
+- **Soft Delete**: Track deleted records without losing data
+- **Audit Trail**: Automatic tracking of who created/modified records
