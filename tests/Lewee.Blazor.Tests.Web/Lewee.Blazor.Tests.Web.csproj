@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);CS7022</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Lewee.Blazor\Lewee.Blazor.csproj" />
+    <ProjectReference Include="..\..\src\Lewee.Infrastructure.AspNet\Lewee.Infrastructure.AspNet.csproj" />
+    <ProjectReference Include="..\Lewee.Blazor.Tests.Contracts\Lewee.Blazor.Tests.Contracts.csproj" />
+    <ProjectReference Include="..\Lewee.Tests.ServiceDefaults\Lewee.Tests.ServiceDefaults.csproj" />
+  </ItemGroup>
+  
+</Project>

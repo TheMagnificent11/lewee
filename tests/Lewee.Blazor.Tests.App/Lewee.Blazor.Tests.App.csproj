@@ -16,6 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Lewee.Blazor.Tests.Api\Lewee.Blazor.Tests.Api.csproj" />
     <ProjectReference Include="..\Lewee.Blazor.Tests.Contracts\Lewee.Blazor.Tests.Contracts.csproj" IsAspireProjectResource="false" />
+    <ProjectReference Include="..\Lewee.Blazor.Tests.Web\Lewee.Blazor.Tests.Web.csproj" />
   </ItemGroup>
 
 </Project>

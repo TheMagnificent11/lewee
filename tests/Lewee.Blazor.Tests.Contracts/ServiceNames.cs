@@ -10,4 +10,5 @@ public static class ServiceNames
 {
     public const string SignalR = "test-signalr";
     public const string WebApi = "test-webapi";
+    public const string BlazorServerWeb = "test-blazor-server-web";
 }
