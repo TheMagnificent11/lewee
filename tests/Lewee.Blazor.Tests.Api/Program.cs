@@ -10,7 +10,8 @@ builder.AddServiceDefaults();
 
 builder.Services
     .AddRouting()
-    .AddLeweeAzureSignalR(builder.Configuration.GetConnectionString(ServiceNames.SignalR));
+    .AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ClientEvent).Assembly))
+    .AddLeweeAzureSignalR(builder.Configuration.GetConnectionString(ServiceNames.SignalR)!);
 
 var app = builder.Build();
 

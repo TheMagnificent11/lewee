@@ -1,3 +1,4 @@
+using Fluxor;
 using Lewee.Application.Mediation.Notifications;
 using Lewee.Blazor.Messaging;
 using Lewee.Blazor.Tests.Contracts;
@@ -14,13 +15,15 @@ builder.AddServiceDefaults();
 // Server services
 builder.Services
     .AddRouting()
-    .AddLeweeSignalR()
-    .AddRazorComponents()
-    .AddInteractiveServerComponents();
+    .AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ClientEvent).Assembly))
+    .AddLeweeSignalR();
 
 // Client services (for Blazor Server message receiving)
 builder.Services
-    .AddSignalRMessageReceiver<MessageToActionMapper>();
+    .AddFluxor(options => options.ScanAssemblies(typeof(MessageToActionMapper).Assembly))
+    .AddSignalRMessageReceiver<MessageToActionMapper>()
+    .AddRazorComponents()
+    .AddInteractiveServerComponents();
 
 var app = builder.Build();
 

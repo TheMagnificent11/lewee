@@ -2,7 +2,6 @@ using System.Diagnostics.CodeAnalysis;
 using Lewee.Blazor.Messaging;
 using Lewee.Blazor.Tests.Contracts;
 using Lewee.Contracts.StateManagement;
-using Microsoft.Extensions.Logging;
 
 namespace Lewee.Blazor.Tests.Web;
 
@@ -19,7 +18,7 @@ internal sealed class MessageToActionMapper : IMessageToActionMapper
         this.logger = logger;
     }
 
-    public IMessageReceivedAction? Map(object message, Guid correlationId)
+    public IMessageReceivedAction Map(object message, Guid correlationId)
     {
         this.logger.LogInformation(
             "SignalR message received: {MessageType}, CorrelationId: {CorrelationId}",
