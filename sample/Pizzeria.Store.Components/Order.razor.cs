@@ -12,6 +12,8 @@ namespace Pizzeria.Store.Components;
 
 public partial class Order : FluxorComponent
 {
+    // Required for Blazor routing to bind the {orderId:guid} route parameter from the URL pattern /orders/{orderId:guid}
+    // The component currently uses OrdersState.Value.CurrentOrder for order data, but this parameter must exist for routing to work
     [Parameter]
     public Guid OrderId { get; set; }
 
