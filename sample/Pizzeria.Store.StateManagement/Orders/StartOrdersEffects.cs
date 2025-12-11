@@ -11,17 +11,18 @@ using Pizzeria.Store.StateManagement.Orders.Actions;
 
 namespace Pizzeria.Store.StateManagement.Orders;
 
-public class OrdersEffects : RequestEffects<OrdersState, StartOrderAction, StartOrderSuccessAction, StartOrderFailureAction>
+public sealed class StartOrdersEffects :
+    RequestEffects<OrdersState, StartOrderAction, StartOrderSuccessAction, StartOrderFailureAction>
 {
     private readonly IMediator mediator;
     private readonly NavigationManager navigationManager;
 
-    public OrdersEffects(
+    public StartOrdersEffects(
         IState<OrdersState> state,
         IMediator mediator,
         NavigationManager navigationManager,
         ICorrelationContextAccessor correlationContextAccessor,
-        ILogger<OrdersEffects> logger)
+        ILogger<StartOrdersEffects> logger)
         : base(state, correlationContextAccessor, logger)
     {
         this.mediator = mediator;
@@ -44,28 +45,6 @@ public class OrdersEffects : RequestEffects<OrdersState, StartOrderAction, Start
         return Task.CompletedTask;
     }
 
-    [EffectMethod]
-    public async Task OnAddPizzaToOrderAsync(
-        [NotNull] AddPizzaToOrderAction action,
-        [NotNull] IDispatcher dispatcher)
-    {
-        try
-        {
-            await this.mediator.Send(new AddPizzaToOrderCommand(
-                action.OrderId,
-                action.PizzaId,
-                action.CorrelationId));
-
-            dispatcher.Dispatch(new AddPizzaToOrderSuccessAction());
-        }
-        catch (Exception ex)
-        {
-            dispatcher.Dispatch(new AddPizzaToOrderFailureAction(
-                action.PizzaId,
-                $"Failed to add pizza: {ex.Message}"));
-        }
-    }
-
     protected override async Task ExecuteRequestAsync(
         [NotNull] StartOrderAction action,
         [NotNull] IDispatcher dispatcher)
@@ -76,7 +55,7 @@ public class OrdersEffects : RequestEffects<OrdersState, StartOrderAction, Start
 
             if (result.IsSuccess)
             {
-                dispatcher.Dispatch(new StartOrderSuccessAction { CorrelationId = action.CorrelationId });
+                dispatcher.Dispatch(new StartOrderSuccessAction(action.CorrelationId));
                 return;
             }
 

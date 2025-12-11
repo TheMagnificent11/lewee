@@ -8,10 +8,10 @@ public interface IRequestErrorAction
     /// <summary>
     /// Gets the correlation ID
     /// </summary>
-    Guid CorrelationId { get; }
+    Guid CorrelationId { get; init; }
 
     /// <summary>
     /// Gets the error message
     /// </summary>
-    string ErrorMessage { get; }
+    string ErrorMessage { get; init; }
 }

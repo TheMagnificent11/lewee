@@ -4,7 +4,7 @@ Fluxor state management configuration and base classes for Blazor applications i
 
 ## Purpose
 
-This package provides the foundational state management infrastructure for Blazor applications using [Fluxor](https://github.com/mrpmorris/Fluxor). It includes base state classes, reducer extension methods, effect base classes, action interfaces, and logging utilities for consistent state management patterns.
+This package provides the foundational state management infrastructure for Blazor applications using [Fluxor](https://github.com/mrpmorris/Fluxor). It includes base state classes, reducer extension methods, effect base classes, action interfaces, and observability utilities for consistent state management patterns.
 
 ## Dependencies
 
@@ -156,17 +156,36 @@ public class GetPizzasEffects : RequestEffects<PizzaListState, GetPizzasAction, 
 }
 ```
 
-### Logging
+### Observability
+
+The `Lewee.StateManagement.Observability` namespace provides utilities for logging and correlation context management.
 
 #### LoggingExtensions
 
 Provides a `BeginCorrelationIdScope` extension method for `ILogger` to include correlation ID in log scopes:
 
 ```cs
+using Lewee.StateManagement.Observability;
+
 using (logger.BeginCorrelationIdScope(correlationId))
 {
     logger.LogInformation("Processing request...");
 }
+```
+
+#### CorrelationContextAccessorExtensions
+
+Provides extension methods for `ICorrelationContextAccessor` to manage correlation context:
+
+| Method | Description |
+|--------|-------------|
+| `SetNewCorrelationId` | Sets a new correlation ID on the correlation context from a request action |
+
+```cs
+using Lewee.StateManagement.Observability;
+
+// Set correlation context from a request action
+correlationContextAccessor.SetNewCorrelationId(action);
 ```
 
 ## Configuration

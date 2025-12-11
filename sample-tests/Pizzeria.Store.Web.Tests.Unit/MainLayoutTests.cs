@@ -19,7 +19,7 @@ public class MainLayoutTests : TestContext
     {
         this.Services.AddSingleton(Mock.Of<IMediator>());
         this.Services.AddSingleton(Mock.Of<ICorrelationContextAccessor>());
-        this.Services.AddSingleton(Mock.Of<ILogger<OrdersEffects>>());
+        this.Services.AddSingleton(Mock.Of<ILogger<StartOrdersEffects>>());
         this.Services.AddMudServices();
         this.Services.AddFluxor(o => o.ScanAssemblies(typeof(OrdersState).Assembly));
 

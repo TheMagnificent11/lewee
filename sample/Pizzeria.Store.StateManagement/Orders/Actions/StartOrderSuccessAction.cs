@@ -2,7 +2,4 @@ using Lewee.StateManagement;
 
 namespace Pizzeria.Store.StateManagement.Orders.Actions;
 
-public record StartOrderSuccessAction : IRequestSuccessAction
-{
-    public Guid CorrelationId { get; init; }
-}
+public record StartOrderSuccessAction(Guid CorrelationId) : IRequestSuccessAction;

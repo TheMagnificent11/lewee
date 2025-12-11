@@ -1,9 +1,5 @@
-using System.Diagnostics.CodeAnalysis;
+using Lewee.StateManagement;
 
 namespace Pizzeria.Store.StateManagement.Orders.Actions;
 
-[SuppressMessage(
-    "Minor Code Smell",
-    "S2094:Classes should not be empty",
-    Justification = "False positive")]
-public record AddPizzaToOrderSuccessAction;
+public record AddPizzaToOrderSuccessAction(Guid CorrelationId) : IRequestSuccessAction;

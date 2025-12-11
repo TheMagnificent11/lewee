@@ -49,16 +49,18 @@ public partial class Order : FluxorComponent
     {
         if (this.OrdersState.Value.CurrentOrder != null)
         {
-            this.Dispatcher.Dispatch(new AddPizzaToOrderAction
-            {
-                OrderId = this.OrdersState.Value.CurrentOrder.Id,
-                PizzaId = pizzaId,
-            });
+            this.Dispatcher.Dispatch(new AddPizzaToOrderAction(this.OrdersState.Value.CurrentOrder.Id, pizzaId));
         }
     }
 
-    [SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1204:Static members should appear before non-static members", Justification = "Helper method is more readable when placed near its usage context")]
-    [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1313:Parameter '_' should begin with lower-case letter", Justification = "Underscore is the standard discard pattern for unused parameters")]
+    [SuppressMessage(
+        "StyleCop.CSharp.OrderingRules",
+        "SA1204:Static members should appear before non-static members",
+        Justification = "Helper method is more readable when placed near its usage context")]
+    [SuppressMessage(
+        "StyleCop.CSharp.NamingRules",
+        "SA1313:Parameter '_' should begin with lower-case letter",
+        Justification = "Underscore is the standard discard pattern for unused parameters")]
     private static void RemovePizza(Guid _)
     {
         // For this demo, we'll implement decreasing quantity as a future enhancement

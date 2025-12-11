@@ -21,7 +21,7 @@ public class OrdersEffectsTests : TestContext
     private readonly Mock<IMediator> mediatorMock = new();
     private readonly Mock<IDispatcher> dispatcherMock = new();
     private readonly Mock<IState<OrdersState>> stateMock = new();
-    private readonly OrdersEffects effects;
+    private readonly StartOrdersEffects effects;
 
     public OrdersEffectsTests()
     {
@@ -29,12 +29,12 @@ public class OrdersEffectsTests : TestContext
             .Setup(s => s.Value)
             .Returns(new OrdersState());
 
-        this.effects = new OrdersEffects(
+        this.effects = new StartOrdersEffects(
             this.stateMock.Object,
             this.mediatorMock.Object,
             this.Services.GetRequiredService<NavigationManager>(),
             Mock.Of<ICorrelationContextAccessor>(),
-            Mock.Of<ILogger<OrdersEffects>>());
+            Mock.Of<ILogger<StartOrdersEffects>>());
     }
 
     [Fact]
@@ -141,63 +141,6 @@ public class OrdersEffectsTests : TestContext
             d => d.Dispatch(It.Is<StartOrderFailureAction>(a =>
                 a.CorrelationId == correlationId &&
                 a.ErrorMessage == errorMessage)),
-            Times.Once);
-    }
-
-    [Fact]
-    public async Task OnAddPizzaToOrderAsync_Success_DispatchesSuccessActionAsync()
-    {
-        // Arrange
-        var orderId = Guid.NewGuid();
-        var pizzaId = Guid.NewGuid();
-        var correlationId = Guid.NewGuid();
-        var action = new AddPizzaToOrderAction
-        {
-            OrderId = orderId,
-            PizzaId = pizzaId,
-            CorrelationId = correlationId,
-        };
-
-        this.mediatorMock
-            .Setup(x => x.Send(It.IsAny<AddPizzaToOrderCommand>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(CommandResult.Success());
-
-        // Act
-        await this.effects.OnAddPizzaToOrderAsync(action, this.dispatcherMock.Object);
-
-        // Assert
-        this.dispatcherMock.Verify(
-            d => d.Dispatch(It.IsAny<AddPizzaToOrderSuccessAction>()),
-            Times.Once);
-    }
-
-    [Fact]
-    public async Task OnAddPizzaToOrderAsync_Exception_DispatchesFailureActionAsync()
-    {
-        // Arrange
-        var orderId = Guid.NewGuid();
-        var pizzaId = Guid.NewGuid();
-        var correlationId = Guid.NewGuid();
-        var action = new AddPizzaToOrderAction
-        {
-            OrderId = orderId,
-            PizzaId = pizzaId,
-            CorrelationId = correlationId,
-        };
-
-        var exceptionMessage = "Database error";
-        this.mediatorMock
-            .Setup(x => x.Send(It.IsAny<AddPizzaToOrderCommand>(), It.IsAny<CancellationToken>()))
-            .ThrowsAsync(new InvalidOperationException(exceptionMessage));
-
-        // Act
-        await this.effects.OnAddPizzaToOrderAsync(action, this.dispatcherMock.Object);
-
-        // Assert
-        this.dispatcherMock.Verify(
-            d => d.Dispatch(It.Is<AddPizzaToOrderFailureAction>(a =>
-                a.PizzaId == pizzaId &&
-                a.ErrorMessage.Contains(exceptionMessage))),
             Times.Once);
     }
 

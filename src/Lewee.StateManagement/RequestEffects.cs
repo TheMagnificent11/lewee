@@ -1,6 +1,7 @@
-﻿using Correlate;
+﻿using System.Diagnostics.CodeAnalysis;
+using Correlate;
 using Fluxor;
-using Lewee.StateManagement.Logging;
+using Lewee.StateManagement.Observability;
 using Microsoft.Extensions.Logging;
 
 namespace Lewee.StateManagement;
@@ -57,16 +58,21 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
     [EffectMethod]
     public virtual async Task RequestAsync(TRequestAction action, IDispatcher dispatcher)
     {
-        this.correlationContextAccessor.CorrelationContext = new CorrelationContext
-        {
-            CorrelationId = action.CorrelationId.ToString(),
-        };
-
-        using (this.Logger.BeginCorrelationIdScope(action.CorrelationId))
+        using (this.Logger.BeginCorrelationIdScope(this.correlationContextAccessor.SetNewCorrelationId(action)))
         {
             this.Logger.LogDebug("Executing query request...");
 
-            await this.ExecuteRequestAsync(action, dispatcher);
+            try
+            {
+                await this.ExecuteRequestAsync(action, dispatcher);
+            }
+            catch (Exception ex)
+            {
+                this.Logger.LogError(
+                    ex,
+                    "An error occurred while executing the query request: {ErrorMessage}",
+                    ex.Message);
+            }
         }
     }
 
@@ -110,5 +116,7 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
     /// <param name="action">Request action</param>
     /// <param name="dispatcher">Dispatcher</param>
     /// <returns>Asynchronous task</returns>
-    protected abstract Task ExecuteRequestAsync(TRequestAction action, IDispatcher dispatcher);
+    protected abstract Task ExecuteRequestAsync(
+        [NotNull] TRequestAction action,
+        [NotNull] IDispatcher dispatcher);
 }

@@ -1,8 +1,8 @@
+using Lewee.StateManagement;
+
 namespace Pizzeria.Store.StateManagement.Orders.Actions;
 
-public record AddPizzaToOrderAction
+public record AddPizzaToOrderAction(Guid OrderId, Guid PizzaId) : IRequestAction
 {
-    public Guid OrderId { get; init; }
-    public Guid PizzaId { get; init; }
     public Guid CorrelationId { get; init; } = Guid.NewGuid();
 }

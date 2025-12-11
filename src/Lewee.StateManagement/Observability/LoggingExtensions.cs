@@ -1,7 +1,7 @@
 ﻿using Lewee.Shared;
 using Microsoft.Extensions.Logging;
 
-namespace Lewee.StateManagement.Logging;
+namespace Lewee.StateManagement.Observability;
 
 /// <summary>
 /// Logging Extensions
@@ -23,7 +23,7 @@ public static class LoggingExtensions
             {
                 LoggingConsts.CorrelationId,
                 correlationId
-            }
+            },
         };
 
         return logger.BeginScope(loggingProps);

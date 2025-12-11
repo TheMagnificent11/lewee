@@ -45,7 +45,7 @@ public class OrdersReducerTests
         // Arrange
         var state = new OrdersState { IsStartingOrder = true };
         var correlationId = Guid.NewGuid();
-        var action = new StartOrderSuccessAction { CorrelationId = correlationId };
+        var action = new StartOrderSuccessAction(correlationId);
 
         // Act
         var result = OrdersReducer.OnStartOrderSuccess(state, action);
@@ -103,7 +103,7 @@ public class OrdersReducerTests
     {
         // Arrange
         var state = new OrdersState { ErrorMessage = "Previous error" };
-        var action = new AddPizzaToOrderSuccessAction();
+        var action = new AddPizzaToOrderSuccessAction(CorrelationId: Guid.NewGuid());
 
         // Act
         var result = OrdersReducer.OnAddPizzaToOrderSuccess(state, action);
