@@ -67,4 +67,15 @@ public class OrderPageTests : TestContext
         // Assert
         component.Markup.Should().Contain("Pizza Menu");
     }
+
+    [Fact]
+    public void Order_WhenOrderIdParameterProvided_ComponentRendersWithoutError()
+    {
+        // Arrange
+        var orderId = Guid.NewGuid();
+
+        // Act & Assert - component should render without throwing an exception
+        var component = this.RenderComponent<Order>(parameters => parameters.Add(p => p.OrderId, orderId));
+        component.Should().NotBeNull();
+    }
 }
