@@ -12,6 +12,9 @@ namespace Pizzeria.Store.Components;
 
 public partial class Order : FluxorComponent
 {
+    [Parameter]
+    public Guid OrderId { get; set; }
+
     [Inject]
     private IState<OrdersState> OrdersState { get; set; } = null!;
 
