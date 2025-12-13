@@ -2,7 +2,7 @@ using Bunit;
 using Correlate;
 using FluentAssertions;
 using Fluxor;
-using Lewee.Application.Mediation.Requests;
+using Lewee.Common;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

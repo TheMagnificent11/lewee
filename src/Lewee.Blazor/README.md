@@ -96,7 +96,7 @@ public record StartOrderAction(Guid CorrelationId) : IRequestAction;
 public record StartOrderSuccessAction(Order Order, Guid CorrelationId) : IRequestSuccessAction;
 
 // Error action
-public record StartOrderErrorAction(string ErrorMessage, Guid CorrelationId) : IRequestErrorAction;
+public record rrorAction(string ErrorMessage, Guid CorrelationId) : IRequestErrorAction;
 ```
 
 #### 3. Create Reducers

@@ -2,7 +2,7 @@ using Bunit;
 using Correlate;
 using FluentAssertions;
 using Fluxor;
-using Lewee.Application.Mediation.Requests;
+using Lewee.Common;
 using MediatR;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
@@ -51,10 +51,14 @@ public class OrdersEffectsTests : TestContext
             Pizzas = [],
             TotalCost = 0,
         };
-        var action = new StartOrderCompletedAction(order, correlationId);
+        var action = new StartOrderCompletedAction
+        {
+            Order = order,
+            CorrelationId = correlationId,
+        };
 
         // Act
-        await this.effects.OnStartOrderCompletedAsync(action, this.dispatcherMock.Object);
+        await this.effects.RequestCompletedAsync(action, this.dispatcherMock.Object);
 
         // Assert
         var navMan = this.Services.GetRequiredService<NavigationManager>();
@@ -66,12 +70,16 @@ public class OrdersEffectsTests : TestContext
     {
         // Arrange
         var correlationId = Guid.NewGuid();
-        var action = new StartOrderCompletedAction(null!, correlationId);
+        var action = new StartOrderCompletedAction
+        {
+            Order = new OrderDto(),
+            CorrelationId = correlationId,
+        };
         var navMan = this.Services.GetRequiredService<NavigationManager>();
         var initialUri = navMan.Uri;
 
         // Act
-        await this.effects.OnStartOrderCompletedAsync(action, this.dispatcherMock.Object);
+        await this.effects.RequestCompletedAsync(action, this.dispatcherMock.Object);
 
         // Assert
         navMan.Uri.Should().Be(initialUri);
@@ -90,12 +98,16 @@ public class OrdersEffectsTests : TestContext
             Pizzas = [],
             TotalCost = 0,
         };
-        var action = new StartOrderCompletedAction(order, correlationId);
+        var action = new StartOrderCompletedAction
+        {
+            Order = order,
+            CorrelationId = correlationId,
+        };
         var navMan = this.Services.GetRequiredService<NavigationManager>();
         var initialUri = navMan.Uri;
 
         // Act
-        await this.effects.OnStartOrderCompletedAsync(action, this.dispatcherMock.Object);
+        await this.effects.RequestCompletedAsync(action, this.dispatcherMock.Object);
 
         // Assert
         navMan.Uri.Should().Be(initialUri);

@@ -1,4 +1,4 @@
-﻿using Lewee.Shared;
+﻿using Lewee.Common;
 using Microsoft.Extensions.Logging;
 
 namespace Lewee.StateManagement.Observability;

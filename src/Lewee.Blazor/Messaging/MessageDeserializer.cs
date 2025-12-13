@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using System.Text.Json;
-using Lewee.Contracts;
+using Lewee.Common;
 using Microsoft.Extensions.Logging;
 
 namespace Lewee.Blazor.Messaging;

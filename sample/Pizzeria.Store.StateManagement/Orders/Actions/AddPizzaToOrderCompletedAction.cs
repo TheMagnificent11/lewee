@@ -3,7 +3,9 @@ using Pizzeria.Store.Contracts.Orders;
 
 namespace Pizzeria.Store.StateManagement.Orders.Actions;
 
-public record AddPizzaToOrderCompletedAction(OrderDto Order, Guid CorrelationId)
-    : IMessageReceivedAction
+public record AddPizzaToOrderCompletedAction : IMessageReceivedAction
 {
+    public Guid CorrelationId { get; init; }
+
+    public OrderDto Order { get; init; }
 }

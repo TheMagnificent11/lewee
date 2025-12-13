@@ -49,7 +49,11 @@ public partial class Order : FluxorComponent
     {
         if (this.OrdersState.Value.CurrentOrder != null)
         {
-            this.Dispatcher.Dispatch(new AddPizzaToOrderAction(this.OrdersState.Value.CurrentOrder.Id, pizzaId));
+            this.Dispatcher.Dispatch(new AddPizzaToOrderAction
+            {
+                OrderId = this.OrdersState.Value.CurrentOrder.Id,
+                PizzaId = pizzaId,
+            });
         }
     }
 

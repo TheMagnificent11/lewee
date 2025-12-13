@@ -45,7 +45,7 @@ public class OrdersReducerTests
         // Arrange
         var state = new OrdersState { IsStartingOrder = true };
         var correlationId = Guid.NewGuid();
-        var action = new StartOrderSuccessAction(correlationId);
+        var action = new StartOrderSuccessAction { CorrelationId = correlationId };
 
         // Act
         var result = OrdersReducer.OnStartOrderSuccess(state, action);
@@ -63,7 +63,11 @@ public class OrdersReducerTests
         var state = new OrdersState { IsStartingOrder = true };
         var correlationId = Guid.NewGuid();
         var errorMessage = "Failed to start order";
-        var action = new StartOrderFailureAction(correlationId, errorMessage);
+        var action = new StartOrderFailureAction
+        {
+            CorrelationId = correlationId,
+            ErrorMessage = errorMessage,
+        };
 
         // Act
         var result = OrdersReducer.OnStartOrderFailure(state, action);
@@ -88,7 +92,11 @@ public class OrdersReducerTests
             Pizzas = [],
             TotalCost = 0,
         };
-        var action = new StartOrderCompletedAction(order, correlationId);
+        var action = new StartOrderCompletedAction
+        {
+            Order = order,
+            CorrelationId = correlationId,
+        };
 
         // Act
         var result = OrdersReducer.OnStartOrderCompleted(state, action);
@@ -103,7 +111,7 @@ public class OrdersReducerTests
     {
         // Arrange
         var state = new OrdersState { ErrorMessage = "Previous error" };
-        var action = new AddPizzaToOrderSuccessAction(CorrelationId: Guid.NewGuid());
+        var action = new AddPizzaToOrderSuccessAction { CorrelationId = Guid.NewGuid() };
 
         // Act
         var result = OrdersReducer.OnAddPizzaToOrderSuccess(state, action);
@@ -117,9 +125,12 @@ public class OrdersReducerTests
     {
         // Arrange
         var state = new OrdersState();
-        var pizzaId = Guid.NewGuid();
         var errorMessage = "Failed to add pizza";
-        var action = new AddPizzaToOrderFailureAction(pizzaId, errorMessage);
+        var action = new AddPizzaToOrderFailureAction
+        {
+            CorrelationId = Guid.NewGuid(),
+            ErrorMessage = errorMessage,
+        };
 
         // Act
         var result = OrdersReducer.OnAddPizzaToOrderFailure(state, action);

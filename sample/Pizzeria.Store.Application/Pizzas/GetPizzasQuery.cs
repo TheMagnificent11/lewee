@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Lewee.Application.Mediation.Requests;
+using Lewee.Common;
 using Lewee.Domain;
 using MediatR;
 using Pizzeria.Store.Contracts.Pizzas;

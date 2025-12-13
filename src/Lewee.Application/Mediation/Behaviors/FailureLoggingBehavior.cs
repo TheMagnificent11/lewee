@@ -1,4 +1,4 @@
-﻿using Lewee.Application.Mediation.Requests;
+﻿using Lewee.Common;
 using MediatR;
 using Microsoft.Extensions.Logging;
 

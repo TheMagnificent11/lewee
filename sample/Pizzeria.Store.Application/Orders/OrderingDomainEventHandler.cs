@@ -1,6 +1,6 @@
 using Lewee.Application.Mediation.Notifications;
+using Lewee.Common;
 using Lewee.Domain;
-using Lewee.Shared;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Pizzeria.Store.Contracts.Orders;

@@ -1,5 +1,5 @@
 using Fluxor;
-using Lewee.Application.Mediation.Requests;
+using Lewee.Common;
 using MediatR;
 using Moq;
 using Pizzeria.Store.Application.Pizzas;

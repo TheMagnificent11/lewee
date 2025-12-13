@@ -1,5 +1,5 @@
 ﻿using System.Text.Json;
-using Lewee.Contracts;
+using Lewee.Common;
 using MediatR;
 
 namespace Lewee.Application.Mediation.Notifications;

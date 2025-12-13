@@ -5,7 +5,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Lewee.Shared\Lewee.Shared.csproj" />
+    <ProjectReference Include="..\Lewee.Common\Lewee.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>

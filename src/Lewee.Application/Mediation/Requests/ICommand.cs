@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Lewee.Common;
+using MediatR;
 
 namespace Lewee.Application.Mediation.Requests;
 

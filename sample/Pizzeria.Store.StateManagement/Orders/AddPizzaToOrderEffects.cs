@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Correlate;
 using Fluxor;
+using Lewee.Common;
 using Lewee.StateManagement;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -10,7 +11,7 @@ using Pizzeria.Store.StateManagement.Orders.Actions;
 namespace Pizzeria.Store.StateManagement.Orders;
 
 public sealed class AddPizzaToOrderEffects :
-    RequestEffects<OrdersState, AddPizzaToOrderAction, AddPizzaToOrderSuccessAction, AddPizzaToOrderFailureAction>
+    RequestEffects<OrdersState, AddPizzaToOrderAction, AddPizzaToOrderSuccessAction, AddPizzaToOrderFailureAction, AddPizzaToOrderCompletedAction>
 {
     private readonly IMediator mediator;
 
@@ -24,23 +25,20 @@ public sealed class AddPizzaToOrderEffects :
         this.mediator = mediator;
     }
 
-    protected override async Task ExecuteRequestAsync(
+    protected override async Task<Result> ExecuteRequestAsync(
         [NotNull] AddPizzaToOrderAction action,
         [NotNull] IDispatcher dispatcher)
     {
-        var result = await this.mediator.Send(new AddPizzaToOrderCommand(
+        return await this.mediator.Send(new AddPizzaToOrderCommand(
             action.OrderId,
             action.PizzaId,
             action.CorrelationId));
+    }
 
-        if (result.IsSuccess)
-        {
-            dispatcher.Dispatch(new AddPizzaToOrderSuccessAction(action.CorrelationId));
-            return;
-        }
-
-        dispatcher.Dispatch(new AddPizzaToOrderFailureAction(
-            action.CorrelationId,
-            result.GenerateErrorMessage()));
+    protected override Task ExecuteRequestCompletedAsync(
+        [NotNull] AddPizzaToOrderCompletedAction action,
+        [NotNull] IDispatcher dispatcher)
+    {
+        throw new NotSupportedException();
     }
 }
