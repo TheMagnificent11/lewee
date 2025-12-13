@@ -7,7 +7,6 @@ This package assists with building the application layer of an application using
 - [FluentValidation](https://docs.fluentvalidation.net/en/latest)
 - [MediatR](https://github.com/jbogard/MediatR)
 - [Lewee.Domain](../Lewee.Domain/README.md)
-- [Lewee.Contracts](../Lewee.Contracts/README.md)
 
 ## Configuration
 

@@ -1,30 +1,47 @@
 # Lewee
 
-Lewee is an opinionated set of packages to assist with setting up a domain-driven design architecture within ASP.Net.
+Lewee is an opinionated set of packages to assist with setting up a domain-driven design architecture within ASP.NET.
 
 ## Status
 
 [![CI Build](https://github.com/TheMagnificent11/Lewee/actions/workflows/ci.yml/badge.svg)](https://github.com/TheMagnificent11/Lewee/actions/workflows/ci.yml)
 
+## Framework Packages
+
+| Package | Description |
+|---------|-------------|
+| `Lewee.Domain` | Domain layer abstractions including entities, aggregate roots, value objects, domain events, specifications, and repository interfaces |
+| `Lewee.Application` | Application layer with CQRS using MediatR, pipeline behaviors for logging, validation, and exception handling |
+| `Lewee.Common` | Cross-cutting utilities including result types, client messaging contracts, logging constants, and HTTP headers |
+| `Lewee.StateManagement` | Fluxor state management with base state classes, reducer extensions, and action interfaces |
+| `Lewee.Infrastructure.Data` | Entity Framework Core integration with repository implementation and domain event dispatching |
+| `Lewee.Infrastructure.PostgreSQL` | PostgreSQL-specific database configuration using Npgsql |
+| `Lewee.Infrastructure.AspNet` | ASP.NET Core integration including authenticated user services, SignalR, and correlation ID middleware |
+| `Lewee.Infrastructure.AspNet.WebApi` | FastEndpoints-based command and query endpoint base classes |
+| `Lewee.Blazor` | Blazor client-side infrastructure with Fluxor, SignalR messaging, and API integration |
+| `Lewee.Playwright` | Playwright browser automation utilities for integration testing |
+
 ## Dependencies
 
-Below is summary of the dependencies used by Lewee. Note that this isn't a list of NuGet packages, just a high-level list of software used and each can have several related NuGet packages.
+Below is a summary of the dependencies used by Lewee. Note that this isn't a list of NuGet packages, just a high-level list of software used and each can have several related NuGet packages.
 
-- [.NET 9](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
+- [.NET 10](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
 - [.NET Aspire](https://learn.microsoft.com/en-us/dotnet/aspire/get-started/aspire-overview)
 - [PostgreSQL](https://www.postgresql.org/) with [Npgsql](https://www.npgsql.org/)
-- [Entity Framework](https://learn.microsoft.com/en-us/ef)
-- [MediatR](https://mediatr.io/) version 12.5.0 (free version)
+- [Entity Framework Core](https://learn.microsoft.com/en-us/ef)
+- [MediatR](https://mediatr.io/) version 12.5.0 (latest free version)
 - [FastEndpoints](https://fast-endpoints.com)
 - [FluentValidation](https://docs.fluentvalidation.net/en/latest) version 8.7.0 (free version)
+- [Fluxor](https://github.com/mrpmorris/Fluxor) for Blazor state management
 - [xUnit](https://xunit.net)
 
-## Running the sample application
+## Running the Sample Application
 
 ### Prerequisites
 
-- [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
+- [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
 - [.NET Aspire workload](https://learn.microsoft.com/en-us/dotnet/aspire/fundamentals/setup-tooling?tabs=linux#install-net-aspire) (`dotnet workload install aspire`)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (for PostgreSQL container)
 
 ### CLI
 
@@ -34,8 +51,8 @@ Execute the following in a terminal at the root of this Git repository.
 dotnet run --project ./sample/Pizzeria.AppHost/
 ```
 
-This will start the .NET Aspire dashboard and orchestrate the PostgreSQL database and Pizzeria Store API.
+This will start the .NET Aspire dashboard and orchestrate the PostgreSQL database, Pizzeria Store Blazor Server application.
 
-Navigate to the Aspire dashboard (typically [https://localhost:17268](https://localhost:17268)) to monitor services and view logs.
+Navigate to the Aspire dashboard to monitor services and view logs.
 
-The Pizzeria Store API will be available at the URL shown in the Aspire dashboard.
+The Pizzeria Store API Web application will be available at the URLs shown in the Aspire dashboard.

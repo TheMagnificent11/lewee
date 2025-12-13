@@ -10,8 +10,7 @@ This package provides the foundational state management infrastructure for Blazo
 
 - `Fluxor.Blazor.Web.ReduxDevTools` - Fluxor with Redux DevTools support
 - `Correlate.DependencyInjection` - Correlation ID support
-- `Lewee.Contracts` - Client-server communication contracts
-- `Lewee.Shared` - Logging constants
+- `Lewee.Common` - Logging constants and shared utilities
 
 ## Components
 
@@ -209,8 +208,7 @@ The `AddLeweeFluxor` method:
 
 | Package | Integration |
 |---------|-------------|
-| `Lewee.Contracts` | Used for client-server communication contracts |
-| `Lewee.Shared` | Uses `LoggingConsts` for consistent logging property names |
+| `Lewee.Common` | Uses `LoggingConsts` for consistent logging property names |
 | `Lewee.Blazor` | References this package for state management configuration and uses action interfaces |
 
 ## Sample Application

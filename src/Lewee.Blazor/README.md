@@ -7,8 +7,9 @@ This package provides comprehensive Blazor client-side infrastructure for buildi
 - [Fluxor](https://github.com/mrpmorris/Fluxor) (v6.8.0) - State management with Redux pattern
 - [Microsoft.AspNetCore.SignalR.Client](https://learn.microsoft.com/en-us/aspnet/core/signalr) - Real-time web functionality
 - [Correlate](https://github.com/skwasjer/Correlate) - Correlation ID functionality
-- [Lewee.Contracts](../Lewee.Contracts/README.md) - Contract definitions
-- [Lewee.Shared](../Lewee.Shared/README.md) - Shared utilities and constants
+- [Lewee.Common](../Lewee.Common/README.md) - Shared utilities and constants
+- [Lewee.StateManagement](../Lewee.StateManagement/README.md) - State management base classes
+- [Lewee.Infrastructure.AspNet](../Lewee.Infrastructure.AspNet/README.md) - ASP.NET Core integration
 
 ## Features
 
@@ -316,8 +317,8 @@ This package integrates seamlessly with other Lewee packages:
 
 - **[Lewee.Application](../Lewee.Application/README.md)**: Server-side CQRS handlers send `ClientEvent` notifications via SignalR
 - **[Lewee.Infrastructure.AspNet](../Lewee.Infrastructure.AspNet/README.md)**: Provides SignalR hub (`ClientEventHub`) for server-to-client messaging
-- **[Lewee.Contracts](../Lewee.Contracts/README.md)**: Shared DTOs for API requests/responses and SignalR messages
-- **[Lewee.Shared](../Lewee.Shared/README.md)**: Common constants for correlation IDs and request headers
+- **[Lewee.Common](../Lewee.Common/README.md)**: Shared DTOs for API requests/responses, SignalR messages, and common constants
+- **[Lewee.StateManagement](../Lewee.StateManagement/README.md)**: Base state classes and reducer extensions for Fluxor
 
 ## Components
 

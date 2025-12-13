@@ -1,28 +1,98 @@
-# Lewee.Shared
+# Lewee.Common
 
-This package provides shared utilities, constants, and extension methods that are commonly used across Lewee applications and other Lewee packages.
+This package provides shared utilities, constants, result types, and extension methods that are commonly used across Lewee applications and other Lewee packages.
 
 ## Purpose
 
-`Lewee.Shared` contains cross-cutting concerns and common functionality that is used throughout the Lewee framework ecosystem. It provides standardized constants for logging, HTTP headers, and useful extension methods for common operations.
+`Lewee.Common` contains cross-cutting concerns and common functionality that is used throughout the Lewee framework ecosystem. It provides:
+
+- **Result types** for command and query responses
+- **Client message contracts** for SignalR communication
+- **Standardized constants** for logging and HTTP headers
+- **Extension methods** for common operations
 
 ## Dependencies
 
-This package has minimal dependencies and only relies on the .NET Base Class Library (BCL).
+- `FluentValidation` - For validation failure handling in result types
 
 ## Components
+
+### Result Types
+
+#### Result (Abstract Base)
+
+Base class for all result types with success/failure status and validation errors:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `IsSuccess` | `bool` | Whether the request was successfully processed |
+| `Status` | `ResultStatus` | Enum indicating the type of result |
+| `Errors` | `IList<ValidationFailure>` | Validation errors keyed by property |
+
+#### ResultStatus
+
+Enum for categorizing result outcomes:
+
+| Value | Description |
+|-------|-------------|
+| `Success` | Request completed successfully |
+| `ValidationError` | Input validation failed |
+| `NotFound` | Requested resource not found |
+| `DomainError` | Business rule violation |
+| `UnexpectedError` | Unexpected system error |
+| `NotApplicable` | Operation not applicable |
+
+#### CommandResult
+
+Result type for command operations (create, update, delete):
+
+```cs
+// Success
+return CommandResult.Success();
+
+// Failure with message
+return CommandResult.Fail(ResultStatus.DomainError, "Order cannot be modified after completion");
+
+// Failure with validation errors
+return CommandResult.Fail(ResultStatus.ValidationError, validationFailures);
+```
+
+#### QueryResult\<T>
+
+Generic result type for query operations with data payload:
+
+```cs
+// Success with data
+return QueryResult<OrderDto>.Success(orderDto);
+
+// Failure
+return QueryResult<OrderDto>.Fail(ResultStatus.NotFound, "Order not found");
+```
+
+### Client Messaging
+
+#### ClientMessage
+
+Contract for SignalR messages sent from server to client:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `CorrelationId` | `Guid` | Request correlation ID for tracing |
+| `ContractAssemblyName` | `string` | Assembly containing the message type |
+| `ContractFullClassName` | `string` | Full class name of the message type |
+| `MessageJson` | `string` | Serialized message content |
 
 ### Constants
 
 #### RequestHeaders
 
-Contains standardized HTTP request header names used across Lewee applications:
+HTTP request header names used across Lewee applications:
 
 - `CorrelationId` - The HTTP header name for correlation ID (`"X-Correlation-ID"`)
 
 #### LoggingConsts
 
-Provides consistent property names for structured logging:
+Property names for structured logging:
 
 - `CorrelationId` - Property name for correlation ID in logs (`"CorrelationId"`)
 - `CorrelationIdHeaderKey` - Header key for correlation ID in logging context (`"correlationId"`)
@@ -31,7 +101,7 @@ Provides consistent property names for structured logging:
 
 #### HttpContextConsts
 
-Contains constants for HTTP context items:
+Constants for HTTP context items:
 
 - `ClientId` - Key for storing SignalR client ID in HTTP context (`"SignalR-Client-Id"`)
 
@@ -46,10 +116,43 @@ Utility methods for working with enum values:
 
 ## Usage
 
+### Working with Result Types
+
+```cs
+using Lewee.Common;
+
+// In a command handler
+public async Task<CommandResult> Handle(CreateOrderCommand command, CancellationToken ct)
+{
+    if (!await this.repository.ExistsAsync(command.CustomerId, ct))
+    {
+        return CommandResult.Fail(ResultStatus.NotFound, "Customer not found");
+    }
+
+    var order = new Order(command.CustomerId);
+    await this.repository.AddAsync(order, ct);
+
+    return CommandResult.Success();
+}
+
+// In a query handler
+public async Task<QueryResult<OrderDto>> Handle(GetOrderQuery query, CancellationToken ct)
+{
+    var order = await this.repository.RetrieveByIdAsync(query.OrderId, ct);
+
+    if (order == null)
+    {
+        return QueryResult<OrderDto>.Fail(ResultStatus.NotFound, "Order not found");
+    }
+
+    return QueryResult<OrderDto>.Success(new OrderDto(order));
+}
+```
+
 ### Working with Enum Descriptions
 
 ```cs
-using Lewee.Shared;
+using Lewee.Common;
 using System.ComponentModel;
 
 public enum OrderStatus
@@ -71,27 +174,10 @@ var cancelledStatus = OrderStatus.Cancelled;
 string cancelledDescription = cancelledStatus.GetDescription(); // Returns "Cancelled" (ToString())
 ```
 
-### Checking Zero-Equivalent Enums
-
-```cs
-using Lewee.Shared;
-
-public enum Priority
-{
-    None = 0,
-    Low = 1,
-    High = 2
-}
-
-// Usage
-var priority = Priority.None;
-bool isZero = priority.IsEquivalentToZero<Priority>(); // Returns true
-```
-
 ### Using Standard Headers and Logging Constants
 
 ```cs
-using Lewee.Shared;
+using Lewee.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
@@ -112,49 +198,21 @@ public void LogWithCorrelation(ILogger logger, string correlationId, string mess
         logger.LogInformation(message);
     }
 }
-
-// Multi-tenant Logging
-public void LogWithTenant(ILogger logger, Guid tenantId, string requestType, string message)
-{
-    using (logger.BeginScope(new Dictionary<string, object>
-    {
-        [LoggingConsts.TenantId] = tenantId,
-        [LoggingConsts.RequestType] = requestType
-    }))
-    {
-        logger.LogInformation(message);
-    }
-}
-```
-
-### SignalR Client ID in HTTP Context
-
-```cs
-using Lewee.Shared;
-using Microsoft.AspNetCore.Http;
-
-public void StoreSignalRClientId(HttpContext context, string clientId)
-{
-    context.Items[HttpContextConsts.ClientId] = clientId;
-}
-
-public string? GetSignalRClientId(HttpContext context)
-{
-    return context.Items[HttpContextConsts.ClientId] as string;
-}
 ```
 
 ## Integration with Other Lewee Packages
 
 This package is referenced by other Lewee packages to ensure consistent:
 
+- Result type handling across commands and queries
+- Client-server messaging via SignalR
 - Correlation ID handling across HTTP requests and logging
 - Multi-tenant logging patterns
-- SignalR client identification
-- Enum description handling
 
-The constants defined here are used by:
+The types and constants defined here are used by:
 
-- `Lewee.Application` for correlation ID and tenant logging behaviors
-- `Lewee.Infrastructure.AspNet` for HTTP context management
-- Other Lewee packages for consistent cross-cutting concerns
+- `Lewee.Domain` - References for domain abstractions
+- `Lewee.Application` - Uses result types for command/query responses
+- `Lewee.Infrastructure.AspNet` - Uses constants for HTTP context management
+- `Lewee.StateManagement` - Uses constants for logging
+- `Lewee.Blazor` - Deserializes `ClientMessage` for SignalR communication

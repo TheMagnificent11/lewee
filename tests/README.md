@@ -15,7 +15,7 @@ For development guidance in this directory, see the following instruction files:
 |---------|-----------|
 | `Lewee.Domain.Tests.Unit` | Domain layer abstractions and base classes |
 | `Lewee.Application.Tests.Unit` | Application layer and CQRS implementation |
-| `Lewee.Shared.Tests.Unit` | Cross-cutting utilities |
+| `Lewee.Common.Tests.Unit` | Cross-cutting utilities and result types |
 | `Lewee.Infrastructure.Data.Tests.Unit` | Entity Framework Core integration (unit tests) |
 | `Lewee.Infrastructure.Data.Tests.Integration` | Entity Framework Core integration (integration tests) |
 | `Lewee.Blazor.Tests.Integration` | Blazor component library tests |

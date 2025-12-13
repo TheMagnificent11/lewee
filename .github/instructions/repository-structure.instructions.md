@@ -13,14 +13,14 @@ lewee/
 │   ├── Directory.Build.props     # Framework-specific build properties
 │   ├── Lewee.Domain/             # Domain layer abstractions and base classes
 │   ├── Lewee.Application/        # Application layer with CQRS and validation
-│   ├── Lewee.Shared/             # Cross-cutting utilities and constants
-│   ├── Lewee.Contracts/          # Client-server communication contracts
+│   ├── Lewee.Common/             # Cross-cutting utilities, result types, and constants
 │   ├── Lewee.StateManagement/    # Fluxor state management and action interfaces
 │   ├── Lewee.Infrastructure.Data/           # Entity Framework core integration
 │   ├── Lewee.Infrastructure.PostgreSQL/     # PostgreSQL-specific features
 │   ├── Lewee.Infrastructure.AspNet/         # ASP.NET Core integration
 │   ├── Lewee.Infrastructure.AspNet.WebApi/  # Web API utilities
-│   └── Lewee.Blazor/             # Blazor component library
+│   ├── Lewee.Blazor/             # Blazor component library
+│   └── Lewee.Playwright/         # Playwright browser automation for testing
 │
 ├── sample/                       # Example application (demonstrates usage)
 │   ├── Directory.Build.props     # Sample-specific build properties
@@ -32,7 +32,12 @@ lewee/
 │   ├── Pizzeria.Store.Application/  # CQRS commands/queries
 │   ├── Pizzeria.Store.Data/      # EF Core DbContext and migrations
 │   ├── Pizzeria.Store.Contracts/ # API DTOs and contracts
-│   └── Pizzeria.Store.Api/       # FastEndpoints Web API
+│   ├── Pizzeria.Store.StateManagement/ # Fluxor state management
+│   ├── Pizzeria.Store.Components/ # Shared Blazor components
+│   ├── Pizzeria.Store.Web/       # Blazor WebAssembly front-end
+│   ├── Pizzeria.Auth/            # Authentication services
+│   ├── Pizzeria.Configuration/   # Shared configuration
+│   └── Pizzeria.DataSeeder/      # Database seeding utilities
 │
 ├── tests/                        # Framework unit tests
 │   ├── Directory.Build.props     # Test-specific build properties

@@ -19,12 +19,14 @@ For development guidance in this directory, see the following instruction files:
 | `Pizzeria.Common` | Shared utilities and constants |
 | `Pizzeria.Auth` | Authentication configuration |
 | `Pizzeria.Configuration` | Application configuration |
+| `Pizzeria.DataSeeder` | Database seeding utilities |
 | `Pizzeria.Store.Domain` | Domain models and business logic |
 | `Pizzeria.Store.Application` | CQRS commands/queries |
 | `Pizzeria.Store.Data` | EF Core DbContext and migrations |
 | `Pizzeria.Store.Contracts` | API DTOs and contracts |
-| `Pizzeria.Store.Api` | FastEndpoints Web API |
-| `Pizzeria.Store.Web` | Blazor WebAssembly front-end |
+| `Pizzeria.Store.StateManagement` | Fluxor state management features |
+| `Pizzeria.Store.Components` | Shared Blazor components |
+| `Pizzeria.Store.Web` | Blazor WebAssembly front-end with API endpoints |
 
 ## Running the Sample
 
