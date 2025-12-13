@@ -173,9 +173,8 @@ public class OrdersEffectsTests : TestContext
 
         // Assert
         this.dispatcherMock.Verify(
-            d => d.Dispatch(It.Is<StartOrderFailureAction>(a =>
-                a.CorrelationId == correlationId &&
-                a.ErrorMessage.Contains(exceptionMessage))),
+            d => d.Dispatch(It.Is<StartOrderFailureAction>(
+                a => a.CorrelationId == correlationId && a.ErrorMessage == exceptionMessage)),
             Times.Once);
     }
 }

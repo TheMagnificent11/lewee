@@ -58,7 +58,9 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
     /// <param name="dispatcher">Dispatcher</param>
     /// <returns>Asynchronous task</returns>
     [EffectMethod]
-    public virtual async Task RequestAsync(TRequestAction action, IDispatcher dispatcher)
+    public virtual async Task RequestAsync(
+        [NotNull] TRequestAction action,
+        [NotNull] IDispatcher dispatcher)
     {
         using (this.Logger.BeginCorrelationIdScope(this.correlationContextAccessor.SetNewCorrelationId(action)))
         {
@@ -77,7 +79,7 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
                 dispatcher.Dispatch(new TRequestErrorAction()
                 {
                     CorrelationId = action.CorrelationId,
-                    ErrorMessage = "Request execution returned failure.",
+                    ErrorMessage = result.GenerateErrorMessage(),
                 });
             }
             catch (Exception ex)
@@ -86,6 +88,12 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
                     ex,
                     "An error occurred while executing the query request: {ErrorMessage}",
                     ex.Message);
+
+                dispatcher.Dispatch(new TRequestErrorAction
+                {
+                    CorrelationId = action.CorrelationId,
+                    ErrorMessage = ex.Message,
+                });
             }
         }
     }
@@ -97,7 +105,9 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
     /// <param name="dispatcher">Dispatcher</param>
     /// <returns>Asynchronous task</returns>
     [EffectMethod]
-    public virtual Task RequestSuccessAsync(TRequestSuccessAction action, IDispatcher dispatcher)
+    public virtual Task RequestSuccessAsync(
+        [NotNull] TRequestSuccessAction action,
+        [NotNull] IDispatcher dispatcher)
     {
         using (this.Logger.BeginCorrelationIdScope(action.CorrelationId))
         {
@@ -113,7 +123,9 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
     /// <param name="dispatcher">Dispatcher</param>
     /// <returns>Asynchronous task</returns>
     [EffectMethod]
-    public virtual Task RequestErrorAsync(TRequestErrorAction action, IDispatcher dispatcher)
+    public virtual Task RequestErrorAsync(
+        [NotNull] TRequestErrorAction action,
+        [NotNull] IDispatcher dispatcher)
     {
         using (this.Logger.BeginCorrelationIdScope(action.CorrelationId))
         {
@@ -132,7 +144,9 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
     /// <param name="dispatcher">Dispatcher</param>
     /// <returns>Asynchronous task</returns>
     [EffectMethod]
-    public virtual async Task RequestCompletedAsync(TMessageReceived action, IDispatcher dispatcher)
+    public virtual async Task RequestCompletedAsync(
+        [NotNull] TMessageReceived action,
+        [NotNull] IDispatcher dispatcher)
     {
         using (this.Logger.BeginCorrelationIdScope(action.CorrelationId))
         {
