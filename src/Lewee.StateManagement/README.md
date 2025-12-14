@@ -144,7 +144,7 @@ Abstract base class for request effects that provides logging for success and er
 - Provides logging scope with correlation ID for success and error effects
 - Handles success and error logging automatically
 
-#### QuerytEffects\<TState, TData, TRequestAction, TRequestSuccessAction, TRequestErrorAction>
+#### QueryEffects\<TState, TData, TRequestAction, TRequestSuccessAction, TRequestErrorAction>
 
 Abstract base class for implementing Fluxor effects that handle query (read) operations:
 
@@ -166,7 +166,7 @@ Abstract base class for implementing Fluxor effects that handle query (read) ope
 **Usage:**
 
 ```cs
-public class GetPizzasEffects : QuerytEffects<PizzaListState, PizzaDto[], GetPizzasAction, GetPizzasSuccessAction, GetPizzasErrorAction>
+public class GetPizzasEffects : QueryEffects<PizzaListState, PizzaDto[], GetPizzasAction, GetPizzasSuccessAction, GetPizzasErrorAction>
 {
     private readonly IPizzaApiClient client;
 
@@ -252,16 +252,20 @@ The `Lewee.StateManagement.Observability` namespace provides utilities for loggi
 
 #### LoggingExtensions
 
-Provides a `BeginCorrelationIdScope` extension method for `ILogger` to include correlation ID in log scopes:
+Provides a `BeginCorrelationIdScope` extension method for `ILogger` that sets the correlation context and includes the correlation ID in log scopes:
 
 ```cs
 using Lewee.StateManagement.Observability;
 
-using (logger.BeginCorrelationIdScope(correlationId))
+using (logger.BeginCorrelationIdScope(correlationContextAccessor, action))
 {
     logger.LogInformation("Processing request...");
 }
 ```
+
+The method:
+- Sets the correlation context on the `ICorrelationContextAccessor` from the action
+- Creates a logging scope that includes the correlation ID
 
 #### CorrelationContextAccessorExtensions
 

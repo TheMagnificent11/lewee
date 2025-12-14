@@ -49,7 +49,7 @@ public abstract class QueryEffects<TState, TData, TRequestAction, TRequestSucces
         [NotNull] TRequestAction action,
         [NotNull] IDispatcher dispatcher)
     {
-        using (this.Logger.BeginCorrelationIdScope(this.CorrelationContextAccessor.SetNewCorrelationId(action)))
+        using (this.Logger.BeginCorrelationIdScope(this.CorrelationContextAccessor, action))
         {
             this.Logger.LogDebug("Executing request...");
 

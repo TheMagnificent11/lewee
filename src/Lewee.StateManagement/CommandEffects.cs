@@ -51,7 +51,7 @@ public abstract class CommandEffects<TState, TData, TRequestAction, TRequestSucc
         [NotNull] TRequestAction action,
         [NotNull] IDispatcher dispatcher)
     {
-        using (this.Logger.BeginCorrelationIdScope(this.CorrelationContextAccessor.SetNewCorrelationId(action)))
+        using (this.Logger.BeginCorrelationIdScope(this.CorrelationContextAccessor, action))
         {
             this.Logger.LogDebug("Executing request...");
 
@@ -98,7 +98,7 @@ public abstract class CommandEffects<TState, TData, TRequestAction, TRequestSucc
         [NotNull] TMessageReceived action,
         [NotNull] IDispatcher dispatcher)
     {
-        using (this.Logger.BeginCorrelationIdScope(action.CorrelationId))
+        using (this.Logger.BeginCorrelationIdScope(this.CorrelationContextAccessor, action))
         {
             await this.ExecuteCommandCompletedAsync(action, dispatcher);
 

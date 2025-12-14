@@ -1,4 +1,5 @@
-﻿using Lewee.Common;
+﻿using Correlate;
+using Lewee.Common;
 using Microsoft.Extensions.Logging;
 
 namespace Lewee.StateManagement.Observability;
@@ -12,17 +13,25 @@ public static class LoggingExtensions
     /// Starts a correlation ID logging scope
     /// </summary>
     /// <param name="logger">Logger</param>
-    /// <param name="correlationId">Correlation ID</param>
+    /// <param name="accessor">Correlation context accessor</param>
+    /// <param name="action">Request action</param>
     /// <returns><see cref="IDisposable"/></returns>
-    public static IDisposable? BeginCorrelationIdScope(this ILogger logger, Guid correlationId)
+    public static IDisposable? BeginCorrelationIdScope(
+        this ILogger logger,
+        ICorrelationContextAccessor accessor,
+        IRequestAction action)
     {
         ArgumentNullException.ThrowIfNull(logger);
+        ArgumentNullException.ThrowIfNull(accessor);
+        ArgumentNullException.ThrowIfNull(action);
+
+        accessor.SetNewCorrelationId(action);
 
         var loggingProps = new Dictionary<string, object>(StringComparer.Ordinal)
         {
             {
                 LoggingConsts.CorrelationId,
-                correlationId
+                action.CorrelationId
             },
         };
 
