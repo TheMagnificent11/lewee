@@ -14,24 +14,22 @@ namespace Lewee.StateManagement;
 /// <typeparam name="TRequestAction">Request action type</typeparam>
 /// <typeparam name="TRequestSuccessAction">Request success action type</typeparam>
 /// <typeparam name="TRequestErrorAction">Request error action type</typeparam>
-/// <typeparam name="TMessageReceived">Request completed action type</typeparam>
-public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessAction, TRequestErrorAction, TMessageReceived>
+public abstract class QueryRequestEffects<TState, TRequestAction, TRequestSuccessAction, TRequestErrorAction>
     where TState : RequestState, new()
     where TRequestAction : IRequestAction, new()
     where TRequestSuccessAction : IRequestSuccessAction, new()
     where TRequestErrorAction : IRequestErrorAction, new()
-    where TMessageReceived : IMessageReceivedAction, new()
 {
     private readonly ICorrelationContextAccessor correlationContextAccessor;
 
     /// <summary>
     /// Initializes a new instance of the
-    /// <see cref="RequestEffects{TState, TRequestAction, TRequestSuccessAction, TRequestErrorAction, TMessageReceived}"/> class
+    /// <see cref="QueryRequestEffects{TState, TRequestAction, TRequestSuccessAction, TRequestErrorAction}"/> class
     /// </summary>
     /// <param name="state">State</param>
     /// <param name="correlationContextAccessor">Correlation context accessor</param>
     /// <param name="logger">Logger</param>
-    protected RequestEffects(
+    protected QueryRequestEffects(
         IState<TState> state,
         ICorrelationContextAccessor correlationContextAccessor,
         ILogger logger)
@@ -138,25 +136,6 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
     }
 
     /// <summary>
-    /// Request completed effect
-    /// </summary>
-    /// <param name="action">Action</param>
-    /// <param name="dispatcher">Dispatcher</param>
-    /// <returns>Asynchronous task</returns>
-    [EffectMethod]
-    public virtual async Task RequestCompletedAsync(
-        [NotNull] TMessageReceived action,
-        [NotNull] IDispatcher dispatcher)
-    {
-        using (this.Logger.BeginCorrelationIdScope(action.CorrelationId))
-        {
-            await this.ExecuteRequestCompletedAsync(action, dispatcher);
-
-            this.Logger.LogDebug("Executing query request...completed");
-        }
-    }
-
-    /// <summary>
     /// Executes the request
     /// </summary>
     /// <param name="action">Request action</param>
@@ -164,15 +143,5 @@ public abstract class RequestEffects<TState, TRequestAction, TRequestSuccessActi
     /// <returns>Asynchronous task containing a <see cref="Result"/> that represents the success or failure of the request</returns>
     protected abstract Task<Result> ExecuteRequestAsync(
         [NotNull] TRequestAction action,
-        [NotNull] IDispatcher dispatcher);
-
-    /// <summary>
-    /// Executes the request completed
-    /// </summary>
-    /// <param name="action">Request completed action</param>
-    /// <param name="dispatcher">Dispatcher</param>
-    /// <returns>Asynchronous task</returns>
-    protected abstract Task ExecuteRequestCompletedAsync(
-        [NotNull] TMessageReceived action,
         [NotNull] IDispatcher dispatcher);
 }

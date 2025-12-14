@@ -1,6 +1,8 @@
+using Correlate;
 using Fluxor;
 using Lewee.Common;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Pizzeria.Store.Application.Pizzas;
 using Pizzeria.Store.Contracts.Pizzas;
@@ -18,7 +20,11 @@ public class PizzasEffectsTests
 
     public PizzasEffectsTests()
     {
-        this.effects = new PizzasEffects(this.mediatorMock.Object);
+        this.effects = new PizzasEffects(
+            this.mediatorMock.Object,
+            Mock.Of<IState<PizzasState>>(),
+            Mock.Of<ICorrelationContextAccessor>(),
+            Mock.Of<ILogger<PizzasEffects>>());
     }
 
     [Fact]
@@ -38,11 +44,11 @@ public class PizzasEffectsTests
         var action = new LoadPizzasAction { CorrelationId = Guid.NewGuid() };
 
         // Act
-        await this.effects.OnLoadPizzasAsync(action, this.dispatcherMock.Object);
+        await this.effects.RequestAsync(action, this.dispatcherMock.Object);
 
         // Assert
         this.dispatcherMock.Verify(
-            d => d.Dispatch(It.Is<LoadPizzasSuccessAction>(a => a.Pizzas.SequenceEqual(pizzas))),
+            d => d.Dispatch(It.Is<LoadPizzasSuccessAction>(a => a.Data.SequenceEqual(pizzas))),
             Times.Once);
     }
 
@@ -58,7 +64,7 @@ public class PizzasEffectsTests
         var action = new LoadPizzasAction { CorrelationId = Guid.NewGuid() };
 
         // Act
-        await this.effects.OnLoadPizzasAsync(action, this.dispatcherMock.Object);
+        await this.effects.RequestAsync(action, this.dispatcherMock.Object);
 
         // Assert
         this.dispatcherMock.Verify(
@@ -78,7 +84,7 @@ public class PizzasEffectsTests
         var action = new LoadPizzasAction { CorrelationId = Guid.NewGuid() };
 
         // Act
-        await this.effects.OnLoadPizzasAsync(action, this.dispatcherMock.Object);
+        await this.effects.RequestAsync(action, this.dispatcherMock.Object);
 
         // Assert
         this.dispatcherMock.Verify(

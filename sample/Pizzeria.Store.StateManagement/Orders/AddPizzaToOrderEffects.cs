@@ -11,7 +11,7 @@ using Pizzeria.Store.StateManagement.Orders.Actions;
 namespace Pizzeria.Store.StateManagement.Orders;
 
 public sealed class AddPizzaToOrderEffects :
-    RequestEffects<OrdersState, AddPizzaToOrderAction, AddPizzaToOrderSuccessAction, AddPizzaToOrderFailureAction, AddPizzaToOrderCompletedAction>
+    CommandRequestEffects<OrdersState, AddPizzaToOrderAction, AddPizzaToOrderSuccessAction, AddPizzaToOrderFailureAction, AddPizzaToOrderCompletedAction>
 {
     private readonly IMediator mediator;
 

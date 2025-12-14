@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using Fluxor;
+using Lewee.StateManagement;
 using Pizzeria.Store.StateManagement.Orders.Actions;
 
 namespace Pizzeria.Store.StateManagement.Orders;
@@ -11,12 +12,7 @@ public static class OrdersReducer
         [NotNull] OrdersState state,
         [NotNull] StartOrderAction action)
     {
-        return state with
-        {
-            IsStartingOrder = true,
-            ErrorMessage = null,
-            CorrelationId = action.CorrelationId,
-        };
+        return state.OnRequest(action);
     }
 
     [ReducerMethod]

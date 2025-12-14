@@ -13,7 +13,7 @@ using Pizzeria.Store.StateManagement.Orders.Actions;
 namespace Pizzeria.Store.StateManagement.Orders;
 
 public sealed class StartOrdersEffects :
-    RequestEffects<OrdersState, StartOrderAction, StartOrderSuccessAction, StartOrderFailureAction, StartOrderCompletedAction>
+    CommandRequestEffects<OrdersState, StartOrderAction, StartOrderSuccessAction, StartOrderFailureAction, StartOrderCompletedAction>
 {
     private readonly IMediator mediator;
     private readonly NavigationManager navigationManager;
