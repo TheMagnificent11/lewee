@@ -26,7 +26,7 @@ public sealed class AddPizzaToOrderEffects :
         this.mediator = mediator;
     }
 
-    protected override async Task<Result> ExecuteRequestAsync(
+    protected override async Task<CommandResult> ExecuteCommandAsync(
         [NotNull] AddPizzaToOrderAction action,
         [NotNull] IDispatcher dispatcher)
     {
@@ -36,7 +36,7 @@ public sealed class AddPizzaToOrderEffects :
             action.CorrelationId));
     }
 
-    protected override Task ExecuteRequestCompletedAsync(
+    protected override Task ExecuteCommandCompletedAsync(
         [NotNull] AddPizzaToOrderCompletedAction action,
         [NotNull] IDispatcher dispatcher)
     {

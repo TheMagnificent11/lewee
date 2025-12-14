@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Correlate;
 using Fluxor;
+using Lewee.Common;
 using Lewee.StateManagement.Observability;
 using Microsoft.Extensions.Logging;
 
@@ -16,7 +17,7 @@ namespace Lewee.StateManagement;
 /// <typeparam name="TRequestErrorAction">Request error action type</typeparam>
 /// <typeparam name="TMessageReceived">Request completed action type</typeparam>
 public abstract class CommandEffects<TState, TData, TRequestAction, TRequestSuccessAction, TRequestErrorAction, TMessageReceived>
-    : RequestEffects<TState, TData, TRequestAction, TRequestSuccessAction, TRequestErrorAction>
+    : RequestEffects<TState, TData, TRequestSuccessAction, TRequestErrorAction>
     where TState : RequestState<TData>, new()
     where TData : class
     where TRequestAction : IRequestAction, new()
@@ -40,31 +41,88 @@ public abstract class CommandEffects<TState, TData, TRequestAction, TRequestSucc
     }
 
     /// <summary>
-    /// Request completed effect
+    /// Command effect
     /// </summary>
     /// <param name="action">Action</param>
     /// <param name="dispatcher">Dispatcher</param>
     /// <returns>Asynchronous task</returns>
     [EffectMethod]
-    public virtual async Task RequestCompletedAsync(
+    public virtual async Task OnCommandAsync(
+        [NotNull] TRequestAction action,
+        [NotNull] IDispatcher dispatcher)
+    {
+        using (this.Logger.BeginCorrelationIdScope(this.CorrelationContextAccessor.SetNewCorrelationId(action)))
+        {
+            this.Logger.LogDebug("Executing request...");
+
+            try
+            {
+                var result = await this.ExecuteCommandAsync(action, dispatcher);
+                if (result.IsSuccess)
+                {
+                    dispatcher.Dispatch(new TRequestSuccessAction() { CorrelationId = action.CorrelationId });
+
+                    return;
+                }
+
+                dispatcher.Dispatch(new TRequestErrorAction()
+                {
+                    CorrelationId = action.CorrelationId,
+                    ErrorMessage = result.GenerateErrorMessage(),
+                });
+            }
+            catch (Exception ex)
+            {
+                this.Logger.LogError(
+                    ex,
+                    "An error occurred while executing the query request: {ErrorMessage}",
+                    ex.Message);
+
+                dispatcher.Dispatch(new TRequestErrorAction
+                {
+                    CorrelationId = action.CorrelationId,
+                    ErrorMessage = ex.Message,
+                });
+            }
+        }
+    }
+
+    /// <summary>
+    /// Command completed effect
+    /// </summary>
+    /// <param name="action">Action</param>
+    /// <param name="dispatcher">Dispatcher</param>
+    /// <returns>Asynchronous task</returns>
+    [EffectMethod]
+    public virtual async Task OnCommandCompletedAsync(
         [NotNull] TMessageReceived action,
         [NotNull] IDispatcher dispatcher)
     {
         using (this.Logger.BeginCorrelationIdScope(action.CorrelationId))
         {
-            await this.ExecuteRequestCompletedAsync(action, dispatcher);
+            await this.ExecuteCommandCompletedAsync(action, dispatcher);
 
             this.Logger.LogDebug("Executing query request...completed");
         }
     }
 
     /// <summary>
-    /// Executes the request completed
+    /// Executes the command
     /// </summary>
-    /// <param name="action">Request completed action</param>
+    /// <param name="action">Request action</param>
+    /// <param name="dispatcher">Dispatcher</param>
+    /// <returns>Asynchronous task containing a <see cref="Result"/> that represents the success or failure of the request</returns>
+    protected abstract Task<CommandResult> ExecuteCommandAsync(
+        [NotNull] TRequestAction action,
+        [NotNull] IDispatcher dispatcher);
+
+    /// <summary>
+    /// Executes the command completed
+    /// </summary>
+    /// <param name="action">Command completed action</param>
     /// <param name="dispatcher">Dispatcher</param>
     /// <returns>Asynchronous task</returns>
-    protected abstract Task ExecuteRequestCompletedAsync(
+    protected abstract Task ExecuteCommandCompletedAsync(
         [NotNull] TMessageReceived action,
         [NotNull] IDispatcher dispatcher);
 }

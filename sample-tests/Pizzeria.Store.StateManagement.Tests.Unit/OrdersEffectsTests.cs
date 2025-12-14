@@ -58,7 +58,7 @@ public class OrdersEffectsTests : TestContext
         };
 
         // Act
-        await this.effects.RequestCompletedAsync(action, this.dispatcherMock.Object);
+        await this.effects.OnCommandCompletedAsync(action, this.dispatcherMock.Object);
 
         // Assert
         var navMan = this.Services.GetRequiredService<NavigationManager>();
@@ -79,7 +79,7 @@ public class OrdersEffectsTests : TestContext
         var initialUri = navMan.Uri;
 
         // Act
-        await this.effects.RequestCompletedAsync(action, this.dispatcherMock.Object);
+        await this.effects.OnCommandCompletedAsync(action, this.dispatcherMock.Object);
 
         // Assert
         navMan.Uri.Should().Be(initialUri);
@@ -107,7 +107,7 @@ public class OrdersEffectsTests : TestContext
         var initialUri = navMan.Uri;
 
         // Act
-        await this.effects.RequestCompletedAsync(action, this.dispatcherMock.Object);
+        await this.effects.OnCommandCompletedAsync(action, this.dispatcherMock.Object);
 
         // Assert
         navMan.Uri.Should().Be(initialUri);
@@ -125,7 +125,7 @@ public class OrdersEffectsTests : TestContext
         var action = new StartOrderAction { CorrelationId = correlationId };
 
         // Act
-        await this.effects.RequestAsync(action, this.dispatcherMock.Object);
+        await this.effects.OnCommandAsync(action, this.dispatcherMock.Object);
 
         // Assert
         this.dispatcherMock.Verify(
@@ -146,7 +146,7 @@ public class OrdersEffectsTests : TestContext
         var action = new StartOrderAction { CorrelationId = correlationId };
 
         // Act
-        await this.effects.RequestAsync(action, this.dispatcherMock.Object);
+        await this.effects.OnCommandAsync(action, this.dispatcherMock.Object);
 
         // Assert
         this.dispatcherMock.Verify(
@@ -169,7 +169,7 @@ public class OrdersEffectsTests : TestContext
         var action = new StartOrderAction { CorrelationId = correlationId };
 
         // Act
-        await this.effects.RequestAsync(action, this.dispatcherMock.Object);
+        await this.effects.OnCommandAsync(action, this.dispatcherMock.Object);
 
         // Assert
         this.dispatcherMock.Verify(

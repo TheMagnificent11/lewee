@@ -31,14 +31,14 @@ public sealed class StartOrderEffects :
         this.navigationManager = navigationManager;
     }
 
-    protected override async Task<Result> ExecuteRequestAsync(
+    protected override async Task<CommandResult> ExecuteCommandAsync(
         [NotNull] StartOrderAction action,
         [NotNull] IDispatcher dispatcher)
     {
         return await this.mediator.Send(new StartOrderCommand(action.CorrelationId));
     }
 
-    protected override Task ExecuteRequestCompletedAsync(
+    protected override Task ExecuteCommandCompletedAsync(
         [NotNull] StartOrderCompletedAction action,
         [NotNull] IDispatcher dispatcher)
     {

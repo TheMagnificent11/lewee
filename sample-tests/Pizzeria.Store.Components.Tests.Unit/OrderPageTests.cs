@@ -60,7 +60,7 @@ public class OrderPageTests : TestContext
 
         this.mediatorMock
             .Setup(x => x.Send(It.IsAny<GetPizzasQuery>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(QueryResult<PizzaDto[]>.Success(testPizzas));
+            .ReturnsAsync(QueryResult<IEnumerable<PizzaDto>>.Success(testPizzas));
 
         // Act
         var component = this.RenderComponent<Order>();

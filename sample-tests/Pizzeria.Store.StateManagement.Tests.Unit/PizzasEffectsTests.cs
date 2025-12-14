@@ -28,7 +28,7 @@ public class PizzasEffectsTests
     }
 
     [Fact]
-    public async Task OnLoadPizzasAsync_Success_DispatchesSuccessActionAsync()
+    public async Task OnQueryAsync_Success_DispatchesSuccessActionAsync()
     {
         // Arrange
         var pizzas = new PizzaDto[]
@@ -39,12 +39,12 @@ public class PizzasEffectsTests
 
         this.mediatorMock
             .Setup(x => x.Send(It.IsAny<GetPizzasQuery>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(QueryResult<PizzaDto[]>.Success(pizzas));
+            .ReturnsAsync(QueryResult<IEnumerable<PizzaDto>>.Success(pizzas));
 
         var action = new LoadPizzasAction { CorrelationId = Guid.NewGuid() };
 
         // Act
-        await this.effects.RequestAsync(action, this.dispatcherMock.Object);
+        await this.effects.OnQueryAsync(action, this.dispatcherMock.Object);
 
         // Assert
         this.dispatcherMock.Verify(
@@ -53,18 +53,18 @@ public class PizzasEffectsTests
     }
 
     [Fact]
-    public async Task OnLoadPizzasAsync_Failure_DispatchesFailureActionAsync()
+    public async Task OnQueryAsync_Failure_DispatchesFailureActionAsync()
     {
         // Arrange
         var errorMessage = "Failed to retrieve pizzas";
         this.mediatorMock
             .Setup(x => x.Send(It.IsAny<GetPizzasQuery>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(QueryResult<PizzaDto[]>.Fail(ResultStatus.BadRequest, errorMessage));
+            .ReturnsAsync(QueryResult<IEnumerable<PizzaDto>>.Fail(ResultStatus.BadRequest, errorMessage));
 
         var action = new LoadPizzasAction { CorrelationId = Guid.NewGuid() };
 
         // Act
-        await this.effects.RequestAsync(action, this.dispatcherMock.Object);
+        await this.effects.OnQueryAsync(action, this.dispatcherMock.Object);
 
         // Assert
         this.dispatcherMock.Verify(
@@ -73,7 +73,7 @@ public class PizzasEffectsTests
     }
 
     [Fact]
-    public async Task OnLoadPizzasAsync_Exception_DispatchesFailureActionAsync()
+    public async Task OnQueryAsync_Exception_DispatchesFailureActionAsync()
     {
         // Arrange
         var exceptionMessage = "Something went wrong";
@@ -84,7 +84,7 @@ public class PizzasEffectsTests
         var action = new LoadPizzasAction { CorrelationId = Guid.NewGuid() };
 
         // Act
-        await this.effects.RequestAsync(action, this.dispatcherMock.Object);
+        await this.effects.OnQueryAsync(action, this.dispatcherMock.Object);
 
         // Assert
         this.dispatcherMock.Verify(

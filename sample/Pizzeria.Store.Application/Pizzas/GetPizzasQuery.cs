@@ -8,7 +8,7 @@ using Pizzeria.Store.Domain;
 
 namespace Pizzeria.Store.Application.Pizzas;
 
-public sealed class GetPizzasQuery : IQuery<PizzaDto[]>
+public sealed class GetPizzasQuery : IQuery<IEnumerable<PizzaDto>>
 {
     public GetPizzasQuery(Guid correlationId)
     {
@@ -21,7 +21,7 @@ public sealed class GetPizzasQuery : IQuery<PizzaDto[]>
         "Performance",
         "CA1812: Avoid uninstantiated internal classes",
         Justification = "Used via mediation")]
-    internal sealed class Handler : IRequestHandler<GetPizzasQuery, QueryResult<PizzaDto[]>>
+    internal sealed class Handler : IRequestHandler<GetPizzasQuery, QueryResult<IEnumerable<PizzaDto>>>
     {
         private readonly IRepository<Pizza> repository;
 
@@ -30,7 +30,9 @@ public sealed class GetPizzasQuery : IQuery<PizzaDto[]>
             this.repository = repository;
         }
 
-        public async Task<QueryResult<PizzaDto[]>> Handle(GetPizzasQuery request, CancellationToken cancellationToken)
+        public async Task<QueryResult<IEnumerable<PizzaDto>>> Handle(
+            GetPizzasQuery request,
+            CancellationToken cancellationToken)
         {
             var pizzas = await this.repository.AllAsync(cancellationToken);
 
@@ -42,7 +44,7 @@ public sealed class GetPizzasQuery : IQuery<PizzaDto[]>
                     x.Price))
                 .ToArray();
 
-            return QueryResult<PizzaDto[]>.Success(result);
+            return QueryResult<IEnumerable<PizzaDto>>.Success(result);
         }
     }
 }

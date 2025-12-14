@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Correlate;
 using Fluxor;
+using Lewee.Common;
 using Lewee.StateManagement.Observability;
 using Microsoft.Extensions.Logging;
 
@@ -15,7 +16,7 @@ namespace Lewee.StateManagement;
 /// <typeparam name="TRequestSuccessAction">Request success action type</typeparam>
 /// <typeparam name="TRequestErrorAction">Request error action type</typeparam>
 public abstract class QuerytEffects<TState, TData, TRequestAction, TRequestSuccessAction, TRequestErrorAction>
-    : RequestEffects<TState, TData, TRequestAction, TRequestSuccessAction, TRequestErrorAction>
+    : RequestEffects<TState, TData, TRequestSuccessAction, TRequestErrorAction>
     where TState : RequestState<TData>, new()
     where TData : class
     where TRequestAction : IRequestAction, new()
@@ -36,4 +37,65 @@ public abstract class QuerytEffects<TState, TData, TRequestAction, TRequestSucce
         : base(state, correlationContextAccessor, logger)
     {
     }
+
+    /// <summary>
+    /// Command effect
+    /// </summary>
+    /// <param name="action">Action</param>
+    /// <param name="dispatcher">Dispatcher</param>
+    /// <returns>Asynchronous task</returns>
+    [EffectMethod]
+    public virtual async Task OnQueryAsync(
+        [NotNull] TRequestAction action,
+        [NotNull] IDispatcher dispatcher)
+    {
+        using (this.Logger.BeginCorrelationIdScope(this.CorrelationContextAccessor.SetNewCorrelationId(action)))
+        {
+            this.Logger.LogDebug("Executing request...");
+
+            try
+            {
+                var result = await this.ExecuteQueryAsync(action, dispatcher);
+                if (result.IsSuccess)
+                {
+                    dispatcher.Dispatch(new TRequestSuccessAction
+                    {
+                        CorrelationId = action.CorrelationId,
+                        Data = result.Data!,
+                    });
+
+                    return;
+                }
+
+                dispatcher.Dispatch(new TRequestErrorAction()
+                {
+                    CorrelationId = action.CorrelationId,
+                    ErrorMessage = result.GenerateErrorMessage(),
+                });
+            }
+            catch (Exception ex)
+            {
+                this.Logger.LogError(
+                    ex,
+                    "An error occurred while executing the query request: {ErrorMessage}",
+                    ex.Message);
+
+                dispatcher.Dispatch(new TRequestErrorAction
+                {
+                    CorrelationId = action.CorrelationId,
+                    ErrorMessage = ex.Message,
+                });
+            }
+        }
+    }
+
+    /// <summary>
+    /// Executes the query
+    /// </summary>
+    /// <param name="action">Request action</param>
+    /// <param name="dispatcher">Dispatcher</param>
+    /// <returns>Asynchronous task containing a <see cref="Result"/> that represents the success or failure of the request</returns>
+    protected abstract Task<QueryResult<TData>> ExecuteQueryAsync(
+        [NotNull] TRequestAction action,
+        [NotNull] IDispatcher dispatcher);
 }
