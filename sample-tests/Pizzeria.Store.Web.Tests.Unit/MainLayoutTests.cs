@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using MudBlazor.Services;
 using Pizzeria.Store.Contracts;
+using Pizzeria.Store.StateManagement;
 using Pizzeria.Store.StateManagement.Orders;
 using Xunit;
 
@@ -21,7 +22,7 @@ public class MainLayoutTests : TestContext
         this.Services.AddSingleton(Mock.Of<ICorrelationContextAccessor>());
         this.Services.AddSingleton(Mock.Of<ILogger<StartOrderEffects>>());
         this.Services.AddMudServices();
-        this.Services.AddFluxor(o => o.ScanAssemblies(typeof(OrderState).Assembly));
+        this.Services.AddFluxor(o => o.ScanAssemblies(typeof(StoreStateManagementConfiguration).Assembly));
 
         this.JSInterop.Mode = JSRuntimeMode.Loose;
     }

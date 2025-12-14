@@ -20,7 +20,7 @@ public class PizzasEffects
         IMediator mediator,
         IState<PizzasState> state,
         ICorrelationContextAccessor correlationContextAccessor,
-        ILogger logger)
+        ILogger<PizzasEffects> logger)
         : base(state, correlationContextAccessor, logger)
     {
         this.mediator = mediator;

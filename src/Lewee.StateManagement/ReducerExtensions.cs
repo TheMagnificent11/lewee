@@ -77,7 +77,9 @@ public static class ReducerExtensions
 
         return state with
         {
+            CorrelationId = action.CorrelationId,
             IsSaving = false,
+            ErrorMessage = null,
         };
     }
 
@@ -102,6 +104,7 @@ public static class ReducerExtensions
 
         return state with
         {
+            CorrelationId = action.CorrelationId,
             IsLoading = false,
             Data = action.Data,
         };
@@ -126,6 +129,7 @@ public static class ReducerExtensions
 
         return state with
         {
+            CorrelationId = action.CorrelationId,
             IsSaving = false,
             ErrorMessage = action.ErrorMessage,
         };
@@ -152,6 +156,7 @@ public static class ReducerExtensions
 
         return state with
         {
+            CorrelationId = action.CorrelationId,
             IsLoading = false,
             ErrorMessage = action.ErrorMessage,
         };
@@ -178,6 +183,7 @@ public static class ReducerExtensions
 
         return state with
         {
+            CorrelationId = action.CorrelationId,
             Data = action.Data,
         };
     }
