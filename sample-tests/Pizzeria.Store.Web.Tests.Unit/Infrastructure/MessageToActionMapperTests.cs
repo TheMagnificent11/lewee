@@ -33,7 +33,7 @@ public class MessageToActionMapperTests
         action.Should().NotBeNull();
         action.Should().BeOfType<StartOrderCompletedAction>();
         var completedAction = (StartOrderCompletedAction)action!;
-        completedAction.Order.Id.Should().Be(orderId);
+        completedAction.Data.Id.Should().Be(orderId);
         completedAction.CorrelationId.Should().Be(correlationId);
     }
 

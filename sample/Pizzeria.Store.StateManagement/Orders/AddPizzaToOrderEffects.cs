@@ -6,17 +6,18 @@ using Lewee.StateManagement;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Pizzeria.Store.Application.Orders;
+using Pizzeria.Store.Contracts.Orders;
 using Pizzeria.Store.StateManagement.Orders.Actions;
 
 namespace Pizzeria.Store.StateManagement.Orders;
 
 public sealed class AddPizzaToOrderEffects :
-    CommandRequestEffects<OrdersState, AddPizzaToOrderAction, AddPizzaToOrderSuccessAction, AddPizzaToOrderFailureAction, AddPizzaToOrderCompletedAction>
+    CommandEffects<OrderState, OrderDto, AddPizzaToOrderAction, AddPizzaToOrderSuccessAction, AddPizzaToOrderFailureAction, AddPizzaToOrderCompletedAction>
 {
     private readonly IMediator mediator;
 
     public AddPizzaToOrderEffects(
-        IState<OrdersState> state,
+        IState<OrderState> state,
         IMediator mediator,
         ICorrelationContextAccessor correlationContextAccessor,
         ILogger<AddPizzaToOrderEffects> logger)
@@ -39,6 +40,7 @@ public sealed class AddPizzaToOrderEffects :
         [NotNull] AddPizzaToOrderCompletedAction action,
         [NotNull] IDispatcher dispatcher)
     {
+        // TODO
         throw new NotSupportedException();
     }
 }

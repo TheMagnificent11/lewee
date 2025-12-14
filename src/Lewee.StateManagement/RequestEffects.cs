@@ -11,11 +11,13 @@ namespace Lewee.StateManagement;
 /// Request Effects
 /// </summary>
 /// <typeparam name="TState">State type</typeparam>
+/// <typeparam name="TData">Data type</typeparam>
 /// <typeparam name="TRequestAction">Request action type</typeparam>
 /// <typeparam name="TRequestSuccessAction">Request success action type</typeparam>
 /// <typeparam name="TRequestErrorAction">Request error action type</typeparam>
-public abstract class QueryRequestEffects<TState, TRequestAction, TRequestSuccessAction, TRequestErrorAction>
-    where TState : CommandState, new()
+public abstract class RequestEffects<TState, TData, TRequestAction, TRequestSuccessAction, TRequestErrorAction>
+    where TState : RequestState<TData>, new()
+    where TData : class
     where TRequestAction : IRequestAction, new()
     where TRequestSuccessAction : IRequestSuccessAction, new()
     where TRequestErrorAction : IRequestErrorAction, new()
@@ -24,12 +26,12 @@ public abstract class QueryRequestEffects<TState, TRequestAction, TRequestSucces
 
     /// <summary>
     /// Initializes a new instance of the
-    /// <see cref="QueryRequestEffects{TState, TRequestAction, TRequestSuccessAction, TRequestErrorAction}"/> class
+    /// <see cref="RequestEffects{TState, TData, TRequestAction, TRequestSuccessAction, TRequestErrorAction}"/> class
     /// </summary>
     /// <param name="state">State</param>
     /// <param name="correlationContextAccessor">Correlation context accessor</param>
     /// <param name="logger">Logger</param>
-    protected QueryRequestEffects(
+    protected RequestEffects(
         IState<TState> state,
         ICorrelationContextAccessor correlationContextAccessor,
         ILogger logger)
@@ -62,7 +64,7 @@ public abstract class QueryRequestEffects<TState, TRequestAction, TRequestSucces
     {
         using (this.Logger.BeginCorrelationIdScope(this.correlationContextAccessor.SetNewCorrelationId(action)))
         {
-            this.Logger.LogDebug("Executing query request...");
+            this.Logger.LogDebug("Executing request...");
 
             try
             {

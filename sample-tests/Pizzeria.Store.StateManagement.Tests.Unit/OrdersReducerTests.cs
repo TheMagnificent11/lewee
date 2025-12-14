@@ -12,12 +12,12 @@ public class OrdersReducerTests
     public void OnStartOrder_SetsIsSavingToTrue()
     {
         // Arrange
-        var state = new OrdersState();
+        var state = new OrderState();
         var correlationId = Guid.NewGuid();
         var action = new StartOrderAction { CorrelationId = correlationId };
 
         // Act
-        var result = OrdersReducer.OnStartOrder(state, action);
+        var result = OrderReducer.OnStartOrder(state, action);
 
         // Assert
         result.IsSaving.Should().BeTrue();
@@ -29,11 +29,11 @@ public class OrdersReducerTests
     public void OnStartOrder_ClearsExistingErrorMessage()
     {
         // Arrange
-        var state = new OrdersState { ErrorMessage = "Previous error" };
+        var state = new OrderState { ErrorMessage = "Previous error" };
         var action = new StartOrderAction { CorrelationId = Guid.NewGuid() };
 
         // Act
-        var result = OrdersReducer.OnStartOrder(state, action);
+        var result = OrderReducer.OnStartOrder(state, action);
 
         // Assert
         result.ErrorMessage.Should().BeNull();
@@ -43,12 +43,12 @@ public class OrdersReducerTests
     public void OnStartOrderSuccess_SetsIsSavingToFalse()
     {
         // Arrange
-        var state = new OrdersState { IsSaving = true };
+        var state = new OrderState { IsSaving = true };
         var correlationId = Guid.NewGuid();
         var action = new StartOrderSuccessAction { CorrelationId = correlationId };
 
         // Act
-        var result = OrdersReducer.OnStartOrderSuccess(state, action);
+        var result = OrderReducer.OnStartOrderSuccess(state, action);
 
         // Assert
         result.IsSaving.Should().BeFalse();
@@ -60,7 +60,7 @@ public class OrdersReducerTests
     public void OnStartOrderFailure_SetsErrorMessage()
     {
         // Arrange
-        var state = new OrdersState { IsSaving = true };
+        var state = new OrderState { IsSaving = true };
         var correlationId = Guid.NewGuid();
         var errorMessage = "Failed to start order";
         var action = new StartOrderFailureAction
@@ -70,7 +70,7 @@ public class OrdersReducerTests
         };
 
         // Act
-        var result = OrdersReducer.OnStartOrderFailure(state, action);
+        var result = OrderReducer.OnStartOrderFailure(state, action);
 
         // Assert
         result.IsSaving.Should().BeFalse();
@@ -82,7 +82,7 @@ public class OrdersReducerTests
     public void OnStartOrderCompleted_SetsCurrentOrder()
     {
         // Arrange
-        var state = new OrdersState();
+        var state = new OrderState();
         var correlationId = Guid.NewGuid();
         var order = new OrderDto
         {
@@ -94,15 +94,15 @@ public class OrdersReducerTests
         };
         var action = new StartOrderCompletedAction
         {
-            Order = order,
+            Data = order,
             CorrelationId = correlationId,
         };
 
         // Act
-        var result = OrdersReducer.OnStartOrderCompleted(state, action);
+        var result = OrderReducer.OnStartOrderCompleted(state, action);
 
         // Assert
-        result.CurrentOrder.Should().Be(order);
+        result.Data.Should().Be(order);
         result.CorrelationId.Should().Be(correlationId);
     }
 
@@ -110,11 +110,11 @@ public class OrdersReducerTests
     public void OnAddPizzaToOrderSuccess_ClearsErrorMessage()
     {
         // Arrange
-        var state = new OrdersState { ErrorMessage = "Previous error" };
+        var state = new OrderState { ErrorMessage = "Previous error" };
         var action = new AddPizzaToOrderSuccessAction { CorrelationId = Guid.NewGuid() };
 
         // Act
-        var result = OrdersReducer.OnAddPizzaToOrderSuccess(state, action);
+        var result = OrderReducer.OnAddPizzaToOrderSuccess(state, action);
 
         // Assert
         result.ErrorMessage.Should().BeNull();
@@ -124,7 +124,7 @@ public class OrdersReducerTests
     public void OnAddPizzaToOrderFailure_SetsErrorMessage()
     {
         // Arrange
-        var state = new OrdersState();
+        var state = new OrderState();
         var errorMessage = "Failed to add pizza";
         var action = new AddPizzaToOrderFailureAction
         {
@@ -133,7 +133,7 @@ public class OrdersReducerTests
         };
 
         // Act
-        var result = OrdersReducer.OnAddPizzaToOrderFailure(state, action);
+        var result = OrderReducer.OnAddPizzaToOrderFailure(state, action);
 
         // Assert
         result.ErrorMessage.Should().Be(errorMessage);
@@ -143,11 +143,11 @@ public class OrdersReducerTests
     public void OnClearOrderError_ClearsErrorMessage()
     {
         // Arrange
-        var state = new OrdersState { ErrorMessage = "Some error" };
+        var state = new OrderState { ErrorMessage = "Some error" };
         var action = new ClearOrderErrorAction();
 
         // Act
-        var result = OrdersReducer.OnClearOrderError(state, action);
+        var result = OrderReducer.OnClearOrderError(state, action);
 
         // Assert
         result.ErrorMessage.Should().BeNull();

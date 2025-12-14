@@ -3,7 +3,9 @@
 /// <summary>
 /// Request State Interface
 /// </summary>
-public interface IRequestState
+/// <typeparam name="T">Data type</typeparam>
+public interface IRequestState<T>
+    where T : class
 {
     /// <summary>
     /// Gets a value indicating whether the state is loading
@@ -19,6 +21,11 @@ public interface IRequestState
     /// Gets the request correlation ID
     /// </summary>
     Guid CorrelationId { get; init; }
+
+    /// <summary>
+    /// Gets the data
+    /// </summary>
+    T Data { get; init; }
 
     /// <summary>
     /// Gets the request error message

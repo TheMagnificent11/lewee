@@ -18,7 +18,7 @@ public partial class Order : FluxorComponent
     public Guid OrderId { get; set; }
 
     [Inject]
-    private IState<OrdersState> OrdersState { get; set; } = null!;
+    private IState<OrderState> OrdersState { get; set; } = null!;
 
     [Inject]
     private IState<PizzasState> PizzasState { get; set; } = null!;
@@ -33,13 +33,13 @@ public partial class Order : FluxorComponent
     {
         base.OnInitialized();
 
-        if (this.OrdersState.Value.CurrentOrder == null)
+        if (this.OrdersState.Value.Data == null)
         {
             this.Navigation.NavigateTo(PageRoutes.Home);
             return;
         }
 
-        if (!this.PizzasState.Value.Pizzas.Any() && !this.PizzasState.Value.IsLoading)
+        if (!this.PizzasState.Value.Data!.Any() && !this.PizzasState.Value.IsLoading)
         {
             this.Dispatcher.Dispatch(new LoadPizzasAction());
         }
@@ -47,11 +47,11 @@ public partial class Order : FluxorComponent
 
     private void AddPizza(Guid pizzaId)
     {
-        if (this.OrdersState.Value.CurrentOrder != null)
+        if (this.OrdersState.Value.Data != null)
         {
             this.Dispatcher.Dispatch(new AddPizzaToOrderAction
             {
-                OrderId = this.OrdersState.Value.CurrentOrder.Id,
+                OrderId = this.OrdersState.Value.Data.Id,
                 PizzaId = pizzaId,
             });
         }

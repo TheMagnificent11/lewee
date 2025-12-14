@@ -8,22 +8,23 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
 using Pizzeria.Store.Application.Orders;
 using Pizzeria.Store.Contracts;
+using Pizzeria.Store.Contracts.Orders;
 using Pizzeria.Store.StateManagement.Orders.Actions;
 
 namespace Pizzeria.Store.StateManagement.Orders;
 
-public sealed class StartOrdersEffects :
-    CommandRequestEffects<OrdersState, StartOrderAction, StartOrderSuccessAction, StartOrderFailureAction, StartOrderCompletedAction>
+public sealed class StartOrderEffects :
+    CommandEffects<OrderState, OrderDto, StartOrderAction, StartOrderSuccessAction, StartOrderFailureAction, StartOrderCompletedAction>
 {
     private readonly IMediator mediator;
     private readonly NavigationManager navigationManager;
 
-    public StartOrdersEffects(
-        IState<OrdersState> state,
+    public StartOrderEffects(
+        IState<OrderState> state,
         IMediator mediator,
         NavigationManager navigationManager,
         ICorrelationContextAccessor correlationContextAccessor,
-        ILogger<StartOrdersEffects> logger)
+        ILogger<StartOrderEffects> logger)
         : base(state, correlationContextAccessor, logger)
     {
         this.mediator = mediator;
@@ -41,13 +42,13 @@ public sealed class StartOrdersEffects :
         [NotNull] StartOrderCompletedAction action,
         [NotNull] IDispatcher dispatcher)
     {
-        if (action.Order.Id == Guid.Empty)
+        if (action.Data.Id == Guid.Empty)
         {
             this.Logger.LogWarning("Order ID is null or empty. Navigation to order details page aborted.");
             return Task.CompletedTask;
         }
 
-        this.navigationManager.NavigateTo(PageRoutes.GetOrderRoute(action.Order.Id));
+        this.navigationManager.NavigateTo(PageRoutes.GetOrderRoute(action.Data.Id));
 
         return Task.CompletedTask;
     }

@@ -10,26 +10,28 @@ namespace Lewee.StateManagement;
 /// Request Effects
 /// </summary>
 /// <typeparam name="TState">State type</typeparam>
+/// <typeparam name="TData">Data type</typeparam>
 /// <typeparam name="TRequestAction">Request action type</typeparam>
 /// <typeparam name="TRequestSuccessAction">Request success action type</typeparam>
 /// <typeparam name="TRequestErrorAction">Request error action type</typeparam>
 /// <typeparam name="TMessageReceived">Request completed action type</typeparam>
-public abstract class CommandRequestEffects<TState, TRequestAction, TRequestSuccessAction, TRequestErrorAction, TMessageReceived>
-    : QueryRequestEffects<TState, TRequestAction, TRequestSuccessAction, TRequestErrorAction>
-    where TState : CommandState, new()
+public abstract class CommandEffects<TState, TData, TRequestAction, TRequestSuccessAction, TRequestErrorAction, TMessageReceived>
+    : RequestEffects<TState, TData, TRequestAction, TRequestSuccessAction, TRequestErrorAction>
+    where TState : RequestState<TData>, new()
+    where TData : class
     where TRequestAction : IRequestAction, new()
     where TRequestSuccessAction : IRequestSuccessAction, new()
     where TRequestErrorAction : IRequestErrorAction, new()
-    where TMessageReceived : IMessageReceivedAction, new()
+    where TMessageReceived : IMessageReceivedAction<TData>, new()
 {
     /// <summary>
     /// Initializes a new instance of the
-    /// <see cref="CommandRequestEffects{TState, TRequestAction, TRequestSuccessAction, TRequestErrorAction, TMessageReceived}"/> class
+    /// <see cref="CommandEffects{TState, TData, TRequestAction, TRequestSuccessAction, TRequestErrorAction, TMessageReceived}"/> class
     /// </summary>
     /// <param name="state">State</param>
     /// <param name="correlationContextAccessor">Correlation context accessor</param>
     /// <param name="logger">Logger</param>
-    protected CommandRequestEffects(
+    protected CommandEffects(
         IState<TState> state,
         ICorrelationContextAccessor correlationContextAccessor,
         ILogger logger)

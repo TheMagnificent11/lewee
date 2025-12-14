@@ -6,11 +6,13 @@ using Lewee.StateManagement;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Pizzeria.Store.Application.Pizzas;
+using Pizzeria.Store.Contracts.Pizzas;
 using Pizzeria.Store.StateManagement.Pizzas.Actions;
 
 namespace Pizzeria.Store.StateManagement.Pizzas;
 
-public class PizzasEffects : QueryRequestEffects<PizzasState, LoadPizzasAction, LoadPizzasSuccessAction, LoadPizzasFailureAction>
+public class PizzasEffects
+    : QuerytEffects<PizzasState, IEnumerable<PizzaDto>, LoadPizzasAction, LoadPizzasSuccessAction, LoadPizzasFailureAction>
 {
     private readonly IMediator mediator;
 

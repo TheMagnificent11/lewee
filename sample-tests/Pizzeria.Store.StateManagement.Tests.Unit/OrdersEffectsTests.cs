@@ -20,21 +20,21 @@ public class OrdersEffectsTests : TestContext
 {
     private readonly Mock<IMediator> mediatorMock = new();
     private readonly Mock<IDispatcher> dispatcherMock = new();
-    private readonly Mock<IState<OrdersState>> stateMock = new();
-    private readonly StartOrdersEffects effects;
+    private readonly Mock<IState<OrderState>> stateMock = new();
+    private readonly StartOrderEffects effects;
 
     public OrdersEffectsTests()
     {
         this.stateMock
             .Setup(s => s.Value)
-            .Returns(new OrdersState());
+            .Returns(new OrderState());
 
-        this.effects = new StartOrdersEffects(
+        this.effects = new StartOrderEffects(
             this.stateMock.Object,
             this.mediatorMock.Object,
             this.Services.GetRequiredService<NavigationManager>(),
             Mock.Of<ICorrelationContextAccessor>(),
-            Mock.Of<ILogger<StartOrdersEffects>>());
+            Mock.Of<ILogger<StartOrderEffects>>());
     }
 
     [Fact]
@@ -53,7 +53,7 @@ public class OrdersEffectsTests : TestContext
         };
         var action = new StartOrderCompletedAction
         {
-            Order = order,
+            Data = order,
             CorrelationId = correlationId,
         };
 
@@ -72,7 +72,7 @@ public class OrdersEffectsTests : TestContext
         var correlationId = Guid.NewGuid();
         var action = new StartOrderCompletedAction
         {
-            Order = new OrderDto(),
+            Data = new OrderDto(),
             CorrelationId = correlationId,
         };
         var navMan = this.Services.GetRequiredService<NavigationManager>();
@@ -100,7 +100,7 @@ public class OrdersEffectsTests : TestContext
         };
         var action = new StartOrderCompletedAction
         {
-            Order = order,
+            Data = order,
             CorrelationId = correlationId,
         };
         var navMan = this.Services.GetRequiredService<NavigationManager>();

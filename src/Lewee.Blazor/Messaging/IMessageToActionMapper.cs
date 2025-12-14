@@ -13,5 +13,5 @@ public interface IMessageToActionMapper
     /// <param name="message">Message to map</param>
     /// <param name="correlationId">Correlation ID</param>
     /// <returns>Mapped Fluxor action</returns>
-    IMessageReceivedAction? Map(object message, Guid correlationId);
+    IMessageReceivedAction Map(object message, Guid correlationId);
 }

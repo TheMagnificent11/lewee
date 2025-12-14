@@ -27,7 +27,7 @@ public static class PizzasReducer
     {
         return state with
         {
-            Pizzas = action.Data,
+            Data = action.Data,
             IsLoading = false,
             ErrorMessage = null,
         };

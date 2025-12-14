@@ -23,9 +23,9 @@ public class OrderPageTests : TestContext
     {
         this.Services.AddSingleton(this.mediatorMock.Object);
         this.Services.AddSingleton(Mock.Of<ICorrelationContextAccessor>());
-        this.Services.AddSingleton(Mock.Of<ILogger<StartOrdersEffects>>());
+        this.Services.AddSingleton(Mock.Of<ILogger<StartOrderEffects>>());
         this.Services.AddMudServices();
-        this.Services.AddFluxor(x => x.ScanAssemblies(typeof(OrdersState).Assembly));
+        this.Services.AddFluxor(x => x.ScanAssemblies(typeof(OrderState).Assembly));
     }
 
     [Fact]

@@ -56,7 +56,7 @@ public class PizzasReducerTests
         var result = PizzasReducer.OnLoadPizzasSuccess(state, action);
 
         // Assert
-        result.Pizzas.Should().BeEquivalentTo(pizzas);
+        result.Data.Should().BeEquivalentTo(pizzas);
         result.IsLoading.Should().BeFalse();
         result.ErrorMessage.Should().BeNull();
     }
@@ -109,7 +109,7 @@ public class PizzasReducerTests
         {
             new(Guid.NewGuid(), "Margherita", "Classic pizza", 9.99m),
         };
-        var state = new PizzasState { Pizzas = existingPizzas, IsLoading = true };
+        var state = new PizzasState { Data = existingPizzas, IsLoading = true };
         var action = new LoadPizzasFailureAction
         {
             ErrorMessage = "Failed to load pizzas",
@@ -119,6 +119,6 @@ public class PizzasReducerTests
         var result = PizzasReducer.OnLoadPizzasFailure(state, action);
 
         // Assert
-        result.Pizzas.Should().BeEquivalentTo(existingPizzas);
+        result.Data.Should().BeEquivalentTo(existingPizzas);
     }
 }

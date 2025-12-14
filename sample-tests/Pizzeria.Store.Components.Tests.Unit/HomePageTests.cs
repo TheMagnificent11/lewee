@@ -18,9 +18,9 @@ public class HomePageTests : TestContext
     {
         this.Services.AddSingleton(Mock.Of<IMediator>());
         this.Services.AddSingleton(Mock.Of<ICorrelationContextAccessor>());
-        this.Services.AddSingleton(Mock.Of<ILogger<StartOrdersEffects>>());
+        this.Services.AddSingleton(Mock.Of<ILogger<StartOrderEffects>>());
         this.Services.AddMudServices();
-        this.Services.AddFluxor(o => o.ScanAssemblies(typeof(OrdersState).Assembly));
+        this.Services.AddFluxor(o => o.ScanAssemblies(typeof(OrderState).Assembly));
 
         this.JSInterop.Mode = JSRuntimeMode.Loose;
     }
