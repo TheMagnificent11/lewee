@@ -21,10 +21,11 @@ These interfaces define contracts for Fluxor actions used in client-side state m
 | Interface | Description |
 |-----------|-------------|
 | `IRequestAction` | Base interface for actions that initiate a request, containing a `CorrelationId` |
-| `IRequestSuccessAction` | Interface for actions indicating successful request completion with `CorrelationId` |
-| `IQuerySuccessAction<T>` | Generic interface for successful query actions carrying `Data` of type `T` |
-| `IRequestErrorAction` | Interface for failed request actions with `CorrelationId` and `ErrorMessage` |
-| `IMessageReceivedAction` | Interface for actions dispatched when a server message is received |
+| `IRequestSuccessAction` | Interface for actions indicating successful request completion, extends `IRequestAction` |
+| `IQuerySuccessAction<T>` | Generic interface for successful query actions carrying `Data` of type `T`, extends `IRequestSuccessAction` |
+| `IRequestErrorAction` | Interface for failed request actions with `CorrelationId` and `ErrorMessage`, extends `IRequestAction` |
+| `IMessageReceivedAction` | Interface for actions dispatched when a server message is received, extends `IRequestAction` |
+| `IMessageReceivedAction<T>` | Generic interface for message received actions carrying `Data` of type `T`, extends `IMessageReceivedAction` |
 
 **Usage:**
 
@@ -39,38 +40,39 @@ public record GetOrdersSuccessAction(Guid CorrelationId, OrderDto[] Data)
 // Error action for failures
 public record GetOrdersErrorAction(Guid CorrelationId, string ErrorMessage)
     : IRequestErrorAction;
+
+// Message received action with data
+public record OrderUpdatedAction(Guid CorrelationId, OrderDto Data)
+    : IMessageReceivedAction<OrderDto>;
 ```
 
 ### State Classes
 
-#### IRequestState
+#### IRequestState\<T>
 
-Interface defining the base properties for request-based state:
+Generic interface defining the base properties for request-based state:
 
 | Property | Type | Description |
 |----------|------|-------------|
+| `IsLoading` | `bool` | Indicates whether the state is loading (query in progress) |
+| `IsSaving` | `bool` | Indicates whether the state is saving (command in progress) |
 | `CorrelationId` | `Guid` | Request correlation ID for tracing |
+| `Data` | `T?` | The state data |
 | `ErrorMessage` | `string?` | Error message from failed requests |
 
-#### RequestState
+#### RequestState\<T>
 
-Abstract base record for request state, implementing `IRequestState`:
+Abstract base record for request state, implementing `IRequestState<T>`:
 
 ```cs
-public record OrderState : RequestState
+public record OrderState : RequestState<Order>
 {
-    public Order? CurrentOrder { get; init; }
+    // All properties are inherited from RequestState<T>
 }
-```
 
-#### QueryState\<T>
-
-Abstract base record for query state with a `Data` property for storing query results:
-
-```cs
-public record PizzaListState : QueryState<IEnumerable<PizzaDto>>
+public record PizzaListState : RequestState<IEnumerable<PizzaDto>>
 {
-    // Data property is inherited from QueryState<T>
+    // Data property stores the list of pizzas
 }
 ```
 
@@ -82,51 +84,89 @@ Static class providing extension methods for common reducer patterns:
 
 | Method | Description |
 |--------|-------------|
-| `OnRequest<TState, TAction>` | Sets correlation ID and clears error message |
-| `OnQuery<TState, TStateData, TAction>` | Sets correlation ID, clears error and data |
-| `OnQuerySuccess<TState, TStateData, TAction>` | Sets data from successful query action |
-| `OnRequestError<TState, TAction>` | Sets error message from failed request |
+| `OnCommand<TState, TData, TAction>` | Sets correlation ID, sets `IsSaving` to true, clears error message, optionally clears data |
+| `OnQuery<TState, TData, TAction>` | Sets correlation ID, sets `IsLoading` to true, clears data and error message |
+| `OnCommandSuccess<TState, TData, TAction>` | Sets correlation ID, sets `IsSaving` to false, clears error message |
+| `OnQuerySuccess<TState, TData, TAction>` | Sets correlation ID, sets `IsLoading` to false, sets data from action |
+| `OnCommandError<TState, TData, TAction>` | Sets correlation ID, sets `IsSaving` to false, sets error message |
+| `OnQueryError<TState, TData, TAction>` | Sets correlation ID, sets `IsLoading` to false, sets error message |
+| `OnCommandCompleted<TState, TData, TAction>` | Sets correlation ID and data from message received action |
 
 **Usage:**
 
 ```cs
 [ReducerMethod]
-public static MyState OnRequest(MyState state, MyRequestAction action)
-    => state.OnRequest(action);
+public static MyState OnQuery(MyState state, MyQueryAction action)
+    => state.OnQuery<MyState, MyDataDto, MyQueryAction>(action);
+
+[ReducerMethod]
+public static MyState OnCommand(MyState state, MyCommandAction action)
+    => state.OnCommand<MyState, MyDataDto, MyCommandAction>(action, clearData: false);
 
 [ReducerMethod]
 public static MyState OnQuerySuccess(MyState state, MyQuerySuccessAction action)
     => state.OnQuerySuccess<MyState, MyDataDto, MyQuerySuccessAction>(action);
 
 [ReducerMethod]
-public static MyState OnError(MyState state, MyErrorAction action)
-    => state.OnRequestError(action);
+public static MyState OnCommandSuccess(MyState state, MyCommandSuccessAction action)
+    => state.OnCommandSuccess<MyState, MyDataDto, MyCommandSuccessAction>(action);
+
+[ReducerMethod]
+public static MyState OnQueryError(MyState state, MyQueryErrorAction action)
+    => state.OnQueryError<MyState, MyDataDto, MyQueryErrorAction>(action);
+
+[ReducerMethod]
+public static MyState OnCommandError(MyState state, MyCommandErrorAction action)
+    => state.OnCommandError<MyState, MyDataDto, MyCommandErrorAction>(action);
+
+[ReducerMethod]
+public static MyState OnCommandCompleted(MyState state, MyMessageReceivedAction action)
+    => state.OnCommandCompleted<MyState, MyDataDto, MyMessageReceivedAction>(action);
 ```
 
 ### Effects
 
-#### RequestEffects\<TState, TRequestAction, TRequestSuccessAction, TRequestErrorAction>
+The effects hierarchy provides base classes for implementing Fluxor effects that handle async operations.
 
-Abstract base class for implementing Fluxor effects that handle async operations like API calls:
+#### RequestEffects\<TState, TData, TRequestSuccessAction, TRequestErrorAction>
+
+Abstract base class for request effects that provides logging for success and error actions:
 
 **Type Parameters:**
 
-- `TState` - State type extending `RequestState`
-- `TRequestAction` - Action type implementing `IRequestAction`
+- `TState` - State type extending `RequestState<TData>`
+- `TData` - Data type (must be a reference type)
 - `TRequestSuccessAction` - Action type implementing `IRequestSuccessAction`
+- `TRequestErrorAction` - Action type implementing `IRequestErrorAction`
+
+**Features:**
+
+- Provides logging scope with correlation ID for success and error effects
+- Handles success and error logging automatically
+
+#### QuerytEffects\<TState, TData, TRequestAction, TRequestSuccessAction, TRequestErrorAction>
+
+Abstract base class for implementing Fluxor effects that handle query (read) operations:
+
+**Type Parameters:**
+
+- `TState` - State type extending `RequestState<TData>`
+- `TData` - Data type (must be a reference type)
+- `TRequestAction` - Action type implementing `IRequestAction`
+- `TRequestSuccessAction` - Action type implementing `IQuerySuccessAction<TData>`
 - `TRequestErrorAction` - Action type implementing `IRequestErrorAction`
 
 **Features:**
 
 - Automatically sets correlation context for distributed tracing
 - Provides logging scope with correlation ID
-- Handles success and error logging
-- Abstract `ExecuteRequestAsync` method for implementing actual API calls
+- Handles success and error dispatching based on `QueryResult<TData>`
+- Abstract `ExecuteQueryAsync` method for implementing actual API calls
 
 **Usage:**
 
 ```cs
-public class GetPizzasEffects : RequestEffects<PizzaListState, GetPizzasAction, GetPizzasSuccessAction, GetPizzasErrorAction>
+public class GetPizzasEffects : QuerytEffects<PizzaListState, PizzaDto[], GetPizzasAction, GetPizzasSuccessAction, GetPizzasErrorAction>
 {
     private readonly IPizzaApiClient client;
 
@@ -140,17 +180,68 @@ public class GetPizzasEffects : RequestEffects<PizzaListState, GetPizzasAction, 
         this.client = client;
     }
 
-    protected override async Task ExecuteRequestAsync(GetPizzasAction action, IDispatcher dispatcher)
+    protected override async Task<QueryResult<PizzaDto[]>> ExecuteQueryAsync(
+        GetPizzasAction action,
+        IDispatcher dispatcher)
     {
-        try
-        {
-            var pizzas = await this.client.GetPizzasAsync();
-            dispatcher.Dispatch(new GetPizzasSuccessAction(action.CorrelationId, pizzas));
-        }
-        catch (ApiException ex)
-        {
-            dispatcher.Dispatch(new GetPizzasErrorAction(action.CorrelationId, ex.GetErrorMessage()));
-        }
+        var pizzas = await this.client.GetPizzasAsync();
+        return QueryResult<PizzaDto[]>.Success(pizzas);
+    }
+}
+```
+
+#### CommandEffects\<TState, TData, TRequestAction, TRequestSuccessAction, TRequestErrorAction, TMessageReceived>
+
+Abstract base class for implementing Fluxor effects that handle command (write) operations with message-based completion:
+
+**Type Parameters:**
+
+- `TState` - State type extending `RequestState<TData>`
+- `TData` - Data type (must be a reference type)
+- `TRequestAction` - Action type implementing `IRequestAction`
+- `TRequestSuccessAction` - Action type implementing `IRequestSuccessAction`
+- `TRequestErrorAction` - Action type implementing `IRequestErrorAction`
+- `TMessageReceived` - Action type implementing `IMessageReceivedAction<TData>`
+
+**Features:**
+
+- Automatically sets correlation context for distributed tracing
+- Provides logging scope with correlation ID
+- Handles success and error dispatching based on `CommandResult`
+- Supports message-received pattern for server-side completion notifications
+- Abstract `ExecuteCommandAsync` and `ExecuteCommandCompletedAsync` methods for implementing command logic
+
+**Usage:**
+
+```cs
+public class CreateOrderEffects : CommandEffects<OrderState, Order, CreateOrderAction, CreateOrderSuccessAction, CreateOrderErrorAction, OrderCreatedAction>
+{
+    private readonly IOrderApiClient client;
+
+    public CreateOrderEffects(
+        IState<OrderState> state,
+        ICorrelationContextAccessor correlationContextAccessor,
+        ILogger<CreateOrderEffects> logger,
+        IOrderApiClient client)
+        : base(state, correlationContextAccessor, logger)
+    {
+        this.client = client;
+    }
+
+    protected override async Task<CommandResult> ExecuteCommandAsync(
+        CreateOrderAction action,
+        IDispatcher dispatcher)
+    {
+        await this.client.CreateOrderAsync(action.OrderData);
+        return CommandResult.Success();
+    }
+
+    protected override Task ExecuteCommandCompletedAsync(
+        OrderCreatedAction action,
+        IDispatcher dispatcher)
+    {
+        // Handle any post-completion logic
+        return Task.CompletedTask;
     }
 }
 ```
@@ -178,7 +269,7 @@ Provides extension methods for `ICorrelationContextAccessor` to manage correlati
 
 | Method | Description |
 |--------|-------------|
-| `SetNewCorrelationId` | Sets a new correlation ID on the correlation context from a request action |
+| `SetNewCorrelationId` | Sets the correlation ID on the correlation context from a request action |
 
 ```cs
 using Lewee.StateManagement.Observability;
@@ -202,13 +293,13 @@ The `AddLeweeFluxor` method:
 
 - Scans the entry assembly and provided assemblies for Fluxor features
 - Optionally enables Redux DevTools for debugging
-- Configures correlation context support
+- Configures correlation context support via `AddCorrelate()`
 
 ## Integration with Other Lewee Packages
 
 | Package | Integration |
 |---------|-------------|
-| `Lewee.Common` | Uses `LoggingConsts` for consistent logging property names |
+| `Lewee.Common` | Uses `LoggingConsts` for consistent logging property names, uses `CommandResult` and `QueryResult<T>` for effect results |
 | `Lewee.Blazor` | References this package for state management configuration and uses action interfaces |
 
 ## Sample Application
