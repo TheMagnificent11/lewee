@@ -8,5 +8,5 @@ public interface IRequestAction
     /// <summary>
     /// Gets the correlation ID
     /// </summary>
-    Guid CorrelationId { get; }
+    Guid CorrelationId { get; init; }
 }

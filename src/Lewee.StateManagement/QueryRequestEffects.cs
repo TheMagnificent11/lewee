@@ -15,7 +15,7 @@ namespace Lewee.StateManagement;
 /// <typeparam name="TRequestSuccessAction">Request success action type</typeparam>
 /// <typeparam name="TRequestErrorAction">Request error action type</typeparam>
 public abstract class QueryRequestEffects<TState, TRequestAction, TRequestSuccessAction, TRequestErrorAction>
-    where TState : RequestState, new()
+    where TState : CommandState, new()
     where TRequestAction : IRequestAction, new()
     where TRequestSuccessAction : IRequestSuccessAction, new()
     where TRequestErrorAction : IRequestErrorAction, new()

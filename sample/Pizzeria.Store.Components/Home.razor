@@ -37,9 +37,9 @@
                         Size="Size.Large"
                         FullWidth="true"
                         OnClick="StartNewOrder"
-                        Disabled="this.State.Value.IsStartingOrder">
+                        Disabled="this.State.Value.IsSaving">
 
-                        @if (this.State.Value.IsStartingOrder)
+                        @if (this.State.Value.IsSaving)
                         {
                             <MudProgressCircular Size="Size.Small" Indeterminate="true" />
                             <MudText Class="ml-2">Starting Order...</MudText>

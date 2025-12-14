@@ -16,7 +16,7 @@ namespace Lewee.StateManagement;
 /// <typeparam name="TMessageReceived">Request completed action type</typeparam>
 public abstract class CommandRequestEffects<TState, TRequestAction, TRequestSuccessAction, TRequestErrorAction, TMessageReceived>
     : QueryRequestEffects<TState, TRequestAction, TRequestSuccessAction, TRequestErrorAction>
-    where TState : RequestState, new()
+    where TState : CommandState, new()
     where TRequestAction : IRequestAction, new()
     where TRequestSuccessAction : IRequestSuccessAction, new()
     where TRequestErrorAction : IRequestErrorAction, new()

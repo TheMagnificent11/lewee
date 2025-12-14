@@ -3,13 +3,8 @@
 /// <summary>
 /// Request Error Action Interface
 /// </summary>
-public interface IRequestErrorAction
+public interface IRequestErrorAction : IRequestAction
 {
-    /// <summary>
-    /// Gets the correlation ID
-    /// </summary>
-    Guid CorrelationId { get; init; }
-
     /// <summary>
     /// Gets the error message
     /// </summary>

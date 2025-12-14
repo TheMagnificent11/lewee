@@ -6,21 +6,26 @@
 public static class ReducerExtensions
 {
     /// <summary>
-    /// On request reducer
+    /// On command reducer
     /// </summary>
     /// <typeparam name="TState">Request state type</typeparam>
     /// <typeparam name="TAction">Request action type</typeparam>
     /// <param name="state">Requet state</param>
     /// <param name="action">Request action</param>
     /// <returns>Updated state</returns>
-    public static TState OnRequest<TState, TAction>(this TState state, TAction action)
-        where TState : RequestState
+    public static TState OnCommand<TState, TAction>(this TState state, TAction action)
+        where TState : CommandState
         where TAction : IRequestAction
     {
         ArgumentNullException.ThrowIfNull(state);
         ArgumentNullException.ThrowIfNull(action);
 
-        return state with { CorrelationId = action.CorrelationId, ErrorMessage = null };
+        return state with
+        {
+            IsSaving = true,
+            CorrelationId = action.CorrelationId,
+            ErrorMessage = null,
+        };
     }
 
     /// <summary>
@@ -37,7 +42,37 @@ public static class ReducerExtensions
         where TStateData : class
         where TAction : IRequestAction
     {
-        return state.OnRequest(action) with { Data = default };
+        ArgumentNullException.ThrowIfNull(state);
+        ArgumentNullException.ThrowIfNull(action);
+
+        return state with
+        {
+            IsLoading = true,
+            CorrelationId = action.CorrelationId,
+            Data = null,
+            ErrorMessage = null,
+        };
+    }
+
+    /// <summary>
+    /// On command success
+    /// </summary>
+    /// <typeparam name="TState">Request state type</typeparam>
+    /// <typeparam name="TAction">Request action type</typeparam>
+    /// <param name="state">Requet state</param>
+    /// <param name="action">Request action</param>
+    /// <returns>Updated state</returns>
+    public static TState OnCommandSuccess<TState, TAction>(this TState state, TAction action)
+        where TState : CommandState
+        where TAction : IRequestSuccessAction
+    {
+        ArgumentNullException.ThrowIfNull(state);
+        ArgumentNullException.ThrowIfNull(action);
+
+        return state with
+        {
+            IsSaving = false,
+        };
     }
 
     /// <summary>
@@ -49,7 +84,9 @@ public static class ReducerExtensions
     /// <param name="state">Query state</param>
     /// <param name="action">Query action</param>
     /// <returns>Updated state</returns>
-    public static TState OnQuerySuccess<TState, TStateData, TAction>(this TState state, TAction action)
+    public static TState OnQuerySuccess<TState, TStateData, TAction>(
+        this TState state,
+        TAction action)
         where TState : QueryState<TStateData>
         where TStateData : class
         where TAction : IQuerySuccessAction<TStateData>
@@ -57,7 +94,11 @@ public static class ReducerExtensions
         ArgumentNullException.ThrowIfNull(state);
         ArgumentNullException.ThrowIfNull(action);
 
-        return state with { Data = action.Data };
+        return state with
+        {
+            IsLoading = false,
+            Data = action.Data,
+        };
     }
 
     /// <summary>
@@ -68,13 +109,43 @@ public static class ReducerExtensions
     /// <param name="state">Query state</param>
     /// <param name="action">Query action</param>
     /// <returns>Updated state</returns>
-    public static TState OnRequestError<TState, TAction>(this TState state, TAction action)
-        where TState : RequestState
+    public static TState OnCommandError<TState, TAction>(this TState state, TAction action)
+        where TState : CommandState
         where TAction : IRequestErrorAction
     {
         ArgumentNullException.ThrowIfNull(state);
         ArgumentNullException.ThrowIfNull(action);
 
-        return state with { ErrorMessage = action.ErrorMessage };
+        return state with
+        {
+            IsSaving = false,
+            ErrorMessage = action.ErrorMessage,
+        };
+    }
+
+    /// <summary>
+    /// On query error reducer
+    /// </summary>
+    /// <typeparam name="TState">Query state type</typeparam>
+    /// <typeparam name="TStateData">Query state data type</typeparam>
+    /// <typeparam name="TAction">Query action type</typeparam>
+    /// <param name="state">Query state</param>
+    /// <param name="action">Query action</param>
+    /// <returns>Updated state</returns>
+    public static TState OnQueryError<TState, TStateData, TAction>(
+        this TState state,
+        TAction action)
+        where TState : QueryState<TStateData>
+        where TStateData : class
+        where TAction : IRequestErrorAction
+    {
+        ArgumentNullException.ThrowIfNull(state);
+        ArgumentNullException.ThrowIfNull(action);
+
+        return state with
+        {
+            IsLoading = false,
+            ErrorMessage = action.ErrorMessage,
+        };
     }
 }

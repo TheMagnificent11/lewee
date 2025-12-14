@@ -9,7 +9,7 @@ namespace Pizzeria.Store.StateManagement.Tests.Unit;
 public class OrdersReducerTests
 {
     [Fact]
-    public void OnStartOrder_SetsIsStartingOrderToTrue()
+    public void OnStartOrder_SetsIsSavingToTrue()
     {
         // Arrange
         var state = new OrdersState();
@@ -20,7 +20,7 @@ public class OrdersReducerTests
         var result = OrdersReducer.OnStartOrder(state, action);
 
         // Assert
-        result.IsStartingOrder.Should().BeTrue();
+        result.IsSaving.Should().BeTrue();
         result.ErrorMessage.Should().BeNull();
         result.CorrelationId.Should().Be(correlationId);
     }
@@ -40,10 +40,10 @@ public class OrdersReducerTests
     }
 
     [Fact]
-    public void OnStartOrderSuccess_SetsIsStartingOrderToFalse()
+    public void OnStartOrderSuccess_SetsIsSavingToFalse()
     {
         // Arrange
-        var state = new OrdersState { IsStartingOrder = true };
+        var state = new OrdersState { IsSaving = true };
         var correlationId = Guid.NewGuid();
         var action = new StartOrderSuccessAction { CorrelationId = correlationId };
 
@@ -51,7 +51,7 @@ public class OrdersReducerTests
         var result = OrdersReducer.OnStartOrderSuccess(state, action);
 
         // Assert
-        result.IsStartingOrder.Should().BeFalse();
+        result.IsSaving.Should().BeFalse();
         result.ErrorMessage.Should().BeNull();
         result.CorrelationId.Should().Be(correlationId);
     }
@@ -60,7 +60,7 @@ public class OrdersReducerTests
     public void OnStartOrderFailure_SetsErrorMessage()
     {
         // Arrange
-        var state = new OrdersState { IsStartingOrder = true };
+        var state = new OrdersState { IsSaving = true };
         var correlationId = Guid.NewGuid();
         var errorMessage = "Failed to start order";
         var action = new StartOrderFailureAction
@@ -73,7 +73,7 @@ public class OrdersReducerTests
         var result = OrdersReducer.OnStartOrderFailure(state, action);
 
         // Assert
-        result.IsStartingOrder.Should().BeFalse();
+        result.IsSaving.Should().BeFalse();
         result.ErrorMessage.Should().Be(errorMessage);
         result.CorrelationId.Should().Be(correlationId);
     }

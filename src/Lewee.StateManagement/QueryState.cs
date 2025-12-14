@@ -4,7 +4,7 @@
 /// Query State
 /// </summary>
 /// <typeparam name="T">Query data type</typeparam>
-public abstract record QueryState<T> : RequestState
+public abstract record QueryState<T> : CommandState
     where T : class
 {
     /// <summary>

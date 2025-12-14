@@ -12,7 +12,7 @@ public static class OrdersReducer
         [NotNull] OrdersState state,
         [NotNull] StartOrderAction action)
     {
-        return state.OnRequest(action);
+        return state.OnCommand(action);
     }
 
     [ReducerMethod]
@@ -20,12 +20,7 @@ public static class OrdersReducer
         [NotNull] OrdersState state,
         [NotNull] StartOrderSuccessAction action)
     {
-        return state with
-        {
-            IsStartingOrder = false,
-            ErrorMessage = null,
-            CorrelationId = action.CorrelationId,
-        };
+       return state.OnCommandSuccess(action);
     }
 
     [ReducerMethod]
@@ -33,12 +28,7 @@ public static class OrdersReducer
         [NotNull] OrdersState state,
         [NotNull] StartOrderFailureAction action)
     {
-        return state with
-        {
-            IsStartingOrder = false,
-            ErrorMessage = action.ErrorMessage,
-            CorrelationId = action.CorrelationId,
-        };
+        return state.OnCommandError(action);
     }
 
     [ReducerMethod]
@@ -56,12 +46,9 @@ public static class OrdersReducer
     [ReducerMethod]
     public static OrdersState OnAddPizzaToOrderSuccess(
         [NotNull] OrdersState state,
-        [NotNull] AddPizzaToOrderSuccessAction _)
+        [NotNull] AddPizzaToOrderSuccessAction action)
     {
-        return state with
-        {
-            ErrorMessage = null,
-        };
+        return state.OnCommandSuccess(action);
     }
 
     [ReducerMethod]
@@ -69,10 +56,7 @@ public static class OrdersReducer
         [NotNull] OrdersState state,
         [NotNull] AddPizzaToOrderFailureAction action)
     {
-        return state with
-        {
-            ErrorMessage = action.ErrorMessage,
-        };
+        return state.OnCommandError(action);
     }
 
     [ReducerMethod]
