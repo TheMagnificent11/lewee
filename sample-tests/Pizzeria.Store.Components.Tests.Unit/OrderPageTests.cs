@@ -5,13 +5,11 @@ using Fluxor;
 using Lewee.Common;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Moq;
 using MudBlazor.Services;
 using Pizzeria.Store.Application.Pizzas;
 using Pizzeria.Store.Contracts.Pizzas;
 using Pizzeria.Store.StateManagement;
-using Pizzeria.Store.StateManagement.Orders;
 using Xunit;
 
 namespace Pizzeria.Store.Components.Tests.Unit;
@@ -24,7 +22,7 @@ public class OrderPageTests : TestContext
     {
         this.Services.AddSingleton(this.mediatorMock.Object);
         this.Services.AddSingleton(Mock.Of<ICorrelationContextAccessor>());
-        this.Services.AddSingleton(Mock.Of<ILogger<StartOrderEffects>>());
+        this.Services.AddLogging();
         this.Services.AddMudServices();
         this.Services.AddFluxor(x => x.ScanAssemblies(typeof(StoreStateManagementConfiguration).Assembly));
     }

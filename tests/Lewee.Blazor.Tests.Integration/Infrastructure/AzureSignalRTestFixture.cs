@@ -39,7 +39,7 @@ public sealed class AzureSignalRTestFixture : IAsyncLifetime
 
         await resourceNotificationService
             .WaitForResourceAsync(ServiceNames.WebApi, KnownResourceStates.Running)
-            .WaitAsync(TimeSpan.FromMinutes(5));
+            .WaitAsync(TimeSpan.FromMinutes(1));
 
         this.httpClient = this.app.CreateHttpClient(ServiceNames.WebApi);
 
