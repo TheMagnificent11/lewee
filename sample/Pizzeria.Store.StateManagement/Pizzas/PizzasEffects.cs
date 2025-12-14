@@ -12,7 +12,7 @@ using Pizzeria.Store.StateManagement.Pizzas.Actions;
 namespace Pizzeria.Store.StateManagement.Pizzas;
 
 public class PizzasEffects
-    : QuerytEffects<PizzasState, IEnumerable<PizzaDto>, LoadPizzasAction, LoadPizzasSuccessAction, LoadPizzasFailureAction>
+    : QueryEffects<PizzasState, IEnumerable<PizzaDto>, LoadPizzasAction, LoadPizzasSuccessAction, LoadPizzasFailureAction>
 {
     private readonly IMediator mediator;
 

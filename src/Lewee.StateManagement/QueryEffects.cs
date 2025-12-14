@@ -15,7 +15,7 @@ namespace Lewee.StateManagement;
 /// <typeparam name="TRequestAction">Request action type</typeparam>
 /// <typeparam name="TRequestSuccessAction">Request success action type</typeparam>
 /// <typeparam name="TRequestErrorAction">Request error action type</typeparam>
-public abstract class QuerytEffects<TState, TData, TRequestAction, TRequestSuccessAction, TRequestErrorAction>
+public abstract class QueryEffects<TState, TData, TRequestAction, TRequestSuccessAction, TRequestErrorAction>
     : RequestEffects<TState, TData, TRequestSuccessAction, TRequestErrorAction>
     where TState : RequestState<TData>, new()
     where TData : class
@@ -25,12 +25,12 @@ public abstract class QuerytEffects<TState, TData, TRequestAction, TRequestSucce
 {
     /// <summary>
     /// Initializes a new instance of the
-    /// <see cref="QuerytEffects{TState, TData, TRequestAction, TRequestSuccessAction, TRequestErrorAction}"/> class
+    /// <see cref="QueryEffects{TState, TData, TRequestAction, TRequestSuccessAction, TRequestErrorAction}"/> class
     /// </summary>
     /// <param name="state">State</param>
     /// <param name="correlationContextAccessor">Correlation context accessor</param>
     /// <param name="logger">Logger</param>
-    protected QuerytEffects(
+    protected QueryEffects(
         IState<TState> state,
         ICorrelationContextAccessor correlationContextAccessor,
         ILogger logger)
