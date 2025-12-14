@@ -47,13 +47,16 @@ public class PizzasReducerTests
             new(Guid.NewGuid(), "Margherita", "Classic pizza", 9.99m),
             new(Guid.NewGuid(), "Pepperoni", "Spicy pizza", 11.99m),
         };
-        var action = new LoadPizzasSuccessAction(pizzas);
+        var action = new LoadPizzasSuccessAction
+        {
+            Data = pizzas,
+        };
 
         // Act
         var result = PizzasReducer.OnLoadPizzasSuccess(state, action);
 
         // Assert
-        result.Pizzas.Should().BeEquivalentTo(pizzas);
+        result.Data.Should().BeEquivalentTo(pizzas);
         result.IsLoading.Should().BeFalse();
         result.ErrorMessage.Should().BeNull();
     }
@@ -67,7 +70,10 @@ public class PizzasReducerTests
         {
             new(Guid.NewGuid(), "Margherita", "Classic pizza", 9.99m),
         };
-        var action = new LoadPizzasSuccessAction(pizzas);
+        var action = new LoadPizzasSuccessAction
+        {
+            Data = pizzas,
+        };
 
         // Act
         var result = PizzasReducer.OnLoadPizzasSuccess(state, action);
@@ -82,7 +88,10 @@ public class PizzasReducerTests
         // Arrange
         var state = new PizzasState { IsLoading = true };
         var errorMessage = "Failed to load pizzas";
-        var action = new LoadPizzasFailureAction(errorMessage);
+        var action = new LoadPizzasFailureAction
+        {
+            ErrorMessage = errorMessage,
+        };
 
         // Act
         var result = PizzasReducer.OnLoadPizzasFailure(state, action);
@@ -100,13 +109,16 @@ public class PizzasReducerTests
         {
             new(Guid.NewGuid(), "Margherita", "Classic pizza", 9.99m),
         };
-        var state = new PizzasState { Pizzas = existingPizzas, IsLoading = true };
-        var action = new LoadPizzasFailureAction("Failed to load pizzas");
+        var state = new PizzasState { Data = existingPizzas, IsLoading = true };
+        var action = new LoadPizzasFailureAction
+        {
+            ErrorMessage = "Failed to load pizzas",
+        };
 
         // Act
         var result = PizzasReducer.OnLoadPizzasFailure(state, action);
 
         // Assert
-        result.Pizzas.Should().BeEquivalentTo(existingPizzas);
+        result.Data.Should().BeEquivalentTo(existingPizzas);
     }
 }

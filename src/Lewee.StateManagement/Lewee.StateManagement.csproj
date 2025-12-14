@@ -6,8 +6,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Lewee.Contracts\Lewee.Contracts.csproj" />
-    <ProjectReference Include="..\Lewee.Shared\Lewee.Shared.csproj" />
+    <ProjectReference Include="..\Lewee.Common\Lewee.Common.csproj" />
   </ItemGroup>
 
 </Project>

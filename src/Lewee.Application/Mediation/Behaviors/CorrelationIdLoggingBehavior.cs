@@ -1,5 +1,5 @@
 ﻿using Lewee.Application.Mediation.Requests;
-using Lewee.Shared;
+using Lewee.Common;
 using MediatR;
 using Microsoft.Extensions.Logging;
 

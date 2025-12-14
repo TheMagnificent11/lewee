@@ -3,10 +3,6 @@
 /// <summary>
 /// Request Success Action Interface
 /// </summary>
-public interface IRequestSuccessAction
+public interface IRequestSuccessAction : IRequestAction
 {
-    /// <summary>
-    /// Gets the correlation ID
-    /// </summary>
-    Guid CorrelationId { get; }
 }

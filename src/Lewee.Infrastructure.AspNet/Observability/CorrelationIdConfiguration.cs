@@ -1,6 +1,6 @@
 ﻿using Correlate.AspNetCore;
 using Correlate.DependencyInjection;
-using Lewee.Shared;
+using Lewee.Common;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 

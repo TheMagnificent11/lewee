@@ -27,7 +27,7 @@ internal sealed class MessageToActionMapper : IMessageToActionMapper
 
         return message switch
         {
-            PizzaOrder order => new OrderCreatedAction(order, correlationId),
+            PizzaOrder order => new OrderCreatedAction { CorrelationId = correlationId, Data = order },
             _ => null,
         };
     }

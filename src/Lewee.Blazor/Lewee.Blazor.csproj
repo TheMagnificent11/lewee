@@ -12,7 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Lewee.Shared\Lewee.Shared.csproj" />
+    <ProjectReference Include="..\Lewee.Common\Lewee.Common.csproj" />
+    <ProjectReference Include="..\Lewee.Infrastructure.AspNet\Lewee.Infrastructure.AspNet.csproj" />
     <ProjectReference Include="..\Lewee.StateManagement\Lewee.StateManagement.csproj" />
   </ItemGroup>
 

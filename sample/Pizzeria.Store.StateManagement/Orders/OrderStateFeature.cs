@@ -7,9 +7,9 @@ namespace Pizzeria.Store.StateManagement.Orders;
     "Performance",
     "CA1812: Avoid uninstantiated internal classes",
     Justification = "Used via Fluxor")]
-public class OrdersStateFeature : Feature<OrdersState>
+public class OrderStateFeature : Feature<OrderState>
 {
-    public override string GetName() => nameof(OrdersState);
+    public override string GetName() => nameof(OrderState);
 
-    protected override OrdersState GetInitialState() => new();
+    protected override OrderState GetInitialState() => new();
 }

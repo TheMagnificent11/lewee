@@ -2,7 +2,7 @@ using Bunit;
 using Correlate;
 using FluentAssertions;
 using Fluxor;
-using Lewee.Application.Mediation.Requests;
+using Lewee.Common;
 using MediatR;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,21 +20,21 @@ public class OrdersEffectsTests : TestContext
 {
     private readonly Mock<IMediator> mediatorMock = new();
     private readonly Mock<IDispatcher> dispatcherMock = new();
-    private readonly Mock<IState<OrdersState>> stateMock = new();
-    private readonly OrdersEffects effects;
+    private readonly Mock<IState<OrderState>> stateMock = new();
+    private readonly StartOrderEffects effects;
 
     public OrdersEffectsTests()
     {
         this.stateMock
             .Setup(s => s.Value)
-            .Returns(new OrdersState());
+            .Returns(new OrderState());
 
-        this.effects = new OrdersEffects(
+        this.effects = new StartOrderEffects(
             this.stateMock.Object,
             this.mediatorMock.Object,
             this.Services.GetRequiredService<NavigationManager>(),
             Mock.Of<ICorrelationContextAccessor>(),
-            Mock.Of<ILogger<OrdersEffects>>());
+            Mock.Of<ILogger<StartOrderEffects>>());
     }
 
     [Fact]
@@ -51,10 +51,14 @@ public class OrdersEffectsTests : TestContext
             Pizzas = [],
             TotalCost = 0,
         };
-        var action = new StartOrderCompletedAction(order, correlationId);
+        var action = new StartOrderCompletedAction
+        {
+            Data = order,
+            CorrelationId = correlationId,
+        };
 
         // Act
-        await this.effects.OnStartOrderCompletedAsync(action, this.dispatcherMock.Object);
+        await this.effects.OnCommandCompletedAsync(action, this.dispatcherMock.Object);
 
         // Assert
         var navMan = this.Services.GetRequiredService<NavigationManager>();
@@ -66,12 +70,16 @@ public class OrdersEffectsTests : TestContext
     {
         // Arrange
         var correlationId = Guid.NewGuid();
-        var action = new StartOrderCompletedAction(null!, correlationId);
+        var action = new StartOrderCompletedAction
+        {
+            Data = new OrderDto(),
+            CorrelationId = correlationId,
+        };
         var navMan = this.Services.GetRequiredService<NavigationManager>();
         var initialUri = navMan.Uri;
 
         // Act
-        await this.effects.OnStartOrderCompletedAsync(action, this.dispatcherMock.Object);
+        await this.effects.OnCommandCompletedAsync(action, this.dispatcherMock.Object);
 
         // Assert
         navMan.Uri.Should().Be(initialUri);
@@ -90,12 +98,16 @@ public class OrdersEffectsTests : TestContext
             Pizzas = [],
             TotalCost = 0,
         };
-        var action = new StartOrderCompletedAction(order, correlationId);
+        var action = new StartOrderCompletedAction
+        {
+            Data = order,
+            CorrelationId = correlationId,
+        };
         var navMan = this.Services.GetRequiredService<NavigationManager>();
         var initialUri = navMan.Uri;
 
         // Act
-        await this.effects.OnStartOrderCompletedAsync(action, this.dispatcherMock.Object);
+        await this.effects.OnCommandCompletedAsync(action, this.dispatcherMock.Object);
 
         // Assert
         navMan.Uri.Should().Be(initialUri);
@@ -113,7 +125,7 @@ public class OrdersEffectsTests : TestContext
         var action = new StartOrderAction { CorrelationId = correlationId };
 
         // Act
-        await this.effects.RequestAsync(action, this.dispatcherMock.Object);
+        await this.effects.OnCommandAsync(action, this.dispatcherMock.Object);
 
         // Assert
         this.dispatcherMock.Verify(
@@ -134,70 +146,13 @@ public class OrdersEffectsTests : TestContext
         var action = new StartOrderAction { CorrelationId = correlationId };
 
         // Act
-        await this.effects.RequestAsync(action, this.dispatcherMock.Object);
+        await this.effects.OnCommandAsync(action, this.dispatcherMock.Object);
 
         // Assert
         this.dispatcherMock.Verify(
             d => d.Dispatch(It.Is<StartOrderFailureAction>(a =>
                 a.CorrelationId == correlationId &&
                 a.ErrorMessage == errorMessage)),
-            Times.Once);
-    }
-
-    [Fact]
-    public async Task OnAddPizzaToOrderAsync_Success_DispatchesSuccessActionAsync()
-    {
-        // Arrange
-        var orderId = Guid.NewGuid();
-        var pizzaId = Guid.NewGuid();
-        var correlationId = Guid.NewGuid();
-        var action = new AddPizzaToOrderAction
-        {
-            OrderId = orderId,
-            PizzaId = pizzaId,
-            CorrelationId = correlationId,
-        };
-
-        this.mediatorMock
-            .Setup(x => x.Send(It.IsAny<AddPizzaToOrderCommand>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(CommandResult.Success());
-
-        // Act
-        await this.effects.OnAddPizzaToOrderAsync(action, this.dispatcherMock.Object);
-
-        // Assert
-        this.dispatcherMock.Verify(
-            d => d.Dispatch(It.IsAny<AddPizzaToOrderSuccessAction>()),
-            Times.Once);
-    }
-
-    [Fact]
-    public async Task OnAddPizzaToOrderAsync_Exception_DispatchesFailureActionAsync()
-    {
-        // Arrange
-        var orderId = Guid.NewGuid();
-        var pizzaId = Guid.NewGuid();
-        var correlationId = Guid.NewGuid();
-        var action = new AddPizzaToOrderAction
-        {
-            OrderId = orderId,
-            PizzaId = pizzaId,
-            CorrelationId = correlationId,
-        };
-
-        var exceptionMessage = "Database error";
-        this.mediatorMock
-            .Setup(x => x.Send(It.IsAny<AddPizzaToOrderCommand>(), It.IsAny<CancellationToken>()))
-            .ThrowsAsync(new InvalidOperationException(exceptionMessage));
-
-        // Act
-        await this.effects.OnAddPizzaToOrderAsync(action, this.dispatcherMock.Object);
-
-        // Assert
-        this.dispatcherMock.Verify(
-            d => d.Dispatch(It.Is<AddPizzaToOrderFailureAction>(a =>
-                a.PizzaId == pizzaId &&
-                a.ErrorMessage.Contains(exceptionMessage))),
             Times.Once);
     }
 
@@ -214,13 +169,12 @@ public class OrdersEffectsTests : TestContext
         var action = new StartOrderAction { CorrelationId = correlationId };
 
         // Act
-        await this.effects.RequestAsync(action, this.dispatcherMock.Object);
+        await this.effects.OnCommandAsync(action, this.dispatcherMock.Object);
 
         // Assert
         this.dispatcherMock.Verify(
-            d => d.Dispatch(It.Is<StartOrderFailureAction>(a =>
-                a.CorrelationId == correlationId &&
-                a.ErrorMessage.Contains(exceptionMessage))),
+            d => d.Dispatch(It.Is<StartOrderFailureAction>(
+                a => a.CorrelationId == correlationId && a.ErrorMessage == exceptionMessage)),
             Times.Once);
     }
 }

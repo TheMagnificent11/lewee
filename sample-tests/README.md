@@ -14,8 +14,9 @@ For development guidance in this directory, see the following instruction files:
 | Project | Description |
 |---------|-------------|
 | `Pizzeria.Store.Domain.Tests` | Unit tests for domain models |
-| `Pizzeria.Store.Application.Tests.Unit` | Unit tests for application layer |
-| `Pizzeria.Store.Web.Tests.Unit` | Unit tests for Blazor components |
+| `Pizzeria.Store.StateManagement.Tests.Unit` | Unit tests for Fluxor state management |
+| `Pizzeria.Store.Components.Tests.Unit` | Unit tests for shared Blazor components |
+| `Pizzeria.Store.Web.Tests.Unit` | Unit tests for Blazor web application |
 | `Pizzeria.Tests.Integration` | End-to-end integration tests |
 
 ## Running Tests

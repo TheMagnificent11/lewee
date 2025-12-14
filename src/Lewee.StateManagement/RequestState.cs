@@ -1,13 +1,24 @@
 ﻿namespace Lewee.StateManagement;
 
 /// <summary>
-/// Request State
+/// Command State
 /// </summary>
-public abstract record class RequestState : IRequestState
+/// <typeparam name="T">Data type</typeparam>
+public abstract record class RequestState<T> : IRequestState<T>
+    where T : class
 {
-    /// <inheritdoc/>
-    public Guid CorrelationId { get; init; } = Guid.Empty;
+    /// <inheritdoc />
+    public bool IsLoading { get; init; }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
+    public bool IsSaving { get; init; }
+
+    /// <inheritdoc />
+    public Guid CorrelationId { get; init; }
+
+    /// <inheritdoc />
+    public T? Data { get; init; }
+
+    /// <inheritdoc />
     public string? ErrorMessage { get; init; }
 }

@@ -4,7 +4,7 @@
 
 @inherits FluxorComponent
 
-@inject IState<OrdersState> State
+@inject IState<OrderState> State
 @inject IDispatcher Dispatcher
 @inject NavigationManager NavigationManager
 
@@ -14,7 +14,7 @@
     Welcome to Lewee Pizzeria
 </MudText>
 
-@if (this.State.Value.CurrentOrder == null)
+@if (this.State.Value.Data == null)
 {
     <MudGrid Justify="Justify.Center">
         <MudItem xs="12" sm="6" md="4">
@@ -37,9 +37,9 @@
                         Size="Size.Large"
                         FullWidth="true"
                         OnClick="StartNewOrder"
-                        Disabled="this.State.Value.IsStartingOrder">
+                        Disabled="this.State.Value.IsSaving">
 
-                        @if (this.State.Value.IsStartingOrder)
+                        @if (this.State.Value.IsSaving)
                         {
                             <MudProgressCircular Size="Size.Small" Indeterminate="true" />
                             <MudText Class="ml-2">Starting Order...</MudText>

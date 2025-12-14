@@ -10,7 +10,6 @@ Specifically, it assists with configuring an [AuthenticatedUserService](./Auth/A
 - [Correlate.AspNetCore](https://github.com/skwasjer/Correlate) (for correlation ID functionality)
 - [Microsoft.Azure.SignalR.Management](https://learn.microsoft.com/en-us/azure/azure-signalr/) (for Azure SignalR integration)
 - [Lewee.Application](../Lewee.Application/README.md)
-- [Lewee.Contracts](../Lewee.Contracts/README.md)
 
 ## Configuration
 
@@ -64,7 +63,7 @@ The `AddCorrelationIdServices` method configures correlation ID middleware using
 
 **Configuration:**
 
-- Uses the `X-Correlation-ID` header (defined in [Lewee.Shared.RequestHeaders](../Lewee.Shared/README.md#constants))
+- Uses the `X-Correlation-ID` header (defined in [Lewee.Common.RequestHeaders](../Lewee.Common/README.md#constants))
 - Automatically generates correlation IDs for requests that don't include the header
 - Makes correlation IDs available via `ICorrelationContextAccessor` for logging and tracing
 

@@ -1,6 +1,7 @@
 using System.Threading.Channels;
+using Lewee.Common;
 
-namespace Lewee.Contracts;
+namespace Lewee.Infrastructure.AspNet.SignalR;
 
 /// <summary>
 /// Channel for passing client events to Blazor circuits

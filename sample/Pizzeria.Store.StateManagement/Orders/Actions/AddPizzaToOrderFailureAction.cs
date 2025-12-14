@@ -1,3 +1,10 @@
+using Lewee.StateManagement;
+
 namespace Pizzeria.Store.StateManagement.Orders.Actions;
 
-public record AddPizzaToOrderFailureAction(Guid PizzaId, string ErrorMessage);
+public record AddPizzaToOrderFailureAction : IRequestErrorAction
+{
+    public Guid CorrelationId { get; init; }
+
+    public string ErrorMessage { get; init; } = string.Empty;
+}

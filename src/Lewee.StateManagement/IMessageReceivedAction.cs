@@ -1,12 +1,25 @@
-﻿namespace Lewee.StateManagement;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Lewee.StateManagement;
+
+/// <summary>
+/// Message Received Action Inteface
+/// </summary>
+[SuppressMessage(
+    "StyleCop.CSharp.DocumentationRules",
+    "SA1649:File name should match first type name",
+    Justification = "False positive")]
+public interface IMessageReceivedAction : IRequestAction;
 
 /// <summary>
 /// Message Received Action Interface
 /// </summary>
-public interface IMessageReceivedAction
+/// <typeparam name="T">Data type</typeparam>
+public interface IMessageReceivedAction<T> : IMessageReceivedAction
+    where T : class
 {
     /// <summary>
-    /// Gets the correlation ID
+    /// Gets the data
     /// </summary>
-    Guid CorrelationId { get; }
+    T Data { get; init; }
 }
