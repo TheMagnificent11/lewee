@@ -25,7 +25,7 @@ public interface IRequestState<T>
     /// <summary>
     /// Gets the data
     /// </summary>
-    T Data { get; init; }
+    T? Data { get; init; }
 
     /// <summary>
     /// Gets the request error message

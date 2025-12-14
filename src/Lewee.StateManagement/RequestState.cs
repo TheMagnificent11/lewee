@@ -17,9 +17,7 @@ public abstract record class RequestState<T> : IRequestState<T>
     public Guid CorrelationId { get; init; }
 
     /// <inheritdoc />
-#pragma warning disable CS8766 // Nullability of reference types in return type doesn't match implicitly implemented member (possibly because of nullability attributes).
-    public T? Data { get; init; } // TODO: fix nullability
-#pragma warning restore CS8766 // Nullability of reference types in return type doesn't match implicitly implemented member (possibly because of nullability attributes).
+    public T? Data { get; init; }
 
     /// <inheritdoc />
     public string? ErrorMessage { get; init; }

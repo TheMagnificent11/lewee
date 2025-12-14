@@ -16,7 +16,7 @@ public class MessageToActionMapper : IMessageToActionMapper
         this.logger = logger;
     }
 
-    public IMessageReceivedAction Map([NotNull] object message, Guid correlationId)
+    public IMessageReceivedAction? Map([NotNull] object message, Guid correlationId)
     {
         var messageType = message.GetType().FullName;
 
