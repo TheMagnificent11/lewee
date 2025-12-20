@@ -12,6 +12,7 @@
     <PackageVersion Include="Moq" Version="4.20.72" />
     <PackageVersion Include="MudBlazor" Version="8.14.0" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
+    <PackageVersion Include="Refit.HttpClientFactory" Version="9.0.2" />
     <PackageVersion Include="Respawn" Version="6.2.1" />
     <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.15.0.120848" />
     <PackageVersion Include="StyleCop.Analyzers" Version="1.2.0-beta.556" />

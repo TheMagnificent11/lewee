@@ -52,15 +52,4 @@ public static class Configuration
             .AddAzureSignalRMessageReceiver<TMapper>(apiAspireServiceName)
             .AddLeweeFluxor(useReduxDevTools, typeof(ServerHealthState).Assembly);
     }
-
-    /// <summary>
-    /// Configures the <see cref="CorrelationIdDelegatingHandler" />
-    /// </summary>
-    /// <param name="builder">HTTP client builder</param>
-    /// <returns>The updated HTTP client builder</returns>
-    public static IHttpClientBuilder AddCorrelationIdDelegationHandler(this IHttpClientBuilder builder)
-    {
-        return builder
-            .AddHttpMessageHandler<CorrelationIdDelegatingHandler>();
-    }
 }
