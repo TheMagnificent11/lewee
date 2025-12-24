@@ -1,13 +1,12 @@
 # Lewee.Blazor
 
-This package provides comprehensive Blazor client-side infrastructure for building interactive web applications with state management, real-time messaging, and API integration.
+This package provides comprehensive Blazor client-side infrastructure for building interactive web applications with state management and real-time messaging.
 
 ## Dependencies
 
 - [Fluxor](https://github.com/mrpmorris/Fluxor) - State management with Redux pattern (via Lewee.StateManagement)
 - [Microsoft.AspNetCore.SignalR.Client](https://learn.microsoft.com/en-us/aspnet/core/signalr) - Real-time web functionality
 - [Correlate](https://github.com/skwasjer/Correlate) - Correlation ID functionality
-- [Refit](https://github.com/reactiveui/refit) - Type-safe REST client
 - [Flurl](https://flurl.dev/) - URL building utilities
 - [Lewee.Common](../Lewee.Common/README.md) - Shared utilities and constants
 - [Lewee.StateManagement](../Lewee.StateManagement/README.md) - State management base classes
@@ -17,12 +16,7 @@ This package provides comprehensive Blazor client-side infrastructure for buildi
 
 - **State Management**: Fluxor-based Redux pattern implementation for Blazor
 - **SignalR Integration**: Real-time messaging from server to client via Azure SignalR
-- **Correlation ID Handling**: Automatic correlation ID propagation across HTTP requests
-- **Authentication Token Handling**: Automatic Bearer token propagation for authenticated requests
-- **API Error Handling**: Structured exception handling for API calls with NSwag compatibility
-- **Service Discovery Support**: Integration with .NET Aspire service discovery
 - **Server Health Monitoring**: Automatic health checks before establishing SignalR connections
-- **Refit API Client Support**: Easy configuration of type-safe API clients
 
 ## Configuration
 
@@ -60,21 +54,6 @@ services.AddLeweeBlazor<YourMessageToActionMapper>(
 | `apiAspireServiceName` | Name of the Aspire service for service discovery (preferred for .NET Aspire) |
 | `useReduxDevTools` | Enable Redux DevTools browser extension for debugging (typically true in development) |
 | `httpMessageHandler` | Optional HTTP message handler for testing scenarios |
-
-### Adding Refit API Clients
-
-Use `AddApiClient<T>` to configure type-safe Refit API clients with automatic authentication and correlation ID handling:
-
-```cs
-using Lewee.Blazor.Http;
-
-// Configure a Refit API client with service discovery
-services.AddApiClient<IMyApiClient>("my-api-service");
-```
-
-This automatically configures:
-- `AuthTokenDelegatingHandler` - Adds Bearer token from the current user's access token
-- `CorrelationIdDelegatingHandler` - Adds correlation ID header to all requests
 
 ## Usage
 
@@ -170,7 +149,7 @@ public static class OrderReducer
 
 ```cs
 using Fluxor;
-using Lewee.Blazor.Http;
+using Lewee.Infrastructure.HttpClient;
 
 public class OrderEffects
 {
@@ -303,74 +282,11 @@ Lewee.Blazor automatically performs health checks before establishing SignalR co
 3. On success, the SignalR `HubConnection` is started
 4. On failure, retries up to 3 times with 3-second delays
 
-### Correlation ID Handling
-
-The `CorrelationIdDelegatingHandler` automatically adds correlation IDs to all HTTP requests using the `X-Correlation-ID` header.
-
-The correlation ID flows through:
-
-1. Fluxor actions (via `IRequestAction.CorrelationId`)
-2. HTTP requests (via `X-Correlation-ID` header)
-3. Server-side logging (via [Lewee.Application](../Lewee.Application/README.md))
-4. SignalR messages back to client
-5. Client-side logging
-
-### Authentication Token Handling
-
-The `AuthTokenDelegatingHandler` automatically:
-
-1. Retrieves the `access_token` from the current `HttpContext`
-2. Adds it as a `Bearer` token in the `Authorization` header
-3. Logs warnings when tokens are missing
-
-This is automatically configured when using `AddApiClient<T>`.
-
-### API Error Handling
-
-Use the `ApiException` extension methods to handle and log API errors:
-
-```cs
-using Lewee.Blazor.Http;
-
-try
-{
-    await apiClient.CreateOrderAsync(request);
-}
-catch (ApiException ex)
-{
-    // Log with appropriate level based on status code
-    ex.Log(logger);
-
-    dispatcher.Dispatch(new CreateOrderFailureAction
-    {
-        CorrelationId = correlationId,
-        ErrorMessage = ex.Message
-    });
-}
-```
-
-The `Log` extension method automatically chooses the appropriate log level:
-- **< 400**: Warning (unexpected response status)
-- **400**: Information (bad request with response body)
-- **401-499**: Information (client error)
-- **500+**: Error (server error)
-
 ## Components
 
 ### Configuration
 
 **[Configuration.cs](./Configuration.cs)**: Main entry point with `AddLeweeBlazor` extension methods
-
-### HTTP
-
-| Component | Description |
-|-----------|-------------|
-| **[ApiCientConfiguration.cs](./Http/ApiCientConfiguration.cs)** | Refit API client configuration with `AddApiClient<T>` |
-| **[CorrelationIdDelegatingHandler.cs](./Http/CorrelationIdDelegatingHandler.cs)** | Adds correlation ID to all HTTP requests |
-| **[AuthTokenDelegatingHandler.cs](./Http/AuthTokenDelegatingHandler.cs)** | Adds Bearer token from user's access token |
-| **[ApiException.cs](./Http/ApiException.cs)** | Exception class for API errors (NSwag-compatible) |
-| **[ApiExceptionExtensions.cs](./Http/ApiExceptionExtensions.cs)** | Helper methods to log API exceptions |
-| **[ApiExceptionLogMessages.cs](./Http/ApiExceptionLogMessages.cs)** | Source-generated log messages for API exceptions |
 
 ### Messaging
 
@@ -386,10 +302,10 @@ The `Log` extension method automatically chooses the appropriate log level:
 
 | Component | Description |
 |-----------|-------------|
-| **[ServerHealthState.cs](./Messaging/Health/ServerHealthState.cs)** | State for server health tracking |
-| **[HealthCheckService.cs](./Messaging/Health/HealthCheckService.cs)** | HTTP client for health endpoint calls |
-| **[ServerHealthCheckEffects.cs](./Messaging/Health/ServerHealthCheckEffects.cs)** | Fluxor effects for health check workflow |
-| **[ServerHealthReducer.cs](./Messaging/Health/ServerHealthReducer.cs)** | Reducers for health state updates |
+| **[ServerHealthState](./Messaging/Health/ServerHealthState.cs)** | State for server health tracking |
+| **[HealthCheckService](./Messaging/Health/HealthCheckService.cs)** | HTTP client for health endpoint calls |
+| **[ServerHealthCheckEffects](./Messaging/Health/ServerHealthCheckEffects.cs)** | Fluxor effects for health check workflow |
+| **[ServerHealthReducer](./Messaging/Health/ServerHealthReducer.cs)** | Reducers for health state updates |
 | **[Health/Actions/](./Messaging/Health/Actions/)** | Health check actions (HealthCheckAction, HealthCheckSuccessAction, HealthCheckFailedAction) |
 
 ### State Management (via Lewee.StateManagement)
@@ -429,6 +345,7 @@ This package integrates seamlessly with other Lewee packages:
 |---------|-------------|
 | **[Lewee.Application](../Lewee.Application/README.md)** | Server-side CQRS handlers send `ClientEvent` notifications via SignalR |
 | **[Lewee.Infrastructure.AspNet](../Lewee.Infrastructure.AspNet/README.md)** | Provides SignalR hub and `ClientEventChannel` for messaging |
+| **[Lewee.Infrastructure.HttpClient](../Lewee.Infrastructure.HttpClient/README.md)** | HTTP client configuration with Refit, authentication, and correlation ID handling |
 | **[Lewee.Common](../Lewee.Common/README.md)** | Shared `ClientMessage` DTO and `RequestHeaders` constants |
 | **[Lewee.StateManagement](../Lewee.StateManagement/README.md)** | Base state classes, action interfaces, and Fluxor configuration |
 
@@ -436,12 +353,10 @@ This package integrates seamlessly with other Lewee packages:
 
 1. **Always use correlation IDs**: Let actions generate default `Guid.NewGuid()` for distributed tracing
 2. **Enable Redux DevTools in development**: Set `useReduxDevTools: true` to debug state changes
-3. **Implement proper error handling**: Use `try-catch` with `ApiException` in effects and call `ex.Log(logger)`
-4. **Use service discovery with .NET Aspire**: Preferred over hardcoded URIs for production applications
-5. **Keep state immutable**: Always use `record` types with `init` properties
-6. **Map all expected messages**: Return `null` from `IMessageToActionMapper.Map` for unrecognized message types
-7. **Inherit from FluxorComponent**: Use `@inherits FluxorComponent` in Razor components for automatic re-rendering
-8. **Use AddApiClient for API clients**: Ensures consistent authentication and correlation ID handling
+3. **Use service discovery with .NET Aspire**: Preferred over hardcoded URIs for production applications
+4. **Keep state immutable**: Always use `record` types with `init` properties
+5. **Map all expected messages**: Return `null` from `IMessageToActionMapper.Map` for unrecognized message types
+6. **Inherit from FluxorComponent**: Use `@inherits FluxorComponent` in Razor components for automatic re-rendering
 
 ## Troubleshooting
 

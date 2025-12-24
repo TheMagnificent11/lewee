@@ -1,4 +1,4 @@
-﻿namespace Lewee.Blazor.Http;
+﻿namespace Lewee.Infrastructure.HttpClient;
 
 /// <summary>
 /// Api Exception

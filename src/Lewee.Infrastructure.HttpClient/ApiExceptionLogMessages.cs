@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
 
-namespace Lewee.Blazor.ErrorHandling;
+namespace Lewee.Infrastructure.HttpClient;
 
 internal static partial class ApiExceptionLogMessages
 {

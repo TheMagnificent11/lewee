@@ -1,5 +1,4 @@
-﻿using Lewee.Blazor.Http;
-using Lewee.Blazor.Messaging;
+﻿using Lewee.Blazor.Messaging;
 using Lewee.Blazor.Messaging.Health;
 using Lewee.StateManagement;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,7 +27,6 @@ public static class Configuration
         where TMapper : class, IMessageToActionMapper
     {
         return services
-            .AddTransient<CorrelationIdDelegatingHandler>()
             .AddAzureSignalRMessageReceiver<TMapper>(serverBaseAddress, httpMessageHandler)
             .AddLeweeFluxor(useReduxDevTools, typeof(ServerHealthState).Assembly);
     }
@@ -48,7 +46,6 @@ public static class Configuration
         where TMapper : class, IMessageToActionMapper
     {
         return services
-            .AddTransient<CorrelationIdDelegatingHandler>()
             .AddAzureSignalRMessageReceiver<TMapper>(apiAspireServiceName)
             .AddLeweeFluxor(useReduxDevTools, typeof(ServerHealthState).Assembly);
     }

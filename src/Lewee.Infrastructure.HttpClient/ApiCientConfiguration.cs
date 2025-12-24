@@ -1,7 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Correlate.DependencyInjection;
+using Correlate.Http;
+using Lewee.Common;
+using Microsoft.Extensions.DependencyInjection;
 using Refit;
 
-namespace Lewee.Blazor.Http;
+namespace Lewee.Infrastructure.HttpClient;
 
 /// <summary>
 /// API Client Configuration
@@ -19,13 +22,14 @@ public static class ApiCientConfiguration
         where T : class
     {
         services.AddHttpContextAccessor();
+        services.AddCorrelate(options => options.RequestHeaders = [RequestHeaders.CorrelationId]);
         services.AddTransient<AuthTokenDelegatingHandler>();
 
         services
             .AddRefitClient<T>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri($"https://{aspireApiServiceName}"))
             .AddHttpMessageHandler<AuthTokenDelegatingHandler>()
-            .AddHttpMessageHandler<CorrelationIdDelegatingHandler>();
+            .AddHttpMessageHandler<CorrelatingHttpMessageHandler>();
 
         return services;
     }

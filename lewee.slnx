@@ -77,6 +77,7 @@
   <Project Path="src/Lewee.Infrastructure.AspNet.WebApi/Lewee.Infrastructure.AspNet.WebApi.csproj" />
   <Project Path="src/Lewee.Infrastructure.AspNet/Lewee.Infrastructure.AspNet.csproj" />
   <Project Path="src/Lewee.Infrastructure.Data/Lewee.Infrastructure.Data.csproj" />
+  <Project Path="src/Lewee.Infrastructure.HttpClient/Lewee.Infrastructure.HttpClient.csproj" Id="a37ba846-9db0-4d4d-8c7e-0a9d5db471f7" />
   <Project Path="src/Lewee.Infrastructure.PostgreSQL/Lewee.Infrastructure.PostgreSQL.csproj" />
   <Project Path="src/Lewee.Playwright/Lewee.Playwright.csproj" />
   <Project Path="src/Lewee.Common/Lewee.Common.csproj" />

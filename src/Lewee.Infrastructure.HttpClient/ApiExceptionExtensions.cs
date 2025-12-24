@@ -1,7 +1,6 @@
-﻿using Lewee.Blazor.ErrorHandling;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 
-namespace Lewee.Blazor.Http;
+namespace Lewee.Infrastructure.HttpClient;
 
 /// <summary>
 /// Extension methods for <see cref="ApiException"/>
