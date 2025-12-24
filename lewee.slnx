@@ -94,6 +94,8 @@
   <Project Path="tests/Lewee.Infrastructure.Data.Tests.Integration/Lewee.Infrastructure.Data.Tests.Integration.csproj" />
   <Project Path="tests/Lewee.Infrastructure.Data.Tests.Unit/Lewee.Infrastructure.Data.Tests.Unit.csproj" />
   <Project Path="tests/Lewee.Infrastructure.HttpClient.Tests.Integration/Lewee.Infrastructure.HttpClient.Tests.Integration.csproj" Id="f3827d32-016f-4581-88de-460bfa1d8520" />
+  <Project Path="tests/Lewee.Tests.Api/Lewee.Tests.Api.csproj" />
+  <Project Path="tests/Lewee.Tests.AppHost/Lewee.Tests.AppHost.csproj" Id="6222b3d9-8faa-4a98-91c5-5bc3e21b39cf" />
   <Project Path="tests/Lewee.Tests.Common/Lewee.Tests.Common.csproj" />
   <Project Path="tests/Lewee.Tests.ServiceDefaults/Lewee.Tests.ServiceDefaults.csproj" />
 </Solution>

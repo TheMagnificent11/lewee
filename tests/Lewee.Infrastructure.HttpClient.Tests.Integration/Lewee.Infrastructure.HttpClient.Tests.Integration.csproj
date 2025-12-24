@@ -1,4 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" />
+  </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\..\src\Lewee.Infrastructure.HttpClient\Lewee.Infrastructure.HttpClient.csproj" />
