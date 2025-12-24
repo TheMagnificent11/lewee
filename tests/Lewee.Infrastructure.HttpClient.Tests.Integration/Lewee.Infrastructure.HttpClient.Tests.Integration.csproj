@@ -1,0 +1,7 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Lewee.Infrastructure.HttpClient\Lewee.Infrastructure.HttpClient.csproj" />
+  </ItemGroup>
+  
+</Project>
