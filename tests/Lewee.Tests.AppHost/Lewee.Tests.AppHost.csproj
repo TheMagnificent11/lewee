@@ -1,15 +1,13 @@
-<Project Sdk="Aspire.AppHost.Sdk/13.0.2">
+<Project Sdk="Aspire.AppHost.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
     <UserSecretsId>d6c0f7d5-2703-40d5-a207-91295142ed6e</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Lewee.Tests.Api\Lewee.Tests.Api.csproj" />
+    <ProjectReference Include="..\Lewee.Tests.Web\Lewee.Tests.Web\Lewee.Tests.Web.csproj" />
   </ItemGroup>
 
 </Project>

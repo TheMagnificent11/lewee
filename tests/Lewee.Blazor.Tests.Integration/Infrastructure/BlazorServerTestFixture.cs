@@ -3,7 +3,7 @@ using System.Net.Http.Json;
 using Aspire.Hosting;
 using Aspire.Hosting.ApplicationModel;
 using Aspire.Hosting.Testing;
-using Lewee.Blazor.Tests.Contracts;
+using Lewee.Tests.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 

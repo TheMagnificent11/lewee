@@ -1,7 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Lewee.Blazor.Messaging;
-using Lewee.Blazor.Tests.Contracts;
 using Lewee.StateManagement;
+using Lewee.Tests.Contracts;
 
 namespace Lewee.Blazor.Tests.Web;
 

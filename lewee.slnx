@@ -85,7 +85,6 @@
   <Project Path="tests/Lewee.Application.Tests.Unit/Lewee.Application.Tests.Unit.csproj" />
   <Project Path="tests/Lewee.Blazor.Tests.Api/Lewee.Blazor.Tests.Api.csproj" />
   <Project Path="tests/Lewee.Blazor.Tests.App/Lewee.Blazor.Tests.App.csproj" />
-  <Project Path="tests/Lewee.Blazor.Tests.Contracts/Lewee.Blazor.Tests.Contracts.csproj" />
   <Project Path="tests/Lewee.Blazor.Tests.Integration/Lewee.Blazor.Tests.Integration.csproj" />
   <Project Path="tests/Lewee.Blazor.Tests.Web/Lewee.Blazor.Tests.Web.csproj" />
   <Project Path="tests/Lewee.Common.Tests.Unit/Lewee.Common.Tests.Unit.csproj" />
@@ -97,5 +96,8 @@
   <Project Path="tests/Lewee.Tests.Api/Lewee.Tests.Api.csproj" />
   <Project Path="tests/Lewee.Tests.AppHost/Lewee.Tests.AppHost.csproj" Id="6222b3d9-8faa-4a98-91c5-5bc3e21b39cf" />
   <Project Path="tests/Lewee.Tests.Common/Lewee.Tests.Common.csproj" />
+  <Project Path="tests/Lewee.Tests.Contracts/Lewee.Tests.Contracts.csproj" />
   <Project Path="tests/Lewee.Tests.ServiceDefaults/Lewee.Tests.ServiceDefaults.csproj" />
+  <Project Path="tests/Lewee.Tests.Web.Client/Lewee.Tests.Web.Client.csproj" />
+  <Project Path="tests/Lewee.Tests.Web/Lewee.Tests.Web.csproj" />
 </Solution>

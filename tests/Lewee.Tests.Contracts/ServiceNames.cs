@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace Lewee.Blazor.Tests.Contracts;
+namespace Lewee.Tests.Contracts;
 
 [SuppressMessage(
     "Maintainability",

@@ -1,4 +1,4 @@
-﻿namespace Lewee.Infrastructure.HttpClient.Tests.Integration;
+﻿namespace Lewee.Tests.Web;
 
 internal interface IPizzaClient
 {

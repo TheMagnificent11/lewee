@@ -1,5 +1,5 @@
 using Aspire.Hosting.Azure;
-using Lewee.Blazor.Tests.Contracts;
+using Lewee.Tests.Contracts;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
