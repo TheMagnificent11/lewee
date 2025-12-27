@@ -14,17 +14,14 @@ app.MapDefaultEndpoints();
 
 var pizzas = new ConcurrentDictionary<string, Pizza>(StringComparer.OrdinalIgnoreCase);
 
-app.MapPost("/api/piazzas", (AddPizzaToMenuRequest request) =>
+app.MapPost(Endpoints.Pizzas, (AddPizzaToMenuRequest request) =>
 {
     if (pizzas.ContainsKey(request.Name))
     {
         return Results.BadRequest("Pizza already exists");
     }
 
-    var pizza = new Pizza(
-        request.Name,
-        request.Description,
-        request.Price);
+    var pizza = new Pizza(request.Name, request.Price);
 
     if (pizzas.TryAdd(request.Name, pizza))
     {
@@ -32,6 +29,13 @@ app.MapPost("/api/piazzas", (AddPizzaToMenuRequest request) =>
     }
 
     return Results.InternalServerError("Unexpected error occurred");
+});
+
+app.MapGet(Endpoints.Pizzas, () =>
+{
+    var result = pizzas.ToArray();
+
+    return Results.Ok(result);
 });
 
 await app.RunAsync();

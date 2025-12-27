@@ -5,12 +5,9 @@ namespace Lewee.Infrastructure.HttpClient.Tests.Integration;
 
 internal interface IPizzaClient
 {
-    [Post("/api/pizzas")]
+    [Post(Endpoints.Pizzas)]
     Task AddPizzaToMenuAsync(AddPizzaToMenuRequest request, CancellationToken cancellationToken);
 
-    [Get("/api/pizzas")]
+    [Get(Endpoints.Pizzas)]
     Task<IReadOnlyCollection<Pizza>> GetMenuAsync(CancellationToken cancellationToken);
-
-    [Get("/api/pizzas/{id}")]
-    Task<Pizza> GetPizzaAsync(Guid id, CancellationToken cancellationToken);
 }

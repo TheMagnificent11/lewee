@@ -1,11 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.TestHost" />
+    <PackageReference Include="Aspire.Hosting.Testing" />
   </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\..\src\Lewee.Infrastructure.HttpClient\Lewee.Infrastructure.HttpClient.csproj" />
+    <ProjectReference Include="..\Lewee.Tests.AppHost\Lewee.Tests.AppHost.csproj" />
     <ProjectReference Include="..\Lewee.Tests.Contracts\Lewee.Tests.Contracts.csproj" />
   </ItemGroup>
   

@@ -1,6 +1,7 @@
 ﻿using Aspire.Hosting;
 using Aspire.Hosting.ApplicationModel;
 using Aspire.Hosting.Testing;
+using FluentAssertions;
 using Lewee.Tests.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -11,7 +12,6 @@ public sealed class HttpClientTests : IAsyncLifetime
 {
     private IDistributedApplicationTestingBuilder builder;
     private DistributedApplication app;
-    private IServiceProvider serviceProvider;
 
     public async Task InitializeAsync()
     {
@@ -25,21 +25,14 @@ public sealed class HttpClientTests : IAsyncLifetime
 
         await this.app.StartAsync();
 
-        var services = new ServiceCollection();
-
-        services.AddLogging();
-        services.AddWebApiHttpClient<IPizzaClient>(ServiceNames.WebApi);
-
-        this.serviceProvider = services.BuildServiceProvider();
+        // Wait for Web API to be running
+        await resourceNotificationService
+            .WaitForResourceAsync(ServiceNames.WebApi, KnownResourceStates.Running)
+            .WaitAsync(TimeSpan.FromMinutes(5));
     }
 
     public async Task DisposeAsync()
     {
-        if (this.serviceProvider is IDisposable disposable)
-        {
-            disposable.Dispose();
-        }
-
         if (this.app != null)
         {
             await this.app.StopAsync();
@@ -50,5 +43,28 @@ public sealed class HttpClientTests : IAsyncLifetime
         {
             await this.builder.DisposeAsync();
         }
+    }
+
+    [Fact]
+    public async Task AddWebApiHttpClient_Should_CreateFunctioningHttpClient()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+
+        services.AddLogging();
+        services.AddWebApiHttpClient<IPizzaClient>(ServiceNames.WebApi);
+
+        await using var serviceProvider = services.BuildServiceProvider();
+
+        var httpClient = serviceProvider.GetRequiredService<IPizzaClient>();
+        var request = new AddPizzaToMenuRequest("Margherita", 12.50m);
+
+        // Act
+        await httpClient.AddPizzaToMenuAsync(request, CancellationToken.None);
+        var result = await httpClient.GetMenuAsync(CancellationToken.None);
+
+        // Assert
+        result.Should().NotBeNullOrEmpty();
+        result.Should().ContainSingle(x => x.Name == request.Name && x.Price == request.Price);
     }
 }

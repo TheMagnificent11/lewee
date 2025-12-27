@@ -21,15 +21,17 @@ public static class ApiCientConfiguration
     public static IServiceCollection AddWebApiHttpClient<T>(this IServiceCollection services, string aspireApiServiceName)
         where T : class
     {
-        services.AddHttpContextAccessor();
-        services.AddCorrelate(options => options.RequestHeaders = [RequestHeaders.CorrelationId]);
-        services.AddTransient<AuthTokenDelegatingHandler>();
+        services
+            .AddHttpContextAccessor()
+            .AddCorrelate(options => options.RequestHeaders = [RequestHeaders.CorrelationId])
+            .AddTransient<CorrelatingHttpMessageHandler>()
+            .AddTransient<AuthTokenDelegatingHandler>();
 
         services
             .AddRefitClient<T>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri($"https://{aspireApiServiceName}"))
-            .AddHttpMessageHandler<AuthTokenDelegatingHandler>()
-            .AddHttpMessageHandler<CorrelatingHttpMessageHandler>();
+            .AddHttpMessageHandler<CorrelatingHttpMessageHandler>()
+            .AddHttpMessageHandler<AuthTokenDelegatingHandler>();
 
         return services;
     }
