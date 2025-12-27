@@ -30,7 +30,7 @@ public sealed class BlazorServerTestFixture : IAsyncLifetime
 
     public async Task InitializeAsync()
     {
-        this.builder = await DistributedApplicationTestingBuilder.CreateAsync<Projects.Lewee_Blazor_Tests_App>();
+        this.builder = await DistributedApplicationTestingBuilder.CreateAsync<Projects.Lewee_Blazor_Tests_AppHost>();
         this.app = await this.builder.BuildAsync();
         var resourceNotificationService = this.app.Services.GetRequiredService<ResourceNotificationService>();
 

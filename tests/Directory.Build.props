@@ -1,6 +1,8 @@
 <Project>
 
   <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
-  <Import Project="$([MSBuild]::GetPathOfFileAbove('Tests.props', '$(MSBuildThisFileDirectory)../'))" />
+  <Import
+    Condition="$(MSBuildProjectName.Contains('.Tests.Unit')) OR $(MSBuildProjectName.Contains('.Tests.Integration'))"
+    Project="$([MSBuild]::GetPathOfFileAbove('Tests.props', '$(MSBuildThisFileDirectory)../'))" />
 
 </Project>

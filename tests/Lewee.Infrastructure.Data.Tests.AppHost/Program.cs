@@ -1,4 +1,4 @@
-using Lewee.Infrastructure.Data.Tests.App;
+using Lewee.Infrastructure.Data.Tests.AppHost;
 
 var builder = DistributedApplication.CreateBuilder(args);
 

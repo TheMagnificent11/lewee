@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace Lewee.Infrastructure.Data.Tests.App;
+namespace Lewee.Infrastructure.Data.Tests.AppHost;
 
 [SuppressMessage(
     "Maintainability",

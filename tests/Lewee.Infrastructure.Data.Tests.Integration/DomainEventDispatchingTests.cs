@@ -3,17 +3,14 @@ using Aspire.Hosting.ApplicationModel;
 using Aspire.Hosting.Testing;
 using FluentAssertions;
 using Lewee.Domain;
-using Lewee.Infrastructure.Data.Tests.App;
 using Lewee.Infrastructure.PostgreSQL;
+using Lewee.Tests.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace Lewee.Infrastructure.Data.Tests.Integration;
 
-/// <summary>
-/// Integration tests for domain event dispatching
-/// </summary>
 public sealed class DomainEventDispatchingTests : IAsyncLifetime
 {
     private IDistributedApplicationTestingBuilder builder;
@@ -24,7 +21,7 @@ public sealed class DomainEventDispatchingTests : IAsyncLifetime
     public async Task InitializeAsync()
     {
         // Create the test application
-        this.builder = await DistributedApplicationTestingBuilder.CreateAsync<Projects.Lewee_Infrastructure_Data_Tests_App>();
+        this.builder = await DistributedApplicationTestingBuilder.CreateAsync<Projects.Lewee_Tests_AppHost>();
 
         this.app = await this.builder.BuildAsync();
 

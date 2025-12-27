@@ -18,7 +18,7 @@ public static class ApiCientConfiguration
     /// <param name="services">Service collection</param>
     /// <param name="aspireApiServiceName">Aspire API service name</param>
     /// <returns>The updated service collection</returns>
-    public static IServiceCollection AddApiClient<T>(this IServiceCollection services, string aspireApiServiceName)
+    public static IServiceCollection AddWebApiHttpClient<T>(this IServiceCollection services, string aspireApiServiceName)
         where T : class
     {
         services.AddHttpContextAccessor();
