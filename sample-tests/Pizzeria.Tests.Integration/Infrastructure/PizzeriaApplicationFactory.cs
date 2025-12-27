@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using System.Net.Http.Json;
 using Aspire.Hosting;
 using Aspire.Hosting.ApplicationModel;
 using Aspire.Hosting.Testing;
@@ -100,28 +99,6 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
             options => options.BaseAddress = new Uri(this.keycloakBaseUrl));
 
         this.serviceProvider = services.BuildServiceProvider();
-    }
-
-    // TODO: this should be removed after `PizzaOrderTests` are refactored to use Playwright
-    public async Task<string> GetJwtAsync(string username, string password)
-    {
-        using var httpClient = new HttpClient();
-        var tokenEndpoint = $"{this.keycloakBaseUrl}/realms/{Environments.Auth.RealmName}/protocol/openid-connect/token";
-
-        using var tokenRequest = new FormUrlEncodedContent(new Dictionary<string, string>(StringComparer.Ordinal)
-        {
-            ["grant_type"] = "password",
-            ["client_id"] = Environments.Auth.Clients.StoreApi,
-            ["username"] = username,
-            ["password"] = password,
-        });
-
-        using var response = await httpClient.PostAsync(tokenEndpoint, tokenRequest);
-        response.EnsureSuccessStatusCode();
-
-        var tokenResponse = await response.Content.ReadFromJsonAsync<KeycloakTokenResponse>();
-
-        return tokenResponse!.AccessToken;
     }
 
     public async Task<HttpClient> GetServiceClientAsync(string serviceName)
