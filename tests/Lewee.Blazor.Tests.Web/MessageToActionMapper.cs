@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using Lewee.Blazor.Messaging;
-using Lewee.StateManagement;
+using Lewee.Infrastructure.Fluxor;
 using Lewee.Tests.Contracts;
 
 namespace Lewee.Blazor.Tests.Web;

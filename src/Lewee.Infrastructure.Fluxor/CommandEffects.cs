@@ -2,10 +2,10 @@
 using Correlate;
 using Fluxor;
 using Lewee.Common;
-using Lewee.StateManagement.Observability;
+using Lewee.Infrastructure.Fluxor.Observability;
 using Microsoft.Extensions.Logging;
 
-namespace Lewee.StateManagement;
+namespace Lewee.Infrastructure.Fluxor;
 
 /// <summary>
 /// Request Effects
@@ -15,22 +15,24 @@ namespace Lewee.StateManagement;
 /// <typeparam name="TRequestAction">Request action type</typeparam>
 /// <typeparam name="TRequestSuccessAction">Request success action type</typeparam>
 /// <typeparam name="TRequestErrorAction">Request error action type</typeparam>
-public abstract class QueryEffects<TState, TData, TRequestAction, TRequestSuccessAction, TRequestErrorAction>
+/// <typeparam name="TMessageReceived">Request completed action type</typeparam>
+public abstract class CommandEffects<TState, TData, TRequestAction, TRequestSuccessAction, TRequestErrorAction, TMessageReceived>
     : RequestEffects<TState, TData, TRequestSuccessAction, TRequestErrorAction>
     where TState : RequestState<TData>, new()
     where TData : class
     where TRequestAction : IRequestAction, new()
-    where TRequestSuccessAction : IQuerySuccessAction<TData>, new()
+    where TRequestSuccessAction : IRequestSuccessAction, new()
     where TRequestErrorAction : IRequestErrorAction, new()
+    where TMessageReceived : IMessageReceivedAction<TData>, new()
 {
     /// <summary>
     /// Initializes a new instance of the
-    /// <see cref="QueryEffects{TState, TData, TRequestAction, TRequestSuccessAction, TRequestErrorAction}"/> class
+    /// <see cref="CommandEffects{TState, TData, TRequestAction, TRequestSuccessAction, TRequestErrorAction, TMessageReceived}"/> class
     /// </summary>
     /// <param name="state">State</param>
     /// <param name="correlationContextAccessor">Correlation context accessor</param>
     /// <param name="logger">Logger</param>
-    protected QueryEffects(
+    protected CommandEffects(
         IState<TState> state,
         ICorrelationContextAccessor correlationContextAccessor,
         ILogger logger)
@@ -45,7 +47,7 @@ public abstract class QueryEffects<TState, TData, TRequestAction, TRequestSucces
     /// <param name="dispatcher">Dispatcher</param>
     /// <returns>Asynchronous task</returns>
     [EffectMethod]
-    public virtual async Task OnQueryAsync(
+    public virtual async Task OnCommandAsync(
         [NotNull] TRequestAction action,
         [NotNull] IDispatcher dispatcher)
     {
@@ -55,14 +57,10 @@ public abstract class QueryEffects<TState, TData, TRequestAction, TRequestSucces
 
             try
             {
-                var result = await this.ExecuteQueryAsync(action, dispatcher);
+                var result = await this.ExecuteCommandAsync(action, dispatcher);
                 if (result.IsSuccess)
                 {
-                    dispatcher.Dispatch(new TRequestSuccessAction
-                    {
-                        CorrelationId = action.CorrelationId,
-                        Data = result.Data!,
-                    });
+                    dispatcher.Dispatch(new TRequestSuccessAction() { CorrelationId = action.CorrelationId });
 
                     return;
                 }
@@ -90,12 +88,41 @@ public abstract class QueryEffects<TState, TData, TRequestAction, TRequestSucces
     }
 
     /// <summary>
-    /// Executes the query
+    /// Command completed effect
+    /// </summary>
+    /// <param name="action">Action</param>
+    /// <param name="dispatcher">Dispatcher</param>
+    /// <returns>Asynchronous task</returns>
+    [EffectMethod]
+    public virtual async Task OnCommandCompletedAsync(
+        [NotNull] TMessageReceived action,
+        [NotNull] IDispatcher dispatcher)
+    {
+        using (this.Logger.BeginCorrelationIdScope(this.CorrelationContextAccessor, action))
+        {
+            await this.ExecuteCommandCompletedAsync(action, dispatcher);
+
+            this.Logger.LogDebug("Executing query request...completed");
+        }
+    }
+
+    /// <summary>
+    /// Executes the command
     /// </summary>
     /// <param name="action">Request action</param>
     /// <param name="dispatcher">Dispatcher</param>
     /// <returns>Asynchronous task containing a <see cref="Result"/> that represents the success or failure of the request</returns>
-    protected abstract Task<QueryResult<TData>> ExecuteQueryAsync(
+    protected abstract Task<CommandResult> ExecuteCommandAsync(
         [NotNull] TRequestAction action,
+        [NotNull] IDispatcher dispatcher);
+
+    /// <summary>
+    /// Executes the command completed
+    /// </summary>
+    /// <param name="action">Command completed action</param>
+    /// <param name="dispatcher">Dispatcher</param>
+    /// <returns>Asynchronous task</returns>
+    protected abstract Task ExecuteCommandCompletedAsync(
+        [NotNull] TMessageReceived action,
         [NotNull] IDispatcher dispatcher);
 }

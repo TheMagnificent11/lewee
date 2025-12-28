@@ -2,7 +2,7 @@
 using Correlate;
 using Fluxor;
 using Lewee.Common;
-using Lewee.StateManagement;
+using Lewee.Infrastructure.Fluxor;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Pizzeria.Store.Application.Orders;

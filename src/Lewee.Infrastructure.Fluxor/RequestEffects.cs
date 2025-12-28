@@ -1,10 +1,10 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Correlate;
 using Fluxor;
-using Lewee.StateManagement.Observability;
+using Lewee.Infrastructure.Fluxor.Observability;
 using Microsoft.Extensions.Logging;
 
-namespace Lewee.StateManagement;
+namespace Lewee.Infrastructure.Fluxor;
 
 /// <summary>
 /// Request Effects

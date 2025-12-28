@@ -1,6 +1,6 @@
 ﻿using Correlate;
 
-namespace Lewee.StateManagement.Observability;
+namespace Lewee.Infrastructure.Fluxor.Observability;
 
 internal static class CorrelationContextAccessorExtensions
 {

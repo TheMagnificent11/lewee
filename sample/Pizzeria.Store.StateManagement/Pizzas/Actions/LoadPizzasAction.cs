@@ -1,4 +1,4 @@
-using Lewee.StateManagement;
+using Lewee.Infrastructure.Fluxor;
 
 namespace Pizzeria.Store.StateManagement.Pizzas.Actions;
 

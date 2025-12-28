@@ -1,6 +1,6 @@
 ﻿using Lewee.Blazor.Messaging;
 using Lewee.Blazor.Messaging.Health;
-using Lewee.StateManagement;
+using Lewee.Infrastructure.Fluxor;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Lewee.Blazor;

@@ -78,10 +78,10 @@
   <Project Path="src/Lewee.Infrastructure.AspNet.WebApi/Lewee.Infrastructure.AspNet.WebApi.csproj" />
   <Project Path="src/Lewee.Infrastructure.AspNet/Lewee.Infrastructure.AspNet.csproj" />
   <Project Path="src/Lewee.Infrastructure.Data/Lewee.Infrastructure.Data.csproj" />
+  <Project Path="src/Lewee.Infrastructure.Fluxor/Lewee.Infrastructure.Fluxor.csproj" />
   <Project Path="src/Lewee.Infrastructure.HttpClient/Lewee.Infrastructure.HttpClient.csproj" />
   <Project Path="src/Lewee.Infrastructure.PostgreSQL/Lewee.Infrastructure.PostgreSQL.csproj" />
   <Project Path="src/Lewee.Playwright/Lewee.Playwright.csproj" />
-  <Project Path="src/Lewee.StateManagement/Lewee.StateManagement.csproj" />
   <Project Path="tests/Lewee.Application.Tests.Unit/Lewee.Application.Tests.Unit.csproj" />
   <Project Path="tests/Lewee.Blazor.Tests.Api/Lewee.Blazor.Tests.Api.csproj" />
   <Project Path="tests/Lewee.Blazor.Tests.AppHost/Lewee.Blazor.Tests.AppHost.csproj" />

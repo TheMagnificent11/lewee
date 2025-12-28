@@ -2,7 +2,7 @@
 using Lewee.Common;
 using Microsoft.Extensions.Logging;
 
-namespace Lewee.StateManagement.Observability;
+namespace Lewee.Infrastructure.Fluxor.Observability;
 
 /// <summary>
 /// Logging Extensions

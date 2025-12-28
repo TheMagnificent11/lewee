@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace Lewee.StateManagement;
+namespace Lewee.Infrastructure.Fluxor;
 
 /// <summary>
 /// Message Received Action Inteface

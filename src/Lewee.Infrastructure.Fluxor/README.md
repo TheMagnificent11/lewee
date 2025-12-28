@@ -1,4 +1,4 @@
-# Lewee.StateManagement
+# Lewee.Infrastructure.Fluxor
 
 Fluxor state management configuration and base classes for Blazor applications implementing the Redux pattern.
 

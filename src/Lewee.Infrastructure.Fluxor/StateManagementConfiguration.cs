@@ -4,7 +4,7 @@ using Fluxor;
 using Fluxor.Blazor.Web.ReduxDevTools;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Lewee.StateManagement;
+namespace Lewee.Infrastructure.Fluxor;
 
 /// <summary>
 /// Fluxor Configuration

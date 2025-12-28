@@ -10,7 +10,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Lewee.Common\Lewee.Common.csproj" />
     <ProjectReference Include="..\Lewee.Infrastructure.AspNet\Lewee.Infrastructure.AspNet.csproj" />
-    <ProjectReference Include="..\Lewee.StateManagement\Lewee.StateManagement.csproj" />
+    <ProjectReference Include="..\Lewee.Infrastructure.Fluxor\Lewee.Infrastructure.Fluxor.csproj" />
   </ItemGroup>
 
   <ItemGroup>

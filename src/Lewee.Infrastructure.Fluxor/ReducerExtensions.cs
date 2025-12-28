@@ -1,4 +1,4 @@
-﻿namespace Lewee.StateManagement;
+﻿namespace Lewee.Infrastructure.Fluxor;
 
 /// <summary>
 /// Reducer Extension Methods

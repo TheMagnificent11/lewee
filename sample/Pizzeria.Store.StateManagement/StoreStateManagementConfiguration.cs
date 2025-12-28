@@ -1,4 +1,4 @@
-﻿using Lewee.StateManagement;
+﻿using Lewee.Infrastructure.Fluxor;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Pizzeria.Store.StateManagement;
