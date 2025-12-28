@@ -78,6 +78,7 @@
   <Project Path="src/Lewee.Infrastructure.AspNet.WebApi/Lewee.Infrastructure.AspNet.WebApi.csproj" />
   <Project Path="src/Lewee.Infrastructure.AspNet/Lewee.Infrastructure.AspNet.csproj" />
   <Project Path="src/Lewee.Infrastructure.Auth/Lewee.Infrastructure.Auth.csproj" />
+  <Project Path="src/Lewee.Infrastructure.Correlate/Lewee.Infrastructure.Correlate.csproj" Id="382b56a3-c2f7-456a-9b88-e4b579652454" />
   <Project Path="src/Lewee.Infrastructure.Data/Lewee.Infrastructure.Data.csproj" />
   <Project Path="src/Lewee.Infrastructure.Fluxor/Lewee.Infrastructure.Fluxor.csproj" />
   <Project Path="src/Lewee.Infrastructure.HttpClient/Lewee.Infrastructure.HttpClient.csproj" />

@@ -7,7 +7,7 @@ Specifically, it assists with configuring handlers to send specific events/messa
 ## Dependencies
 
 - `Microsoft.AspNetCore.App` (framework reference, not package reference)
-- [Correlate.AspNetCore](https://github.com/skwasjer/Correlate) (for correlation ID functionality)
+
 - [Microsoft.Azure.SignalR.Management](https://learn.microsoft.com/en-us/azure/azure-signalr/) (for Azure SignalR integration)
 - [Lewee.Application](../Lewee.Application/README.md)
 
@@ -23,18 +23,6 @@ services.ConfigureSignalR();
 
 ```cs
 app.MapHub<ClientEventHub>("/events");
-```
-
-### Correlation ID Configuration
-
-Configure correlation ID logging to track requests across your application:
-
-```cs
-services.AddCorrelationIdServices();
-```
-
-```cs
-app.UseCorrelationIdMiddleware();
 ```
 
 ## Usage
