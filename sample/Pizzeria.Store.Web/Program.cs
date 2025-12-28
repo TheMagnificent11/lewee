@@ -1,7 +1,7 @@
 using Lewee.Blazor.Messaging;
-using Lewee.Infrastructure.AspNet.Auth;
 using Lewee.Infrastructure.AspNet.Observability;
 using Lewee.Infrastructure.AspNet.SignalR;
+using Lewee.Infrastructure.Auth;
 using Lewee.Infrastructure.Data;
 using Lewee.Infrastructure.PostgreSQL;
 using MudBlazor.Services;

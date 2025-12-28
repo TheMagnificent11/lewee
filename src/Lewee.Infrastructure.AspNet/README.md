@@ -2,7 +2,7 @@
 
 This package is used configure infrastructure that is available in ASP.Net.
 
-Specifically, it assists with configuring an [AuthenticatedUserService](./Auth/AuthenticatedUserService.cs), handlers to send specific events/messages via `SignalR`, and correlation ID middleware.
+Specifically, it assists with configuring handlers to send specific events/messages via `SignalR`, and correlation ID middleware.
 
 ## Dependencies
 
@@ -14,12 +14,6 @@ Specifically, it assists with configuring an [AuthenticatedUserService](./Auth/A
 ## Configuration
 
 In the code below, `services` in the code below is `Microsoft.Extensions.DependencyInjection.ServicesCollection` and `app` is a `Microsoft.AspNetCore.Routing.IEndpointRouteBuilder` (`Microsoft.AspNetCore.Builder.WebApplication` implements `IEndpointRouteBuilder`).
-
-### Authenticated User Configuration
-
-```cs
-services.ConfigureAuthenticatedUserService();
-```
 
 ### Client Events SignalR Configuration
 
@@ -44,12 +38,6 @@ app.UseCorrelationIdMiddleware();
 ```
 
 ## Usage
-
-### Authenticated User
-
-Inject `IAuthenticatedUserService` into an services that need to obtain the `UserId` of a user (this is the value stored as the [name identifier claim](http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier) in a JWT).
-
-[Lewee.Infrastructure.Data](../Lewee.Infrastructure.Data/README.md) uses this service to populate the created/modified by user ID on entity table records.
 
 ### Client Events
 
