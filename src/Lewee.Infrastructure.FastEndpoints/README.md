@@ -1,4 +1,4 @@
-# Lewee.Infrastructure.AspNet.WebApi
+# Lewee.Infrastructure.FastEndpoints
 
 FastEndpoints base classes for building Web API endpoints with MediatR integration and correlation ID support.
 
@@ -8,10 +8,9 @@ This package provides abstract base classes for building FastEndpoints-based Web
 
 ## Dependencies
 
-- `Lewee.Infrastructure.AspNet` - ASP.NET Core integration
-- `Lewee.Application` - CQRS implementation
-- `FastEndpoints` - Endpoint framework
-- `Correlate` - Correlation ID support
+- [FastEndpoints](https://fast-endpoints.com)
+- [Lewee.Application](../Lewee.Application/Lewee.Application.csproj) - CQRS implementation
+- [Lewee.Infrastructure.Correlate](../Lewee.Infrastructure.Correlate/Lewee.Infrastructure.Correlate.csproj) - Correlation ID support
 
 ## Components
 
