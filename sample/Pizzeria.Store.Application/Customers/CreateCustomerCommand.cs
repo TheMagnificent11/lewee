@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using FluentValidation;
 using Lewee.Application.Mediation.Requests;
+using Lewee.Common;
 using Lewee.Domain;
 using MediatR;
 using Microsoft.Extensions.Logging;

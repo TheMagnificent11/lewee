@@ -10,7 +10,7 @@
     Pizza Menu
 </MudText>
 
-@if (OrdersState.Value.CurrentOrder == null)
+@if (OrdersState.Value.Data == null)
 {
     <MudAlert Severity="Severity.Warning" Class="mb-4">
         <MudText>No active order found. <MudLink Href="/" Color="Color.Primary">Start a new order</MudLink></MudText>
@@ -33,7 +33,7 @@ else if (PizzasState.Value.IsLoading)
         }
     </MudGrid>
 }
-else if (PizzasState.Value.Pizzas.Any())
+else if (PizzasState.Value.Data!.Any())
 {
     <MudAlert Severity="Severity.Info">
         <MudText>No pizzas available at the moment.</MudText>
@@ -42,9 +42,9 @@ else if (PizzasState.Value.Pizzas.Any())
 else
 {
     <MudGrid>
-        @foreach (var pizza in PizzasState.Value.Pizzas)
+        @foreach (var pizza in PizzasState.Value.Data!)
         {
-            var quantity = OrdersState.Value.CurrentOrder?.Pizzas.FirstOrDefault(p => p.PizzaId == pizza.Id)?.Quantity ?? 0;
+            var quantity = OrdersState.Value.Data.Pizzas.FirstOrDefault(p => p.PizzaId == pizza.Id)?.Quantity ?? 0;
             
             <MudItem xs="12" sm="6" md="4">
                 <MudCard>

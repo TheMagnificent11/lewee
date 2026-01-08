@@ -1,9 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <IsPackable>false</IsPackable>
-  </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Correlate.DependencyInjection" />
     <PackageReference Include="Flurl" />
@@ -12,12 +8,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Lewee.Shared\Lewee.Shared.csproj" />
-    <ProjectReference Include="..\Lewee.StateManagement\Lewee.StateManagement.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
+    <ProjectReference Include="..\Lewee.Common\Lewee.Common.csproj" />
+    <ProjectReference Include="..\Lewee.Infrastructure.AspNet\Lewee.Infrastructure.AspNet.csproj" />
+    <ProjectReference Include="..\Lewee.Infrastructure.Fluxor\Lewee.Infrastructure.Fluxor.csproj" />
   </ItemGroup>
 
   <ItemGroup>

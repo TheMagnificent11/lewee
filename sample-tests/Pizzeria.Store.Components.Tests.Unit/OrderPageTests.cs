@@ -2,15 +2,14 @@ using Bunit;
 using Correlate;
 using FluentAssertions;
 using Fluxor;
-using Lewee.Application.Mediation.Requests;
+using Lewee.Common;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Moq;
 using MudBlazor.Services;
 using Pizzeria.Store.Application.Pizzas;
 using Pizzeria.Store.Contracts.Pizzas;
-using Pizzeria.Store.StateManagement.Orders;
+using Pizzeria.Store.StateManagement;
 using Xunit;
 
 namespace Pizzeria.Store.Components.Tests.Unit;
@@ -23,9 +22,9 @@ public class OrderPageTests : TestContext
     {
         this.Services.AddSingleton(this.mediatorMock.Object);
         this.Services.AddSingleton(Mock.Of<ICorrelationContextAccessor>());
-        this.Services.AddSingleton(Mock.Of<ILogger<OrdersEffects>>());
+        this.Services.AddLogging();
         this.Services.AddMudServices();
-        this.Services.AddFluxor(x => x.ScanAssemblies(typeof(OrdersState).Assembly));
+        this.Services.AddFluxor(x => x.ScanAssemblies(typeof(StoreStateManagementConfiguration).Assembly));
     }
 
     [Fact]
@@ -59,7 +58,7 @@ public class OrderPageTests : TestContext
 
         this.mediatorMock
             .Setup(x => x.Send(It.IsAny<GetPizzasQuery>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(QueryResult<PizzaDto[]>.Success(testPizzas));
+            .ReturnsAsync(QueryResult<IEnumerable<PizzaDto>>.Success(testPizzas));
 
         // Act
         var component = this.RenderComponent<Order>();

@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Lewee.Blazor.Messaging;
-using Lewee.Shared;
-using Lewee.StateManagement;
+using Lewee.Common;
+using Lewee.Infrastructure.Fluxor;
 using Pizzeria.Store.Contracts.Orders;
 using Pizzeria.Store.StateManagement.Orders.Actions;
 
@@ -30,7 +30,11 @@ public class MessageToActionMapper : IMessageToActionMapper
 
             var result = message switch
             {
-                OrderDto order => new StartOrderCompletedAction(order, correlationId),
+                OrderDto order => new StartOrderCompletedAction
+                {
+                    Data = order,
+                    CorrelationId = correlationId,
+                },
                 _ => null,
             };
 

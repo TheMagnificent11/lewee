@@ -2,25 +2,18 @@
 
 This package is used configure infrastructure that is available in ASP.Net.
 
-Specifically, it assists with configuring an [AuthenticatedUserService](./Auth/AuthenticatedUserService.cs), handlers to send specific events/messages via `SignalR`, and correlation ID middleware.
+Specifically, it assists with configuring handlers to send specific events/messages via `SignalR`, and correlation ID middleware.
 
 ## Dependencies
 
 - `Microsoft.AspNetCore.App` (framework reference, not package reference)
-- [Correlate.AspNetCore](https://github.com/skwasjer/Correlate) (for correlation ID functionality)
+
 - [Microsoft.Azure.SignalR.Management](https://learn.microsoft.com/en-us/azure/azure-signalr/) (for Azure SignalR integration)
 - [Lewee.Application](../Lewee.Application/README.md)
-- [Lewee.Contracts](../Lewee.Contracts/README.md)
 
 ## Configuration
 
 In the code below, `services` in the code below is `Microsoft.Extensions.DependencyInjection.ServicesCollection` and `app` is a `Microsoft.AspNetCore.Routing.IEndpointRouteBuilder` (`Microsoft.AspNetCore.Builder.WebApplication` implements `IEndpointRouteBuilder`).
-
-### Authenticated User Configuration
-
-```cs
-services.ConfigureAuthenticatedUserService();
-```
 
 ### Client Events SignalR Configuration
 
@@ -32,25 +25,7 @@ services.ConfigureSignalR();
 app.MapHub<ClientEventHub>("/events");
 ```
 
-### Correlation ID Configuration
-
-Configure correlation ID logging to track requests across your application:
-
-```cs
-services.AddCorrelationIdServices();
-```
-
-```cs
-app.UseCorrelationIdMiddleware();
-```
-
 ## Usage
-
-### Authenticated User
-
-Inject `IAuthenticatedUserService` into an services that need to obtain the `UserId` of a user (this is the value stored as the [name identifier claim](http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier) in a JWT).
-
-[Lewee.Infrastructure.Data](../Lewee.Infrastructure.Data/README.md) uses this service to populate the created/modified by user ID on entity table records.
 
 ### Client Events
 
@@ -64,7 +39,7 @@ The `AddCorrelationIdServices` method configures correlation ID middleware using
 
 **Configuration:**
 
-- Uses the `X-Correlation-ID` header (defined in [Lewee.Shared.RequestHeaders](../Lewee.Shared/README.md#constants))
+- Uses the `X-Correlation-ID` header (defined in [Lewee.Common.RequestHeaders](../Lewee.Common/README.md#constants))
 - Automatically generates correlation IDs for requests that don't include the header
 - Makes correlation IDs available via `ICorrelationContextAccessor` for logging and tracing
 

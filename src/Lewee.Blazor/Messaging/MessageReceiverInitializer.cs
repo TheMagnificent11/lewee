@@ -1,6 +1,6 @@
 ﻿using Fluxor;
 using Lewee.Blazor.Messaging.Health.Actions;
-using Lewee.Contracts;
+using Lewee.Common;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;

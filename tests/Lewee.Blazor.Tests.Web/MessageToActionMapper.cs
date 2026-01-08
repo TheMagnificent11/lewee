@@ -1,7 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Lewee.Blazor.Messaging;
-using Lewee.Blazor.Tests.Contracts;
-using Lewee.StateManagement;
+using Lewee.Infrastructure.Fluxor;
+using Lewee.Tests.Contracts;
 
 namespace Lewee.Blazor.Tests.Web;
 
@@ -27,7 +27,7 @@ internal sealed class MessageToActionMapper : IMessageToActionMapper
 
         return message switch
         {
-            PizzaOrder order => new OrderCreatedAction(order, correlationId),
+            PizzaOrder order => new OrderCreatedAction { CorrelationId = correlationId, Data = order },
             _ => null,
         };
     }

@@ -1,6 +1,6 @@
 using FluentAssertions;
 using Lewee.Application.Mediation.Behaviors;
-using Lewee.Application.Mediation.Requests;
+using Lewee.Common;
 using Lewee.Domain;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;

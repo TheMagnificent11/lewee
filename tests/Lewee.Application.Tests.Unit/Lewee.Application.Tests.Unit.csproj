@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Lewee.Application\Lewee.Application.csproj" />
+    <ProjectReference Include="..\..\src\Lewee.Blazor\Lewee.Blazor.csproj" />
     <ProjectReference Include="..\Lewee.Tests.Common\Lewee.Tests.Common.csproj" />
   </ItemGroup>
 

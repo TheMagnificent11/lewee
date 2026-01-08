@@ -1,6 +1,6 @@
 using FluentAssertions;
 using FluentValidation.Results;
-using Lewee.Application.Mediation.Requests;
+using Lewee.Common;
 using Xunit;
 
 namespace Lewee.Application.Tests.Unit;

@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Lewee.Infrastructure.AspNet\Lewee.Infrastructure.AspNet.csproj" />
-    <ProjectReference Include="..\Lewee.Blazor.Tests.Contracts\Lewee.Blazor.Tests.Contracts.csproj" />
+    <ProjectReference Include="..\Lewee.Tests.Contracts\Lewee.Tests.Contracts.csproj" />
     <ProjectReference Include="..\Lewee.Tests.ServiceDefaults\Lewee.Tests.ServiceDefaults.csproj" />
   </ItemGroup>
   

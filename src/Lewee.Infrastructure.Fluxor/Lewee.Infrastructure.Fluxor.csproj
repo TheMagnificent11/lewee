@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="Correlate.DependencyInjection" />
+    <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Lewee.Common\Lewee.Common.csproj" />
+  </ItemGroup>
+
+</Project>

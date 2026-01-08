@@ -23,7 +23,7 @@ What does the code do?
 ├─ Business logic → Lewee.Domain or [Project].Domain
 ├─ Use case orchestration → Lewee.Application or [Project].Application
 ├─ Database/API concerns → Lewee.Infrastructure.* or [Project].Data/Api
-├─ Cross-cutting utilities → Lewee.Shared
+├─ Cross-cutting utilities → Lewee.Common
 └─ Presentation/UI → [Project].Api or Lewee.Blazor
 ```
 

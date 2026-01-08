@@ -7,7 +7,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Lewee.Contracts\Lewee.Contracts.csproj" />
     <ProjectReference Include="..\Lewee.Domain\Lewee.Domain.csproj" />
   </ItemGroup>
 

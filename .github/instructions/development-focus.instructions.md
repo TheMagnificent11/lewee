@@ -25,12 +25,14 @@ applyTo: "**/*.cs"
 - Blazor components and utilities
 - **Key Pattern:** Adapters implementing domain interfaces
 
-**Shared Utilities (Lewee.Shared)**
+**Shared Utilities (Lewee.Common)**
 - Cross-cutting concerns
+- Result types (CommandResult, QueryResult)
+- Client messaging contracts
 - Logging constants
 - HTTP headers
 - Extension methods
-- **Key Pattern:** Zero-dependency utilities
+- **Key Pattern:** Minimal-dependency utilities
 
 ## Sample Application (sample/Pizzeria.*)
 

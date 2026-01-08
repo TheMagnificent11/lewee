@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="Moq" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\sample\Pizzeria.Store.StateManagement\Pizzeria.Store.StateManagement.csproj" />
+    <ProjectReference Include="..\..\src\Lewee.Infrastructure.Fluxor\Lewee.Infrastructure.Fluxor.csproj" />
+  </ItemGroup>
+
+</Project>

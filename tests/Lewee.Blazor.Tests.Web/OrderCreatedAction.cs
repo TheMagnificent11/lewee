@@ -1,6 +1,11 @@
-using Lewee.Blazor.Tests.Contracts;
-using Lewee.StateManagement;
+using Lewee.Infrastructure.Fluxor;
+using Lewee.Tests.Contracts;
 
 namespace Lewee.Blazor.Tests.Web;
 
-internal sealed record OrderCreatedAction(PizzaOrder Order, Guid CorrelationId) : IMessageReceivedAction;
+internal sealed record OrderCreatedAction : IMessageReceivedAction<PizzaOrder>
+{
+    public PizzaOrder Data { get; init; }
+
+    public Guid CorrelationId { get; init; }
+}

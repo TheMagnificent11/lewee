@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using CSharpFunctionalExtensions;
+using Lewee.Common;
 using Lewee.Domain;
 
 namespace Pizzeria.Store.Domain;
@@ -86,7 +86,7 @@ public class Order : AggregateRoot
     {
         if (string.IsNullOrWhiteSpace(deliveryAddress))
         {
-            return Result.Failure("Delivery address is required.");
+            return CommandResult.Fail(ResultStatus.BadRequest, "Delivery address is required.");
         }
 
         this.DeliveryAddress = deliveryAddress;
@@ -99,19 +99,19 @@ public class Order : AggregateRoot
             this.DeliveryAddress,
             correlationId));
 
-        return Result.Success();
+        return CommandResult.Success();
     }
 
     public Result PizzasPrepared(Guid correlationId)
     {
         if (!this.IsSubmitted)
         {
-            return Result.Failure("Cannot prepare an order that is not submitted.");
+            return CommandResult.Fail(ResultStatus.BadRequest, "Cannot prepare an order that is not submitted.");
         }
 
         if (this.IsPrepared)
         {
-            return Result.Success("Pizzas already prepared.");
+            return CommandResult.Success();
         }
 
         this.PreparedDateTime = DateTime.UtcNow;
@@ -122,41 +122,41 @@ public class Order : AggregateRoot
             this.PreparedDateTime.Value,
             correlationId));
 
-        return Result.Success();
+        return CommandResult.Success();
     }
 
     public Result PickedUp()
     {
         if (!this.IsPrepared)
         {
-            return Result.Failure("Cannot pick up an order that is not prepared.");
+            return CommandResult.Fail(ResultStatus.BadRequest, "Cannot pick up an order that is not prepared.");
         }
 
         if (this.IsCompleted)
         {
-            return Result.Success("Order already picked up.");
+            return CommandResult.Success();
         }
 
         this.CompletedDateTime = DateTime.UtcNow;
 
-        return Result.Success();
+        return CommandResult.Success();
     }
 
     public Result PizzasDelivered()
     {
         if (!this.IsPrepared)
         {
-            return Result.Failure("Cannot deliver an order that is not prepared.");
+            return CommandResult.Fail(ResultStatus.BadRequest, "Cannot deliver an order that is not prepared.");
         }
 
         if (this.IsCompleted)
         {
-            return Result.Success("Pizza already delivered.");
+            return CommandResult.Success();
         }
 
         this.CompletedDateTime = DateTime.UtcNow;
 
-        return Result.Success();
+        return CommandResult.Success();
     }
 
     public static class FieldLengths

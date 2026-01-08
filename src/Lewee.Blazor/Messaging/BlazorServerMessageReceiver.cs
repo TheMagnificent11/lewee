@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Fluxor;
-using Lewee.Contracts;
+using Lewee.Common;
+using Lewee.Infrastructure.AspNet.SignalR;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
 

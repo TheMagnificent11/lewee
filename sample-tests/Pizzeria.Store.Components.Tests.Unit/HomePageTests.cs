@@ -4,10 +4,9 @@ using FluentAssertions;
 using Fluxor;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Moq;
 using MudBlazor.Services;
-using Pizzeria.Store.StateManagement.Orders;
+using Pizzeria.Store.StateManagement;
 using Xunit;
 
 namespace Pizzeria.Store.Components.Tests.Unit;
@@ -18,9 +17,9 @@ public class HomePageTests : TestContext
     {
         this.Services.AddSingleton(Mock.Of<IMediator>());
         this.Services.AddSingleton(Mock.Of<ICorrelationContextAccessor>());
-        this.Services.AddSingleton(Mock.Of<ILogger<OrdersEffects>>());
+        this.Services.AddLogging();
         this.Services.AddMudServices();
-        this.Services.AddFluxor(o => o.ScanAssemblies(typeof(OrdersState).Assembly));
+        this.Services.AddFluxor(o => o.ScanAssemblies(typeof(StoreStateManagementConfiguration).Assembly));
 
         this.JSInterop.Mode = JSRuntimeMode.Loose;
     }

@@ -1,16 +1,11 @@
-using Lewee.StateManagement;
+using Lewee.Infrastructure.Fluxor;
 using Pizzeria.Store.Contracts.Orders;
 
 namespace Pizzeria.Store.StateManagement.Orders.Actions;
 
-public record AddPizzaToOrderCompletedAction : IMessageReceivedAction
+public record AddPizzaToOrderCompletedAction : IMessageReceivedAction<OrderDto>
 {
-    public AddPizzaToOrderCompletedAction(OrderDto order, Guid correlationId)
-    {
-        this.Order = order;
-        this.CorrelationId = correlationId;
-    }
-
-    public OrderDto Order { get; init; }
     public Guid CorrelationId { get; init; }
+
+    public OrderDto Data { get; init; }
 }

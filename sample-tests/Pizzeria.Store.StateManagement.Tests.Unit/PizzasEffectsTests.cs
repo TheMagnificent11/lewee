@@ -1,6 +1,8 @@
+using Correlate;
 using Fluxor;
-using Lewee.Application.Mediation.Requests;
+using Lewee.Common;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Pizzeria.Store.Application.Pizzas;
 using Pizzeria.Store.Contracts.Pizzas;
@@ -18,11 +20,15 @@ public class PizzasEffectsTests
 
     public PizzasEffectsTests()
     {
-        this.effects = new PizzasEffects(this.mediatorMock.Object);
+        this.effects = new PizzasEffects(
+            this.mediatorMock.Object,
+            Mock.Of<IState<PizzasState>>(),
+            Mock.Of<ICorrelationContextAccessor>(),
+            Mock.Of<ILogger<PizzasEffects>>());
     }
 
     [Fact]
-    public async Task OnLoadPizzasAsync_Success_DispatchesSuccessActionAsync()
+    public async Task OnQueryAsync_Success_DispatchesSuccessActionAsync()
     {
         // Arrange
         var pizzas = new PizzaDto[]
@@ -33,32 +39,32 @@ public class PizzasEffectsTests
 
         this.mediatorMock
             .Setup(x => x.Send(It.IsAny<GetPizzasQuery>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(QueryResult<PizzaDto[]>.Success(pizzas));
+            .ReturnsAsync(QueryResult<IEnumerable<PizzaDto>>.Success(pizzas));
 
         var action = new LoadPizzasAction { CorrelationId = Guid.NewGuid() };
 
         // Act
-        await this.effects.OnLoadPizzasAsync(action, this.dispatcherMock.Object);
+        await this.effects.OnQueryAsync(action, this.dispatcherMock.Object);
 
         // Assert
         this.dispatcherMock.Verify(
-            d => d.Dispatch(It.Is<LoadPizzasSuccessAction>(a => a.Pizzas.SequenceEqual(pizzas))),
+            d => d.Dispatch(It.Is<LoadPizzasSuccessAction>(a => a.Data.SequenceEqual(pizzas))),
             Times.Once);
     }
 
     [Fact]
-    public async Task OnLoadPizzasAsync_Failure_DispatchesFailureActionAsync()
+    public async Task OnQueryAsync_Failure_DispatchesFailureActionAsync()
     {
         // Arrange
         var errorMessage = "Failed to retrieve pizzas";
         this.mediatorMock
             .Setup(x => x.Send(It.IsAny<GetPizzasQuery>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(QueryResult<PizzaDto[]>.Fail(ResultStatus.BadRequest, errorMessage));
+            .ReturnsAsync(QueryResult<IEnumerable<PizzaDto>>.Fail(ResultStatus.BadRequest, errorMessage));
 
         var action = new LoadPizzasAction { CorrelationId = Guid.NewGuid() };
 
         // Act
-        await this.effects.OnLoadPizzasAsync(action, this.dispatcherMock.Object);
+        await this.effects.OnQueryAsync(action, this.dispatcherMock.Object);
 
         // Assert
         this.dispatcherMock.Verify(
@@ -67,7 +73,7 @@ public class PizzasEffectsTests
     }
 
     [Fact]
-    public async Task OnLoadPizzasAsync_Exception_DispatchesFailureActionAsync()
+    public async Task OnQueryAsync_Exception_DispatchesFailureActionAsync()
     {
         // Arrange
         var exceptionMessage = "Something went wrong";
@@ -78,7 +84,7 @@ public class PizzasEffectsTests
         var action = new LoadPizzasAction { CorrelationId = Guid.NewGuid() };
 
         // Act
-        await this.effects.OnLoadPizzasAsync(action, this.dispatcherMock.Object);
+        await this.effects.OnQueryAsync(action, this.dispatcherMock.Object);
 
         // Assert
         this.dispatcherMock.Verify(

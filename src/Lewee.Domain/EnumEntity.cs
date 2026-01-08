@@ -1,4 +1,4 @@
-﻿using Lewee.Shared;
+﻿using Lewee.Common;
 
 namespace Lewee.Domain;
 
