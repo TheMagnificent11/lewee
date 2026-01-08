@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Lewee.Blazor.Messaging;
 using Lewee.Common;
-using Lewee.StateManagement;
+using Lewee.Infrastructure.Fluxor;
 using Pizzeria.Store.Contracts.Orders;
 using Pizzeria.Store.StateManagement.Orders.Actions;
 

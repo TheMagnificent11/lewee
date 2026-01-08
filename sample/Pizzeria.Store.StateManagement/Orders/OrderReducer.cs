@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using Fluxor;
-using Lewee.StateManagement;
+using Lewee.Infrastructure.Fluxor;
 using Pizzeria.Store.Contracts.Orders;
 using Pizzeria.Store.StateManagement.Orders.Actions;
 

@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Sdk Name="Aspire.AppHost.Sdk" Version="13.0.2" />
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <UserSecretsId>d6c0f7d5-2703-40d5-a207-91295142ed6e</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.AppHost" />
+    <PackageReference Include="Aspire.Hosting.PostgreSQL" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Lewee.Tests.Api\Lewee.Tests.Api.csproj" />
+    <ProjectReference Include="..\Lewee.Tests.Contracts\Lewee.Tests.Contracts.csproj" IsAspireProjectResource="false" />
+  </ItemGroup>
+
+</Project>

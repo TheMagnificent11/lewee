@@ -1,5 +1,5 @@
 using FluentAssertions;
-using Lewee.StateManagement;
+using Lewee.Infrastructure.Fluxor;
 using Pizzeria.Store.Contracts.Pizzas;
 using Pizzeria.Store.StateManagement.Pizzas.Actions;
 using Xunit;

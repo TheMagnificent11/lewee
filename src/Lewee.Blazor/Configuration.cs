@@ -1,7 +1,6 @@
-﻿using Lewee.Blazor.Http;
-using Lewee.Blazor.Messaging;
+﻿using Lewee.Blazor.Messaging;
 using Lewee.Blazor.Messaging.Health;
-using Lewee.StateManagement;
+using Lewee.Infrastructure.Fluxor;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Lewee.Blazor;
@@ -28,7 +27,6 @@ public static class Configuration
         where TMapper : class, IMessageToActionMapper
     {
         return services
-            .AddTransient<CorrelationIdDelegatingHandler>()
             .AddAzureSignalRMessageReceiver<TMapper>(serverBaseAddress, httpMessageHandler)
             .AddLeweeFluxor(useReduxDevTools, typeof(ServerHealthState).Assembly);
     }
@@ -48,19 +46,7 @@ public static class Configuration
         where TMapper : class, IMessageToActionMapper
     {
         return services
-            .AddTransient<CorrelationIdDelegatingHandler>()
             .AddAzureSignalRMessageReceiver<TMapper>(apiAspireServiceName)
             .AddLeweeFluxor(useReduxDevTools, typeof(ServerHealthState).Assembly);
-    }
-
-    /// <summary>
-    /// Configures the <see cref="CorrelationIdDelegatingHandler" />
-    /// </summary>
-    /// <param name="builder">HTTP client builder</param>
-    /// <returns>The updated HTTP client builder</returns>
-    public static IHttpClientBuilder AddCorrelationIdDelegationHandler(this IHttpClientBuilder builder)
-    {
-        return builder
-            .AddHttpMessageHandler<CorrelationIdDelegatingHandler>();
     }
 }

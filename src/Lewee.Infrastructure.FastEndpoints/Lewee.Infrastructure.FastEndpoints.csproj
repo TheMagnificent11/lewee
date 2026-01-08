@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  
+  <ItemGroup>
+    <PackageReference Include="FastEndpoints" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Lewee.Application\Lewee.Application.csproj" />
+    <ProjectReference Include="..\Lewee.Infrastructure.Correlate\Lewee.Infrastructure.Correlate.csproj" />
+  </ItemGroup>
+  
+</Project>

@@ -2,7 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using Aspire.Hosting;
 using Aspire.Hosting.ApplicationModel;
 using Aspire.Hosting.Testing;
-using Lewee.Blazor.Tests.Contracts;
+using Lewee.Tests.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Testing;
 using Xunit;
@@ -31,7 +31,7 @@ public sealed class AzureSignalRTestFixture : IAsyncLifetime
 
     public async Task InitializeAsync()
     {
-        this.builder = await DistributedApplicationTestingBuilder.CreateAsync<Projects.Lewee_Blazor_Tests_App>();
+        this.builder = await DistributedApplicationTestingBuilder.CreateAsync<Projects.Lewee_Blazor_Tests_AppHost>();
         this.app = await this.builder.BuildAsync();
         var resourceNotificationService = this.app.Services.GetRequiredService<ResourceNotificationService>();
 

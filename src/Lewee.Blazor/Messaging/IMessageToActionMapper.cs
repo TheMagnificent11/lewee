@@ -1,4 +1,4 @@
-﻿using Lewee.StateManagement;
+﻿using Lewee.Infrastructure.Fluxor;
 
 namespace Lewee.Blazor.Messaging;
 

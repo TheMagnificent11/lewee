@@ -1,6 +1,6 @@
 using Lewee.Application.Mediation.Notifications;
-using Lewee.Blazor.Tests.Contracts;
 using Lewee.Infrastructure.AspNet.SignalR;
+using Lewee.Tests.Contracts;
 using Lewee.Tests.ServiceDefaults;
 using MediatR;
 

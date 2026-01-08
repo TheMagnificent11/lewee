@@ -1,10 +1,10 @@
 using Fluxor;
 using Lewee.Application.Mediation.Notifications;
 using Lewee.Blazor.Messaging;
-using Lewee.Blazor.Tests.Contracts;
 using Lewee.Blazor.Tests.Web;
 using Lewee.Blazor.Tests.Web.Components;
 using Lewee.Infrastructure.AspNet.SignalR;
+using Lewee.Tests.Contracts;
 using Lewee.Tests.ServiceDefaults;
 using MediatR;
 
