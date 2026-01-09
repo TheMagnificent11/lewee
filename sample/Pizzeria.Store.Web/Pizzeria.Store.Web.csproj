@@ -13,6 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Http.Resilience" VersionOverride="10.1.0" />
+    <PackageReference Include="Microsoft.Extensions.ServiceDiscovery" VersionOverride="10.1.0" />
     <ProjectReference Include="..\..\src\Lewee.Blazor\Lewee.Blazor.csproj" />
     <ProjectReference Include="..\..\src\Lewee.Infrastructure.AspNet\Lewee.Infrastructure.AspNet.csproj" />
     <ProjectReference Include="..\..\src\Lewee.Infrastructure.Auth\Lewee.Infrastructure.Auth.csproj" />
