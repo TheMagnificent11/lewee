@@ -1,0 +1,54 @@
+# To get started with Dependabot version updates, you'll need to specify which
+# package ecosystems to update and where the package manifests are located.
+# Please see the documentation for all configuration options:
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+version: 2
+updates:
+  - package-ecosystem: "nuget"
+    directory: "/" # Location of package manifests
+    schedule:
+      interval: "weekly"
+    # Ignore major version updates - only allow minor and patch updates
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "FluentAssertions"
+        update-types: ["version-update:semver-minor", "version-update:semver-major"]
+      - dependency-name: "MediatR"
+        update-types: ["version-update:semver-minor", "version-update:semver-major"]
+    # Group updates based on ItemGroup labels in Directory.Packages.props
+    groups:
+      aspire:
+        patterns:
+          - "Aspire.*"
+      azure:
+        patterns:
+          - "Azure.*"
+      correlate:
+        patterns:
+          - "Correlate.*"
+      fluxor:
+        patterns:
+          - "Fluxor.*"
+      microsoft-aspnetcore:
+        patterns:
+          - "Microsoft.AspNetCore.*"
+      microsoft-entityframeworkcore:
+        patterns:
+          - "Microsoft.EntityFrameworkCore.*"
+      microsoft-extensions:
+        patterns:
+          - "Microsoft.Extensions.*"
+      opentelemetry:
+        patterns:
+          - "OpenTelemetry.*"
+      xunit:
+        patterns:
+          - "xunit.*"
+      analyzers:
+        patterns:
+          - "Meziantou.Analyzer"
+          - "Microsoft.VisualStudio.Threading.Analyzers"
+          - "SonarAnalyzer.CSharp"
+          - "StyleCop.Analyzers"
