@@ -52,3 +52,9 @@ updates:
           - "Microsoft.VisualStudio.Threading.Analyzers"
           - "SonarAnalyzer.CSharp"
           - "StyleCop.Analyzers"
+      ardalis:
+        patterns:
+          - "Ardalis.*"
+      refit:
+        patterns:
+          - "Refit.*"
