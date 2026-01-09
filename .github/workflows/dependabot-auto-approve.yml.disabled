@@ -8,7 +8,7 @@
 # - The token should be a Personal Access Token (PAT) or GitHub App token for the lewee-bot user
 # - The token must have 'pull_requests: write' permission
 #
-name: Auto-approve Renovate PRs
+name: Auto-approve Dependabot PRs
 
 on:
   pull_request:
