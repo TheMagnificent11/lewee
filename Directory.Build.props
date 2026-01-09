@@ -11,7 +11,7 @@
     <RepositoryUrl>https://github.com/TheMagnificent11/Lewee.git</RepositoryUrl>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <Authors>Saji Weerasingham</Authors>
-    <Company>NA</Company>
+    <Company>Lewee Pty Ltd</Company>
     <AnalysisLevel>latest</AnalysisLevel>
     <AnalysisMode>All</AnalysisMode>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
