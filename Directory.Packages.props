@@ -32,7 +32,11 @@
     <PackageVersion Include="Correlate.AspNetCore" Version="6.1.1" />
     <PackageVersion Include="Correlate.DependencyInjection" Version="6.1.1" />
   </ItemGroup>
-  <ItemGroup Label="FluentValidation (DO NOT UPGRADE)">
+  <ItemGroup Label="FluentAssertions (DO NOT UPGRADE)">
+    <PackageVersion Include="FluentAssertions" Version="7.2.0" />
+    <PackageVersion Include="FluentAssertions.Analyzers" Version="0.34.1" />
+  </ItemGroup>
+  <ItemGroup Label="FluentValidation">
     <PackageVersion Include="FluentValidation" Version="12.1.1" />
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
   </ItemGroup>
@@ -80,10 +84,6 @@
     <PackageVersion Include="Microsoft.Playwright" Version="1.51.0" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
     <PackageVersion Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.14.15" />
-  </ItemGroup>
-  <ItemGroup Label="FluentAssertions (DO NOT UPGRADE)">
-    <PackageVersion Include="FluentAssertions" Version="7.2.0" />
-    <PackageVersion Include="FluentAssertions.Analyzers" Version="0.34.1" />
   </ItemGroup>
   <ItemGroup Label="OpenTelemetry">
     <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.14.0" />
