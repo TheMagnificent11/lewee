@@ -81,8 +81,8 @@
   <Project Path="src/Lewee.Infrastructure.Data/Lewee.Infrastructure.Data.csproj" />
   <Project Path="src/Lewee.Infrastructure.FastEndpoints/Lewee.Infrastructure.FastEndpoints.csproj" />
   <Project Path="src/Lewee.Infrastructure.Fluxor/Lewee.Infrastructure.Fluxor.csproj" />
-  <Project Path="src/Lewee.Infrastructure.HttpClient/Lewee.Infrastructure.HttpClient.csproj" />
   <Project Path="src/Lewee.Infrastructure.PostgreSQL/Lewee.Infrastructure.PostgreSQL.csproj" />
+  <Project Path="src/Lewee.Infrastructure.Refit/Lewee.Infrastructure.Refit.csproj" />
   <Project Path="src/Lewee.Playwright/Lewee.Playwright.csproj" />
   <Project Path="tests/Lewee.Application.Tests.Unit/Lewee.Application.Tests.Unit.csproj" />
   <Project Path="tests/Lewee.Blazor.Tests.Api/Lewee.Blazor.Tests.Api.csproj" />
@@ -94,7 +94,7 @@
   <Project Path="tests/Lewee.Infrastructure.Data.Tests.Integration/Lewee.Infrastructure.Data.Tests.Integration.csproj" />
   <Project Path="tests/Lewee.Infrastructure.Data.Tests.Unit/Lewee.Infrastructure.Data.Tests.Unit.csproj" />
   <Project Path="tests/Lewee.Infrastructure.Fluxor.Tests.Unit/Lewee.Infrastructure.Fluxor.Tests.Unit.csproj" />
-  <Project Path="tests/Lewee.Infrastructure.HttpClient.Tests.Integration/Lewee.Infrastructure.HttpClient.Tests.Integration.csproj" />
+  <Project Path="tests/Lewee.Infrastructure.Refit.Tests.Integration/Lewee.Infrastructure.Refit.Tests.Integration.csproj" />
   <Project Path="tests/Lewee.Tests.Api/Lewee.Tests.Api.csproj" />
   <Project Path="tests/Lewee.Tests.AppHost/Lewee.Tests.AppHost.csproj" />
   <Project Path="tests/Lewee.Tests.Common/Lewee.Tests.Common.csproj" />

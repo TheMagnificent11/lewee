@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
 
-namespace Lewee.Infrastructure.HttpClient;
+namespace Lewee.Infrastructure.Refit;
 
 internal static partial class ApiExceptionLogMessages
 {

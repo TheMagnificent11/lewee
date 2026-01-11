@@ -13,11 +13,14 @@ Lewee is an opinionated set of packages to assist with setting up a domain-drive
 | `Lewee.Domain` | Domain layer abstractions including entities, aggregate roots, value objects, domain events, specifications, and repository interfaces |
 | `Lewee.Application` | Application layer with CQRS using MediatR, pipeline behaviors for logging, validation, and exception handling |
 | `Lewee.Common` | Cross-cutting utilities including result types, client messaging contracts, logging constants, and HTTP headers |
-| `Lewee.StateManagement` | Fluxor state management with base state classes, reducer extensions, and action interfaces |
 | `Lewee.Infrastructure.Data` | Entity Framework Core integration with repository implementation and domain event dispatching |
 | `Lewee.Infrastructure.PostgreSQL` | PostgreSQL-specific database configuration using Npgsql |
 | `Lewee.Infrastructure.AspNet` | ASP.NET Core integration including authenticated user services, SignalR, and correlation ID middleware |
-| `Lewee.Infrastructure.AspNet.WebApi` | FastEndpoints-based command and query endpoint base classes |
+| `Lewee.Infrastructure.Auth` | Authentication infrastructure with authenticated user service implementation |
+| `Lewee.Infrastructure.Correlate` | Correlation ID infrastructure using the Correlate library |
+| `Lewee.Infrastructure.FastEndpoints` | FastEndpoints-based command and query endpoint base classes |
+| `Lewee.Infrastructure.Fluxor` | Fluxor state management infrastructure for Blazor applications |
+| `Lewee.Infrastructure.Refit` | Refit HTTP client infrastructure with authentication and correlation ID support |
 | `Lewee.Blazor` | Blazor client-side infrastructure with Fluxor, SignalR messaging, and API integration |
 | `Lewee.Playwright` | Playwright browser automation utilities for integration testing |
 

@@ -1,4 +1,4 @@
-﻿namespace Lewee.Infrastructure.HttpClient;
+﻿namespace Lewee.Infrastructure.Refit;
 
 /// <summary>
 /// Api Exception

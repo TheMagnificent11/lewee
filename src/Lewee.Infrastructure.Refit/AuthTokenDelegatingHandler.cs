@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace Lewee.Infrastructure.HttpClient;
+namespace Lewee.Infrastructure.Refit;
 
 /// <summary>
 /// Delegating handler that adds the user's access token to outgoing HTTP requests.
