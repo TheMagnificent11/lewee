@@ -1,4 +1,4 @@
-name: CI Build
+name: Continuous Integration
 
 on:
   workflow_dispatch:
@@ -6,7 +6,7 @@ on:
     branches: [ develop, main ]
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   buildAndTest:
