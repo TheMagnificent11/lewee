@@ -53,6 +53,24 @@ applyTo: "**/*.cs"
 
 ## Contribution Guidelines
 
+**Pull Request Template:**
+
+A comprehensive pull request template is available at `.github/PULL_REQUEST_TEMPLATE.md`. This template automatically appears when creating a new pull request and includes:
+
+- Type of change identification
+- Scope selection (framework, sample, tests, docs, build)
+- Detailed validation checklist covering:
+  - Build and test requirements
+  - Code quality standards (formatting, analyzers, coverage)
+  - Documentation requirements
+  - Solution file standards
+  - Framework-specific requirements
+  - Sample application standards
+- Breaking changes documentation
+- Reviewer checklist
+
+Use this template to ensure all required validations and documentation are completed before requesting review.
+
 **When working on framework (Lewee.*):**
 1. Maintain backward compatibility
 2. Add XML documentation for public and protected APIs
