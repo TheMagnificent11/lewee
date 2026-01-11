@@ -7,7 +7,7 @@ using Lewee.Tests.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-namespace Lewee.Infrastructure.HttpClient.Tests.Integration;
+namespace Lewee.Infrastructure.Refit.Tests.Integration;
 
 public sealed class HttpClientTests : IAsyncLifetime
 {

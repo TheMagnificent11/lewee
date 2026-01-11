@@ -149,7 +149,7 @@ public static class OrderReducer
 
 ```cs
 using Fluxor;
-using Lewee.Infrastructure.HttpClient;
+using Lewee.Infrastructure.Refit;
 
 public class OrderEffects
 {
@@ -345,7 +345,7 @@ This package integrates seamlessly with other Lewee packages:
 |---------|-------------|
 | **[Lewee.Application](../Lewee.Application/README.md)** | Server-side CQRS handlers send `ClientEvent` notifications via SignalR |
 | **[Lewee.Infrastructure.AspNet](../Lewee.Infrastructure.AspNet/README.md)** | Provides SignalR hub and `ClientEventChannel` for messaging |
-| **[Lewee.Infrastructure.HttpClient](../Lewee.Infrastructure.HttpClient/README.md)** | HTTP client configuration with Refit, authentication, and correlation ID handling |
+| **[Lewee.Infrastructure.Refit](../Lewee.Infrastructure.Refit/README.md)** | HTTP client configuration with Refit, authentication, and correlation ID handling |
 | **[Lewee.Common](../Lewee.Common/README.md)** | Shared `ClientMessage` DTO and `RequestHeaders` constants |
 | **[Lewee.StateManagement](../Lewee.StateManagement/README.md)** | Base state classes, action interfaces, and Fluxor configuration |
 

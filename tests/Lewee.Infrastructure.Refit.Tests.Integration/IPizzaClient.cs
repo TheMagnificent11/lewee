@@ -1,7 +1,7 @@
 ﻿using Lewee.Tests.Contracts;
 using Refit;
 
-namespace Lewee.Infrastructure.HttpClient.Tests.Integration;
+namespace Lewee.Infrastructure.Refit.Tests.Integration;
 
 internal interface IPizzaClient
 {

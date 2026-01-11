@@ -5,7 +5,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Lewee.Infrastructure.HttpClient\Lewee.Infrastructure.HttpClient.csproj" />
+    <ProjectReference Include="..\..\src\Lewee.Infrastructure.Refit\Lewee.Infrastructure.Refit.csproj" />
     <ProjectReference Include="..\Lewee.Tests.AppHost\Lewee.Tests.AppHost.csproj" />
     <ProjectReference Include="..\Lewee.Tests.Contracts\Lewee.Tests.Contracts.csproj" />
   </ItemGroup>

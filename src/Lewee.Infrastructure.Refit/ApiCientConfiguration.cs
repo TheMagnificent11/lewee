@@ -4,7 +4,7 @@ using Lewee.Common;
 using Microsoft.Extensions.DependencyInjection;
 using Refit;
 
-namespace Lewee.Infrastructure.HttpClient;
+namespace Lewee.Infrastructure.Refit;
 
 /// <summary>
 /// API Client Configuration
