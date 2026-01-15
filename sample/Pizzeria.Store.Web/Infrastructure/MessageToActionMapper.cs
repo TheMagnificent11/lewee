@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Lewee.Blazor.Messaging;
 using Lewee.Common;
 using Lewee.Infrastructure.Fluxor;
 using Pizzeria.Store.Contracts.Orders;
@@ -7,7 +6,7 @@ using Pizzeria.Store.StateManagement.Orders.Actions;
 
 namespace Pizzeria.Store.Web.Infrastructure;
 
-public class MessageToActionMapper : IMessageToActionMapper
+public class MessageToActionMapper //: IMessageToActionMapper
 {
     private readonly ILogger<MessageToActionMapper> logger;
 
