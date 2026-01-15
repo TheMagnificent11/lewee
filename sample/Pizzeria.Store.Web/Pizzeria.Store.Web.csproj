@@ -10,8 +10,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Lewee.Blazor\Lewee.Blazor.csproj" />
-    <ProjectReference Include="..\..\src\Lewee.Infrastructure.AspNet\Lewee.Infrastructure.AspNet.csproj" />
     <ProjectReference Include="..\..\src\Lewee.Infrastructure.Auth\Lewee.Infrastructure.Auth.csproj" />
     <ProjectReference Include="..\..\src\Lewee.Infrastructure.Correlate\Lewee.Infrastructure.Correlate.csproj" />
     <ProjectReference Include="..\..\src\Lewee.Infrastructure.Keycloak\Lewee.Infrastructure.Keycloak.csproj" />

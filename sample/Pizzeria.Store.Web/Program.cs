@@ -1,5 +1,3 @@
-using Lewee.Blazor.Messaging;
-using Lewee.Infrastructure.AspNet.SignalR;
 using Lewee.Infrastructure.Auth;
 using Lewee.Infrastructure.Correlate;
 using Lewee.Infrastructure.Data;
@@ -39,13 +37,13 @@ builder.Services
         {
             OnTokenValidated = async context => await context.CreateCustomerOnFirstLoginAsync(),
         })
-    .AddLeweeSignalR()
+    //.AddLeweeSignalR()
     .AddDatabaseHealthCheck();
 
 // Client services
 builder.Services
     .AddStoreState(builder.Environment.IsDevelopment())
-    .AddSignalRMessageReceiver<MessageToActionMapper>()
+    //.AddSignalRMessageReceiver<MessageToActionMapper>()
     .AddMudServices()
     .AddRazorComponents()
     .AddInteractiveServerComponents();
@@ -68,8 +66,6 @@ app
     .UseCorrelationIdMiddleware()
     .UseAuthentication()
     .UseAuthorization();
-
-app.MapLeweeSignalRHub();
 
 app.MapStaticAssets();
 
