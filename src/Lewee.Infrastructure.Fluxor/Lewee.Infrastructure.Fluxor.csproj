@@ -3,10 +3,18 @@
   <ItemGroup>
     <PackageReference Include="Correlate.DependencyInjection" />
     <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" />
+    <PackageReference Include="Microsoft.Extensions.Http" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Lewee.Common\Lewee.Common.csproj" />
+    <ProjectReference Include="..\Lewee.Infrastructure.Auth\Lewee.Infrastructure.Auth.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Lewee.Infrastructure.Fluxor.Tests.Unit</_Parameter1>
+    </AssemblyAttribute>
   </ItemGroup>
 
 </Project>

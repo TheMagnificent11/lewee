@@ -1,4 +1,4 @@
-﻿using Lewee.Domain;
+﻿using Lewee.Common;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Lewee.Infrastructure.Auth;

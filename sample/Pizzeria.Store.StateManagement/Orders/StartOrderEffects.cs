@@ -3,10 +3,8 @@ using Correlate;
 using Fluxor;
 using Lewee.Common;
 using Lewee.Infrastructure.Fluxor;
-using MediatR;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
-using Pizzeria.Store.Application.Orders;
 using Pizzeria.Store.Contracts;
 using Pizzeria.Store.Contracts.Orders;
 using Pizzeria.Store.StateManagement.Orders.Actions;
@@ -16,18 +14,18 @@ namespace Pizzeria.Store.StateManagement.Orders;
 public sealed class StartOrderEffects :
     CommandEffects<OrderState, OrderDto, StartOrderAction, StartOrderSuccessAction, StartOrderFailureAction, StartOrderCompletedAction>
 {
-    private readonly IMediator mediator;
+    private readonly IStoreApiClient storeApiClient;
     private readonly NavigationManager navigationManager;
 
     public StartOrderEffects(
         IState<OrderState> state,
-        IMediator mediator,
+        IStoreApiClient storeApiClient,
         NavigationManager navigationManager,
         ICorrelationContextAccessor correlationContextAccessor,
         ILogger<StartOrderEffects> logger)
         : base(state, correlationContextAccessor, logger)
     {
-        this.mediator = mediator;
+        this.storeApiClient = storeApiClient;
         this.navigationManager = navigationManager;
     }
 
@@ -35,7 +33,9 @@ public sealed class StartOrderEffects :
         [NotNull] StartOrderAction action,
         [NotNull] IDispatcher dispatcher)
     {
-        return await this.mediator.Send(new StartOrderCommand(action.CorrelationId));
+        await this.storeApiClient.StartOrderAsync();
+
+        return CommandResult.Success();
     }
 
     protected override Task ExecuteCommandCompletedAsync(

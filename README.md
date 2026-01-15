@@ -15,14 +15,13 @@ Lewee is an opinionated set of packages to assist with setting up a domain-drive
 | `Lewee.Common` | Cross-cutting utilities including result types, client messaging contracts, logging constants, and HTTP headers |
 | `Lewee.Infrastructure.Data` | Entity Framework Core integration with repository implementation and domain event dispatching |
 | `Lewee.Infrastructure.PostgreSQL` | PostgreSQL-specific database configuration using Npgsql |
-| `Lewee.Infrastructure.AspNet` | ASP.NET Core integration including authenticated user services, SignalR, and correlation ID middleware |
 | `Lewee.Infrastructure.Auth` | Authentication infrastructure with authenticated user service implementation |
 | `Lewee.Infrastructure.Correlate` | Correlation ID infrastructure using the Correlate library |
 | `Lewee.Infrastructure.FastEndpoints` | FastEndpoints-based command and query endpoint base classes |
-| `Lewee.Infrastructure.Fluxor` | Fluxor state management infrastructure for Blazor applications |
+| `Lewee.Infrastructure.Fluxor` | Fluxor state management infrastructure for Blazor applications with SSE client support |
+| `Lewee.Infrastructure.ServerEvents` | Server-Sent Events infrastructure for real-time client event broadcasting |
 | `Lewee.Infrastructure.Keycloak` | Keycloak OpenID Connect authentication integration with .NET Aspire service discovery |
 | `Lewee.Infrastructure.Refit` | Refit HTTP client infrastructure with authentication and correlation ID support |
-| `Lewee.Blazor` | Blazor client-side infrastructure with Fluxor, SignalR messaging, and API integration |
 | `Lewee.Playwright` | Playwright browser automation utilities for integration testing |
 
 ## Dependencies
@@ -55,8 +54,12 @@ Execute the following in a terminal at the root of this Git repository.
 dotnet run --project ./sample/Pizzeria.AppHost/
 ```
 
-This will start the .NET Aspire dashboard and orchestrate the PostgreSQL database, Pizzeria Store Blazor Server application.
+This will start the .NET Aspire dashboard and orchestrate the following services:
+- PostgreSQL database
+- Keycloak authentication server
+- Pizzeria Store API (FastEndpoints Web API)
+- Pizzeria Store Web (Blazor Server application)
 
 Navigate to the Aspire dashboard to monitor services and view logs.
 
-The Pizzeria Store API Web application will be available at the URLs shown in the Aspire dashboard.
+The Pizzeria Store API and Web applications will be available at the URLs shown in the Aspire dashboard.

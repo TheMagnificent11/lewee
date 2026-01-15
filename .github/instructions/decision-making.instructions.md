@@ -24,7 +24,7 @@ What does the code do?
 ├─ Use case orchestration → Lewee.Application or [Project].Application
 ├─ Database/API concerns → Lewee.Infrastructure.* or [Project].Data/Api
 ├─ Cross-cutting utilities → Lewee.Common
-└─ Presentation/UI → [Project].Api or Lewee.Blazor
+└─ Presentation/UI → [Project].Api or [Project].Web
 ```
 
 **Question: What type of test should I write?**
