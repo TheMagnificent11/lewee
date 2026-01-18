@@ -59,10 +59,10 @@
     <PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="10.0.2" />
   </ItemGroup>
   <ItemGroup Label="Microsoft.EntityFramework">
-    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.1" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.1" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.1" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.2" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.2" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.2" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.2" />
   </ItemGroup>
   <ItemGroup Label="Microsoft.Extensions">
     <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="10.0.1" />
@@ -79,7 +79,7 @@
   </ItemGroup>
   <ItemGroup Label="Microsoft (Other)">
   <PackageVersion Include="Microsoft.Azure.SignalR.Management" Version="1.32.0" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.2" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
     <PackageVersion Include="Microsoft.Playwright" Version="1.57.0" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
