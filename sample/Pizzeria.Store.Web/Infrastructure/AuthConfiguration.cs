@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
+using Lewee.Infrastructure.Keycloak;
 using MediatR;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Pizzeria.Common;
 using Pizzeria.Store.Application.Customers;
@@ -12,81 +12,41 @@ internal static class AuthConfiguration
 {
     public static IServiceCollection AddAuth(this IServiceCollection services)
     {
-        services
-            .AddAuthentication(options =>
+        services.AddKeycloakAuthentication(
+            keycloakServiceName: ServiceNames.AuthServer,
+            keycloakRealmName: Pizzeria.Common.Environments.Auth.RealmName,
+            keycloakClientId: Pizzeria.Common.Environments.Auth.Clients.StoreWeb,
+            events: new OpenIdConnectEvents
             {
-                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = "OpenIdConnect";
-            })
-            .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
-            .AddKeycloakOpenIdConnect(
-                ServiceNames.AuthServer,
-                realm: Pizzeria.Common.Environments.Auth.RealmName,
-                options =>
+                OnTokenValidated = async context =>
                 {
-                    options.ClientId = Pizzeria.Common.Environments.Auth.Clients.StoreWeb;
-                    options.ResponseType = "code"; // Use authorization code flow
-                    options.SaveTokens = true;
-                    options.GetClaimsFromUserInfoEndpoint = true;
-                    options.RequireHttpsMetadata = false; // For development/testing only
-                    options.UsePkce = true; // Enable PKCE for public clients
-
-                    // Map claims
-                    options.TokenValidationParameters.NameClaimType = "preferred_username";
-                    options.TokenValidationParameters.RoleClaimType = "roles";
-
-                    // Add scopes
-                    options.Scope.Clear();
-                    options.Scope.Add("openid");
-                    options.Scope.Add("profile");
-                    options.Scope.Add("email");
-
-                    // Handle user creation on first login
-                    options.Events = new OpenIdConnectEvents
+                    var externalUserId = context.Principal?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                    if (!string.IsNullOrEmpty(externalUserId))
                     {
-                        OnTokenValidated = async context =>
+                        var mediator = context.HttpContext.RequestServices.GetRequiredService<IMediator>();
+                        var createCustomerCommand = new CreateCustomerCommand(
+                            externalUserId,
+                            CorrelationId: Guid.NewGuid());
+
+                        try
                         {
-                            var externalUserId = context.Principal?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                            if (!string.IsNullOrEmpty(externalUserId))
-                            {
-                                var mediator = context.HttpContext.RequestServices.GetRequiredService<IMediator>();
-                                var createCustomerCommand = new CreateCustomerCommand(
-                                    externalUserId,
-                                    CorrelationId: Guid.NewGuid());
-
-                                try
-                                {
-                                    _ = await mediator.Send(createCustomerCommand, context.HttpContext.RequestAborted);
-                                }
-                                catch
-                                {
-                                    // Ignore errors - user might already exist or API might be temporarily unavailable
-                                    // This shouldn't prevent the user from accessing the application
-                                }
-                            }
-                        },
-                    };
-                });
-
-        services.AddAuthorization();
-        services.AddCascadingAuthenticationState();
+                            _ = await mediator.Send(createCustomerCommand, context.HttpContext.RequestAborted);
+                        }
+                        catch
+                        {
+                            // Ignore errors - user might already exist or API might be temporarily unavailable
+                            // This shouldn't prevent the user from accessing the application
+                        }
+                    }
+                },
+            });
 
         return services;
     }
 
     public static WebApplication MapSignOut(this WebApplication app)
     {
-        app
-            .MapPost(PageRoutes.SignOut, () =>
-            {
-                return TypedResults.SignOut(
-                    authenticationSchemes:
-                    [
-                        CookieAuthenticationDefaults.AuthenticationScheme,
-                        OpenIdConnectDefaults.AuthenticationScheme,
-                   ]);
-            })
-            .RequireAuthorization();
+        app.MapKeycloakSignOut(PageRoutes.SignOut);
 
         return app;
     }
