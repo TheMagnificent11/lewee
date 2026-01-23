@@ -14,7 +14,8 @@ internal static class PageExtensions
         string email)
     {
         // Navigate to the web client (which should redirect to Keycloak login)
-        await page.GotoAsync(webClientUrl);
+        // Use resilient navigation to handle transient network errors like net::ERR_NETWORK_CHANGED
+        await page.GotoWithRetryAsync(webClientUrl);
 
         // Wait for Keycloak login page to load
         await page.WaitForSelectorAsync("text=Register", new PageWaitForSelectorOptions { Timeout = 30000 });
