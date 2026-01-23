@@ -96,6 +96,7 @@
   <Project Path="tests/Lewee.Infrastructure.Data.Tests.Unit/Lewee.Infrastructure.Data.Tests.Unit.csproj" />
   <Project Path="tests/Lewee.Infrastructure.Fluxor.Tests.Unit/Lewee.Infrastructure.Fluxor.Tests.Unit.csproj" />
   <Project Path="tests/Lewee.Infrastructure.Refit.Tests.Integration/Lewee.Infrastructure.Refit.Tests.Integration.csproj" />
+  <Project Path="tests/Lewee.Playwright.Tests.Unit/Lewee.Playwright.Tests.Unit.csproj" />
   <Project Path="tests/Lewee.Tests.Api/Lewee.Tests.Api.csproj" />
   <Project Path="tests/Lewee.Tests.AppHost/Lewee.Tests.AppHost.csproj" />
   <Project Path="tests/Lewee.Tests.Common/Lewee.Tests.Common.csproj" />

@@ -25,6 +25,15 @@ Furthermore, when working on application C# projects like web applications, do n
 
 **Exception:** During major framework upgrades (e.g., .NET 9 to .NET 10), explicit package references may be temporarily required to resolve version conflicts with third-party packages that have hard upper-bound constraints. These should be documented and removed once the third-party packages are updated for the new framework version.
 
+### Directory.Packages.props ItemGroup Organization
+
+In `Directory.Packages.props`, only use labeled `ItemGroup` elements (with the `Label` attribute) when there are **multiple packages** that share the same prefix matching the label. Single packages should be placed in the first unlabeled `ItemGroup` to avoid unnecessary grouping.
+
+**Example:**
+- Multiple `Microsoft.Extensions.*` packages → Use `<ItemGroup Label="Microsoft.Extensions">`
+- Multiple `Aspire.*` packages → Use `<ItemGroup Label="Aspire">`
+- Single `Polly.Core` package → Place in the first unlabeled `<ItemGroup>`
+
 ## Project File Configuration
 
 **IMPORTANT: Do NOT add build properties to individual `.csproj` files.**
