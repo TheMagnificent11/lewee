@@ -30,7 +30,7 @@ public static class PageExtensions
         .AddRetry(new RetryStrategyOptions
         {
             ShouldHandle = new PredicateBuilder().Handle<PlaywrightException>(IsTransientNetworkError),
-            MaxRetryAttempts = int.MaxValue,
+            MaxRetryAttempts = 10,
             BackoffType = DelayBackoffType.Exponential,
             UseJitter = true,
             Delay = TimeSpan.FromMilliseconds(200),
