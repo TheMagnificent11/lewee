@@ -16,6 +16,7 @@ applyTo: "**/*"
 | FastEndpoints | Latest | API endpoints | [fast-endpoints.com](https://fast-endpoints.com) |
 | FluentValidation | 8.7.0 | Validation (free version) | [fluentvalidation.net](https://fluentvalidation.net) |
 | Ardalis.Specification | Latest | Specification pattern | [specification.ardalis.com](http://specification.ardalis.com) |
+| Polly | 8.6.5 | Resilience and transient fault handling | [pollydocs.org](https://www.pollydocs.org/) |
 | xUnit | Latest | Testing framework | [xunit.net](https://xunit.net) |
 
 ## Package Version Strategy
