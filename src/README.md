@@ -24,6 +24,7 @@ For development guidance in this directory, see the following instruction files:
 | `Lewee.Infrastructure.Correlate` | Correlation ID infrastructure using the Correlate library for distributed request tracing |
 | `Lewee.Infrastructure.FastEndpoints` | FastEndpoints-based command and query endpoint base classes with MediatR integration and result handling |
 | `Lewee.Infrastructure.Fluxor` | Fluxor state management infrastructure with base state classes, reducer extensions, effect base classes, and action interfaces for Blazor applications |
+| `Lewee.Infrastructure.Keycloak` | Keycloak OpenID Connect authentication integration with .NET Aspire service discovery, cookie authentication, and customizable authentication events |
 | `Lewee.Infrastructure.Refit` | Refit HTTP client infrastructure with authentication token propagation and correlation ID support for domain-driven design |
 | `Lewee.Blazor` | Blazor client-side infrastructure with Fluxor state management, SignalR message receiving, HTTP correlation ID handling, and server health monitoring |
 | `Lewee.Playwright` | Playwright browser automation utilities for integration testing with page wrapper and FluentAssertions extensions |
