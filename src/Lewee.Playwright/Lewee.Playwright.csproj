@@ -9,6 +9,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Playwright" />
+    <PackageReference Include="Polly.Core" />
   </ItemGroup>
 
 </Project>

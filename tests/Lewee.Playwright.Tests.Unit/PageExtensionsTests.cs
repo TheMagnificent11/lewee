@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Lewee.Playwright.Tests.Unit;
 
-public sealed class PageExtensionsTests
+internal sealed class PageExtensionsTests
 {
     [Theory]
     [InlineData("net::ERR_NETWORK_CHANGED at http://localhost:41763/")]
@@ -60,14 +60,8 @@ public sealed class PageExtensionsTests
     }
 
     [Fact]
-    public void DefaultMaxRetries_Should_BeThree()
+    public void MaxRetryDuration_Should_BeTenSeconds()
     {
-        PageExtensions.DefaultMaxRetries.Should().Be(3);
-    }
-
-    [Fact]
-    public void DefaultRetryDelayMilliseconds_Should_BeOneThousand()
-    {
-        PageExtensions.DefaultRetryDelayMilliseconds.Should().Be(1000);
+        PageExtensions.MaxRetryDuration.Should().Be(TimeSpan.FromSeconds(10));
     }
 }

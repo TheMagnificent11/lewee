@@ -1,5 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.Playwright;
+using Polly;
+using Polly.Retry;
 
 namespace Lewee.Playwright;
 
@@ -9,14 +11,9 @@ namespace Lewee.Playwright;
 public static class PageExtensions
 {
     /// <summary>
-    /// Default number of retry attempts for resilient navigation
+    /// Maximum total wait time for retries (10 seconds)
     /// </summary>
-    public const int DefaultMaxRetries = 3;
-
-    /// <summary>
-    /// Default delay in milliseconds between retry attempts
-    /// </summary>
-    public const int DefaultRetryDelayMilliseconds = 1000;
+    public static readonly TimeSpan MaxRetryDuration = TimeSpan.FromSeconds(10);
 
     private static readonly string[] TransientNetworkErrors =
     [
@@ -28,6 +25,19 @@ public static class PageExtensions
         "net::ERR_SOCKET_NOT_CONNECTED",
         "net::ERR_TIMED_OUT",
     ];
+
+    private static readonly ResiliencePipeline NavigationResiliencePipeline = new ResiliencePipelineBuilder()
+        .AddRetry(new RetryStrategyOptions
+        {
+            ShouldHandle = new PredicateBuilder().Handle<PlaywrightException>(IsTransientNetworkError),
+            MaxRetryAttempts = int.MaxValue,
+            BackoffType = DelayBackoffType.Exponential,
+            UseJitter = true,
+            Delay = TimeSpan.FromMilliseconds(200),
+            MaxDelay = TimeSpan.FromSeconds(5),
+        })
+        .AddTimeout(MaxRetryDuration)
+        .Build();
 
     /// <summary>
     /// Assert that the page contains an element with specified selector
@@ -44,46 +54,23 @@ public static class PageExtensions
     }
 
     /// <summary>
-    /// Navigate to a URL with retry logic for transient network errors
+    /// Navigate to a URL with retry logic for transient network errors.
+    /// Uses exponential backoff with a maximum total wait time of 10 seconds.
     /// </summary>
     /// <param name="page">Playwright page</param>
     /// <param name="url">URL to navigate to</param>
     /// <param name="options">Optional navigation options</param>
-    /// <param name="maxRetries">Maximum number of retry attempts (default: 3)</param>
-    /// <param name="retryDelayMilliseconds">Delay between retries in milliseconds (default: 1000)</param>
-    /// <returns>The response from the navigation, or null if navigation was retried successfully</returns>
+    /// <returns>The response from the navigation, or null if the page navigated successfully</returns>
     public static async Task<IResponse?> GotoWithRetryAsync(
         this IPage page,
         string url,
-        PageGotoOptions? options = null,
-        int maxRetries = DefaultMaxRetries,
-        int retryDelayMilliseconds = DefaultRetryDelayMilliseconds)
+        PageGotoOptions? options = null)
     {
         ArgumentNullException.ThrowIfNull(page);
         ArgumentException.ThrowIfNullOrEmpty(url);
 
-        var lastException = default(PlaywrightException);
-
-        for (var attempt = 0; attempt <= maxRetries; attempt++)
-        {
-            try
-            {
-                return await page.GotoAsync(url, options);
-            }
-            catch (PlaywrightException ex) when (IsTransientNetworkError(ex))
-            {
-                lastException = ex;
-
-                if (attempt < maxRetries)
-                {
-                    await Task.Delay(retryDelayMilliseconds);
-                }
-            }
-        }
-
-        throw new PlaywrightException(
-            $"Navigation to '{url}' failed after {maxRetries + 1} attempts due to transient network errors",
-            lastException!);
+        return await NavigationResiliencePipeline.ExecuteAsync(
+            async cancellationToken => await page.GotoAsync(url, options));
     }
 
     /// <summary>
