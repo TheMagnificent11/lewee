@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Lewee.Playwright.Tests.Unit;
 
-internal sealed class PageExtensionsTests
+public sealed class PageExtensionsTests
 {
     [Theory]
     [InlineData("net::ERR_NETWORK_CHANGED at http://localhost:41763/")]

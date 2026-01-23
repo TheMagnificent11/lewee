@@ -70,7 +70,7 @@ public static class PageExtensions
         ArgumentException.ThrowIfNullOrEmpty(url);
 
         return await NavigationResiliencePipeline.ExecuteAsync(
-            async cancellationToken => await page.GotoAsync(url, options));
+            async _ => await page.GotoAsync(url, options));
     }
 
     /// <summary>
