@@ -1,5 +1,5 @@
 ---
-applyTo: "**/*.cs,**/*.csproj"
+applyTo: "**/*.cs,**/*.csproj,**/*.props"
 ---
 
 # Code Quality Standards
