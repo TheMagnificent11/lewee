@@ -3,7 +3,9 @@ using Lewee.Infrastructure.AspNet.SignalR;
 using Lewee.Infrastructure.Auth;
 using Lewee.Infrastructure.Correlate;
 using Lewee.Infrastructure.Data;
+using Lewee.Infrastructure.Keycloak;
 using Lewee.Infrastructure.PostgreSQL;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using MudBlazor.Services;
 using Pizzeria.Common;
 using Pizzeria.ServiceDefaults;
@@ -29,7 +31,14 @@ builder.Services
     .AddLeweeDatabaseServices<StoreDbContext>(typeof(Pizza).Assembly)
     .AddPizzaStoreApplication()
     .AddCorrelationIdServices()
-    .AddAuth()
+    .AddKeycloakAuthentication(
+        keycloakServiceName: ServiceNames.AuthServer,
+        keycloakRealmName: Pizzeria.Common.Environments.Auth.RealmName,
+        keycloakClientId: Pizzeria.Common.Environments.Auth.Clients.StoreWeb,
+        events: new OpenIdConnectEvents
+        {
+            OnTokenValidated = async context => await context.CreateCustomerOnFirstLoginAsync(),
+        })
     .AddLeweeSignalR()
     .AddDatabaseHealthCheck();
 
@@ -65,7 +74,7 @@ app.MapLeweeSignalRHub();
 app.MapStaticAssets();
 
 app
-    .MapSignOut()
+    .MapKeycloakSignOut(PageRoutes.SignOut)
     .MapRazorComponents<App>()
     .AddAdditionalAssemblies(typeof(Pizzeria.Store.Components._Imports).Assembly)
     .AddInteractiveServerRenderMode();
