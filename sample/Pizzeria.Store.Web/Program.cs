@@ -14,6 +14,7 @@ using Pizzeria.Store.Domain;
 using Pizzeria.Store.StateManagement;
 using Pizzeria.Store.Web;
 using Pizzeria.Store.Web.Infrastructure;
+using Pizzeria.Store.Web.Infrastructure.ServerSentEvents;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,13 +38,12 @@ builder.Services
         {
             OnTokenValidated = async context => await context.CreateCustomerOnFirstLoginAsync(),
         })
-    //.AddLeweeSignalR()
     .AddDatabaseHealthCheck();
 
 // Client services
 builder.Services
     .AddStoreState(builder.Environment.IsDevelopment())
-    //.AddSignalRMessageReceiver<MessageToActionMapper>()
+    .AddSseMessageReceiver<MessageToActionMapper>()
     .AddMudServices()
     .AddRazorComponents()
     .AddInteractiveServerComponents();

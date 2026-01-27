@@ -1,0 +1,79 @@
+@using Lewee.Application.ServerSentEvents
+@using Lewee.Domain
+@using System.Text.Json
+
+@inject IClientEventBroadcaster ClientEventBroadcaster
+@inject IDispatcher Dispatcher
+@inject IMessageToActionMapper MessageMapper
+@inject IAuthenticatedUserService AuthenticatedUserService
+@inject ILogger<ClientEventReceiver> Logger
+
+@implements IDisposable
+
+@code {
+    private string? currentUserId;
+
+    protected override void OnInitialized()
+    {
+        this.currentUserId = this.AuthenticatedUserService.UserId;
+        this.ClientEventBroadcaster.OnClientEvent += this.HandleClientEvent;
+
+        this.Logger.LogInformation("Started listening for client events. UserId: {UserId}", this.currentUserId);
+    }
+
+    private void HandleClientEvent(object? sender, ClientEventArgs e)
+    {
+        var clientEvent = e.ClientEvent;
+
+        // Filter by user ID - only process events for this user
+        if (clientEvent.UserId != null && clientEvent.UserId != this.currentUserId)
+        {
+            return;
+        }
+
+        using (this.Logger.BeginScope(new Dictionary<string, object>(StringComparer.Ordinal)
+        {
+            [Lewee.Common.LoggingConsts.CorrelationId] = clientEvent.CorrelationId,
+            ["ContractType"] = clientEvent.ContractFullClassName,
+        }))
+        {
+            this.Logger.LogInformation("Processing client event");
+
+            // Deserialize the message
+            var messageType = Type.GetType($"{clientEvent.ContractFullClassName}, {clientEvent.ContractAssemblyName}");
+            if (messageType == null)
+            {
+                this.Logger.LogWarning("Could not resolve type: {TypeName}", clientEvent.ContractFullClassName);
+                return;
+            }
+
+            var message = JsonSerializer.Deserialize(clientEvent.MessageJson, messageType);
+            if (message == null)
+            {
+                this.Logger.LogWarning("Could not deserialize message");
+                return;
+            }
+
+            // Map the message to an action
+            var action = this.MessageMapper.Map(message, clientEvent.CorrelationId);
+            if (action == null)
+            {
+                this.Logger.LogDebug("No action mapped for message type: {MessageType}", messageType.FullName);
+                return;
+            }
+
+            // Dispatch the action - use InvokeAsync to ensure thread safety with Blazor
+            InvokeAsync(() =>
+            {
+                this.Dispatcher.Dispatch(action);
+                this.Logger.LogInformation("Dispatched action: {ActionType}", action.GetType().FullName);
+            });
+        }
+    }
+
+    public void Dispose()
+    {
+        this.ClientEventBroadcaster.OnClientEvent -= this.HandleClientEvent;
+        this.Logger.LogInformation("Stopped listening for client events");
+    }
+}

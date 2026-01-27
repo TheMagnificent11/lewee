@@ -35,8 +35,6 @@ public sealed class PizzaOrderingTests : PizzeriaTests
         await playwrightPage.Page.ClickAsync(Home.Selectors.StartOrderButton);
         await this.WaitForDomainEventsToBeDispatchedAsync();
 
-        // TODO: Re-enable this section when SignalR message-receiving bug is fixed
-        /*
         try
         {
             // Wait for URL to contain /orders/ (indicating successful navigation to order page)
@@ -46,7 +44,7 @@ public sealed class PizzaOrderingTests : PizzeriaTests
 
             // Assert - verify we're on an order details page
             var currentUrl = playwrightPage.Page.Url;
-            currentUrl.Should().Contain("/orders/", "the app should navigate to the order page after receiving the SignalR message");
+            currentUrl.Should().Contain("/orders/", "the app should navigate to the order page after receiving the SSE message");
 
             // Verify the page shows order-related content
             var orderPageContent = await playwrightPage.Page.ContentAsync();
@@ -59,14 +57,13 @@ public sealed class PizzaOrderingTests : PizzeriaTests
 
             var error = $"""
                     Timed out waiting for navigation to order page.
-                    This indicates the SignalR message was not received.
+                    This indicates the SSE message was not received.
                     Current URL: {currentUrl}.
                     Page contains error: {currentContent.Contains("error", StringComparison.OrdinalIgnoreCase)}
                     """;
 
             throw new InvalidOperationException(error, ex);
         }
-        */
 
         // Assert
         var order = await this.Factory.GetLatestOrderAsync();

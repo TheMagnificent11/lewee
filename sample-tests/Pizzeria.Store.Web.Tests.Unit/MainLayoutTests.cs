@@ -2,12 +2,15 @@ using Bunit;
 using Correlate;
 using FluentAssertions;
 using Fluxor;
+using Lewee.Application.ServerSentEvents;
+using Lewee.Domain;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using MudBlazor.Services;
 using Pizzeria.Store.Contracts;
 using Pizzeria.Store.StateManagement;
+using Pizzeria.Store.Web.Infrastructure.ServerSentEvents;
 using Xunit;
 
 namespace Pizzeria.Store.Web.Tests.Unit;
@@ -18,6 +21,9 @@ public class MainLayoutTests : TestContext
     {
         this.Services.AddSingleton(Mock.Of<IMediator>());
         this.Services.AddSingleton(Mock.Of<ICorrelationContextAccessor>());
+        this.Services.AddSingleton(Mock.Of<IClientEventBroadcaster>());
+        this.Services.AddSingleton(Mock.Of<IMessageToActionMapper>());
+        this.Services.AddSingleton(Mock.Of<IAuthenticatedUserService>());
         this.Services.AddLogging();
         this.Services.AddMudServices();
         this.Services.AddFluxor(o => o.ScanAssemblies(typeof(StoreStateManagementConfiguration).Assembly));
