@@ -31,7 +31,7 @@ public class CustomerCreatedEventHandler : INotificationHandler<UserCreatedEvent
             ExternalId = notification.ExternalId,
         };
 
-        // Send SignalR message to notify the web client
+        // Send client event to notify the web client
         var clientEvent = new ClientEvent(notification.CorrelationId, userId: null, dto);
 
         await this.mediator.Publish(clientEvent, cancellationToken);
