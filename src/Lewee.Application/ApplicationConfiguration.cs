@@ -24,7 +24,11 @@ public static class ApplicationConfiguration
         Assembly applicationAssembly,
         Assembly domainAssembly)
     {
-        services.AddMediatR(config => config.RegisterServicesFromAssemblies(applicationAssembly, domainAssembly));
+        var leweeApplicationAssembly = typeof(ApplicationConfiguration).Assembly;
+        services.AddMediatR(config => config.RegisterServicesFromAssemblies(
+            applicationAssembly,
+            domainAssembly,
+            leweeApplicationAssembly));
         services.AddValidatorsFromAssembly(applicationAssembly, includeInternalTypes: true);
         services.AddPipelineBehaviors();
         services.AddClientEventBroadcaster();

@@ -63,10 +63,19 @@
             }
 
             // Dispatch the action - use InvokeAsync to ensure thread safety with Blazor
-            InvokeAsync(() =>
+            _ = InvokeAsync(async () =>
             {
-                this.Dispatcher.Dispatch(action);
-                this.Logger.LogInformation("Dispatched action: {ActionType}", action.GetType().FullName);
+                try
+                {
+                    this.Dispatcher.Dispatch(action);
+                    this.Logger.LogInformation("Dispatched action: {ActionType}", action.GetType().FullName);
+                }
+                catch (Exception ex)
+                {
+                    this.Logger.LogError(ex, "Error dispatching action: {ActionType}", action.GetType().FullName);
+                }
+
+                await Task.CompletedTask;
             });
         }
     }
