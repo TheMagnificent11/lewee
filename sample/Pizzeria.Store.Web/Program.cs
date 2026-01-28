@@ -1,6 +1,7 @@
 using Lewee.Infrastructure.Auth;
 using Lewee.Infrastructure.Correlate;
 using Lewee.Infrastructure.Data;
+using Lewee.Infrastructure.Fluxor;
 using Lewee.Infrastructure.Keycloak;
 using Lewee.Infrastructure.PostgreSQL;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -37,13 +38,12 @@ builder.Services
         {
             OnTokenValidated = async context => await context.CreateCustomerOnFirstLoginAsync(),
         })
-    //.AddLeweeSignalR()
     .AddDatabaseHealthCheck();
 
 // Client services
 builder.Services
     .AddStoreState(builder.Environment.IsDevelopment())
-    //.AddSignalRMessageReceiver<MessageToActionMapper>()
+    .AddSseMessageReceiver<MessageToActionMapper>()
     .AddMudServices()
     .AddRazorComponents()
     .AddInteractiveServerComponents();

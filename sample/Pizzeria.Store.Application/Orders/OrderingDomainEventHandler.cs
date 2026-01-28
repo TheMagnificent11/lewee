@@ -65,7 +65,7 @@ public class OrderingDomainEventHandler : INotificationHandler<OrderStartedEvent
 
             var totalCost = orderLines.Sum(p => p.LineTotal);
 
-            // Create the DTO for SignalR
+            // Create the DTO for the client event
             var dto = new OrderDto
             {
                 Id = order.Id,

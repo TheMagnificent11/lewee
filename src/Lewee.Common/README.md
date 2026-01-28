@@ -7,7 +7,7 @@ This package provides shared utilities, constants, result types, and extension m
 `Lewee.Common` contains cross-cutting concerns and common functionality that is used throughout the Lewee framework ecosystem. It provides:
 
 - **Result types** for command and query responses
-- **Client message contracts** for SignalR communication
+- **Client message contracts** for server-to-client communication
 - **Standardized constants** for logging and HTTP headers
 - **Extension methods** for common operations
 
@@ -73,7 +73,7 @@ return QueryResult<OrderDto>.Fail(ResultStatus.NotFound, "Order not found");
 
 #### ClientMessage
 
-Contract for SignalR messages sent from server to client:
+Contract for server-to-client event messages:
 
 | Property | Type | Description |
 |----------|------|-------------|
@@ -103,7 +103,7 @@ Property names for structured logging:
 
 Constants for HTTP context items:
 
-- `ClientId` - Key for storing SignalR client ID in HTTP context (`"SignalR-Client-Id"`)
+- `ClientId` - Key for storing client ID in HTTP context (`"SignalR-Client-Id"`)
 
 ### Extension Methods
 
@@ -205,7 +205,7 @@ public void LogWithCorrelation(ILogger logger, string correlationId, string mess
 This package is referenced by other Lewee packages to ensure consistent:
 
 - Result type handling across commands and queries
-- Client-server messaging via SignalR
+- Client-server messaging via event broadcasting
 - Correlation ID handling across HTTP requests and logging
 - Multi-tenant logging patterns
 
@@ -214,5 +214,4 @@ The types and constants defined here are used by:
 - `Lewee.Domain` - References for domain abstractions
 - `Lewee.Application` - Uses result types for command/query responses
 - `Lewee.Infrastructure.AspNet` - Uses constants for HTTP context management
-- `Lewee.StateManagement` - Uses constants for logging
-- `Lewee.Blazor` - Deserializes `ClientMessage` for SignalR communication
+- `Lewee.Infrastructure.Fluxor` - Uses constants for logging and client event handling

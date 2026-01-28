@@ -37,4 +37,18 @@ public static class StateManagementConfiguration
 
         return services;
     }
+
+    /// <summary>
+    /// Adds the SSE message receiver configuration
+    /// </summary>
+    /// <typeparam name="TMapper">Message to action mapper type</typeparam>
+    /// <param name="services">Services collection</param>
+    /// <returns>Updated services collection</returns>
+    public static IServiceCollection AddSseMessageReceiver<TMapper>(this IServiceCollection services)
+        where TMapper : class, IMessageToActionMapper
+    {
+        services.AddScoped<IMessageToActionMapper, TMapper>();
+
+        return services;
+    }
 }

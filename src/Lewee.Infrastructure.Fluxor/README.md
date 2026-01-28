@@ -4,13 +4,13 @@ Fluxor state management configuration and base classes for Blazor applications i
 
 ## Purpose
 
-This package provides the foundational state management infrastructure for Blazor applications using [Fluxor](https://github.com/mrpmorris/Fluxor). It includes base state classes, reducer extension methods, effect base classes, action interfaces, and observability utilities for consistent state management patterns.
+This package provides the foundational state management infrastructure for Blazor applications using [Fluxor](https://github.com/mrpmorris/Fluxor). It includes base state classes, reducer extension methods, effect base classes, action interfaces, observability utilities, and client event receiver for server-sent events.
 
 ## Dependencies
 
 - `Fluxor.Blazor.Web.ReduxDevTools` - Fluxor with Redux DevTools support
 - `Correlate.DependencyInjection` - Correlation ID support
-- `Lewee.Common` - Logging constants and shared utilities
+- `Lewee.Application` - Client event broadcasting infrastructure
 
 ## Components
 
@@ -299,13 +299,58 @@ The `AddLeweeFluxor` method:
 - Optionally enables Redux DevTools for debugging
 - Configures correlation context support via `AddCorrelate()`
 
+### Server-Sent Events Configuration
+
+```cs
+using Lewee.Infrastructure.Fluxor;
+
+// Register message to action mapper for SSE
+services.AddSseMessageReceiver<MyMessageToActionMapper>();
+```
+
+The `AddSseMessageReceiver` method registers your custom `IMessageToActionMapper` implementation that maps server events to Fluxor actions.
+
+## Client Event Receiver
+
+The `ClientEventReceiver` component subscribes to client events from the `IClientEventBroadcaster` and dispatches corresponding Fluxor actions. This component should be placed in the application layout to receive events for the authenticated user.
+
+### Usage
+
+```razor
+@using Lewee.Infrastructure.Fluxor
+
+<ClientEventReceiver />
+```
+
+### IMessageToActionMapper
+
+Implement this interface to map server messages to Fluxor actions:
+
+```cs
+public class MyMessageToActionMapper : IMessageToActionMapper
+{
+    public IMessageReceivedAction? Map(object message, Guid correlationId)
+    {
+        return message switch
+        {
+            OrderDto order => new OrderCreatedAction
+            {
+                Data = order,
+                CorrelationId = correlationId,
+            },
+            _ => null,
+        };
+    }
+}
+```
+
 ## Integration with Other Lewee Packages
 
 | Package | Integration |
 |---------|-------------|
 | `Lewee.Common` | Uses `LoggingConsts` for consistent logging property names, uses `CommandResult` and `QueryResult<T>` for effect results |
-| `Lewee.Blazor` | References this package for state management configuration and uses action interfaces |
+| `Lewee.Application` | Uses `IClientEventBroadcaster` and `ClientEventArgs` for client event broadcasting |
 
 ## Sample Application
 
-See the [Pizzeria Store Web](../../sample/Pizzeria.Store.Web/) project for a complete implementation example using Fluxor state management.
+See the [Pizzeria Store Web](../../sample/Pizzeria.Store.Web/) project for a complete implementation example using Fluxor state management and client event receiving.
