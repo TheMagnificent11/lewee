@@ -6,7 +6,7 @@ using Pizzeria.Store.StateManagement.Orders.Actions;
 
 namespace Pizzeria.Store.Web.Infrastructure;
 
-public class MessageToActionMapper //: IMessageToActionMapper
+public class MessageToActionMapper : IMessageToActionMapper
 {
     private readonly ILogger<MessageToActionMapper> logger;
 

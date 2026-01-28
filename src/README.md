@@ -19,14 +19,14 @@ For development guidance in this directory, see the following instruction files:
 | `Lewee.Common` | Cross-cutting utilities including result types (CommandResult, QueryResult), client messaging contracts, logging constants, HTTP context constants, request headers, and enum extension methods |
 | `Lewee.Infrastructure.Data` | Entity Framework Core integration with repository implementation, domain event dispatching, audit interceptors, and database configuration |
 | `Lewee.Infrastructure.PostgreSQL` | PostgreSQL-specific database configuration and setup using Npgsql with schema support and migration configuration |
-| `Lewee.Infrastructure.AspNet` | ASP.NET Core integration including authenticated user services, SignalR hub configuration, and correlation ID middleware |
+| `Lewee.Infrastructure.AspNet` | ASP.NET Core integration including authenticated user services and correlation ID middleware |
 | `Lewee.Infrastructure.Auth` | Authentication infrastructure with authenticated user service implementation and HttpContext integration |
 | `Lewee.Infrastructure.Correlate` | Correlation ID infrastructure using the Correlate library for distributed request tracing |
 | `Lewee.Infrastructure.FastEndpoints` | FastEndpoints-based command and query endpoint base classes with MediatR integration and result handling |
-| `Lewee.Infrastructure.Fluxor` | Fluxor state management infrastructure with base state classes, reducer extensions, effect base classes, and action interfaces for Blazor applications |
+| `Lewee.Infrastructure.Fluxor` | Fluxor state management infrastructure with base state classes, reducer extensions, effect base classes, action interfaces, and client event receiver for Blazor applications |
 | `Lewee.Infrastructure.Keycloak` | Keycloak OpenID Connect authentication integration with .NET Aspire service discovery, cookie authentication, and customizable authentication events |
 | `Lewee.Infrastructure.Refit` | Refit HTTP client infrastructure with authentication token propagation and correlation ID support for domain-driven design |
-| `Lewee.Blazor` | Blazor client-side infrastructure with Fluxor state management, SignalR message receiving, HTTP correlation ID handling, and server health monitoring |
+| `Lewee.Blazor` | Blazor client-side infrastructure with Fluxor state management, HTTP correlation ID handling, and server health monitoring |
 | `Lewee.Playwright` | Playwright browser automation utilities for integration testing with page wrapper and FluentAssertions extensions |
 
 ## Key Requirements

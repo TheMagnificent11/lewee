@@ -83,8 +83,16 @@ As mentioned in the [Pipeline Behaviors](#pipeline-behaviors) section, the `Tena
 
 ### ClientEvent Notification
 
-The [ClientEvent](./Mediation/Notifications/ClientEvent.cs) can be published via `MediatR.IMediator.Publish` to send a `SignalR` event to the a client application.
+The [ClientEvent](./Mediation/Notifications/ClientEvent.cs) can be published via `MediatR.IMediator.Publish` to broadcast an event to connected Blazor clients via the `IClientEventBroadcaster`.
+
+### Server-Sent Events (SSE) Infrastructure
+
+The [ServerSentEvents](./ServerSentEvents/) folder contains the infrastructure for broadcasting client events:
+
+- [IClientEventBroadcaster](./ServerSentEvents/IClientEventBroadcaster.cs) - Interface for broadcasting client events to subscribers
+- [ClientEventBroadcaster](./ServerSentEvents/ClientEventBroadcaster.cs) - Implementation using .NET events for broadcasting
+- [ClientEventBroadcasterHandler](./ServerSentEvents/ClientEventBroadcasterHandler.cs) - MediatR notification handler that broadcasts `ClientEvent` notifications
 
 #### Sample
 
-*Note: The current Pizzeria sample application does not yet include ClientEvent examples. This functionality is available in the framework but not yet implemented in the sample application.*
+*Note: The current Pizzeria sample application demonstrates the ClientEvent pattern with the `StartOrderCompletedAction` being dispatched when an order is created.*

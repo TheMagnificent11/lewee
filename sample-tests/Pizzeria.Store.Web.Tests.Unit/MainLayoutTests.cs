@@ -2,6 +2,9 @@ using Bunit;
 using Correlate;
 using FluentAssertions;
 using Fluxor;
+using Lewee.Application.ServerSentEvents;
+using Lewee.Domain;
+using Lewee.Infrastructure.Fluxor;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
@@ -18,6 +21,9 @@ public class MainLayoutTests : TestContext
     {
         this.Services.AddSingleton(Mock.Of<IMediator>());
         this.Services.AddSingleton(Mock.Of<ICorrelationContextAccessor>());
+        this.Services.AddSingleton(Mock.Of<IClientEventBroadcaster>());
+        this.Services.AddSingleton(Mock.Of<IMessageToActionMapper>());
+        this.Services.AddSingleton(Mock.Of<IAuthenticatedUserService>());
         this.Services.AddLogging();
         this.Services.AddMudServices();
         this.Services.AddFluxor(o => o.ScanAssemblies(typeof(StoreStateManagementConfiguration).Assembly));
