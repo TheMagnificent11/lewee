@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Pizzeria.Store.Data;
 
-namespace Pizzeria.Store.Web.Infrastructure;
+namespace Pizzeria.Store.Infrastructure;
 
 internal static class DatabaseHealthConfiguration
 {

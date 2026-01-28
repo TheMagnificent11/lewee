@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
@@ -12,13 +12,14 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Lewee.Infrastructure.Auth\Lewee.Infrastructure.Auth.csproj" />
     <ProjectReference Include="..\..\src\Lewee.Infrastructure.Correlate\Lewee.Infrastructure.Correlate.csproj" />
+    <ProjectReference Include="..\..\src\Lewee.Infrastructure.Fluxor\Lewee.Infrastructure.Fluxor.csproj" />
     <ProjectReference Include="..\..\src\Lewee.Infrastructure.Keycloak\Lewee.Infrastructure.Keycloak.csproj" />
     <ProjectReference Include="..\..\src\Lewee.Infrastructure.PostgreSQL\Lewee.Infrastructure.PostgreSQL.csproj" />
     <ProjectReference Include="..\Pizzeria.Common\Pizzeria.Common.csproj" />
+    <ProjectReference Include="..\Pizzeria.ServiceDefaults\Pizzeria.ServiceDefaults.csproj" />
     <ProjectReference Include="..\Pizzeria.Store.Application\Pizzeria.Store.Application.csproj" />
     <ProjectReference Include="..\Pizzeria.Store.Components\Pizzeria.Store.Components.csproj" />
     <ProjectReference Include="..\Pizzeria.Store.Data\Pizzeria.Store.Data.csproj" />
-    <ProjectReference Include="..\Pizzeria.ServiceDefaults\Pizzeria.ServiceDefaults.csproj" />
   </ItemGroup>
   
 </Project>

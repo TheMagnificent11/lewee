@@ -77,9 +77,9 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         // Wait for configuration health check to report healthy
         await this.WaitForConfigurationHealthAsync(TimeSpan.FromMinutes(2));
 
-        // Wait for `Pizzeria.Store.Web` to be running
+        // Wait for `Pizzeria.Store` to be running
         await this.resourceNotificationService
-            .WaitForResourceAsync(ServiceNames.PizzaStoreWeb, KnownResourceStates.Running)
+            .WaitForResourceAsync(ServiceNames.PizzaStore, KnownResourceStates.Running)
             .WaitAsync(TimeSpan.FromMinutes(10)); // To allow Aspire to pull Docker images
 
         var databaseName = ServiceNames.PizzaStoreDatabaseName;
@@ -196,7 +196,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
     public async Task<string> GetWebClientBaseUrlAsync()
     {
-        using var httpClient = await this.GetServiceClientAsync(ServiceNames.PizzaStoreWeb);
+        using var httpClient = await this.GetServiceClientAsync(ServiceNames.PizzaStore);
         var baseAddress = httpClient.BaseAddress!.ToString().TrimEnd('/');
 
         // If the scheme is tcp, replace it with http (Aspire might return tcp scheme)

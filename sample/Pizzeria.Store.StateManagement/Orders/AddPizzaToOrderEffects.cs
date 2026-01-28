@@ -40,7 +40,7 @@ public sealed class AddPizzaToOrderEffects :
         [NotNull] AddPizzaToOrderCompletedAction action,
         [NotNull] IDispatcher dispatcher)
     {
-        // TODO
-        throw new NotSupportedException();
+        // Order updates are received via SSE
+        return Task.CompletedTask;
     }
 }

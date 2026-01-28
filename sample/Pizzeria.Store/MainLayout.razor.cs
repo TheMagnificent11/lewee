@@ -1,0 +1,24 @@
+using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Components;
+
+namespace Pizzeria.Store;
+
+#pragma warning disable CA1515 // Consider making public types internal - Blazor components must be public
+public partial class MainLayout : LayoutComponentBase
+{
+    [SuppressMessage(
+        "SonarAnalyzer.CSharp",
+        "S1144:Unused private types or members should be removed",
+        Justification = "Used by integration tests")]
+    public static class Selectors
+    {
+        public const string BannerHeading = "[role='heading'][aria-level='1']";
+        public const string SignOutButton = $"button[aria-label='{AriaLabels.SignOut}']";
+    }
+
+    internal static class AriaLabels
+    {
+        public const string SignOut = "sign-out";
+    }
+}
+#pragma warning restore CA1515

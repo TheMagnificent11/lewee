@@ -13,7 +13,7 @@ using Pizzeria.Store.Contracts;
 using Pizzeria.Store.StateManagement;
 using Xunit;
 
-namespace Pizzeria.Store.Web.Tests.Unit;
+namespace Pizzeria.Store.Tests.Unit;
 
 public class MainLayoutTests : TestContext
 {
