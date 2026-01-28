@@ -4,13 +4,13 @@ using FluentAssertions;
 using Fluxor;
 using Lewee.Application.ServerSentEvents;
 using Lewee.Domain;
+using Lewee.Infrastructure.Fluxor;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using MudBlazor.Services;
 using Pizzeria.Store.Contracts;
 using Pizzeria.Store.StateManagement;
-using Pizzeria.Store.Web.Infrastructure.ServerSentEvents;
 using Xunit;
 
 namespace Pizzeria.Store.Web.Tests.Unit;

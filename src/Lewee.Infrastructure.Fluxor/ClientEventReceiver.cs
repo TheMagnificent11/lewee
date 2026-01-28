@@ -1,18 +1,62 @@
-@using Lewee.Application.ServerSentEvents
-@using Lewee.Domain
-@using System.Text.Json
+using System.Text.Json;
+using Fluxor;
+using Lewee.Application.ServerSentEvents;
+using Lewee.Common;
+using Lewee.Domain;
+using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Logging;
 
-@inject IClientEventBroadcaster ClientEventBroadcaster
-@inject IDispatcher Dispatcher
-@inject IMessageToActionMapper MessageMapper
-@inject IAuthenticatedUserService AuthenticatedUserService
-@inject ILogger<ClientEventReceiver> Logger
+namespace Lewee.Infrastructure.Fluxor;
 
-@implements IDisposable
-
-@code {
+/// <summary>
+/// Client Event Receiver Component
+/// </summary>
+/// <remarks>
+/// Subscribes to client events from the broadcaster and dispatches corresponding Fluxor actions.
+/// This component should be placed in the application layout to receive events for the authenticated user.
+/// </remarks>
+public sealed class ClientEventReceiver : ComponentBase, IDisposable
+{
     private string? currentUserId;
 
+    /// <summary>
+    /// Gets or sets the client event broadcaster
+    /// </summary>
+    [Inject]
+    public IClientEventBroadcaster ClientEventBroadcaster { get; set; } = null!;
+
+    /// <summary>
+    /// Gets or sets the Fluxor dispatcher
+    /// </summary>
+    [Inject]
+    public IDispatcher Dispatcher { get; set; } = null!;
+
+    /// <summary>
+    /// Gets or sets the message to action mapper
+    /// </summary>
+    [Inject]
+    public IMessageToActionMapper MessageMapper { get; set; } = null!;
+
+    /// <summary>
+    /// Gets or sets the authenticated user service
+    /// </summary>
+    [Inject]
+    public IAuthenticatedUserService AuthenticatedUserService { get; set; } = null!;
+
+    /// <summary>
+    /// Gets or sets the logger
+    /// </summary>
+    [Inject]
+    public ILogger<ClientEventReceiver> Logger { get; set; } = null!;
+
+    /// <inheritdoc/>
+    public void Dispose()
+    {
+        this.ClientEventBroadcaster.OnClientEvent -= this.HandleClientEvent;
+        this.Logger.LogInformation("Stopped listening for client events");
+    }
+
+    /// <inheritdoc/>
     protected override void OnInitialized()
     {
         this.currentUserId = this.AuthenticatedUserService.UserId;
@@ -33,7 +77,7 @@
 
         using (this.Logger.BeginScope(new Dictionary<string, object>(StringComparer.Ordinal)
         {
-            [Lewee.Common.LoggingConsts.CorrelationId] = clientEvent.CorrelationId,
+            [LoggingConsts.CorrelationId] = clientEvent.CorrelationId,
             ["ContractType"] = clientEvent.ContractFullClassName,
         }))
         {
@@ -63,7 +107,7 @@
             }
 
             // Dispatch the action - use InvokeAsync to ensure thread safety with Blazor
-            _ = InvokeAsync(async () =>
+            _ = this.InvokeAsync(async () =>
             {
                 try
                 {
@@ -78,11 +122,5 @@
                 await Task.CompletedTask;
             });
         }
-    }
-
-    public void Dispose()
-    {
-        this.ClientEventBroadcaster.OnClientEvent -= this.HandleClientEvent;
-        this.Logger.LogInformation("Stopped listening for client events");
     }
 }

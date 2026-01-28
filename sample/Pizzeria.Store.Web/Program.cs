@@ -1,6 +1,7 @@
 using Lewee.Infrastructure.Auth;
 using Lewee.Infrastructure.Correlate;
 using Lewee.Infrastructure.Data;
+using Lewee.Infrastructure.Fluxor;
 using Lewee.Infrastructure.Keycloak;
 using Lewee.Infrastructure.PostgreSQL;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -14,7 +15,6 @@ using Pizzeria.Store.Domain;
 using Pizzeria.Store.StateManagement;
 using Pizzeria.Store.Web;
 using Pizzeria.Store.Web.Infrastructure;
-using Pizzeria.Store.Web.Infrastructure.ServerSentEvents;
 
 var builder = WebApplication.CreateBuilder(args);
 

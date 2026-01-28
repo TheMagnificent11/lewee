@@ -3,7 +3,6 @@ using Lewee.Common;
 using Lewee.Infrastructure.Fluxor;
 using Pizzeria.Store.Contracts.Orders;
 using Pizzeria.Store.StateManagement.Orders.Actions;
-using Pizzeria.Store.Web.Infrastructure.ServerSentEvents;
 
 namespace Pizzeria.Store.Web.Infrastructure;
 
