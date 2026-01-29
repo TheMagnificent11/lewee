@@ -13,6 +13,44 @@ applyTo: "**/*.cs,**/*.csproj,**/*.props"
 | Documentation Generation | Required | All framework projects must generate XML docs |
 | Code Coverage | Required for Framework | Pull requests with changes to `src/` directory (Lewee packages) must have at least 90% line coverage |
 
+### Rule Suppression Guidelines
+
+**Never use `#pragma warning disable`** to suppress compiler warnings or analyzer messages. Instead, use the `SuppressMessageAttribute` with the `Justification` property to document the reasoning for the suppression. This ensures code reviewers understand the decision process.
+
+**Correct:**
+```csharp
+[SuppressMessage(
+    "Design",
+    "CA1515:Consider making public types internal",
+    Justification = "Blazor components must be public to be rendered")]
+public partial class MyComponent : ComponentBase
+{
+}
+```
+
+**Incorrect:**
+```csharp
+#pragma warning disable CA1515
+public partial class MyComponent : ComponentBase
+{
+}
+#pragma warning restore CA1515
+```
+
+## Blazor
+
+### Component Code Organization
+
+- **Never use `@code` blocks** in `.razor` files. Always use a code-behind partial class with the `ComponentName.razor.cs` filename pattern
+- Components that only contain logic (no markup) should be implemented as pure C# classes inheriting from `ComponentBase`
+- Use the code-behind pattern consistently across all Blazor components
+
+**Example:**
+```
+MyComponent.razor      <- Contains only Razor markup
+MyComponent.razor.cs   <- Contains component logic as partial class
+```
+
 ## Dependency Management
 
 The solution uses Central Package Management via `Directory.Packages.props`.

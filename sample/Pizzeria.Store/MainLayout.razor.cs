@@ -3,7 +3,10 @@ using Microsoft.AspNetCore.Components;
 
 namespace Pizzeria.Store;
 
-#pragma warning disable CA1515 // Consider making public types internal - Blazor components must be public
+[SuppressMessage(
+    "Design",
+    "CA1515:Consider making public types internal",
+    Justification = "Blazor components must be public to be rendered")]
 public partial class MainLayout : LayoutComponentBase
 {
     [SuppressMessage(
@@ -21,4 +24,3 @@ public partial class MainLayout : LayoutComponentBase
         public const string SignOut = "sign-out";
     }
 }
-#pragma warning restore CA1515

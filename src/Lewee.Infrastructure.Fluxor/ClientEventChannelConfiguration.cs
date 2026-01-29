@@ -3,12 +3,12 @@ using Lewee.Application.Mediation.Notifications;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Pizzeria.Store.Infrastructure;
+namespace Lewee.Infrastructure.Fluxor;
 
 /// <summary>
 /// Client Event Channel Configuration
 /// </summary>
-internal static class ClientEventChannelConfiguration
+public static class ClientEventChannelConfiguration
 {
     /// <summary>
     /// Adds the client event channel for SSE broadcasting

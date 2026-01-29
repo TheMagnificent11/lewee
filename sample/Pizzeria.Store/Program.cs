@@ -4,6 +4,8 @@ using Lewee.Infrastructure.Data;
 using Lewee.Infrastructure.Fluxor;
 using Lewee.Infrastructure.Keycloak;
 using Lewee.Infrastructure.PostgreSQL;
+using Lewee.Infrastructure.WebApi;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using MudBlazor.Services;
 using Pizzeria.Common;
 using Pizzeria.ServiceDefaults;
@@ -32,8 +34,12 @@ builder.Services
     .AddKeycloakAuthenticationForWebApp(
         keycloakServiceName: ServiceNames.AuthServer,
         keycloakRealmName: Pizzeria.Common.Environments.Auth.RealmName,
-        keycloakClientId: Pizzeria.Common.Environments.Auth.Clients.StoreWeb)
-    .AddDatabaseHealthCheck()
+        keycloakClientId: Pizzeria.Common.Environments.Auth.Clients.StoreWeb,
+        events: new OpenIdConnectEvents
+        {
+            OnTokenValidated = async context => await context.CreateCustomerOnFirstLoginAsync(),
+        })
+    .AddDatabaseHealthCheck<StoreDbContext>()
     .AddClientEventChannel();
 
 // Client services

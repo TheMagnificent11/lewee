@@ -5,14 +5,13 @@ using Lewee.Application.Mediation.Notifications;
 using Lewee.Common;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
 
-namespace Pizzeria.Store.Infrastructure;
+namespace Lewee.Infrastructure.WebApi;
 
 /// <summary>
 /// SSE Endpoint Configuration
 /// </summary>
-internal static class SseEndpointConfiguration
+public static class SseEndpointConfiguration
 {
     /// <summary>
     /// SSE events endpoint path

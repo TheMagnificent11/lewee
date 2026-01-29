@@ -2,7 +2,7 @@ using System.Threading.Channels;
 using Lewee.Application.Mediation.Notifications;
 using MediatR;
 
-namespace Pizzeria.Store.Infrastructure;
+namespace Lewee.Infrastructure.Fluxor;
 
 /// <summary>
 /// Writes client events to the channel for SSE broadcasting
