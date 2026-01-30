@@ -22,6 +22,8 @@ internal sealed class StoreApiAdapter : IStoreApi
     {
         await this.client.StartOrderAsync(cancellationToken);
 
+        // Order data is received asynchronously via Server-Sent Events (SSE)
+        // The API broadcasts an OrderDto through the SSE channel after the order is created
         return null;
     }
 

@@ -24,10 +24,14 @@ internal sealed class StartOrderEndpoint : Endpoint<EmptyRequest, EmptyResponse>
         if (result.IsSuccess)
         {
             await this.SendOkAsync(ct);
+            return;
         }
-        else
+
+        foreach (var error in result.Errors)
         {
-            await this.SendNotFoundAsync(ct);
+            this.AddError(error);
         }
+
+        this.ThrowIfAnyErrors();
     }
 }

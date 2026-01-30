@@ -26,7 +26,28 @@ For development guidance in this directory, see the following instruction files:
 | `Pizzeria.Store.Contracts` | API DTOs and contracts |
 | `Pizzeria.Store.StateManagement` | Fluxor state management features |
 | `Pizzeria.Store.Components` | Shared Blazor components |
-| `Pizzeria.Store.Web` | Blazor WebAssembly front-end with API endpoints |
+| `Pizzeria.Store.Api` | Web API with FastEndpoints for CQRS commands/queries |
+| `Pizzeria.Store.Web` | Blazor Server front-end using Refit to call the API |
+
+## Architecture
+
+The sample application is split into two main runtime projects:
+
+### Pizzeria.Store.Api
+- **Purpose**: Backend API using FastEndpoints for CQRS commands/queries
+- **Authentication**: Keycloak JWT Bearer tokens
+- **Features**:
+  - Database access via Entity Framework Core
+  - Domain event handling
+  - Server-Sent Events (SSE) for real-time notifications
+  
+### Pizzeria.Store.Web
+- **Purpose**: Blazor Server front-end
+- **Authentication**: Keycloak OpenID Connect
+- **Features**:
+  - Refit HTTP client to call the API
+  - Fluxor state management
+  - SSE client to receive real-time events from the API
 
 ## Running the Sample
 
@@ -37,16 +58,20 @@ dotnet run --project ./sample/Pizzeria.AppHost/
 This will start:
 1. .NET Aspire dashboard (check console output for URL)
 2. PostgreSQL container (managed by Aspire)
-3. Pizzeria Store API
-4. Pizzeria Store Web application
+3. Keycloak authentication server
+4. Configuration service
+5. Pizzeria Store API
+6. Pizzeria Store Web application
 
 ## Key Patterns Demonstrated
 
 - Domain-driven design architecture
-- CQRS with MediatR
+- CQRS with MediatR (API side)
 - Entity Framework with PostgreSQL
 - FastEndpoints API
-- Blazor WebAssembly with Fluxor state management
+- Blazor Server with Fluxor state management
+- Refit HTTP client for API communication
+- Server-Sent Events for real-time notifications
 - .NET Aspire orchestration
 
 ## Documentation

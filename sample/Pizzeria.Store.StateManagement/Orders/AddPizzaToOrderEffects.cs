@@ -37,6 +37,7 @@ public sealed class AddPizzaToOrderEffects :
         [NotNull] AddPizzaToOrderCompletedAction action,
         [NotNull] IDispatcher dispatcher)
     {
+        // Order updates are received via SSE
         return Task.CompletedTask;
     }
 }

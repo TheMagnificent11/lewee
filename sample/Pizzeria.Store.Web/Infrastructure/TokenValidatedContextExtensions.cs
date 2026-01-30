@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.Extensions.Logging;
 
 namespace Pizzeria.Store.Infrastructure;
 
@@ -11,6 +12,7 @@ internal static class TokenValidatedContextExtensions
         if (!string.IsNullOrEmpty(externalUserId))
         {
             var apiClient = context.HttpContext.RequestServices.GetRequiredService<IStoreApiClient>();
+            var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<IStoreApiClient>>();
 
             try
             {
@@ -18,10 +20,14 @@ internal static class TokenValidatedContextExtensions
                     new CreateCustomerApiRequest(externalUserId),
                     context.HttpContext.RequestAborted);
             }
-            catch
+            catch (Exception ex)
             {
-                // Ignore errors - user might already exist or API might be temporarily unavailable
-                // This shouldn't prevent the user from accessing the application
+                // Log but don't fail authentication - user might already exist
+                // or API might be temporarily unavailable
+                logger.LogDebug(
+                    ex,
+                    "Failed to create customer during first login for user {ExternalUserId}",
+                    externalUserId);
             }
         }
     }
