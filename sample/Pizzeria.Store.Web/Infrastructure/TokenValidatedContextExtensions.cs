@@ -30,7 +30,7 @@ internal static class TokenValidatedContextExtensions
         {
             // Log but don't fail authentication - user might already exist
             // or API might be temporarily unavailable
-            logger.LogDebug(
+            logger.LogError(
                 ex,
                 "Failed to create customer during first login for user {ExternalUserId}",
                 externalUserId);

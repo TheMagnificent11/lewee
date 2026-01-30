@@ -1,3 +1,4 @@
+using FastEndpoints;
 using Lewee.Infrastructure.FastEndpoints;
 using Pizzeria.Store.Application.Orders;
 
