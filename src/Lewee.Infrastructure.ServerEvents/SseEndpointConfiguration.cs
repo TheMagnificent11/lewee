@@ -25,10 +25,12 @@ public static class SseEndpointConfiguration
     /// <returns>The updated web application</returns>
     public static WebApplication MapSseEndpoint(this WebApplication app)
     {
-        app.MapGet(EventsEndpoint, async (
-            ChannelReader<ClientEvent> channelReader,
-            HttpContext httpContext,
-            CancellationToken cancellationToken) =>
+        app.MapGet(
+            EventsEndpoint,
+            async (
+                ChannelReader<ClientEvent> channelReader,
+                HttpContext httpContext,
+                CancellationToken cancellationToken) =>
         {
             var userId = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
