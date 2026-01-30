@@ -53,7 +53,7 @@ public sealed class ClientEventReceiver : ComponentBase, IDisposable
     public void Dispose()
     {
         this.ClientEventBroadcaster.OnClientEvent -= this.HandleClientEvent;
-        this.Logger.LogInformation("Stopped listening for client events");
+        this.Logger.LogStoppedListening();
     }
 
     /// <inheritdoc/>
@@ -62,7 +62,7 @@ public sealed class ClientEventReceiver : ComponentBase, IDisposable
         this.currentUserId = this.AuthenticatedUserService.UserId;
         this.ClientEventBroadcaster.OnClientEvent += this.HandleClientEvent;
 
-        this.Logger.LogInformation("Started listening for client events. UserId: {UserId}", this.currentUserId);
+        this.Logger.LogStartedListening(this.currentUserId);
     }
 
     private void HandleClientEvent(object? sender, ClientEventArgs e)
@@ -81,20 +81,20 @@ public sealed class ClientEventReceiver : ComponentBase, IDisposable
             ["ContractType"] = clientEvent.ContractFullClassName,
         }))
         {
-            this.Logger.LogInformation("Processing client event");
+            this.Logger.LogProcessingClientEvent();
 
             // Deserialize the message
             var messageType = Type.GetType($"{clientEvent.ContractFullClassName}, {clientEvent.ContractAssemblyName}");
             if (messageType == null)
             {
-                this.Logger.LogWarning("Could not resolve type: {TypeName}", clientEvent.ContractFullClassName);
+                this.Logger.LogCouldNotResolveType(clientEvent.ContractFullClassName);
                 return;
             }
 
             var message = JsonSerializer.Deserialize(clientEvent.MessageJson, messageType);
             if (message == null)
             {
-                this.Logger.LogWarning("Could not deserialize message");
+                this.Logger.LogCouldNotDeserializeMessage();
                 return;
             }
 
@@ -102,7 +102,7 @@ public sealed class ClientEventReceiver : ComponentBase, IDisposable
             var action = this.MessageMapper.Map(message, clientEvent.CorrelationId);
             if (action == null)
             {
-                this.Logger.LogDebug("No action mapped for message type: {MessageType}", messageType.FullName);
+                this.Logger.LogNoActionMapped(messageType.FullName);
                 return;
             }
 
@@ -112,11 +112,11 @@ public sealed class ClientEventReceiver : ComponentBase, IDisposable
                 try
                 {
                     this.Dispatcher.Dispatch(action);
-                    this.Logger.LogInformation("Dispatched action: {ActionType}", action.GetType().FullName);
+                    this.Logger.LogDispatchedAction(action.GetType().FullName);
                 }
                 catch (Exception ex)
                 {
-                    this.Logger.LogError(ex, "Error dispatching action: {ActionType}", action.GetType().FullName);
+                    this.Logger.LogErrorDispatchingAction(ex, action.GetType().FullName);
                 }
 
                 await Task.CompletedTask;
