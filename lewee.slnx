@@ -82,7 +82,7 @@
   <Project Path="src/Lewee.Infrastructure.Keycloak/Lewee.Infrastructure.Keycloak.csproj" />
   <Project Path="src/Lewee.Infrastructure.PostgreSQL/Lewee.Infrastructure.PostgreSQL.csproj" />
   <Project Path="src/Lewee.Infrastructure.Refit/Lewee.Infrastructure.Refit.csproj" />
-  <Project Path="src/Lewee.Infrastructure.WebApi/Lewee.Infrastructure.WebApi.csproj" />
+  <Project Path="src/Lewee.Infrastructure.ServerEvents/Lewee.Infrastructure.ServerEvents.csproj" />
   <Project Path="src/Lewee.Playwright/Lewee.Playwright.csproj" />
   <Project Path="tests/Lewee.Application.Tests.Unit/Lewee.Application.Tests.Unit.csproj" />
   <Project Path="tests/Lewee.Common.Tests.Unit/Lewee.Common.Tests.Unit.csproj" />

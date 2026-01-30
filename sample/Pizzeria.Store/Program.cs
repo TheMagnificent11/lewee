@@ -4,7 +4,7 @@ using Lewee.Infrastructure.Data;
 using Lewee.Infrastructure.Fluxor;
 using Lewee.Infrastructure.Keycloak;
 using Lewee.Infrastructure.PostgreSQL;
-using Lewee.Infrastructure.WebApi;
+using Lewee.Infrastructure.ServerEvents;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using MudBlazor.Services;
 using Pizzeria.Common;

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Lewee.Infrastructure.WebApi;
+namespace Lewee.Infrastructure.Data;
 
 /// <summary>
 /// Database Health Check Configuration

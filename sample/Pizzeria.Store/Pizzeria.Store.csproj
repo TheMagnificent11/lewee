@@ -14,7 +14,7 @@
     <ProjectReference Include="..\..\src\Lewee.Infrastructure.Fluxor\Lewee.Infrastructure.Fluxor.csproj" />
     <ProjectReference Include="..\..\src\Lewee.Infrastructure.Keycloak\Lewee.Infrastructure.Keycloak.csproj" />
     <ProjectReference Include="..\..\src\Lewee.Infrastructure.PostgreSQL\Lewee.Infrastructure.PostgreSQL.csproj" />
-    <ProjectReference Include="..\..\src\Lewee.Infrastructure.WebApi\Lewee.Infrastructure.WebApi.csproj" />
+    <ProjectReference Include="..\..\src\Lewee.Infrastructure.ServerEvents\Lewee.Infrastructure.ServerEvents.csproj" />
     <ProjectReference Include="..\Pizzeria.Common\Pizzeria.Common.csproj" />
     <ProjectReference Include="..\Pizzeria.ServiceDefaults\Pizzeria.ServiceDefaults.csproj" />
     <ProjectReference Include="..\Pizzeria.Store.Application\Pizzeria.Store.Application.csproj" />

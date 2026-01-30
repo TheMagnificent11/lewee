@@ -6,7 +6,7 @@ using Lewee.Common;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 
-namespace Lewee.Infrastructure.WebApi;
+namespace Lewee.Infrastructure.ServerEvents;
 
 /// <summary>
 /// SSE Endpoint Configuration
