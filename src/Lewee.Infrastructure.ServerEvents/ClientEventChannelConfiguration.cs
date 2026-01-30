@@ -3,7 +3,7 @@ using Lewee.Application.Mediation.Notifications;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Lewee.Infrastructure.Fluxor;
+namespace Lewee.Infrastructure.ServerEvents;
 
 /// <summary>
 /// Client Event Channel Configuration
@@ -11,11 +11,11 @@ namespace Lewee.Infrastructure.Fluxor;
 public static class ClientEventChannelConfiguration
 {
     /// <summary>
-    /// Adds the client event channel for SSE broadcasting
+    /// Adds the client event broadcaster for SSE broadcasting
     /// </summary>
     /// <param name="services">Services collection</param>
     /// <returns>The updated services collection</returns>
-    public static IServiceCollection AddClientEventChannel(this IServiceCollection services)
+    public static IServiceCollection AddClientEventBroadcaster(this IServiceCollection services)
     {
         var channel = Channel.CreateUnbounded<ClientEvent>(new UnboundedChannelOptions
         {
@@ -29,6 +29,8 @@ public static class ClientEventChannelConfiguration
 
         // Register the handler that writes to the channel
         services.AddTransient<INotificationHandler<ClientEvent>, ClientEventChannelHandler>();
+
+        services.AddSingleton<IClientEventBroadcaster, ClientEventBroadcaster>();
 
         return services;
     }

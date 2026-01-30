@@ -1,4 +1,5 @@
-﻿using Lewee.Domain;
+﻿using Lewee.Common;
+using Lewee.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 

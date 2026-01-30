@@ -19,6 +19,7 @@ lewee/
 │   ├── Lewee.Infrastructure.PostgreSQL/     # PostgreSQL-specific features
 │   ├── Lewee.Infrastructure.AspNet/         # ASP.NET Core integration
 │   ├── Lewee.Infrastructure.AspNet.WebApi/  # Web API utilities
+│   ├── Lewee.Infrastructure.ServerEvents/   # Server-Sent Events infrastructure
 │   ├── Lewee.Blazor/             # Blazor component library
 │   └── Lewee.Playwright/         # Playwright browser automation for testing
 │
@@ -60,9 +61,11 @@ lewee/
 
 | Layer | Purpose | Example Projects | Dependencies Flow |
 |-------|---------|-----------------|-------------------|
-| Domain | Business logic and entities | Lewee.Domain, Pizzeria.Store.Domain | No dependencies on other layers |
+| Common | Shared contracts and utilities | Lewee.Common | No dependencies on other Lewee layers |
+| Domain | Business logic and entities | Lewee.Domain, Pizzeria.Store.Domain | Depends on Common |
 | Application | Use cases and orchestration | Lewee.Application, Pizzeria.Store.Application | Depends on Domain |
-| Infrastructure | External concerns (DB, API) | Lewee.Infrastructure.*, Pizzeria.Store.Data | Depends on Application and Domain |
+| Infrastructure (Server) | Server-side concerns (DB, API, Auth) | Lewee.Infrastructure.Data, Lewee.Infrastructure.ServerEvents | Depends on Application and Domain |
+| Infrastructure (Client) | Client-side concerns (State, SSE) | Lewee.Infrastructure.Fluxor | Depends on Common and Lewee.Infrastructure.Auth |
 | Presentation | User interface | Pizzeria.Store.Api, Lewee.Blazor | Depends on all layers |
 
 ## Configuration Files

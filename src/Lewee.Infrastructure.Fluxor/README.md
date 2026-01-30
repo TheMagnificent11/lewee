@@ -4,13 +4,15 @@ Fluxor state management configuration and base classes for Blazor applications i
 
 ## Purpose
 
-This package provides the foundational state management infrastructure for Blazor applications using [Fluxor](https://github.com/mrpmorris/Fluxor). It includes base state classes, reducer extension methods, effect base classes, action interfaces, observability utilities, and client event receiver for server-sent events.
+This package provides the foundational state management infrastructure for Blazor applications using [Fluxor](https://github.com/mrpmorris/Fluxor). It includes base state classes, reducer extension methods, effect base classes, action interfaces, and observability utilities.
 
 ## Dependencies
 
 - `Fluxor.Blazor.Web.ReduxDevTools` - Fluxor with Redux DevTools support
 - `Correlate.DependencyInjection` - Correlation ID support
-- `Lewee.Application` - Client event broadcasting infrastructure
+- `Microsoft.Extensions.Http` - HttpClient factory support
+- `Lewee.Common` - Shared contracts and utilities
+- `Lewee.Infrastructure.Auth` - Authenticated user service
 
 ## Components
 
@@ -312,7 +314,13 @@ The `AddSseMessageReceiver` method registers your custom `IMessageToActionMapper
 
 ## Client Event Receiver
 
-The `ClientEventReceiver` component subscribes to client events from the `IClientEventBroadcaster` and dispatches corresponding Fluxor actions. This component should be placed in the application layout to receive events for the authenticated user.
+The `ClientEventReceiver` component connects to the server's SSE endpoint via `HttpClient` and dispatches received events as Fluxor actions. This component should be placed in the application layout to receive events for the authenticated user.
+
+### How It Works
+
+1. The component uses `SseClientMessageReceiver` to establish an HTTP connection to the server's `/events` SSE endpoint
+2. When a `ClientMessage` is received, it deserializes the message and uses `IMessageToActionMapper` to convert it to a Fluxor action
+3. The action is dispatched to update the application state
 
 ### Usage
 
@@ -344,12 +352,22 @@ public class MyMessageToActionMapper : IMessageToActionMapper
 }
 ```
 
+### SseClientMessageReceiver
+
+The `SseClientMessageReceiver` class handles the HTTP-based SSE connection:
+
+- Connects to the server's SSE endpoint using `HttpClient`
+- Parses the SSE event stream and deserializes `ClientMessage` objects
+- Raises `OnMessageReceived` events for each received message
+- Implements automatic reconnection with retry logic on connection failures
+
 ## Integration with Other Lewee Packages
 
 | Package | Integration |
 |---------|-------------|
-| `Lewee.Common` | Uses `LoggingConsts` for consistent logging property names, uses `CommandResult` and `QueryResult<T>` for effect results |
-| `Lewee.Application` | Uses `IClientEventBroadcaster` and `ClientEventArgs` for client event broadcasting |
+| `Lewee.Common` | Uses `LoggingConsts` for consistent logging, `ClientMessage` for SSE message contract, `IAuthenticatedUserService` for user context |
+| `Lewee.Infrastructure.Auth` | Provides `IAuthenticatedUserService` implementation for authenticated user access |
+| `Lewee.Infrastructure.ServerEvents` | Server-side SSE broadcasting (see [Lewee.Infrastructure.ServerEvents](../Lewee.Infrastructure.ServerEvents/README.md)) |
 
 ## Sample Application
 

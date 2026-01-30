@@ -17,6 +17,18 @@ This package provides shared utilities, constants, result types, and extension m
 
 ## Components
 
+### Authenticated User Service
+
+#### IAuthenticatedUserService
+
+Interface for accessing the current authenticated user's ID:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `UserId` | `string?` | The user ID of the authenticated user, or null if not authenticated |
+
+This interface is implemented by `Lewee.Infrastructure.Auth` for server-side ASP.NET Core applications (using `IHttpContextAccessor`) and can be implemented differently for client-side Blazor applications.
+
 ### Result Types
 
 #### Result (Abstract Base)

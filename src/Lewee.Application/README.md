@@ -83,15 +83,9 @@ As mentioned in the [Pipeline Behaviors](#pipeline-behaviors) section, the `Tena
 
 ### ClientEvent Notification
 
-The [ClientEvent](./Mediation/Notifications/ClientEvent.cs) can be published via `MediatR.IMediator.Publish` to broadcast an event to connected Blazor clients via the `IClientEventBroadcaster`.
+The [ClientEvent](./Mediation/Notifications/ClientEvent.cs) can be published via `MediatR.IMediator.Publish` to broadcast an event to connected Blazor clients. The `ClientEvent` is handled by infrastructure in the [Lewee.Infrastructure.ServerEvents](../Lewee.Infrastructure.ServerEvents/README.md) package, which writes the event to an SSE channel for streaming to clients.
 
-### Server-Sent Events (SSE) Infrastructure
-
-The [ServerSentEvents](./ServerSentEvents/) folder contains the infrastructure for broadcasting client events:
-
-- [IClientEventBroadcaster](./ServerSentEvents/IClientEventBroadcaster.cs) - Interface for broadcasting client events to subscribers
-- [ClientEventBroadcaster](./ServerSentEvents/ClientEventBroadcaster.cs) - Implementation using .NET events for broadcasting
-- [ClientEventBroadcasterHandler](./ServerSentEvents/ClientEventBroadcasterHandler.cs) - MediatR notification handler that broadcasts `ClientEvent` notifications
+For the complete server-sent events infrastructure implementation, see the [Lewee.Infrastructure.ServerEvents](../Lewee.Infrastructure.ServerEvents/README.md) package.
 
 #### Sample
 

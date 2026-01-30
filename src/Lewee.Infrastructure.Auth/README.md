@@ -7,7 +7,7 @@ At the moment, it's only purpose is to setup the [AuthenticatedUserService](./Au
 ## Dependencies
 
 - ASP.Net Framework (for `IHttpContextAccessor`)
-- [Lewee.Domain](../Lewee.Domain/README.md)
+- [Lewee.Common](../Lewee.Common/README.md)
 
 ## Configuration
 

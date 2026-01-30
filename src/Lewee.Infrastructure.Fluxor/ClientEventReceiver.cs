@@ -1,8 +1,6 @@
 using System.Text.Json;
 using Fluxor;
-using Lewee.Application.ServerSentEvents;
 using Lewee.Common;
-using Lewee.Domain;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
 
@@ -12,18 +10,16 @@ namespace Lewee.Infrastructure.Fluxor;
 /// Client Event Receiver Component
 /// </summary>
 /// <remarks>
-/// Subscribes to client events from the broadcaster and dispatches corresponding Fluxor actions.
+/// Subscribes to client events via SSE and dispatches corresponding Fluxor actions.
 /// This component should be placed in the application layout to receive events for the authenticated user.
 /// </remarks>
-public sealed class ClientEventReceiver : ComponentBase, IDisposable
+public sealed class ClientEventReceiver : ComponentBase, IAsyncDisposable
 {
-    private string? currentUserId;
-
     /// <summary>
-    /// Gets or sets the client event broadcaster
+    /// Gets or sets the SSE client message receiver
     /// </summary>
     [Inject]
-    public IClientEventBroadcaster ClientEventBroadcaster { get; set; } = null!;
+    public SseClientMessageReceiver MessageReceiver { get; set; } = null!;
 
     /// <summary>
     /// Gets or sets the Fluxor dispatcher
@@ -50,64 +46,57 @@ public sealed class ClientEventReceiver : ComponentBase, IDisposable
     public ILogger<ClientEventReceiver> Logger { get; set; } = null!;
 
     /// <inheritdoc/>
-    public void Dispose()
+    public async ValueTask DisposeAsync()
     {
-        this.ClientEventBroadcaster.OnClientEvent -= this.HandleClientEvent;
+        this.MessageReceiver.OnMessageReceived -= this.HandleClientMessage;
+        await this.MessageReceiver.DisposeAsync();
         this.Logger.LogStoppedListening();
     }
 
     /// <inheritdoc/>
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        this.currentUserId = this.AuthenticatedUserService.UserId;
-        this.ClientEventBroadcaster.OnClientEvent += this.HandleClientEvent;
+        var userId = this.AuthenticatedUserService.UserId;
+        this.MessageReceiver.OnMessageReceived += this.HandleClientMessage;
 
-        this.Logger.LogStartedListening(this.currentUserId);
+        await this.MessageReceiver.StartAsync();
+        this.Logger.LogStartedListening(userId);
     }
 
-    private void HandleClientEvent(object? sender, ClientEventArgs e)
+    private void HandleClientMessage(object? sender, ClientMessageEventArgs e)
     {
-        var clientEvent = e.ClientEvent;
-
-        // Filter by user ID - only process events for this user
-        if (clientEvent.UserId != null && clientEvent.UserId != this.currentUserId)
-        {
-            return;
-        }
+        var clientMessage = e.Message;
 
         using (this.Logger.BeginScope(new Dictionary<string, object>(StringComparer.Ordinal)
         {
-            [LoggingConsts.CorrelationId] = clientEvent.CorrelationId,
-            ["ContractType"] = clientEvent.ContractFullClassName,
+            [LoggingConsts.CorrelationId] = clientMessage.CorrelationId,
+            ["ContractType"] = clientMessage.ContractFullClassName,
         }))
         {
             this.Logger.LogProcessingClientEvent();
 
-            // Deserialize the message
-            var messageType = Type.GetType($"{clientEvent.ContractFullClassName}, {clientEvent.ContractAssemblyName}");
+            var messageType = Type.GetType($"{clientMessage.ContractFullClassName}, {clientMessage.ContractAssemblyName}");
             if (messageType == null)
             {
-                this.Logger.LogCouldNotResolveType(clientEvent.ContractFullClassName);
+                this.Logger.LogCouldNotResolveType(clientMessage.ContractFullClassName);
                 return;
             }
 
-            var message = JsonSerializer.Deserialize(clientEvent.MessageJson, messageType);
+            var message = JsonSerializer.Deserialize(clientMessage.MessageJson, messageType);
             if (message == null)
             {
                 this.Logger.LogCouldNotDeserializeMessage();
                 return;
             }
 
-            // Map the message to an action
-            var action = this.MessageMapper.Map(message, clientEvent.CorrelationId);
+            var action = this.MessageMapper.Map(message, clientMessage.CorrelationId);
             if (action == null)
             {
                 this.Logger.LogNoActionMapped(messageType.FullName);
                 return;
             }
 
-            // Dispatch the action - use InvokeAsync to ensure thread safety with Blazor
-            _ = this.InvokeAsync(async () =>
+            _ = this.InvokeAsync(() =>
             {
                 try
                 {
@@ -118,8 +107,6 @@ public sealed class ClientEventReceiver : ComponentBase, IDisposable
                 {
                     this.Logger.LogErrorDispatchingAction(ex, action.GetType().FullName);
                 }
-
-                await Task.CompletedTask;
             });
         }
     }

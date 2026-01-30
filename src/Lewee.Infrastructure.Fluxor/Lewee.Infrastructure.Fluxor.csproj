@@ -3,10 +3,12 @@
   <ItemGroup>
     <PackageReference Include="Correlate.DependencyInjection" />
     <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" />
+    <PackageReference Include="Microsoft.Extensions.Http" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Lewee.Application\Lewee.Application.csproj" />
+    <ProjectReference Include="..\Lewee.Common\Lewee.Common.csproj" />
+    <ProjectReference Include="..\Lewee.Infrastructure.Auth\Lewee.Infrastructure.Auth.csproj" />
   </ItemGroup>
 
   <ItemGroup>

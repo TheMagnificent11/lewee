@@ -1,4 +1,4 @@
-using Lewee.Domain;
+using Lewee.Common;
 
 namespace Lewee.Infrastructure.Data.Tests.Integration;
 

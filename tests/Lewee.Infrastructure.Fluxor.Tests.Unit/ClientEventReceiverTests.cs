@@ -1,8 +1,10 @@
+#nullable enable
+using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 using Bunit;
+using FluentAssertions;
 using Fluxor;
-using Lewee.Application.Mediation.Notifications;
-using Lewee.Application.ServerSentEvents;
-using Lewee.Domain;
+using Lewee.Common;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -10,13 +12,15 @@ using Xunit;
 
 namespace Lewee.Infrastructure.Fluxor.Tests.Unit;
 
+[SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "Test context handles disposal")]
+[SuppressMessage("Reliability", "CA2213:Disposable fields should be disposed", Justification = "Test context handles disposal")]
 public sealed class ClientEventReceiverTests : TestContext
 {
     private readonly string testUserId = "test-user-id";
-    private readonly Mock<IClientEventBroadcaster> mockBroadcaster = new();
     private readonly Mock<IDispatcher> mockDispatcher = new();
     private readonly Mock<IMessageToActionMapper> mockMessageMapper = new();
     private readonly Mock<IAuthenticatedUserService> mockAuthService = new();
+    private readonly TestSseClientMessageReceiver testMessageReceiver;
     private readonly Guid testCorrelationId = Guid.NewGuid();
 
     public ClientEventReceiverTests()
@@ -25,57 +29,55 @@ public sealed class ClientEventReceiverTests : TestContext
             .Setup(x => x.UserId)
             .Returns(this.testUserId);
 
+        var httpClient = new HttpClient();
+        var logger = Mock.Of<ILogger<SseClientMessageReceiver>>();
+        this.testMessageReceiver = new TestSseClientMessageReceiver(httpClient, logger);
+
         this.Services.AddFakeLogging();
-        this.Services.AddSingleton(this.mockBroadcaster.Object);
+        this.Services.AddSingleton<SseClientMessageReceiver>(this.testMessageReceiver);
         this.Services.AddSingleton(this.mockDispatcher.Object);
         this.Services.AddSingleton(this.mockMessageMapper.Object);
         this.Services.AddSingleton(this.mockAuthService.Object);
     }
 
     [Fact]
-    public void OnInitialized_Should_SubscribeToClientEvents()
+    public void OnInitialized_Should_StartMessageReceiver()
     {
         // Act
         this.RenderComponent<ClientEventReceiver>();
 
         // Assert
-        this.mockBroadcaster.VerifyAdd(
-            x => x.OnClientEvent += It.IsAny<EventHandler<ClientEventArgs>>(),
-            Times.Once);
+        this.testMessageReceiver.IsStarted.Should().BeTrue();
     }
 
     [Fact]
-    public void Dispose_Should_UnsubscribeFromClientEvents()
+    public async Task DisposeAsync_Should_StopMessageReceiver()
     {
         // Arrange
         var cut = this.RenderComponent<ClientEventReceiver>();
 
         // Act
-        cut.Instance.Dispose();
+        await cut.Instance.DisposeAsync();
 
         // Assert
-        this.mockBroadcaster.VerifyRemove(
-            x => x.OnClientEvent -= It.IsAny<EventHandler<ClientEventArgs>>(),
-            Times.Once);
+        this.testMessageReceiver.IsDisposed.Should().BeTrue();
     }
 
     [Fact]
-    public void HandleClientEvent_Should_ProcessEvent_When_UserIdMatches()
+    public void HandleClientMessage_Should_ProcessEvent_And_DispatchAction()
     {
         // Arrange
         var cut = this.RenderComponent<ClientEventReceiver>();
         var testMessage = new TestMessage { Value = "test" };
         var testAction = new TestAction();
-        var clientEvent = this.CreateClientEvent(this.testUserId, testMessage);
+        var clientMessage = this.CreateClientMessage(testMessage);
 
         this.mockMessageMapper
             .Setup(x => x.Map(It.IsAny<object>(), this.testCorrelationId))
             .Returns(testAction);
 
         // Act
-        this.mockBroadcaster.Raise(
-            x => x.OnClientEvent += null,
-            new ClientEventArgs(clientEvent));
+        this.testMessageReceiver.SimulateMessageReceived(clientMessage);
 
         // Assert
         cut.WaitForAssertion(
@@ -84,67 +86,43 @@ public sealed class ClientEventReceiverTests : TestContext
     }
 
     [Fact]
-    public void HandleClientEvent_Should_NotProcessEvent_When_UserIdDoesNotMatch()
+    public void HandleClientMessage_Should_NotDispatch_When_TypeCannotBeResolved()
     {
         // Arrange
         var cut = this.RenderComponent<ClientEventReceiver>();
-        var testMessage = new TestMessage { Value = "test" };
-        var clientEvent = this.CreateClientEvent("different-user-id", testMessage);
+        var clientMessage = new ClientMessage
+        {
+            CorrelationId = this.testCorrelationId,
+            ContractAssemblyName = "NonExistent.Assembly",
+            ContractFullClassName = "NonExistent.Type",
+            MessageJson = "{}",
+        };
 
         // Act
-        this.mockBroadcaster.Raise(
-            x => x.OnClientEvent += null,
-            new ClientEventArgs(clientEvent));
+        this.testMessageReceiver.SimulateMessageReceived(clientMessage);
 
         // Assert
         cut.WaitForState(() => true, TimeSpan.FromMilliseconds(200));
 
-        this.mockMessageMapper.Verify(
-            x => x.Map(It.IsAny<object>(), It.IsAny<Guid>()),
-            Times.Never);
         this.mockDispatcher.Verify(
             x => x.Dispatch(It.IsAny<object>()),
             Times.Never);
     }
 
     [Fact]
-    public void HandleClientEvent_Should_ProcessEvent_When_UserIdIsNull()
+    public void HandleClientMessage_Should_NotDispatch_When_NoActionMapped()
     {
         // Arrange
         var cut = this.RenderComponent<ClientEventReceiver>();
         var testMessage = new TestMessage { Value = "test" };
-        var testAction = new TestAction();
-        var clientEvent = this.CreateClientEvent(userId: null, testMessage);
+        var clientMessage = this.CreateClientMessage(testMessage);
 
         this.mockMessageMapper
             .Setup(x => x.Map(It.IsAny<object>(), this.testCorrelationId))
-            .Returns(testAction);
+            .Returns((IMessageReceivedAction?)null);
 
         // Act
-        this.mockBroadcaster.Raise(
-            x => x.OnClientEvent += null,
-            new ClientEventArgs(clientEvent));
-
-        // Assert
-        cut.WaitForAssertion(
-            () => this.mockDispatcher.Verify(x => x.Dispatch(testAction), Times.Once),
-            TimeSpan.FromSeconds(2));
-    }
-
-    [Fact]
-    public void HandleClientEvent_Should_NotDispatch_When_TypeCannotBeResolved()
-    {
-        // Arrange
-        var cut = this.RenderComponent<ClientEventReceiver>();
-        var clientEvent = new ClientEvent(
-            this.testCorrelationId,
-            this.testUserId,
-            new { Test = "1" });
-
-        // Act
-        this.mockBroadcaster.Raise(
-            x => x.OnClientEvent += null,
-            new ClientEventArgs(clientEvent));
+        this.testMessageReceiver.SimulateMessageReceived(clientMessage);
 
         // Assert
         cut.WaitForState(() => true, TimeSpan.FromMilliseconds(200));
@@ -154,34 +132,16 @@ public sealed class ClientEventReceiverTests : TestContext
             Times.Never);
     }
 
-    [Fact]
-    public void HandleClientEvent_Should_NotDispatch_When_NoActionMapped()
+    private ClientMessage CreateClientMessage(TestMessage message)
     {
-        // Arrange
-        var cut = this.RenderComponent<ClientEventReceiver>();
-        var testMessage = new TestMessage { Value = "test" };
-        var clientEvent = this.CreateClientEvent(this.testUserId, testMessage);
-
-        this.mockMessageMapper
-            .Setup(x => x.Map(It.IsAny<object>(), this.testCorrelationId))
-            .Returns((IMessageReceivedAction)null!);
-
-        // Act
-        this.mockBroadcaster.Raise(
-            x => x.OnClientEvent += null,
-            new ClientEventArgs(clientEvent));
-
-        // Assert
-        cut.WaitForState(() => true, TimeSpan.FromMilliseconds(200));
-
-        this.mockDispatcher.Verify(
-            x => x.Dispatch(It.IsAny<object>()),
-            Times.Never);
-    }
-
-    private ClientEvent CreateClientEvent(string userId, TestMessage message)
-    {
-        return new ClientEvent(this.testCorrelationId, userId, message);
+        var messageType = message.GetType();
+        return new ClientMessage
+        {
+            CorrelationId = this.testCorrelationId,
+            ContractAssemblyName = messageType.Assembly.FullName ?? string.Empty,
+            ContractFullClassName = messageType.FullName ?? string.Empty,
+            MessageJson = JsonSerializer.Serialize(message),
+        };
     }
 
     private sealed class TestMessage
@@ -192,5 +152,41 @@ public sealed class ClientEventReceiverTests : TestContext
     private sealed class TestAction : IMessageReceivedAction
     {
         public Guid CorrelationId { get; init; }
+    }
+
+    /// <summary>
+    /// Test implementation of SseClientMessageReceiver that allows simulating message events
+    /// </summary>
+    [SuppressMessage(
+        "Reliability",
+        "CA2215:Dispose methods should call base class dispose",
+        Justification = "Test double - no resources to dispose")]
+    private sealed class TestSseClientMessageReceiver : SseClientMessageReceiver
+    {
+        public TestSseClientMessageReceiver(HttpClient httpClient, ILogger<SseClientMessageReceiver> logger)
+            : base(httpClient, logger)
+        {
+        }
+
+        public bool IsStarted { get; private set; }
+
+        public bool IsDisposed { get; private set; }
+
+        public override Task StartAsync(CancellationToken cancellationToken = default)
+        {
+            this.IsStarted = true;
+            return Task.CompletedTask;
+        }
+
+        public override ValueTask DisposeAsync()
+        {
+            this.IsDisposed = true;
+            return ValueTask.CompletedTask;
+        }
+
+        public void SimulateMessageReceived(ClientMessage message)
+        {
+            this.RaiseMessageReceived(message);
+        }
     }
 }

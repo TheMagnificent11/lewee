@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using FluentValidation;
 using Lewee.Application.Mediation.Behaviors;
-using Lewee.Application.ServerSentEvents;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -31,7 +30,6 @@ public static class ApplicationConfiguration
             leweeApplicationAssembly));
         services.AddValidatorsFromAssembly(applicationAssembly, includeInternalTypes: true);
         services.AddPipelineBehaviors();
-        services.AddClientEventBroadcaster();
 
         return services;
     }
@@ -61,18 +59,6 @@ public static class ApplicationConfiguration
                 services.AddTransient(typeof(IPipelineBehavior<,>), item);
             }
         }
-
-        return services;
-    }
-
-    /// <summary>
-    /// Adds the client event broadcaster for server-sent events
-    /// </summary>
-    /// <param name="services">Service collection</param>
-    /// <returns>Service collection (for chaining)</returns>
-    public static IServiceCollection AddClientEventBroadcaster(this IServiceCollection services)
-    {
-        services.AddSingleton<IClientEventBroadcaster, ClientEventBroadcaster>();
 
         return services;
     }

@@ -2,7 +2,7 @@ using Aspire.Hosting;
 using Aspire.Hosting.ApplicationModel;
 using Aspire.Hosting.Testing;
 using FluentAssertions;
-using Lewee.Domain;
+using Lewee.Common;
 using Lewee.Infrastructure.PostgreSQL;
 using Lewee.Tests.Contracts;
 using Microsoft.EntityFrameworkCore;

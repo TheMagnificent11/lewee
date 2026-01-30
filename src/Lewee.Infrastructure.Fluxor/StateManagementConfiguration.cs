@@ -2,6 +2,7 @@
 using Correlate.DependencyInjection;
 using Fluxor;
 using Fluxor.Blazor.Web.ReduxDevTools;
+using Lewee.Infrastructure.Auth;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Lewee.Infrastructure.Fluxor;
@@ -34,6 +35,7 @@ public static class StateManagementConfiguration
         });
 
         services.AddCorrelate();
+        services.AddAuthenticatedUserService();
 
         return services;
     }
@@ -43,11 +45,19 @@ public static class StateManagementConfiguration
     /// </summary>
     /// <typeparam name="TMapper">Message to action mapper type</typeparam>
     /// <param name="services">Services collection</param>
+    /// <param name="configureHttpClient">Action to configure the HttpClient for SSE</param>
     /// <returns>Updated services collection</returns>
-    public static IServiceCollection AddSseMessageReceiver<TMapper>(this IServiceCollection services)
+    public static IServiceCollection AddSseMessageReceiver<TMapper>(
+        this IServiceCollection services,
+        Action<HttpClient>? configureHttpClient = null)
         where TMapper : class, IMessageToActionMapper
     {
         services.AddScoped<IMessageToActionMapper, TMapper>();
+
+        services.AddHttpClient<SseClientMessageReceiver>(client =>
+        {
+            configureHttpClient?.Invoke(client);
+        });
 
         return services;
     }

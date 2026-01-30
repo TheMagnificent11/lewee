@@ -19,7 +19,8 @@ Lewee is an opinionated set of packages to assist with setting up a domain-drive
 | `Lewee.Infrastructure.Auth` | Authentication infrastructure with authenticated user service implementation |
 | `Lewee.Infrastructure.Correlate` | Correlation ID infrastructure using the Correlate library |
 | `Lewee.Infrastructure.FastEndpoints` | FastEndpoints-based command and query endpoint base classes |
-| `Lewee.Infrastructure.Fluxor` | Fluxor state management infrastructure for Blazor applications with client event receiver |
+| `Lewee.Infrastructure.Fluxor` | Fluxor state management infrastructure for Blazor applications |
+| `Lewee.Infrastructure.ServerEvents` | Server-Sent Events infrastructure for real-time client event broadcasting |
 | `Lewee.Infrastructure.Keycloak` | Keycloak OpenID Connect authentication integration with .NET Aspire service discovery |
 | `Lewee.Infrastructure.Refit` | Refit HTTP client infrastructure with authentication and correlation ID support |
 | `Lewee.Blazor` | Blazor client-side infrastructure with Fluxor and API integration |

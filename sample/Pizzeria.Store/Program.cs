@@ -40,7 +40,7 @@ builder.Services
             OnTokenValidated = async context => await context.CreateCustomerOnFirstLoginAsync(),
         })
     .AddDatabaseHealthCheck<StoreDbContext>()
-    .AddClientEventChannel();
+    .AddClientEventBroadcaster();
 
 // Client services
 builder.Services

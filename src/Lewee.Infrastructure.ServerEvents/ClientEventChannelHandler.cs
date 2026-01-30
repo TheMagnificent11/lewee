@@ -2,7 +2,7 @@ using System.Threading.Channels;
 using Lewee.Application.Mediation.Notifications;
 using MediatR;
 
-namespace Lewee.Infrastructure.Fluxor;
+namespace Lewee.Infrastructure.ServerEvents;
 
 /// <summary>
 /// Writes client events to the channel for SSE broadcasting
