@@ -59,6 +59,11 @@ Do not unnecessarily add package and project references; use implicit references
 
 Therefore, always check for existing references in packages and projects that are already referenced implicitly in a C# project before adding new ones.
 
+**Transitive Dependencies:** Prefer transitive dependencies over explicit dependencies. If a package is already referenced by a project dependency, do not add an explicit reference to it.
+
+**Example:**
+- `Lewee.Infrastructure.FastEndpoints` already references `FastEndpoints`, so sample projects using `Lewee.Infrastructure.FastEndpoints` should not add an explicit `FastEndpoints` package reference.
+
 Furthermore, when working on application C# projects like web applications, do not add a reference if it comes in the `Microsoft.NET.Sdk.Web` web SDK.
 
 **Exception:** During major framework upgrades (e.g., .NET 9 to .NET 10), explicit package references may be temporarily required to resolve version conflicts with third-party packages that have hard upper-bound constraints. These should be documented and removed once the third-party packages are updated for the new framework version.
@@ -148,6 +153,32 @@ dotnet format lewee.sln
 - Defined in `.editorconfig` (root and directory-specific)
 - Enforced during build
 - Must be applied before committing
+
+**Early Return Pattern:** Use early returns to reduce indentation and improve readability. Check for error/null conditions first and return early.
+
+**Correct:**
+```csharp
+public void DoSomething(string? value)
+{
+    if (string.IsNullOrEmpty(value))
+    {
+        return;
+    }
+
+    // Main logic here without extra indentation
+}
+```
+
+**Incorrect:**
+```csharp
+public void DoSomething(string? value)
+{
+    if (!string.IsNullOrEmpty(value))
+    {
+        // Unnecessarily indented logic
+    }
+}
+```
 
 **Quality Checklist:**
 - [ ] No compiler warnings

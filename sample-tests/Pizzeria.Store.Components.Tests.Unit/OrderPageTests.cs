@@ -5,6 +5,7 @@ using Fluxor;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using MudBlazor.Services;
+using Pizzeria.Store.Contracts;
 using Pizzeria.Store.Contracts.Pizzas;
 using Pizzeria.Store.StateManagement;
 using Xunit;
@@ -13,11 +14,11 @@ namespace Pizzeria.Store.Components.Tests.Unit;
 
 public class OrderPageTests : TestContext
 {
-    private readonly Mock<IStoreApi> storeApiMock = new();
+    private readonly Mock<IStoreApiClient> storeApiClientMock = new();
 
     public OrderPageTests()
     {
-        this.Services.AddSingleton(this.storeApiMock.Object);
+        this.Services.AddSingleton(this.storeApiClientMock.Object);
         this.Services.AddSingleton(Mock.Of<ICorrelationContextAccessor>());
         this.Services.AddLogging();
         this.Services.AddMudServices();
@@ -53,7 +54,7 @@ public class OrderPageTests : TestContext
             new PizzaDto(Guid.NewGuid(), "Pepperoni", "Pepperoni and cheese", 14.99m),
         };
 
-        this.storeApiMock
+        this.storeApiClientMock
             .Setup(x => x.GetPizzasAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(testPizzas);
 

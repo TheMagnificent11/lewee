@@ -1,10 +1,9 @@
 using Lewee.Infrastructure.FastEndpoints;
-using MediatR;
 using Pizzeria.Store.Application.Orders;
 
 using CommonEndpoints = Pizzeria.Common.Endpoints;
 
-namespace Pizzeria.Store.Api.Endpoints;
+namespace Pizzeria.Store.Api.Orders;
 
 internal sealed class AddPizzaToOrderEndpoint : CommandEndpoint<AddPizzaToOrderRequest>
 {

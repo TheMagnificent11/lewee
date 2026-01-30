@@ -7,7 +7,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\sample\Pizzeria.Store.Components\Pizzeria.Store.Components.csproj" />
-    <ProjectReference Include="..\..\sample\Pizzeria.Store.StateManagement\Pizzeria.Store.StateManagement.csproj" />
   </ItemGroup>
 
 </Project>

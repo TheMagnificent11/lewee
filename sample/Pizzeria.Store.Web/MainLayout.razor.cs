@@ -19,7 +19,7 @@ public partial class MainLayout : LayoutComponentBase
         public const string SignOutButton = $"button[aria-label='{AriaLabels.SignOut}']";
     }
 
-    public static class AriaLabels
+    internal static class AriaLabels
     {
         public const string SignOut = "sign-out";
     }

@@ -14,18 +14,18 @@ namespace Pizzeria.Store.StateManagement.Orders;
 public sealed class StartOrderEffects :
     CommandEffects<OrderState, OrderDto, StartOrderAction, StartOrderSuccessAction, StartOrderFailureAction, StartOrderCompletedAction>
 {
-    private readonly IStoreApi storeApi;
+    private readonly IStoreApiClient storeApiClient;
     private readonly NavigationManager navigationManager;
 
     public StartOrderEffects(
         IState<OrderState> state,
-        IStoreApi storeApi,
+        IStoreApiClient storeApiClient,
         NavigationManager navigationManager,
         ICorrelationContextAccessor correlationContextAccessor,
         ILogger<StartOrderEffects> logger)
         : base(state, correlationContextAccessor, logger)
     {
-        this.storeApi = storeApi;
+        this.storeApiClient = storeApiClient;
         this.navigationManager = navigationManager;
     }
 
@@ -33,7 +33,7 @@ public sealed class StartOrderEffects :
         [NotNull] StartOrderAction action,
         [NotNull] IDispatcher dispatcher)
     {
-        await this.storeApi.StartOrderAsync();
+        await this.storeApiClient.StartOrderAsync();
 
         return CommandResult.Success();
     }

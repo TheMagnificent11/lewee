@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Pizzeria.Store.Contracts;
 using Pizzeria.Store.Contracts.Orders;
 using Pizzeria.Store.StateManagement.Orders;
 using Pizzeria.Store.StateManagement.Orders.Actions;
@@ -17,7 +18,7 @@ namespace Pizzeria.Store.StateManagement.Tests.Unit;
 
 public class OrdersEffectsTests : TestContext
 {
-    private readonly Mock<IStoreApi> storeApiMock = new();
+    private readonly Mock<IStoreApiClient> storeApiClientMock = new();
     private readonly Mock<IDispatcher> dispatcherMock = new();
     private readonly Mock<IState<OrderState>> stateMock = new();
     private readonly StartOrderEffects effects;
@@ -30,7 +31,7 @@ public class OrdersEffectsTests : TestContext
 
         this.effects = new StartOrderEffects(
             this.stateMock.Object,
-            this.storeApiMock.Object,
+            this.storeApiClientMock.Object,
             this.Services.GetRequiredService<NavigationManager>(),
             Mock.Of<ICorrelationContextAccessor>(),
             Mock.Of<ILogger<StartOrderEffects>>());
@@ -116,9 +117,9 @@ public class OrdersEffectsTests : TestContext
     public async Task ExecuteRequestAsync_Success_DispatchesSuccessActionAsync()
     {
         // Arrange
-        this.storeApiMock
+        this.storeApiClientMock
             .Setup(x => x.StartOrderAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync((OrderDto?)null);
+            .Returns(Task.CompletedTask);
 
         var correlationId = Guid.NewGuid();
         var action = new StartOrderAction { CorrelationId = correlationId };
@@ -137,7 +138,7 @@ public class OrdersEffectsTests : TestContext
     {
         // Arrange
         var exceptionMessage = "Unexpected error";
-        this.storeApiMock
+        this.storeApiClientMock
             .Setup(x => x.StartOrderAsync(It.IsAny<CancellationToken>()))
             .ThrowsAsync(new InvalidOperationException(exceptionMessage));
 

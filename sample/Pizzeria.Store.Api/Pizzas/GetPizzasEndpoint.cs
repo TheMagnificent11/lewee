@@ -1,11 +1,10 @@
 using Lewee.Infrastructure.FastEndpoints;
-using MediatR;
 using Pizzeria.Store.Application.Pizzas;
 using Pizzeria.Store.Contracts.Pizzas;
 
 using CommonEndpoints = Pizzeria.Common.Endpoints;
 
-namespace Pizzeria.Store.Api.Endpoints;
+namespace Pizzeria.Store.Api.Pizzas;
 
 internal sealed class GetPizzasEndpoint : QueryEndpoint<IEnumerable<PizzaDto>>
 {

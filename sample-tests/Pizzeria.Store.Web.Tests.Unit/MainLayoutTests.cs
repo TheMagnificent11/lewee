@@ -14,7 +14,7 @@ using Pizzeria.Store.StateManagement;
 using Pizzeria.Store.Web;
 using Xunit;
 
-namespace Pizzeria.Store.Tests.Unit;
+namespace Pizzeria.Store.Web.Tests.Unit;
 
 [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "Test context handles disposal")]
 [SuppressMessage("Reliability", "CA2213:Disposable fields should be disposed", Justification = "Test context handles disposal")]
@@ -28,7 +28,7 @@ public class MainLayoutTests : TestContext
         var logger = Mock.Of<ILogger<SseClientMessageReceiver>>();
         this.testMessageReceiver = new TestSseClientMessageReceiver(httpClient, logger);
 
-        this.Services.AddSingleton(Mock.Of<IStoreApi>());
+        this.Services.AddSingleton(Mock.Of<IStoreApiClient>());
         this.Services.AddSingleton(Mock.Of<ICorrelationContextAccessor>());
         this.Services.AddSingleton<SseClientMessageReceiver>(this.testMessageReceiver);
         this.Services.AddSingleton(Mock.Of<IMessageToActionMapper>());

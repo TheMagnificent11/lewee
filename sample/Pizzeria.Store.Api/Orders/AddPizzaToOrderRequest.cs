@@ -1,4 +1,4 @@
-namespace Pizzeria.Store.Api.Endpoints;
+namespace Pizzeria.Store.Api.Orders;
 
 /// <summary>
 /// Request for adding a pizza to an order.

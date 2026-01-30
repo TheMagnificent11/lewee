@@ -18,7 +18,6 @@ builder.AddServiceDefaults();
 
 builder.Services
     .AddWebApiHttpClient<IStoreApiClient>(ServiceNames.PizzaStoreApi)
-    .AddScoped<IStoreApi, StoreApiAdapter>()
     .AddKeycloakAuthenticationForWebApp(
         keycloakServiceName: ServiceNames.AuthServer,
         keycloakRealmName: CommonEnvironments.Auth.RealmName,
@@ -36,13 +35,18 @@ builder.Services
     })
     .AddMudServices()
     .AddRazorComponents()
-    .AddInteractiveServerComponents();
+    .AddInteractiveServerComponents()
+    .AddInteractiveWebAssemblyComponents();
 
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
 
-if (!app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
+{
+    app.UseWebAssemblyDebugging();
+}
+else
 {
     app.UseExceptionHandler(PageRoutes.Error, createScopeForErrors: true);
     app.UseHsts();
@@ -61,6 +65,7 @@ app.MapKeycloakSignOut(PageRoutes.SignOut);
 app
     .MapRazorComponents<App>()
     .AddAdditionalAssemblies(typeof(Pizzeria.Store.Components._Imports).Assembly)
-    .AddInteractiveServerRenderMode();
+    .AddInteractiveServerRenderMode()
+    .AddInteractiveWebAssemblyRenderMode();
 
 await app.RunAsync();

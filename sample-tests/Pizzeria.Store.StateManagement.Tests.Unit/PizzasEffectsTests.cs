@@ -3,6 +3,7 @@ using Fluxor;
 using Lewee.Common;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Pizzeria.Store.Contracts;
 using Pizzeria.Store.Contracts.Pizzas;
 using Pizzeria.Store.StateManagement.Pizzas;
 using Pizzeria.Store.StateManagement.Pizzas.Actions;
@@ -12,14 +13,14 @@ namespace Pizzeria.Store.StateManagement.Tests.Unit;
 
 public class PizzasEffectsTests
 {
-    private readonly Mock<IStoreApi> storeApiMock = new();
+    private readonly Mock<IStoreApiClient> storeApiClientMock = new();
     private readonly Mock<IDispatcher> dispatcherMock = new();
     private readonly PizzasEffects effects;
 
     public PizzasEffectsTests()
     {
         this.effects = new PizzasEffects(
-            this.storeApiMock.Object,
+            this.storeApiClientMock.Object,
             Mock.Of<IState<PizzasState>>(),
             Mock.Of<ICorrelationContextAccessor>(),
             Mock.Of<ILogger<PizzasEffects>>());
@@ -35,7 +36,7 @@ public class PizzasEffectsTests
             new(Guid.NewGuid(), "Pepperoni", "Spicy pizza", 11.99m),
         };
 
-        this.storeApiMock
+        this.storeApiClientMock
             .Setup(x => x.GetPizzasAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(pizzas);
 
@@ -55,7 +56,7 @@ public class PizzasEffectsTests
     {
         // Arrange
         var exceptionMessage = "Something went wrong";
-        this.storeApiMock
+        this.storeApiClientMock
             .Setup(x => x.GetPizzasAsync(It.IsAny<CancellationToken>()))
             .ThrowsAsync(new InvalidOperationException(exceptionMessage));
 
