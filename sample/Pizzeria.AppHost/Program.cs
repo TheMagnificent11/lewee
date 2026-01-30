@@ -43,7 +43,7 @@ var configuration = builder.AddProject<Projects.Pizzeria_Configuration>(ServiceN
     .WaitFor(pizzaStoreDatabase)
     .WithHttpHealthCheck("/health");
 
-builder.AddProject<Projects.Pizzeria_Store_Web>(ServiceNames.PizzaStoreWeb)
+builder.AddProject<Projects.Pizzeria_Store>(ServiceNames.PizzaStore)
     .WithReference(pizzaStoreDatabase)
     .WithReference(authServer)
     .WaitFor(configuration)

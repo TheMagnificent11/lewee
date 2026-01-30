@@ -3,7 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Pizzeria.Store.Application.Customers;
 
-namespace Pizzeria.Store.Web.Infrastructure;
+namespace Pizzeria.Store.Infrastructure;
 
 internal static class TokenValidatedContextExtensions
 {

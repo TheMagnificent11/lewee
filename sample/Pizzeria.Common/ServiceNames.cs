@@ -8,13 +8,11 @@ public static class ServiceNames
 
     public const string PizzaStoreDatabaseIntegrationTesting = "pizza-store-integration-testing-database";
 
-    public const string PizzaStoreWeb = "pizza-store-web";
+    public const string PizzaStore = "pizza-store";
 
     public const string AuthServer = "auth-server";
 
     public const string ConfigurationService = "configuration-service";
-
-    public const string SignalR = "signalr";
 
     public static string PizzaStoreDatabaseName => Environments.IsIntegrationTesting
         ? PizzaStoreDatabaseIntegrationTesting

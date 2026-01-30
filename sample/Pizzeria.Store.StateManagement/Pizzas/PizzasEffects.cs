@@ -26,7 +26,9 @@ public class PizzasEffects
         this.mediator = mediator;
     }
 
-    protected override async Task<QueryResult<IEnumerable<PizzaDto>>> ExecuteQueryAsync([NotNull] LoadPizzasAction action, [NotNull] IDispatcher dispatcher)
+    protected override async Task<QueryResult<IEnumerable<PizzaDto>>> ExecuteQueryAsync(
+        [NotNull] LoadPizzasAction action,
+        [NotNull] IDispatcher dispatcher)
     {
         return await this.mediator.Send(new GetPizzasQuery(action.CorrelationId));
     }

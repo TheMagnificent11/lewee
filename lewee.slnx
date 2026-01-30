@@ -57,7 +57,7 @@
   <Project Path="sample-tests/Pizzeria.Store.Components.Tests.Unit/Pizzeria.Store.Components.Tests.Unit.csproj" />
   <Project Path="sample-tests/Pizzeria.Store.Domain.Tests/Pizzeria.Store.Domain.Tests.csproj" />
   <Project Path="sample-tests/Pizzeria.Store.StateManagement.Tests.Unit/Pizzeria.Store.StateManagement.Tests.Unit.csproj" />
-  <Project Path="sample-tests/Pizzeria.Store.Web.Tests.Unit/Pizzeria.Store.Web.Tests.Unit.csproj" />
+  <Project Path="sample-tests/Pizzeria.Store.Tests.Unit/Pizzeria.Store.Tests.Unit.csproj" />
   <Project Path="sample-tests/Pizzeria.Tests.Integration/Pizzeria.Tests.Integration.csproj" />
   <Project Path="sample/Pizzeria.AppHost/Pizzeria.AppHost.csproj" />
   <Project Path="sample/Pizzeria.Auth/Pizzeria.Auth.csproj" />
@@ -70,7 +70,7 @@
   <Project Path="sample/Pizzeria.Store.Data/Pizzeria.Store.Data.csproj" />
   <Project Path="sample/Pizzeria.Store.Domain/Pizzeria.Store.Domain.csproj" />
   <Project Path="sample/Pizzeria.Store.StateManagement/Pizzeria.Store.StateManagement.csproj" />
-  <Project Path="sample/Pizzeria.Store.Web/Pizzeria.Store.Web.csproj" />
+  <Project Path="sample/Pizzeria.Store/Pizzeria.Store.csproj" />
   <Project Path="src/Lewee.Application/Lewee.Application.csproj" />
   <Project Path="src/Lewee.Common/Lewee.Common.csproj" />
   <Project Path="src/Lewee.Domain/Lewee.Domain.csproj" />
@@ -82,6 +82,7 @@
   <Project Path="src/Lewee.Infrastructure.Keycloak/Lewee.Infrastructure.Keycloak.csproj" />
   <Project Path="src/Lewee.Infrastructure.PostgreSQL/Lewee.Infrastructure.PostgreSQL.csproj" />
   <Project Path="src/Lewee.Infrastructure.Refit/Lewee.Infrastructure.Refit.csproj" />
+  <Project Path="src/Lewee.Infrastructure.ServerEvents/Lewee.Infrastructure.ServerEvents.csproj" />
   <Project Path="src/Lewee.Playwright/Lewee.Playwright.csproj" />
   <Project Path="tests/Lewee.Application.Tests.Unit/Lewee.Application.Tests.Unit.csproj" />
   <Project Path="tests/Lewee.Common.Tests.Unit/Lewee.Common.Tests.Unit.csproj" />

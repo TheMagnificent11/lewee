@@ -1,12 +1,12 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using Lewee.Common;
 using Lewee.Infrastructure.Fluxor;
 using Pizzeria.Store.Contracts.Orders;
 using Pizzeria.Store.StateManagement.Orders.Actions;
 
-namespace Pizzeria.Store.Web.Infrastructure;
+namespace Pizzeria.Store.Infrastructure;
 
-public class MessageToActionMapper : IMessageToActionMapper
+internal sealed class MessageToActionMapper : IMessageToActionMapper
 {
     private readonly ILogger<MessageToActionMapper> logger;
 

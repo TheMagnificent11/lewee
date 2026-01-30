@@ -10,6 +10,7 @@ applyTo: "**/*.razor,**/*.razor.cs"
 - Create a separate `.razor.cs` file for component logic
 - Do not add `@code` blocks directly in `.razor` files, use code-behind instead (partial classes named `[ComponentName].razor.cs`)
 - All other `@` directives (e.g. `@attribute`, `@inherits`, `@inject`, `@using`, etc.) should remain in the `.razor` file
+- **Components that only contain logic (no markup)** should be implemented as pure C# classes inheriting from `ComponentBase`, not as `.razor` files
 
 ## Example Structure
 
@@ -17,7 +18,7 @@ applyTo: "**/*.razor,**/*.razor.cs"
 ```razor
 @page "/"
 
-@using Pizzeria.Store.Web.States.Orders
+@using Pizzeria.Store.States.Orders
 
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
 @inherits FluxorComponent
@@ -33,9 +34,9 @@ applyTo: "**/*.razor,**/*.razor.cs"
 
 ### Code-Behind File (`Home.razor.cs`)
 ```csharp
-using Pizzeria.Store.Web.States.Orders.Actions;
+using Pizzeria.Store.States.Orders.Actions;
 
-namespace Pizzeria.Store.Web.Pages;
+namespace Pizzeria.Store.Pages;
 
 public partial class Home
 {
@@ -51,9 +52,36 @@ public partial class Home
 }
 ```
 
+### Logic-Only Component (`RedirectToLogin.cs`)
+
+When a component only contains logic and no markup, use a pure C# class:
+
+```csharp
+using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Components;
+
+namespace Pizzeria.Store;
+
+[SuppressMessage(
+    "Design",
+    "CA1515:Consider making public types internal",
+    Justification = "Blazor components must be public to be rendered")]
+public sealed class RedirectToLogin : ComponentBase
+{
+    [Inject]
+    private NavigationManager Navigation { get; set; } = null!;
+
+    protected override void OnInitialized()
+    {
+        var returnUrl = Uri.EscapeDataString(this.Navigation.Uri);
+        this.Navigation.NavigateTo($"authentication/login?returnUrl={returnUrl}", forceLoad: true);
+    }
+}
+```
+
 ## Reference Implementation
 
-See `sample/Pizzeria.Store.Web/Pages/Home.razor` and `Home.razor.cs` for a complete example of the code-behind pattern in action.
+See `sample/Pizzeria.Store/Pages/Home.razor` and `Home.razor.cs` for a complete example of the code-behind pattern in action.
 
 ## State Management with Fluxor
 
