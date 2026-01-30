@@ -127,6 +127,8 @@ public static class KeycloakAuthenticationConfiguration
                     options.TokenValidationParameters.ValidAudience = keycloakClientId;
                 });
 
+        services.AddAuthorization();
+
         return services;
     }
 
