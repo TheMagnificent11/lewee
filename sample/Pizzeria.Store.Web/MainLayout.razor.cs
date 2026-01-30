@@ -1,7 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Components;
 
-namespace Pizzeria.Store;
+namespace Pizzeria.Store.Web;
 
 [SuppressMessage(
     "Design",
@@ -19,7 +19,7 @@ public partial class MainLayout : LayoutComponentBase
         public const string SignOutButton = $"button[aria-label='{AriaLabels.SignOut}']";
     }
 
-    internal static class AriaLabels
+    public static class AriaLabels
     {
         public const string SignOut = "sign-out";
     }

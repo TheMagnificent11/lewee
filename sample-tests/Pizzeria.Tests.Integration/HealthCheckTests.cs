@@ -17,7 +17,7 @@ public sealed class HealthCheckTests : PizzeriaTests
     public async Task Should_ReturnHealthy_When_CallingLivenessEndpointAsync()
     {
         // Arrange
-        using var httpClient = await this.Factory.GetServiceClientAsync(ServiceNames.PizzaStore);
+        using var httpClient = await this.Factory.GetServiceClientAsync(ServiceNames.PizzaStoreWeb);
 
         // Act
         using var response = await httpClient.GetAsync("/health");
@@ -31,7 +31,7 @@ public sealed class HealthCheckTests : PizzeriaTests
     public async Task Should_ReturnReadinessStatus_When_CallingReadinessEndpointAsync()
     {
         // Arrange
-        using var httpClient = await this.Factory.GetServiceClientAsync(ServiceNames.PizzaStore);
+        using var httpClient = await this.Factory.GetServiceClientAsync(ServiceNames.PizzaStoreWeb);
 
         // Act
         using var response = await httpClient.GetAsync("/ready");
@@ -45,7 +45,7 @@ public sealed class HealthCheckTests : PizzeriaTests
     public async Task Should_ReturnAlive_When_CallingAliveEndpointInDevelopmentAsync()
     {
         // Arrange
-        using var httpClient = await this.Factory.GetServiceClientAsync(ServiceNames.PizzaStore);
+        using var httpClient = await this.Factory.GetServiceClientAsync(ServiceNames.PizzaStoreWeb);
 
         // Act
         using var response = await httpClient.GetAsync("/alive");

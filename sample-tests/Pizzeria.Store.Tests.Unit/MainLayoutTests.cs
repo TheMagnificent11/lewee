@@ -5,13 +5,13 @@ using FluentAssertions;
 using Fluxor;
 using Lewee.Common;
 using Lewee.Infrastructure.Fluxor;
-using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 using MudBlazor.Services;
 using Pizzeria.Store.Contracts;
 using Pizzeria.Store.StateManagement;
+using Pizzeria.Store.Web;
 using Xunit;
 
 namespace Pizzeria.Store.Tests.Unit;
@@ -28,7 +28,7 @@ public class MainLayoutTests : TestContext
         var logger = Mock.Of<ILogger<SseClientMessageReceiver>>();
         this.testMessageReceiver = new TestSseClientMessageReceiver(httpClient, logger);
 
-        this.Services.AddSingleton(Mock.Of<IMediator>());
+        this.Services.AddSingleton(Mock.Of<IStoreApi>());
         this.Services.AddSingleton(Mock.Of<ICorrelationContextAccessor>());
         this.Services.AddSingleton<SseClientMessageReceiver>(this.testMessageReceiver);
         this.Services.AddSingleton(Mock.Of<IMessageToActionMapper>());

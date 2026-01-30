@@ -1,5 +1,6 @@
 using Lewee.Playwright;
 using Microsoft.Playwright;
+using Pizzeria.Store.Web;
 
 namespace Pizzeria.Tests.Integration.Infrastructure;
 
@@ -42,6 +43,6 @@ internal static class PageExtensions
 
     public static void ShouldHaveBannerHeading(this IPage page)
     {
-        page.ShouldHave(Store.MainLayout.Selectors.BannerHeading);
+        page.ShouldHave(MainLayout.Selectors.BannerHeading);
     }
 }

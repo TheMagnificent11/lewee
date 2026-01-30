@@ -2,7 +2,7 @@
   
   <ItemGroup>
     <ProjectReference Include="..\..\src\Lewee.Infrastructure.Fluxor\Lewee.Infrastructure.Fluxor.csproj" />
-    <ProjectReference Include="..\Pizzeria.Store.Application\Pizzeria.Store.Application.csproj" />
+    <ProjectReference Include="..\Pizzeria.Common\Pizzeria.Common.csproj" />
     <ProjectReference Include="..\Pizzeria.Store.Contracts\Pizzeria.Store.Contracts.csproj" />
   </ItemGroup>
   

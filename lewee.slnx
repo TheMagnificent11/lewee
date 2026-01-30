@@ -64,13 +64,14 @@
   <Project Path="sample/Pizzeria.Common/Pizzeria.Common.csproj" />
   <Project Path="sample/Pizzeria.Configuration/Pizzeria.Configuration.csproj" />
   <Project Path="sample/Pizzeria.ServiceDefaults/Pizzeria.ServiceDefaults.csproj" />
+  <Project Path="sample/Pizzeria.Store.Api/Pizzeria.Store.Api.csproj" />
   <Project Path="sample/Pizzeria.Store.Application/Pizzeria.Store.Application.csproj" />
   <Project Path="sample/Pizzeria.Store.Components/Pizzeria.Store.Components.csproj" />
   <Project Path="sample/Pizzeria.Store.Contracts/Pizzeria.Store.Contracts.csproj" />
   <Project Path="sample/Pizzeria.Store.Data/Pizzeria.Store.Data.csproj" />
   <Project Path="sample/Pizzeria.Store.Domain/Pizzeria.Store.Domain.csproj" />
   <Project Path="sample/Pizzeria.Store.StateManagement/Pizzeria.Store.StateManagement.csproj" />
-  <Project Path="sample/Pizzeria.Store/Pizzeria.Store.csproj" />
+  <Project Path="sample/Pizzeria.Store.Web/Pizzeria.Store.Web.csproj" />
   <Project Path="src/Lewee.Application/Lewee.Application.csproj" />
   <Project Path="src/Lewee.Common/Lewee.Common.csproj" />
   <Project Path="src/Lewee.Domain/Lewee.Domain.csproj" />

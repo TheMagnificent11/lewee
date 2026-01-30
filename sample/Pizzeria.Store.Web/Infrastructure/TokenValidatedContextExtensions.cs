@@ -1,7 +1,5 @@
 using System.Security.Claims;
-using MediatR;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Pizzeria.Store.Application.Customers;
 
 namespace Pizzeria.Store.Infrastructure;
 
@@ -12,14 +10,13 @@ internal static class TokenValidatedContextExtensions
         var externalUserId = context.Principal?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (!string.IsNullOrEmpty(externalUserId))
         {
-            var mediator = context.HttpContext.RequestServices.GetRequiredService<IMediator>();
-            var createCustomerCommand = new CreateCustomerCommand(
-                externalUserId,
-                CorrelationId: Guid.NewGuid());
+            var apiClient = context.HttpContext.RequestServices.GetRequiredService<IStoreApiClient>();
 
             try
             {
-                _ = await mediator.Send(createCustomerCommand, context.HttpContext.RequestAborted);
+                await apiClient.CreateCustomerAsync(
+                    new CreateCustomerApiRequest(externalUserId),
+                    context.HttpContext.RequestAborted);
             }
             catch
             {
