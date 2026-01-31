@@ -1,14 +1,14 @@
+#nullable enable
 using Bunit;
 using Correlate;
 using FluentAssertions;
 using Fluxor;
 using Lewee.Common;
-using MediatR;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Pizzeria.Store.Application.Orders;
+using Pizzeria.Store.Contracts;
 using Pizzeria.Store.Contracts.Orders;
 using Pizzeria.Store.StateManagement.Orders;
 using Pizzeria.Store.StateManagement.Orders.Actions;
@@ -18,7 +18,7 @@ namespace Pizzeria.Store.StateManagement.Tests.Unit;
 
 public class OrdersEffectsTests : TestContext
 {
-    private readonly Mock<IMediator> mediatorMock = new();
+    private readonly Mock<IStoreApiClient> storeApiClientMock = new();
     private readonly Mock<IDispatcher> dispatcherMock = new();
     private readonly Mock<IState<OrderState>> stateMock = new();
     private readonly StartOrderEffects effects;
@@ -31,7 +31,7 @@ public class OrdersEffectsTests : TestContext
 
         this.effects = new StartOrderEffects(
             this.stateMock.Object,
-            this.mediatorMock.Object,
+            this.storeApiClientMock.Object,
             this.Services.GetRequiredService<NavigationManager>(),
             Mock.Of<ICorrelationContextAccessor>(),
             Mock.Of<ILogger<StartOrderEffects>>());
@@ -117,9 +117,9 @@ public class OrdersEffectsTests : TestContext
     public async Task ExecuteRequestAsync_Success_DispatchesSuccessActionAsync()
     {
         // Arrange
-        this.mediatorMock
-            .Setup(x => x.Send(It.IsAny<StartOrderCommand>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(CommandResult.Success());
+        this.storeApiClientMock
+            .Setup(x => x.StartOrderAsync(It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
 
         var correlationId = Guid.NewGuid();
         var action = new StartOrderAction { CorrelationId = correlationId };
@@ -134,35 +134,12 @@ public class OrdersEffectsTests : TestContext
     }
 
     [Fact]
-    public async Task ExecuteRequestAsync_Failure_DispatchesFailureActionAsync()
-    {
-        // Arrange
-        var errorMessage = "Something bad happened";
-        this.mediatorMock
-            .Setup(x => x.Send(It.IsAny<StartOrderCommand>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(CommandResult.Fail(ResultStatus.BadRequest, errorMessage));
-
-        var correlationId = Guid.NewGuid();
-        var action = new StartOrderAction { CorrelationId = correlationId };
-
-        // Act
-        await this.effects.OnCommandAsync(action, this.dispatcherMock.Object);
-
-        // Assert
-        this.dispatcherMock.Verify(
-            d => d.Dispatch(It.Is<StartOrderFailureAction>(a =>
-                a.CorrelationId == correlationId &&
-                a.ErrorMessage == errorMessage)),
-            Times.Once);
-    }
-
-    [Fact]
     public async Task ExecuteRequestAsync_Exception_DispatchesFailureActionAsync()
     {
         // Arrange
         var exceptionMessage = "Unexpected error";
-        this.mediatorMock
-            .Setup(x => x.Send(It.IsAny<StartOrderCommand>(), It.IsAny<CancellationToken>()))
+        this.storeApiClientMock
+            .Setup(x => x.StartOrderAsync(It.IsAny<CancellationToken>()))
             .ThrowsAsync(new InvalidOperationException(exceptionMessage));
 
         var correlationId = Guid.NewGuid();

@@ -17,58 +17,47 @@ For **client-side** event reception in Blazor applications, see [Lewee.Infrastru
 
 ## Components
 
-### Interfaces
+### ClientEventChannelHandler
 
-#### IClientEventBroadcaster
-
-Interface for broadcasting client events to subscribers:
+MediatR notification handler that writes `ClientEvent` notifications to a channel for SSE broadcasting:
 
 ```csharp
-public interface IClientEventBroadcaster
+internal sealed class ClientEventChannelHandler : INotificationHandler<ClientEvent>
 {
-    event EventHandler<ClientEventArgs>? OnClientEvent;
-    void Broadcast(ClientEvent clientEvent);
+    public async Task Handle(ClientEvent notification, CancellationToken cancellationToken)
+    {
+        await this.channelWriter.WriteAsync(notification, cancellationToken);
+    }
 }
 ```
-
-#### ClientEventArgs
-
-Event arguments containing the client event:
-
-```csharp
-public class ClientEventArgs : EventArgs
-{
-    public ClientEvent ClientEvent { get; }
-}
-```
-
-### Server-Side Broadcasting
-
-#### ClientEventBroadcaster
-
-Implementation using .NET events for broadcasting client events to all connected subscribers.
-
-#### ClientEventBroadcasterHandler
-
-MediatR notification handler that broadcasts `ClientEvent` notifications published via `IMediator.Publish`.
 
 ### SSE Endpoint Configuration
 
-#### AddClientEventChannel
+#### AddClientEventBroadcaster
 
-Configures the client event channel and broadcaster:
+Configures the client event channel and handler:
 
 ```csharp
-builder.Services.AddClientEventChannel();
+builder.Services.AddClientEventBroadcaster();
 ```
+
+This method:
+- Creates an unbounded channel for `ClientEvent` messages
+- Registers the channel reader and writer as singletons
+- Registers `ClientEventChannelHandler` as a notification handler
 
 #### MapSseEndpoint
 
-Maps the SSE endpoint for client connections:
+Maps the SSE endpoint at `/events` for client connections:
 
 ```csharp
 app.MapSseEndpoint();
 ```
+
+The endpoint:
+- Requires authorization
+- Filters events by the authenticated user's ID
+- Streams events as Server-Sent Events
 
 ## Usage
 
@@ -76,7 +65,7 @@ app.MapSseEndpoint();
 
 ```csharp
 // In Web API Program.cs
-builder.Services.AddClientEventChannel();
+builder.Services.AddClientEventBroadcaster();
 
 var app = builder.Build();
 app.MapSseEndpoint();
@@ -94,11 +83,11 @@ public class CreateOrderHandler : IRequestHandler<CreateOrderCommand, CommandRes
     {
         // ... create order logic ...
 
-        // Broadcast event to all connected clients
+        // Publish event to channel for broadcasting to connected clients
         await mediator.Publish(new ClientEvent
         {
-            MessageType = "OrderCreated",
-            TenantId = order.TenantId,
+            ContractFullClassName = "OrderCreated",
+            UserId = order.UserId,
             Data = JsonSerializer.Serialize(orderDto)
         }, cancellationToken);
 

@@ -3,3 +3,6 @@ root = false
 [*.cs]
 # Test-specific rules
 dotnet_diagnostic.CA1707.severity = none           # Identifiers should not contain underscores
+
+# Meziantou.Analyzer
+dotnet_diagnostic.MA0176.severity = none           # Optimize guid creation

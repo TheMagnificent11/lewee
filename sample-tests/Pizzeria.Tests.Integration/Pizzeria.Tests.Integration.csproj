@@ -12,7 +12,7 @@
     <ProjectReference Include="..\..\sample\Pizzeria.Auth\Pizzeria.Auth.csproj" />
     <ProjectReference Include="..\..\sample\Pizzeria.Store.Data\Pizzeria.Store.Data.csproj" />
     <ProjectReference Include="..\..\sample\Pizzeria.Store.Domain\Pizzeria.Store.Domain.csproj" />
-    <ProjectReference Include="..\..\sample\Pizzeria.Store\Pizzeria.Store.csproj" />
+    <ProjectReference Include="..\..\sample\Pizzeria.Store.Web\Pizzeria.Store.Web.csproj" />
     <ProjectReference Include="..\..\src\Lewee.Playwright\Lewee.Playwright.csproj" />
   </ItemGroup>
 

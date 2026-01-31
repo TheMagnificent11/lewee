@@ -2,10 +2,10 @@
 using Correlate;
 using FluentAssertions;
 using Fluxor;
-using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using MudBlazor.Services;
+using Pizzeria.Store.Contracts;
 using Pizzeria.Store.StateManagement;
 using Xunit;
 
@@ -15,7 +15,7 @@ public class HomePageTests : TestContext
 {
     public HomePageTests()
     {
-        this.Services.AddSingleton(Mock.Of<IMediator>());
+        this.Services.AddSingleton(Mock.Of<IStoreApiClient>());
         this.Services.AddSingleton(Mock.Of<ICorrelationContextAccessor>());
         this.Services.AddLogging();
         this.Services.AddMudServices();

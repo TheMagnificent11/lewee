@@ -3,9 +3,8 @@ using Correlate;
 using Fluxor;
 using Lewee.Common;
 using Lewee.Infrastructure.Fluxor;
-using MediatR;
 using Microsoft.Extensions.Logging;
-using Pizzeria.Store.Application.Orders;
+using Pizzeria.Store.Contracts;
 using Pizzeria.Store.Contracts.Orders;
 using Pizzeria.Store.StateManagement.Orders.Actions;
 
@@ -14,26 +13,25 @@ namespace Pizzeria.Store.StateManagement.Orders;
 public sealed class AddPizzaToOrderEffects :
     CommandEffects<OrderState, OrderDto, AddPizzaToOrderAction, AddPizzaToOrderSuccessAction, AddPizzaToOrderFailureAction, AddPizzaToOrderCompletedAction>
 {
-    private readonly IMediator mediator;
+    private readonly IStoreApiClient storeApiClient;
 
     public AddPizzaToOrderEffects(
         IState<OrderState> state,
-        IMediator mediator,
+        IStoreApiClient storeApiClient,
         ICorrelationContextAccessor correlationContextAccessor,
         ILogger<AddPizzaToOrderEffects> logger)
         : base(state, correlationContextAccessor, logger)
     {
-        this.mediator = mediator;
+        this.storeApiClient = storeApiClient;
     }
 
     protected override async Task<CommandResult> ExecuteCommandAsync(
         [NotNull] AddPizzaToOrderAction action,
         [NotNull] IDispatcher dispatcher)
     {
-        return await this.mediator.Send(new AddPizzaToOrderCommand(
-            action.OrderId,
-            action.PizzaId,
-            action.CorrelationId));
+        await this.storeApiClient.AddPizzaToOrderAsync(action.OrderId, action.PizzaId);
+
+        return CommandResult.Success();
     }
 
     protected override Task ExecuteCommandCompletedAsync(

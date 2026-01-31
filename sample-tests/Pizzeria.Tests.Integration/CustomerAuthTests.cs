@@ -1,6 +1,7 @@
 using FluentAssertions;
 using Lewee.Playwright;
 using Microsoft.Playwright;
+using Pizzeria.Store.Web;
 using Pizzeria.Tests.Integration.Infrastructure;
 using Xunit;
 
@@ -30,7 +31,7 @@ public sealed class CustomerAuthTests : PizzeriaTests
         playwrightPage.Page.ShouldHaveBannerHeading();
 
         // Step 3: Sign out the user
-        var signOutButton = playwrightPage.Page.Locator(Store.MainLayout.Selectors.SignOutButton);
+        var signOutButton = playwrightPage.Page.Locator(MainLayout.Selectors.SignOutButton);
 
         // Click sign-out and wait for load state
         await signOutButton.ClickAsync();
@@ -76,7 +77,7 @@ public sealed class CustomerAuthTests : PizzeriaTests
         playwrightPage.Page.ShouldHaveBannerHeading();
 
         // Step 6: Sign out again to verify it works consistently
-        signOutButton = playwrightPage.Page.Locator(Store.MainLayout.Selectors.SignOutButton);
+        signOutButton = playwrightPage.Page.Locator(MainLayout.Selectors.SignOutButton);
 
         await signOutButton.ClickAsync();
         await playwrightPage.Page.WaitForLoadStateAsync(LoadState.NetworkIdle, new PageWaitForLoadStateOptions { Timeout = 60000 });

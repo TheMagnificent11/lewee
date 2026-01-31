@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Net.ServerSentEvents;
 using System.Text.Json;
 using Lewee.Common;
 using Microsoft.Extensions.Logging;
@@ -23,6 +24,12 @@ public class SseClientMessageReceiver : IAsyncDisposable
 {
     private readonly HttpClient httpClient;
     private readonly ILogger<SseClientMessageReceiver> logger;
+
+    private readonly JsonSerializerOptions sseJsonOptions = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+    };
+
     private CancellationTokenSource? cts;
     private Task? listeningTask;
 
@@ -115,9 +122,11 @@ public class SseClientMessageReceiver : IAsyncDisposable
                 response.EnsureSuccessStatusCode();
 
                 await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
-                using var reader = new StreamReader(stream);
 
-                await this.ProcessEventStreamAsync(reader, cancellationToken);
+                await foreach (var item in GetSseDataAsync(stream, cancellationToken))
+                {
+                    this.ProcessEvent(item);
+                }
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
             {
@@ -129,40 +138,13 @@ public class SseClientMessageReceiver : IAsyncDisposable
                 await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
             }
         }
-    }
 
-    private async Task ProcessEventStreamAsync(StreamReader reader, CancellationToken cancellationToken)
-    {
-        var dataBuilder = new System.Text.StringBuilder();
-
-        while (!cancellationToken.IsCancellationRequested)
+        static IAsyncEnumerable<string> GetSseDataAsync(Stream stream, CancellationToken cancellationToken)
         {
-            var line = await reader.ReadLineAsync(cancellationToken);
-            if (line == null)
-            {
-                break;
-            }
-
-            if (string.IsNullOrEmpty(line))
-            {
-                if (dataBuilder.Length > 0)
-                {
-                    this.ProcessEvent(dataBuilder.ToString());
-                    dataBuilder.Clear();
-                }
-
-                continue;
-            }
-
-            if (line.StartsWith("data:", StringComparison.Ordinal))
-            {
-                if (dataBuilder.Length > 0)
-                {
-                    dataBuilder.AppendLine();
-                }
-
-                dataBuilder.Append(line[5..].Trim());
-            }
+            return SseParser.Create(stream)
+                .EnumerateAsync(cancellationToken)
+                .Select(x => x.Data)
+                .Where(x => x != null);
         }
     }
 
@@ -170,15 +152,35 @@ public class SseClientMessageReceiver : IAsyncDisposable
     {
         try
         {
-            var message = JsonSerializer.Deserialize<ClientMessage>(data);
-            if (message != null)
+            // Deserialize the wrapper object that contains the client message
+            // Note: The server sends SseItem<ClientMessage> serialized as JSON with camelCase property names
+            var wrapper = JsonSerializer.Deserialize<SseItemWrapper>(data, this.sseJsonOptions);
+            if (wrapper?.Data == null)
             {
-                this.RaiseMessageReceived(message);
+                this.logger.LogSseEventDataNull();
+                return;
             }
+
+            this.RaiseMessageReceived(wrapper.Data);
         }
         catch (JsonException ex)
         {
             this.logger.LogSseDeserializationError(ex);
         }
+    }
+
+    /// <summary>
+    /// Wrapper class for deserializing SSE items from camelCase JSON
+    /// </summary>
+    /// <remarks>
+    /// This is needed because System.Net.ServerSentEvents.SseItem uses PascalCase properties
+    /// but ASP.NET Core serializes with camelCase when using default JSON options
+    /// </remarks>
+    internal sealed class SseItemWrapper
+    {
+        public ClientMessage? Data { get; set; }
+        public string? EventType { get; set; }
+        public string? EventId { get; set; }
+        public int? ReconnectionInterval { get; set; }
     }
 }

@@ -54,10 +54,14 @@ public static class StateManagementConfiguration
     {
         services.AddScoped<IMessageToActionMapper, TMapper>();
 
+        services.AddHttpContextAccessor();
+        services.AddTransient<AuthTokenDelegatingHandler>();
+
         services.AddHttpClient<SseClientMessageReceiver>(client =>
         {
             configureHttpClient?.Invoke(client);
-        });
+        })
+        .AddHttpMessageHandler<AuthTokenDelegatingHandler>();
 
         return services;
     }

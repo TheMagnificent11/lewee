@@ -1,7 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Components;
 
-namespace Pizzeria.Store;
+namespace Pizzeria.Store.Web;
 
 [SuppressMessage(
     "Design",

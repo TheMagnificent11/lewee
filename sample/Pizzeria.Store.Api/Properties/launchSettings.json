@@ -1,10 +1,11 @@
 {
+  "$schema": "https://json.schemastore.org/launchsettings.json",
   "profiles": {
     "https": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": false,
-      "applicationUrl": "https://configuration-pizzeria.dev.localhost:7976;http://configuration-pizzeria.dev.localhost:5976",
+      "applicationUrl": "https://store-api-pizzeria.dev.localhost:7061;http://store-api-pizzeria.dev.localhost:5149",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

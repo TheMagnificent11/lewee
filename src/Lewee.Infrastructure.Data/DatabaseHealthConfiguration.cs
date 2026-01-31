@@ -44,12 +44,6 @@ public static class DatabaseHealthConfiguration
             Predicate = healthCheck => !healthCheck.Tags.Contains("ready"),
         });
 
-        // Map the /ready endpoint for startup readiness checks (for consuming applications)
-        app.MapHealthChecks("/ready", new HealthCheckOptions
-        {
-            Predicate = healthCheck => healthCheck.Tags.Contains("ready"),
-        });
-
         // Map other default endpoints (but skip /health since we mapped it above)
         if (app.Environment.IsDevelopment())
         {

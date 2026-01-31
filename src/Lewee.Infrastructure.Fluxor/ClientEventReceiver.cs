@@ -12,9 +12,12 @@ namespace Lewee.Infrastructure.Fluxor;
 /// <remarks>
 /// Subscribes to client events via SSE and dispatches corresponding Fluxor actions.
 /// This component should be placed in the application layout to receive events for the authenticated user.
+/// SSE connection is only established after interactive rendering (not during pre-rendering).
 /// </remarks>
 public sealed class ClientEventReceiver : ComponentBase, IAsyncDisposable
 {
+    private bool isListening;
+
     /// <summary>
     /// Gets or sets the SSE client message receiver
     /// </summary>
@@ -48,18 +51,37 @@ public sealed class ClientEventReceiver : ComponentBase, IAsyncDisposable
     /// <inheritdoc/>
     public async ValueTask DisposeAsync()
     {
+        if (!this.isListening)
+        {
+            return;
+        }
+
         this.MessageReceiver.OnMessageReceived -= this.HandleClientMessage;
         await this.MessageReceiver.DisposeAsync();
         this.Logger.LogStoppedListening();
     }
 
     /// <inheritdoc/>
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (!firstRender || this.isListening)
+        {
+            return;
+        }
+
         var userId = this.AuthenticatedUserService.UserId;
+
+        // Only start listening if the user is authenticated
+        if (string.IsNullOrEmpty(userId))
+        {
+            this.Logger.LogSkippingUnauthenticated();
+            return;
+        }
+
         this.MessageReceiver.OnMessageReceived += this.HandleClientMessage;
 
         await this.MessageReceiver.StartAsync();
+        this.isListening = true;
         this.Logger.LogStartedListening(userId);
     }
 
