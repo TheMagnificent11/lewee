@@ -41,13 +41,35 @@ public static class SseEndpointConfiguration
 
             async IAsyncEnumerable<SseItem<ClientMessage>> StreamEventsAsync()
             {
-                await foreach (var clientEvent in channelReader.ReadAllAsync(cancellationToken))
+                var enumerator = channelReader.ReadAllAsync(cancellationToken).GetAsyncEnumerator(cancellationToken);
+                try
                 {
-                    if (clientEvent.UserId == userId)
+                    while (true)
                     {
-                        var clientMessage = clientEvent.ToClientMessage();
-                        yield return new SseItem<ClientMessage>(clientMessage, clientEvent.ContractFullClassName);
+                        try
+                        {
+                            if (!await enumerator.MoveNextAsync())
+                            {
+                                break;
+                            }
+                        }
+                        catch (OperationCanceledException)
+                        {
+                            // Client disconnected - stop enumeration
+                            break;
+                        }
+
+                        var clientEvent = enumerator.Current;
+                        if (clientEvent.UserId == userId)
+                        {
+                            var clientMessage = clientEvent.ToClientMessage();
+                            yield return new SseItem<ClientMessage>(clientMessage, clientEvent.ContractFullClassName);
+                        }
                     }
+                }
+                finally
+                {
+                    await enumerator.DisposeAsync();
                 }
             }
 
