@@ -4,7 +4,7 @@ using Lewee.Infrastructure.Fluxor;
 using Pizzeria.Store.Contracts.Orders;
 using Pizzeria.Store.StateManagement.Orders.Actions;
 
-namespace Pizzeria.Store.Infrastructure;
+namespace Pizzeria.Store.Web.Infrastructure;
 
 internal sealed class MessageToActionMapper : IMessageToActionMapper
 {

@@ -1,10 +1,9 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.Extensions.Logging;
 using Pizzeria.Store.Contracts;
 using Pizzeria.Store.Contracts.Users;
 
-namespace Pizzeria.Store.Infrastructure;
+namespace Pizzeria.Store.Web.Infrastructure;
 
 internal static class TokenValidatedContextExtensions
 {

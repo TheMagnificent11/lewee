@@ -6,10 +6,9 @@ using MudBlazor.Services;
 using Pizzeria.Common;
 using Pizzeria.ServiceDefaults;
 using Pizzeria.Store.Contracts;
-using Pizzeria.Store.Infrastructure;
 using Pizzeria.Store.StateManagement;
 using Pizzeria.Store.Web;
-
+using Pizzeria.Store.Web.Infrastructure;
 using CommonEnvironments = Pizzeria.Common.Environments;
 
 var builder = WebApplication.CreateBuilder(args);
