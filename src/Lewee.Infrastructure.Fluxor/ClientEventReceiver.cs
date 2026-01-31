@@ -12,6 +12,7 @@ namespace Lewee.Infrastructure.Fluxor;
 /// <remarks>
 /// Subscribes to client events via SSE and dispatches corresponding Fluxor actions.
 /// This component should be placed in the application layout to receive events for the authenticated user.
+/// SSE connection is only established after interactive rendering (not during pre-rendering).
 /// </remarks>
 public sealed class ClientEventReceiver : ComponentBase, IAsyncDisposable
 {
@@ -61,8 +62,13 @@ public sealed class ClientEventReceiver : ComponentBase, IAsyncDisposable
     }
 
     /// <inheritdoc/>
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (!firstRender || this.isListening)
+        {
+            return;
+        }
+
         var userId = this.AuthenticatedUserService.UserId;
 
         // Only start listening if the user is authenticated
