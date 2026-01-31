@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Lewee.Common\Lewee.Common.csproj" />
+    <ProjectReference Include="..\Lewee.Infrastructure.Auth\Lewee.Infrastructure.Auth.csproj" />
   </ItemGroup>
 
 </Project>

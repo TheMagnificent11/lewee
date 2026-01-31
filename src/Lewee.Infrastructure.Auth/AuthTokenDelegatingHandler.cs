@@ -3,16 +3,21 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace Lewee.Infrastructure.Refit;
+namespace Lewee.Infrastructure.Auth;
 
 /// <summary>
 /// Delegating handler that adds the user's access token to outgoing HTTP requests.
 /// </summary>
-internal sealed class AuthTokenDelegatingHandler : DelegatingHandler
+public sealed class AuthTokenDelegatingHandler : DelegatingHandler
 {
     private readonly IHttpContextAccessor httpContextAccessor;
     private readonly ILogger<AuthTokenDelegatingHandler> logger;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AuthTokenDelegatingHandler"/> class
+    /// </summary>
+    /// <param name="httpContextAccessor">HTTP context accessor</param>
+    /// <param name="logger">Logger</param>
     public AuthTokenDelegatingHandler(
         IHttpContextAccessor httpContextAccessor,
         ILogger<AuthTokenDelegatingHandler> logger)
@@ -21,6 +26,7 @@ internal sealed class AuthTokenDelegatingHandler : DelegatingHandler
         this.logger = logger;
     }
 
+    /// <inheritdoc/>
     protected override async Task<HttpResponseMessage> SendAsync(
         HttpRequestMessage request,
         CancellationToken cancellationToken)
