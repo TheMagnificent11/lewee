@@ -10,6 +10,11 @@ internal static partial class ClientEventReceiverLogMessages
     public static partial void LogStartedListening(this ILogger logger, string? userId);
 
     [LoggerMessage(
+        Level = LogLevel.Debug,
+        Message = LogMessages.SkippingUnauthenticated)]
+    public static partial void LogSkippingUnauthenticated(this ILogger logger);
+
+    [LoggerMessage(
         Level = LogLevel.Information,
         Message = LogMessages.StoppedListening)]
     public static partial void LogStoppedListening(this ILogger logger);
@@ -59,6 +64,7 @@ internal static partial class ClientEventReceiverLogMessages
     internal static class LogMessages
     {
         public const string StartedListening = "Started listening for client events. UserId: {UserId}";
+        public const string SkippingUnauthenticated = "Skipping SSE connection - user is not authenticated";
         public const string StoppedListening = "Stopped listening for client events";
         public const string ProcessingClientEvent = "Processing client event";
         public const string CouldNotResolveType = "Could not resolve type: {TypeName}";
