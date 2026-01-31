@@ -27,10 +27,7 @@ public static class ClientEventChannelConfiguration
         services.AddSingleton(channel.Reader);
         services.AddSingleton(channel.Writer);
 
-        // Register the handler that writes to the channel
         services.AddTransient<INotificationHandler<ClientEvent>, ClientEventChannelHandler>();
-
-        services.AddSingleton<IClientEventBroadcaster, ClientEventBroadcaster>();
 
         return services;
     }
