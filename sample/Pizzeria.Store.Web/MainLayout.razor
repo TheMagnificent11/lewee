@@ -1,4 +1,3 @@
-@using Lewee.Infrastructure.Fluxor
 @using Pizzeria.Store.Contracts
 
 @inherits LayoutComponentBase
@@ -8,7 +7,7 @@
 <MudDialogProvider />
 <MudSnackbarProvider />
 
-<ClientEventReceiver />
+<Lewee.Infrastructure.Fluxor.ClientEventReceiver />
 
 <MudLayout>
     <MudAppBar Elevation="1" role="banner">
