@@ -1,9 +1,8 @@
-using Pizzeria.Store.Contracts.Orders;
 using Pizzeria.Store.Contracts.Pizzas;
 using Pizzeria.Store.Contracts.Users;
 using Refit;
 
-namespace Pizzeria.Store.Contracts;
+namespace Pizzeria.Store.StateManagement;
 
 public interface IStoreApiClient
 {
@@ -14,8 +13,13 @@ public interface IStoreApiClient
     Task StartOrderAsync(CancellationToken cancellationToken = default);
 
     [Put("/orders/{orderId}/pizzas/{pizzaId}")]
-    Task AddPizzaToOrderAsync(Guid orderId, Guid pizzaId, CancellationToken cancellationToken = default);
+    Task AddPizzaToOrderAsync(
+        Guid orderId,
+        Guid pizzaId,
+        CancellationToken cancellationToken = default);
 
     [Post("/customers")]
-    Task CreateCustomerAsync([Body] CreateCustomerRequest request, CancellationToken cancellationToken = default);
+    Task CreateCustomerAsync(
+        [Body] CreateCustomerRequest request,
+        CancellationToken cancellationToken = default);
 }

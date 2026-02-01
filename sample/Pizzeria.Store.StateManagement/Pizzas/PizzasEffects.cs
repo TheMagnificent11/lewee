@@ -4,7 +4,6 @@ using Fluxor;
 using Lewee.Common;
 using Lewee.Infrastructure.Fluxor;
 using Microsoft.Extensions.Logging;
-using Pizzeria.Store.Contracts;
 using Pizzeria.Store.Contracts.Pizzas;
 using Pizzeria.Store.StateManagement.Pizzas.Actions;
 

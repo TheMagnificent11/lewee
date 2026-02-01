@@ -5,7 +5,6 @@ using Fluxor;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using MudBlazor.Services;
-using Pizzeria.Store.Contracts;
 using Pizzeria.Store.StateManagement;
 using Xunit;
 

@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Pizzeria.Store.Contracts;
 using Pizzeria.Store.Contracts.Users;
+using Pizzeria.Store.StateManagement;
 
 namespace Pizzeria.Store.Web.Infrastructure;
 

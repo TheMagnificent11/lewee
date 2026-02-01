@@ -3,7 +3,6 @@ using Fluxor;
 using Lewee.Common;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Pizzeria.Store.Contracts;
 using Pizzeria.Store.Contracts.Pizzas;
 using Pizzeria.Store.StateManagement.Pizzas;
 using Pizzeria.Store.StateManagement.Pizzas.Actions;
