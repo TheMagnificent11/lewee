@@ -91,7 +91,6 @@
   <Project Path="tests/Lewee.Infrastructure.Data.Tests.Integration/Lewee.Infrastructure.Data.Tests.Integration.csproj" />
   <Project Path="tests/Lewee.Infrastructure.Data.Tests.Unit/Lewee.Infrastructure.Data.Tests.Unit.csproj" />
   <Project Path="tests/Lewee.Infrastructure.Fluxor.Tests.Unit/Lewee.Infrastructure.Fluxor.Tests.Unit.csproj" />
-  <Project Path="tests/Lewee.Infrastructure.Refit.Tests.Integration/Lewee.Infrastructure.Refit.Tests.Integration.csproj" />
   <Project Path="tests/Lewee.Infrastructure.ServerEvents.Tests.Integration/Lewee.Infrastructure.ServerEvents.Tests.Integration.csproj" Id="00861296-83e4-43ec-85cc-20b10775f12c" />
   <Project Path="tests/Lewee.Playwright.Tests.Unit/Lewee.Playwright.Tests.Unit.csproj" />
   <Project Path="tests/Lewee.Tests.Api/Lewee.Tests.Api.csproj" />
