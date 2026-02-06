@@ -8,6 +8,9 @@ using Pizzeria.Store.Web.Infrastructure;
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
 builder.Services
+    .AddAuthorizationCore()
+    .AddCascadingAuthenticationState()
+    .AddAuthenticationStateDeserialization()
     .AddPersistentStateAccessToken()
     .AddWebApiHttpClientForWasm<IStoreApiClient>(ServiceNames.PizzaStoreApi)
     .AddStoreState(builder.HostEnvironment.IsDevelopment())

@@ -36,6 +36,7 @@ builder.Services
     .AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents()
+    .AddAuthenticationStateSerialization()
     .RegisterPersistentService<AccessTokenService>(RenderMode.InteractiveWebAssembly);
 
 var app = builder.Build();
