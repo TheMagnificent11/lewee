@@ -8,11 +8,16 @@ This package provides the foundational state management infrastructure for Blazo
 
 ## Dependencies
 
-- `Fluxor.Blazor.Web.ReduxDevTools` - Fluxor with Redux DevTools support
-- `Correlate.DependencyInjection` - Correlation ID support
-- `Microsoft.Extensions.Http` - HttpClient factory support
-- `Lewee.Common` - Shared contracts and utilities
-- `Lewee.Infrastructure.Auth` - Authenticated user service
+This package uses the following NuGet packages:
+
+- `Fluxor.Blazor.Web.ReduxDevTools` - Fluxor with Redux DevTools support for Blazor
+- `Correlate.DependencyInjection` - Correlation ID support for distributed tracing
+- `Microsoft.AspNetCore.Components.WebAssembly.Authentication` - WebAssembly authentication support
+- `Refit.HttpClientFactory` - HTTP client factory integration for Refit
+- [Lewee.Common](../Lewee.Common/README.md) - Shared contracts and utilities
+- [Lewee.Infrastructure.Auth](../Lewee.Infrastructure.Auth/README.md) - Authentication infrastructure
+
+**Note**: This package uses NuGet package references instead of framework references to ensure full compatibility with Blazor WebAssembly projects.
 
 ## Components
 

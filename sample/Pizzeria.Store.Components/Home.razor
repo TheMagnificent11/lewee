@@ -1,6 +1,7 @@
 ﻿@using Pizzeria.Store.Contracts
 @attribute [Route(PageRoutes.Home)]
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: true))
 
 @inherits FluxorComponent
 

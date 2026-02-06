@@ -23,12 +23,17 @@ Register the authenticated user service to access the current user's ID:
 ```cs
 using Lewee.Infrastructure.Auth;
 
+// Server-side applications must register IHttpContextAccessor first
+services.AddHttpContextAccessor();
+
+// Then register the authenticated user service
 services.AddAuthenticatedUserService();
 ```
 
+**Important**: Server-side Blazor and ASP.NET Core applications must call `AddHttpContextAccessor()` before registering the authenticated user service. This is required because `IHttpContextAccessor` is a server-side concept and cannot be registered by a library that supports WebAssembly.
+
 This registers:
-- `IHttpContextAccessor` - ASP.NET Core service for accessing the current HTTP context
-- `IAuthenticatedUserService` - Service for retrieving the authenticated user's ID
+- `IAuthenticatedUserService` - Service for retrieving the authenticated user's ID from the current HTTP context
 
 ### Authentication Token Delegating Handler
 

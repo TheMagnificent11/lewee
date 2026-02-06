@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Pizzeria.Store.Contracts.Users;
 using Pizzeria.Store.StateManagement;
 
-namespace Pizzeria.Store.Web.Infrastructure;
+namespace Pizzeria.Store.Web;
 
 internal static class TokenValidatedContextExtensions
 {

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <ItemGroup>
     <InternalsVisibleTo Include="Pizzeria.Store.Web.Tests.Unit" />
@@ -11,12 +11,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Lewee.Infrastructure.Fluxor\Lewee.Infrastructure.Fluxor.csproj" />
     <ProjectReference Include="..\..\src\Lewee.Infrastructure.Keycloak\Lewee.Infrastructure.Keycloak.csproj" />
     <ProjectReference Include="..\..\src\Lewee.Infrastructure.Refit\Lewee.Infrastructure.Refit.csproj" />
     <ProjectReference Include="..\Pizzeria.Common\Pizzeria.Common.csproj" />
     <ProjectReference Include="..\Pizzeria.ServiceDefaults\Pizzeria.ServiceDefaults.csproj" />
-    <ProjectReference Include="..\Pizzeria.Store.Components\Pizzeria.Store.Components.csproj" />
+    <ProjectReference Include="..\Pizzeria.Store.Web.Client\Pizzeria.Store.Web.Client.csproj" />
   </ItemGroup>
   
 </Project>

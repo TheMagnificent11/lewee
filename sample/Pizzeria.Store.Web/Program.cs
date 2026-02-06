@@ -1,4 +1,3 @@
-using Lewee.Infrastructure.Fluxor;
 using Lewee.Infrastructure.Keycloak;
 using Lewee.Infrastructure.Refit;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -8,7 +7,6 @@ using Pizzeria.ServiceDefaults;
 using Pizzeria.Store.Contracts;
 using Pizzeria.Store.StateManagement;
 using Pizzeria.Store.Web;
-using Pizzeria.Store.Web.Infrastructure;
 using CommonEnvironments = Pizzeria.Common.Environments;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
 
 builder.Services
+    .AddHttpContextAccessor()
     .AddWebApiHttpClient<IStoreApiClient>(ServiceNames.PizzaStoreApi)
     .AddKeycloakAuthenticationForWebApp(
         keycloakServiceName: ServiceNames.AuthServer,
@@ -28,10 +27,6 @@ builder.Services
 
 builder.Services
     .AddStoreState(builder.Environment.IsDevelopment())
-    .AddSseMessageReceiver<MessageToActionMapper>(client =>
-    {
-        client.BaseAddress = new Uri($"https://{ServiceNames.PizzaStoreApi}");
-    })
     .AddMudServices()
     .AddRazorComponents()
     .AddInteractiveServerComponents()
@@ -52,8 +47,8 @@ else
 }
 
 app
-    .UseAntiforgery()
     .UseHttpsRedirection()
+    .UseAntiforgery()
     .UseAuthentication()
     .UseAuthorization();
 
