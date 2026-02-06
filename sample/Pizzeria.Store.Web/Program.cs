@@ -1,12 +1,15 @@
+using Lewee.Infrastructure.Fluxor;
 using Lewee.Infrastructure.Keycloak;
 using Lewee.Infrastructure.Refit;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Components.Web;
 using MudBlazor.Services;
 using Pizzeria.Common;
 using Pizzeria.ServiceDefaults;
 using Pizzeria.Store.Contracts;
 using Pizzeria.Store.StateManagement;
 using Pizzeria.Store.Web;
+using Pizzeria.Store.Web.Infrastructure;
 using CommonEnvironments = Pizzeria.Common.Environments;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,12 +28,15 @@ builder.Services
             OnTokenValidated = async context => await context.CreateCustomerOnFirstLoginAsync(),
         });
 
+builder.Services.AddScoped<AccessTokenService, ServerAccessTokenService>();
+
 builder.Services
     .AddStoreState(builder.Environment.IsDevelopment())
     .AddMudServices()
     .AddRazorComponents()
     .AddInteractiveServerComponents()
-    .AddInteractiveWebAssemblyComponents();
+    .AddInteractiveWebAssemblyComponents()
+    .RegisterPersistentService<AccessTokenService>(RenderMode.InteractiveWebAssembly);
 
 var app = builder.Build();
 

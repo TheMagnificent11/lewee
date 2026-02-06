@@ -2,6 +2,7 @@
 using Correlate.DependencyInjection;
 using Fluxor;
 using Fluxor.Blazor.Web.ReduxDevTools;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Lewee.Infrastructure.Fluxor;
@@ -59,6 +60,31 @@ public static class StateManagementConfiguration
             configureHttpClient?.Invoke(client);
         })
         .AddHttpMessageHandler<WasmAuthTokenDelegatingHandler>();
+
+        return services;
+    }
+
+    /// <summary>
+    /// Adds the <see cref="AccessTokenService"/> and <see cref="PersistentStateAccessTokenProvider"/>
+    /// for WebAssembly clients to receive persisted access tokens from the server.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Call this method in the WebAssembly client's Program.cs. The server must also register
+    /// <see cref="AccessTokenService"/> and call <c>RegisterPersistentService</c> to enable
+    /// automatic state persistence.
+    /// </para>
+    /// <para>
+    /// The server-side <see cref="AccessTokenService"/> should override the <c>AccessToken</c> property
+    /// to retrieve the token from <c>HttpContext.GetTokenAsync("access_token")</c>.
+    /// </para>
+    /// </remarks>
+    /// <param name="services">Services collection</param>
+    /// <returns>Updated services collection</returns>
+    public static IServiceCollection AddPersistentStateAccessToken(this IServiceCollection services)
+    {
+        services.AddScoped<AccessTokenService>();
+        services.AddScoped<IAccessTokenProvider, PersistentStateAccessTokenProvider>();
 
         return services;
     }
