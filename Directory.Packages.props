@@ -34,7 +34,7 @@
     <PackageVersion Include="Correlate.DependencyInjection" Version="6.1.1" />
   </ItemGroup>
   <ItemGroup Label="FluentAssertions (DO NOT UPGRADE)">
-    <PackageVersion Include="FluentAssertions" Version="7.2.0" />
+    <PackageVersion Include="FluentAssertions" Version="7.2.1" />
     <PackageVersion Include="FluentAssertions.Analyzers" Version="0.34.1" />
   </ItemGroup>
   <ItemGroup Label="FluentValidation">
