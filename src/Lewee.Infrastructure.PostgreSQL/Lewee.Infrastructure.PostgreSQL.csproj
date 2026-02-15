@@ -6,6 +6,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" VersionOverride="10.0.3" />
     <ProjectReference Include="..\Lewee.Infrastructure.Data\Lewee.Infrastructure.Data.csproj" />
   </ItemGroup>
 
