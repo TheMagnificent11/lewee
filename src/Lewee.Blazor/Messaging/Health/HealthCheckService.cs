@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Logging;
 
 namespace Lewee.Blazor.Messaging.Health;
 
@@ -13,6 +14,10 @@ internal class HealthCheckService
         this.logger = logger;
     }
 
+    [SuppressMessage(
+        "Performance",
+        "CA1873:Avoid potentially expensive logging",
+        Justification = "This class is going to be removed in the near future")]
     public async Task<bool> IsServerHealthyAsync(CancellationToken cancellationToken = default)
     {
         this.logger.LogDebug("Checking server health {ServerBaseAddress}", this.httpClient.BaseAddress);

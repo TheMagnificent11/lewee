@@ -82,6 +82,10 @@ public class BlazorServerMessageReceiver : ComponentBase, IAsyncDisposable
         }
     }
 
+    [SuppressMessage(
+        "Performance",
+        "CA1873:Avoid potentially expensive logging",
+        Justification = "This class is going to be removed in the near future")]
     private Task ProcessMessageAsync(ClientMessage message)
     {
         var (messageBody, correlationId) = this.MessageDeserializer.Deserialize(message);

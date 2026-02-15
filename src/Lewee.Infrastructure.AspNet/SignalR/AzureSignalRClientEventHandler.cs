@@ -25,6 +25,10 @@ internal sealed class AzureSignalRClientEventHandler : INotificationHandler<Clie
         this.logger = logger;
     }
 
+    [SuppressMessage(
+        "Performance",
+        "CA1873:Avoid potentially expensive logging",
+        Justification = "This class is going to be removed in the near future")]
     public async Task Handle(ClientEvent notification, CancellationToken cancellationToken)
     {
         using (this.logger.BeginScope(new Dictionary<string, object>(StringComparer.Ordinal)
