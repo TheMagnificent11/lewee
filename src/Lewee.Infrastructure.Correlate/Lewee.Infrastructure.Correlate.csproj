@@ -10,6 +10,8 @@
 
   <!-- No functionality, just helping setup `Correlate` -->
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" VersionOverride="10.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Http" VersionOverride="10.0.3" />
     <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
   </ItemGroup>
 
