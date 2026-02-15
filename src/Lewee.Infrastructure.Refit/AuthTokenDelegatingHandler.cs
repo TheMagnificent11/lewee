@@ -28,22 +28,16 @@ internal sealed class AuthTokenDelegatingHandler : DelegatingHandler
         ArgumentNullException.ThrowIfNull(request);
 
         var httpContext = this.httpContextAccessor.HttpContext;
-        if (httpContext is null)
+
+        var accessToken = await httpContext!.GetTokenAsync("access_token");
+        if (string.IsNullOrEmpty(accessToken))
         {
-            this.logger.LogWarning("HttpContext is null - cannot retrieve access token");
+            this.logger.LogAccessTokenNullOrEmpty(request.RequestUri!);
         }
         else
         {
-            var accessToken = await httpContext.GetTokenAsync("access_token");
-            if (!string.IsNullOrEmpty(accessToken))
-            {
-                this.logger.LogDebug("Adding Bearer token to request: {RequestUri}", request.RequestUri);
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            }
-            else
-            {
-                this.logger.LogWarning("Access token is null or empty for request: {RequestUri}", request.RequestUri);
-            }
+            this.logger.LogAddingBearerToken(request.RequestUri!);
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
         }
 
         return await base.SendAsync(request, cancellationToken);

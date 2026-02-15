@@ -17,6 +17,8 @@ applyTo: "**/*.cs,**/*.csproj,**/*.props"
 
 The solution uses Central Package Management via `Directory.Packages.props`.
 
+Do not use the `VersionOverride` attribute that is available on the `PackageReference` element is C# project files. This can lead to version conflicts and maintenance issues.
+
 Do not unnecessarily add package and project references; use implicit references where possible.
 
 Therefore, always check for existing references in packages and projects that are already referenced implicitly in a C# project before adding new ones.

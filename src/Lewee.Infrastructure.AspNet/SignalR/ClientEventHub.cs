@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
@@ -25,6 +26,10 @@ public class ClientEventHub : Hub
     }
 
     /// <inheritdoc />
+    [SuppressMessage(
+        "Performance",
+        "CA1873:Avoid potentially expensive logging",
+        Justification = "This class is going to be removed in the near future")]
     public override async Task OnConnectedAsync()
     {
         this.logger.LogDebug("Client connected");

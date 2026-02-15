@@ -1,4 +1,5 @@
-﻿using Fluxor;
+﻿using System.Diagnostics.CodeAnalysis;
+using Fluxor;
 using Lewee.Blazor.Messaging.Health.Actions;
 using Lewee.Common;
 using Microsoft.AspNetCore.Components;
@@ -28,6 +29,10 @@ public class MessageReceiverInitializer : ComponentBase
     private ILogger<MessageReceiverInitializer> Logger { get; set; }
 
     /// <inheritdoc />
+    [SuppressMessage(
+        "Performance",
+        "CA1873:Avoid potentially expensive logging",
+        Justification = "This class is going to be removed in the near future")]
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();

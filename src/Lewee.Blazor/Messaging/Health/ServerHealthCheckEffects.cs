@@ -1,4 +1,5 @@
-﻿using Fluxor;
+﻿using System.Diagnostics.CodeAnalysis;
+using Fluxor;
 using Lewee.Blazor.Messaging.Health.Actions;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
@@ -50,6 +51,10 @@ internal class ServerHealthCheckEffects
     }
 
     [EffectMethod]
+    [SuppressMessage(
+        "Performance",
+        "CA1873:Avoid potentially expensive logging",
+        Justification = "This class is going to be removed in the near future")]
     public async Task HealthSuccessAsync(HealthCheckSuccessAction action, IDispatcher dispatcher)
     {
         this.logger.LogInformation("Server health check succeeded. Starting SignalR connection...");
