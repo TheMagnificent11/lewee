@@ -12,7 +12,7 @@ namespace Lewee.Infrastructure.ServerEvents;
 /// This allows for efficient management of SSE connections and ensures that each user has a dedicated channel
 /// for receiving <see cref="ClientEvent" /> events.
 /// </remarks>
-public class ConnectionManager
+internal sealed class ConnectionManager
 {
     private readonly ConcurrentDictionary<string, Channel<ClientEvent>> userChannels
         = new(StringComparer.InvariantCultureIgnoreCase);

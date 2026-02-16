@@ -1,28 +1,40 @@
-using System.Threading.Channels;
+using System.Diagnostics.CodeAnalysis;
 using Lewee.Application.Mediation.Notifications;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace Lewee.Infrastructure.ServerEvents;
 
-/// <summary>
-/// Writes client events to the channel for SSE broadcasting
-/// </summary>
 internal sealed class ClientEventChannelHandler : INotificationHandler<ClientEvent>
 {
-    private readonly ChannelWriter<ClientEvent> channelWriter;
+    private readonly ConnectionManager connectionManager;
+    private readonly ILogger<ClientEventChannelHandler> logger;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ClientEventChannelHandler"/> class
-    /// </summary>
-    /// <param name="channelWriter">Channel writer</param>
-    public ClientEventChannelHandler(ChannelWriter<ClientEvent> channelWriter)
+    public ClientEventChannelHandler(
+        ConnectionManager connectionManager,
+        ILogger<ClientEventChannelHandler> logger)
     {
-        this.channelWriter = channelWriter;
+        this.connectionManager = connectionManager;
+        this.logger = logger;
     }
 
-    /// <inheritdoc/>
-    public async Task Handle(ClientEvent notification, CancellationToken cancellationToken)
+    public async Task Handle(
+        [NotNull] ClientEvent notification,
+        CancellationToken cancellationToken)
     {
-        await this.channelWriter.WriteAsync(notification, cancellationToken);
+        if (string.IsNullOrWhiteSpace(notification.UserId))
+        {
+            // TODO: Send to all user channels
+            return;
+        }
+
+        var channelFound = this.connectionManager.TryGetChannelWriter(notification.UserId, out var channelWriter);
+        if (!channelFound)
+        {
+            this.logger.LogNoUserEventsChannelFound(notification.UserId);
+            return;
+        }
+
+        await channelWriter!.WriteAsync(notification, cancellationToken);
     }
 }
