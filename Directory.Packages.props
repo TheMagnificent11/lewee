@@ -66,17 +66,17 @@
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.3" />
   </ItemGroup>
   <ItemGroup Label="Microsoft.Extensions">
-    <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="10.0.2" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.2" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyModel" Version="10.0.2" />
-    <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="10.0.2" />
-    <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="10.0.2" />
-    <PackageVersion Include="Microsoft.Extensions.Diagnostics.Testing" Version="10.2.0" />
-    <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.2" />
-    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.2.0" />
-    <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.2" />
-    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.2" />
-    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="10.2.0" />
+    <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="10.0.3" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.3" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyModel" Version="10.0.3" />
+    <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="10.0.3" />
+    <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="10.0.3" />
+    <PackageVersion Include="Microsoft.Extensions.Diagnostics.Testing" Version="10.3.0" />
+    <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.3" />
+    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.3.0" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.3" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.3" />
+    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="10.3.0" />
   </ItemGroup>
   <ItemGroup Label="Microsoft (Other)">
   <PackageVersion Include="Microsoft.Azure.SignalR.Management" Version="1.32.0" />
