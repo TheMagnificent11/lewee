@@ -79,7 +79,7 @@
     <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="10.2.0" />
   </ItemGroup>
   <ItemGroup Label="Microsoft (Other)">
-  <PackageVersion Include="Microsoft.Azure.SignalR.Management" Version="1.32.0" />
+  <PackageVersion Include="Microsoft.Azure.SignalR.Management" Version="1.33.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.3" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
     <PackageVersion Include="Microsoft.Playwright" Version="1.58.0" />
