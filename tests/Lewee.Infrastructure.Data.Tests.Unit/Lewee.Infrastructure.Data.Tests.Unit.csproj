@@ -7,6 +7,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Azure.Identity" />
     <ProjectReference Include="..\..\src\Lewee.Infrastructure.Data\Lewee.Infrastructure.Data.csproj" />
   </ItemGroup>
 
