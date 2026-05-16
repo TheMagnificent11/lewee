@@ -3,6 +3,8 @@
   <ItemGroup>
     <PackageReference Include="Correlate.AspNetCore" />
     <PackageReference Include="Microsoft.Azure.SignalR.Management" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" />
+    <PackageReference Include="Microsoft.Extensions.Http" />
   </ItemGroup>
 
   <ItemGroup>
