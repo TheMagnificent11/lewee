@@ -30,7 +30,13 @@ internal sealed class ConnectionManager
     public Channel<ClientEvent> GetOrCreateChannel(string userId, string connectionId)
     {
         return this.connectionChannels
-            .GetOrAdd(connectionId, _ => (userId, Channel.CreateUnbounded<ClientEvent>()))
+            .GetOrAdd(
+                connectionId,
+                _ => (userId, Channel.CreateUnbounded<ClientEvent>(new UnboundedChannelOptions
+                {
+                    SingleReader = true,
+                    SingleWriter = false,
+                })))
             .Channel;
     }
 
