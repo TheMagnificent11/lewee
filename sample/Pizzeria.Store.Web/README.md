@@ -1,6 +1,6 @@
 # Pizzeria Store Web Application
 
-This is the Blazor Web App front-end for the Pizzeria Store application, demonstrating the Lewee framework's Flux, Keycloak and Refit capabilities.
+This is the Blazor Web App (interactive rendering) for the Pizzeria Store application, demonstrating the Lewee framework's Flux, Keycloak and Refit capabilities.
 
 ## Copilot Instructions
 
@@ -24,4 +24,3 @@ The state management is implemented using the Flux/Redux pattern, which allows f
 
 - [Sample Application Instructions](../../.github/instructions/sample-application.instructions.md)
 - [Code Quality Instructions](../../.github/instructions/code-quality.instructions.md)
-- 

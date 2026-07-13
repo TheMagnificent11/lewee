@@ -42,7 +42,7 @@ The sample application is split into two main runtime projects:
   - Server-Sent Events (SSE) for real-time notifications
   
 ### Pizzeria.Store.Web
-- **Purpose**: Blazor Server front-end
+- **Purpose**: Blazor Web App (interactive rendering) that calls the API
 - **Authentication**: Keycloak OpenID Connect
 - **Features**:
   - Refit HTTP client to call the API
