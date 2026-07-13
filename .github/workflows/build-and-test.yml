@@ -35,7 +35,7 @@ jobs:
         run: dotnet tool install --global dotnet-reportgenerator-globaltool
 
       - name: Install HTTPS development certificate
-        run: dotnet dev-certs https --trust
+        run: dotnet dev-certs https
 
       - name: Install GitVersion
         uses: gittools/actions/gitversion/setup@v3.1.11
