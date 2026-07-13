@@ -51,7 +51,7 @@ app.MapGet("/authentication/login", (string? returnUrl) =>
 
     return Results.Challenge(
         new Microsoft.AspNetCore.Authentication.AuthenticationProperties { RedirectUri = redirectUri },
-        new[] { OpenIdConnectDefaults.AuthenticationScheme });
+        [OpenIdConnectDefaults.AuthenticationScheme]);
 });
 
 if (!app.Environment.IsDevelopment())
