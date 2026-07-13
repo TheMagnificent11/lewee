@@ -41,6 +41,19 @@ var app = builder.Build();
 
 app.MapDefaultEndpoints();
 
+app.MapGet("/authentication/login", (string? returnUrl) =>
+{
+    var redirectUri = "/";
+    if (!string.IsNullOrWhiteSpace(returnUrl) && Uri.TryCreate(returnUrl, UriKind.Relative, out _))
+    {
+        redirectUri = returnUrl;
+    }
+
+    return Results.Challenge(
+        new Microsoft.AspNetCore.Authentication.AuthenticationProperties { RedirectUri = redirectUri },
+        new[] { OpenIdConnectDefaults.AuthenticationScheme });
+});
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler(PageRoutes.Error, createScopeForErrors: true);
