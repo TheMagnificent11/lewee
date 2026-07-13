@@ -1,4 +1,4 @@
-<Router AppAssembly="typeof(Pizzeria.Store.Components._Imports).Assembly">
+<Router AppAssembly="typeof(App).Assembly" AdditionalAssemblies="new[] { typeof(Pizzeria.Store.Components._Imports).Assembly }">
     <Found Context="routeData">
         <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)">
             <NotAuthorized>

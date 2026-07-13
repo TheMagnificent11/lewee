@@ -38,7 +38,8 @@ public static class SseEndpointConfiguration
                 return Results.Unauthorized();
             }
 
-            var userChannel = connectionManager.GetOrCreateChannel(userId);
+            var connectionId = httpContext.Connection.Id;
+            var userChannel = connectionManager.GetOrCreateChannel(userId, connectionId);
 
             async IAsyncEnumerable<SseItem<ClientMessage>> StreamEventsAsync()
             {
@@ -68,7 +69,7 @@ public static class SseEndpointConfiguration
                 finally
                 {
                     await enumerator.DisposeAsync();
-                    connectionManager.RemoveChannel(userId);
+                    connectionManager.RemoveChannel(connectionId);
                 }
             }
 

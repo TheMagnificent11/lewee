@@ -33,14 +33,14 @@ internal sealed class ClientEventChannelHandler : INotificationHandler<ClientEve
             return;
         }
 
-        var channelFound = this.connectionManager.TryGetChannelWriter(notification.UserId, out var channelWriter);
-        if (!channelFound)
+        var userWriters = this.connectionManager.GetChannelWritersForUser(notification.UserId).ToList();
+        if (userWriters.Count == 0)
         {
             this.logger.LogNoUserEventsChannelFound(notification.UserId);
             return;
         }
 
-        await this.WriteToChannelAsync(channelWriter!, notification, cancellationToken);
+        await Task.WhenAll(userWriters.Select(writer => this.WriteToChannelAsync(writer, notification, cancellationToken)));
     }
 
     private async Task WriteToChannelAsync(
