@@ -16,8 +16,4 @@
     </AssemblyAttribute>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="ServerSentEvents\" />
-  </ItemGroup>
-
 </Project>

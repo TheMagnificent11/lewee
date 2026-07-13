@@ -32,7 +32,7 @@ public class CustomerCreatedEventHandler : INotificationHandler<UserCreatedEvent
         };
 
         // Send client event to notify the web client
-        var clientEvent = new ClientEvent(notification.CorrelationId, userId: null, dto);
+        var clientEvent = new ClientEvent(notification.CorrelationId, notification.ExternalId, dto);
 
         await this.mediator.Publish(clientEvent, cancellationToken);
 

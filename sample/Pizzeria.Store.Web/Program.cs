@@ -24,7 +24,8 @@ builder.Services
         events: new OpenIdConnectEvents
         {
             OnTokenValidated = async context => await context.CreateCustomerOnFirstLoginAsync(),
-        });
+        },
+        requireHttpsMetadata: false);
 
 builder.Services
     .AddStoreState(builder.Environment.IsDevelopment())

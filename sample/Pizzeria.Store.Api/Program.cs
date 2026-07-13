@@ -29,7 +29,8 @@ builder.Services
     .AddKeycloakAuthenticationForWebApi(
         keycloakServiceName: ServiceNames.AuthServer,
         keycloakRealmName: CommonEnvironments.Auth.RealmName,
-        keycloakClientId: CommonEnvironments.Auth.Clients.StoreApi)
+        keycloakClientId: CommonEnvironments.Auth.Clients.StoreApi,
+        requireHttpsMetadata: false)
     .AddDatabaseHealthCheck<StoreDbContext>()
     .AddClientEventBroadcaster()
     .AddFastEndpoints();

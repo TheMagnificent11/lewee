@@ -48,13 +48,18 @@ public static class KeycloakAuthenticationConfiguration
     /// <param name="keycloakRealmName">Keycloak realm name</param>
     /// <param name="keycloakClientId">Keycloak client ID</param>
     /// <param name="events">OpenID Connect events to handle authentication lifecycle</param>
+    /// <param name="requireHttpsMetadata">
+    /// Whether HTTPS is required for the metadata endpoint. Defaults to <see langword="true"/>.
+    /// Set to <see langword="false"/> only for local development or testing environments.
+    /// </param>
     /// <returns>The updated services collection</returns>
     public static IServiceCollection AddKeycloakAuthenticationForWebApp(
         this IServiceCollection services,
         string keycloakServiceName,
         string keycloakRealmName,
         string keycloakClientId,
-        OpenIdConnectEvents? events = null)
+        OpenIdConnectEvents? events = null,
+        bool requireHttpsMetadata = true)
     {
         services
             .AddAuthentication(options =>
@@ -72,7 +77,7 @@ public static class KeycloakAuthenticationConfiguration
                     options.ResponseType = "code"; // Use authorization code flow
                     options.SaveTokens = true;
                     options.GetClaimsFromUserInfoEndpoint = true;
-                    options.RequireHttpsMetadata = false; // For development/testing only
+                    options.RequireHttpsMetadata = requireHttpsMetadata;
                     options.UsePkce = true; // Enable PKCE for public clients
 
                     // Map claims
@@ -105,12 +110,17 @@ public static class KeycloakAuthenticationConfiguration
     /// <param name="keycloakServiceName">Name of the Keycloak service for service discovery</param>
     /// <param name="keycloakRealmName">Keycloak realm name</param>
     /// <param name="keycloakClientId">Keycloak client ID (used as valid audience)</param>
+    /// <param name="requireHttpsMetadata">
+    /// Whether HTTPS is required for the metadata endpoint. Defaults to <see langword="true"/>.
+    /// Set to <see langword="false"/> only for local development or testing environments.
+    /// </param>
     /// <returns>The updated services collection</returns>
     public static IServiceCollection AddKeycloakAuthenticationForWebApi(
         this IServiceCollection services,
         string keycloakServiceName,
         string keycloakRealmName,
-        string keycloakClientId)
+        string keycloakClientId,
+        bool requireHttpsMetadata = true)
     {
         services
             .AddAuthentication()
@@ -119,7 +129,7 @@ public static class KeycloakAuthenticationConfiguration
                 realm: keycloakRealmName,
                 options =>
                 {
-                    options.RequireHttpsMetadata = false; // For development/testing only
+                    options.RequireHttpsMetadata = requireHttpsMetadata;
 
                     // Map claims
                     options.TokenValidationParameters.NameClaimType = "preferred_username";
