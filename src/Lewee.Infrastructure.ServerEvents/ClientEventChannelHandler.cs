@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Threading.Channels;
 using Lewee.Application.Mediation.Notifications;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -24,7 +25,11 @@ internal sealed class ClientEventChannelHandler : INotificationHandler<ClientEve
     {
         if (string.IsNullOrWhiteSpace(notification.UserId))
         {
-            // TODO: Send to all user channels
+            var writeTasks = this.connectionManager
+                .GetAllChannelWriters()
+                .Select(writer => this.WriteToChannelAsync(writer, notification, cancellationToken));
+
+            await Task.WhenAll(writeTasks);
             return;
         }
 
@@ -35,6 +40,21 @@ internal sealed class ClientEventChannelHandler : INotificationHandler<ClientEve
             return;
         }
 
-        await channelWriter!.WriteAsync(notification, cancellationToken);
+        await this.WriteToChannelAsync(channelWriter!, notification, cancellationToken);
+    }
+
+    private async Task WriteToChannelAsync(
+        ChannelWriter<ClientEvent> writer,
+        ClientEvent notification,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            await writer.WriteAsync(notification, cancellationToken);
+        }
+        catch (ChannelClosedException ex)
+        {
+            this.logger.LogChannelClosedOnWrite(ex);
+        }
     }
 }

@@ -67,6 +67,18 @@ internal sealed class ConnectionManager
     }
 
     /// <summary>
+    /// Gets the channel writers for all currently connected users.
+    /// </summary>
+    /// <remarks>Use the returned writers to broadcast a <see cref="ClientEvent"/> to every connected user.
+    /// The snapshot is taken at the time of the call; channels added or removed concurrently may or may not be
+    /// included.</remarks>
+    /// <returns>An enumerable of <see cref="ChannelWriter{ClientEvent}"/> for every registered user channel.</returns>
+    public IEnumerable<ChannelWriter<ClientEvent>> GetAllChannelWriters()
+    {
+        return this.userChannels.Values.Select(c => c.Writer);
+    }
+
+    /// <summary>
     /// Removes the user channel associated with the specified user identifier from the collection.
     /// </summary>
     /// <remarks>If the specified user identifier does not exist in the collection, no action is

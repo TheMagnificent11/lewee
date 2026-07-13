@@ -1,6 +1,5 @@
 using System.Net.ServerSentEvents;
 using System.Security.Claims;
-using System.Threading.Channels;
 using Lewee.Application.Mediation.Notifications;
 using Lewee.Common;
 using Microsoft.AspNetCore.Builder;
@@ -28,7 +27,7 @@ public static class SseEndpointConfiguration
         app.MapGet(
             EventsEndpoint,
             async (
-                ChannelReader<ClientEvent> channelReader,
+                ConnectionManager connectionManager,
                 HttpContext httpContext,
                 CancellationToken cancellationToken) =>
         {
@@ -39,9 +38,11 @@ public static class SseEndpointConfiguration
                 return Results.Unauthorized();
             }
 
+            var userChannel = connectionManager.GetOrCreateChannel(userId);
+
             async IAsyncEnumerable<SseItem<ClientMessage>> StreamEventsAsync()
             {
-                var enumerator = channelReader.ReadAllAsync(cancellationToken).GetAsyncEnumerator(cancellationToken);
+                var enumerator = userChannel.Reader.ReadAllAsync(cancellationToken).GetAsyncEnumerator(cancellationToken);
                 try
                 {
                     while (true)
@@ -60,16 +61,14 @@ public static class SseEndpointConfiguration
                         }
 
                         var clientEvent = enumerator.Current;
-                        if (clientEvent.UserId == userId)
-                        {
-                            var clientMessage = clientEvent.ToClientMessage();
-                            yield return new SseItem<ClientMessage>(clientMessage, clientEvent.ContractFullClassName);
-                        }
+                        var clientMessage = clientEvent.ToClientMessage();
+                        yield return new SseItem<ClientMessage>(clientMessage, clientEvent.ContractFullClassName);
                     }
                 }
                 finally
                 {
                     await enumerator.DisposeAsync();
+                    connectionManager.RemoveChannel(userId);
                 }
             }
 

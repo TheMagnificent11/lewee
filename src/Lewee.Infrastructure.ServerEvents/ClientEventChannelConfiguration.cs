@@ -1,4 +1,3 @@
-using System.Threading.Channels;
 using Lewee.Application.Mediation.Notifications;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,16 +16,7 @@ public static class ClientEventChannelConfiguration
     /// <returns>The updated services collection</returns>
     public static IServiceCollection AddClientEventBroadcaster(this IServiceCollection services)
     {
-        var channel = Channel.CreateUnbounded<ClientEvent>(new UnboundedChannelOptions
-        {
-            SingleReader = false,
-            SingleWriter = false,
-        });
-
-        services.AddSingleton(channel);
-        services.AddSingleton(channel.Reader);
-        services.AddSingleton(channel.Writer);
-
+        services.AddSingleton<ConnectionManager>();
         services.AddTransient<INotificationHandler<ClientEvent>, ClientEventChannelHandler>();
 
         return services;
