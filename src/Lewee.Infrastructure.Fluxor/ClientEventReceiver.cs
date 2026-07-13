@@ -62,32 +62,32 @@ public sealed class ClientEventReceiver : ComponentBase, IAsyncDisposable
     }
 
     /// <inheritdoc/>
-protected override async Task OnAfterRenderAsync(bool firstRender)
-{
-    if (this.isListening)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        return;
-    }
-
-    var userId = this.AuthenticatedUserService.UserId;
-
-    // Only start listening if the user is authenticated
-    if (string.IsNullOrEmpty(userId))
-    {
-        if (firstRender)
+        if (this.isListening)
         {
-            this.Logger.LogSkippingUnauthenticated();
+            return;
         }
 
-        return;
+        var userId = this.AuthenticatedUserService.UserId;
+
+        // Only start listening if the user is authenticated
+        if (string.IsNullOrEmpty(userId))
+        {
+            if (firstRender)
+            {
+                this.Logger.LogSkippingUnauthenticated();
+            }
+
+            return;
+        }
+
+        this.MessageReceiver.OnMessageReceived += this.HandleClientMessage;
+
+        await this.MessageReceiver.StartAsync();
+        this.isListening = true;
+        this.Logger.LogStartedListening(userId);
     }
-
-    this.MessageReceiver.OnMessageReceived += this.HandleClientMessage;
-
-    await this.MessageReceiver.StartAsync();
-    this.isListening = true;
-    this.Logger.LogStartedListening(userId);
-}
 
     private void HandleClientMessage(object? sender, ClientMessageEventArgs e)
     {
