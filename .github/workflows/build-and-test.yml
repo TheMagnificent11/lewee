@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   buildAndTest:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4.2.2
         with:
@@ -42,7 +42,7 @@ jobs:
         run: dotnet tool install --global dotnet-reportgenerator-globaltool
 
       - name: Install HTTPS development certificate
-        run: dotnet dev-certs https
+        run: dotnet dev-certs https --trust
 
       - name: Install GitVersion
         uses: gittools/actions/gitversion/setup@v3.1.11
