@@ -18,17 +18,15 @@ For **client-side** event reception in Blazor applications, see [Lewee.Infrastru
 
 ### ClientEventChannelHandler
 
-MediatR notification handler that writes `ClientEvent` notifications to a channel for SSE broadcasting:
+MediatR notification handler that fans out `ClientEvent` notifications to all active SSE connections (per user, or broadcast when `UserId` is null/empty).
 
-```csharp
-internal sealed class ClientEventChannelHandler : INotificationHandler<ClientEvent>
-{
-    public async Task Handle(ClientEvent notification, CancellationToken cancellationToken)
+    internal sealed class ClientEventChannelHandler : INotificationHandler<ClientEvent>
     {
-        await this.channelWriter.WriteAsync(notification, cancellationToken);
+        public async Task Handle(ClientEvent notification, CancellationToken cancellationToken)
+        {
+            // Writes the event to all per-connection channels for the user (or all channels when broadcasting)
+        }
     }
-}
-```
 
 ### SSE Endpoint Configuration
 
