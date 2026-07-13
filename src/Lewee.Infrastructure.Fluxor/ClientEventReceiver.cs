@@ -124,14 +124,21 @@ public sealed class ClientEventReceiver : ComponentBase, IAsyncDisposable
 
             _ = this.InvokeAsync(() =>
             {
-                try
+                using (this.Logger.BeginScope(new Dictionary<string, object>(StringComparer.Ordinal)
                 {
-                    this.Dispatcher.Dispatch(action);
-                    this.Logger.LogDispatchedAction(action.GetType().FullName);
-                }
-                catch (Exception ex)
+                    [LoggingConsts.CorrelationId] = clientMessage.CorrelationId,
+                    ["ContractType"] = clientMessage.ContractFullClassName,
+                }))
                 {
-                    this.Logger.LogErrorDispatchingAction(ex, action.GetType().FullName);
+                    try
+                    {
+                        this.Dispatcher.Dispatch(action);
+                        this.Logger.LogDispatchedAction(action.GetType().FullName);
+                    }
+                    catch (Exception ex)
+                    {
+                        this.Logger.LogErrorDispatchingAction(ex, action.GetType().FullName);
+                    }
                 }
             });
         }
