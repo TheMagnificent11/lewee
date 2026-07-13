@@ -68,8 +68,10 @@ internal sealed class ConnectionManager
     /// <remarks>If the specified connection identifier does not exist in the collection, no action is
     /// taken.</remarks>
     /// <param name="connectionId">The unique identifier of the connection whose channel is to be removed.</param>
-    public void RemoveChannel(string connectionId)
+public void RemoveChannel(string connectionId)
+{
+    if (this.connectionChannels.TryRemove(connectionId, out var entry))
     {
-        _ = this.connectionChannels.TryRemove(connectionId, out _);
+        entry.Channel.Writer.TryComplete();
     }
 }
