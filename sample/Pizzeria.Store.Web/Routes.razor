@@ -7,4 +7,12 @@
         </AuthorizeRouteView>
         <FocusOnNavigate RouteData="routeData" Selector="h1" />
     </Found>
+    <NotFound>
+        <PageTitle>Not Found</PageTitle>
+        <LayoutView Layout="typeof(MainLayout)">
+            <MudText Typo="Typo.h4" GutterBottom="true">Page Not Found</MudText>
+            <MudText Typo="Typo.body1">Sorry, there's nothing at this address.</MudText>
+            <MudButton Href="/" Variant="Variant.Filled" Color="Color.Primary" Class="mt-4">Return to Home</MudButton>
+        </LayoutView>
+    </NotFound>
 </Router>
