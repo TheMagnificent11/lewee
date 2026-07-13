@@ -139,13 +139,14 @@ public class SseClientMessageReceiver : IAsyncDisposable
             }
         }
 
-        static IAsyncEnumerable<string> GetSseDataAsync(Stream stream, CancellationToken cancellationToken)
-        {
-            return SseParser.Create(stream)
-                .EnumerateAsync(cancellationToken)
-                .Select(x => x.Data)
-                .Where(x => x != null);
-        }
+static IAsyncEnumerable<string> GetSseDataAsync(Stream stream, CancellationToken cancellationToken)
+{
+    return SseParser.Create(stream)
+        .EnumerateAsync(cancellationToken)
+        .Select(x => x.Data)
+        .Where(static x => !string.IsNullOrEmpty(x))
+        .Select(static x => x!);
+}
     }
 
     private void ProcessEvent(string data)
