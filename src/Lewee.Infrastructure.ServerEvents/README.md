@@ -11,7 +11,6 @@ For **client-side** event reception in Blazor applications, see [Lewee.Infrastru
 ## Dependencies
 
 - `Microsoft.AspNetCore.App` - ASP.NET Core framework
-- `Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore` - Health check support
 - `Lewee.Application` - Application layer with ClientEvent notification
 - `Lewee.Common` - Common utilities
 
