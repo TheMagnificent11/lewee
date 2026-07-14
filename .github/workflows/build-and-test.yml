@@ -25,6 +25,7 @@ jobs:
           dotnet-version: 10.0.*
 
       # Commented-out steps are because the tests from Pizzeria.Tests.Integration.csproj are filtered-out due to the workflow getting stuck on these tests
+      # Fix as part [#499](https://github.com/TheMagnificent11/lewee/issues/499)
 
       # - name: Install Aspire Workload
       #   run: dotnet workload install aspire
