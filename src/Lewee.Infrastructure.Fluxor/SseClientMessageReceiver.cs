@@ -58,6 +58,11 @@ public class SseClientMessageReceiver : IAsyncDisposable
     /// <returns>Task representing the start operation</returns>
     public virtual Task StartAsync(CancellationToken cancellationToken = default)
     {
+        if (this.cts != null)
+        {
+            return Task.CompletedTask;
+        }
+
         this.cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         this.listeningTask = this.ListenForEventsAsync(this.cts.Token);
         return Task.CompletedTask;
