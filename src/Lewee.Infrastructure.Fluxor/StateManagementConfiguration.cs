@@ -59,6 +59,7 @@ public static class StateManagementConfiguration
 
         services.AddHttpClient<SseClientMessageReceiver>(client =>
         {
+            client.Timeout = System.Threading.Timeout.InfiniteTimeSpan;
             configureHttpClient?.Invoke(client);
         })
         .AddHttpMessageHandler<AuthTokenDelegatingHandler>();
