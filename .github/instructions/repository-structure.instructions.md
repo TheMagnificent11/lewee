@@ -38,7 +38,7 @@ lewee/
 │   ├── Pizzeria.Store.StateManagement/ # Fluxor state management
 │   ├── Pizzeria.Store.Components/ # Shared Blazor components
 │   ├── Pizzeria.Store.Api/       # FastEndpoints Web API
-│   ├── Pizzeria.Store.Web/       # Blazor Server front-end
+│   ├── Pizzeria.Store.Web/       # Blazor Web App with Interactive Server
 │   ├── Pizzeria.Store/           # Pizzeria Store shared utilities
 │   ├── Pizzeria.Auth/            # Authentication services
 │   ├── Pizzeria.Configuration/   # Shared configuration

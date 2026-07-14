@@ -34,7 +34,7 @@ Below is a summary of the dependencies used by Lewee. Note that this isn't a lis
 - [Entity Framework Core](https://learn.microsoft.com/en-us/ef)
 - [MediatR](https://mediatr.io/) version 12.5.0 (latest free version)
 - [FastEndpoints](https://fast-endpoints.com)
-- [FluentValidation](https://docs.fluentvalidation.net/en/latest) version 8.7.0 (free version)
+- [FluentValidation](https://docs.fluentvalidation.net/en/latest) version 12.1.1
 - [Fluxor](https://github.com/mrpmorris/Fluxor) for Blazor state management
 - [xUnit](https://xunit.net)
 
@@ -58,7 +58,7 @@ This will start the .NET Aspire dashboard and orchestrate the following services
 - PostgreSQL database
 - Keycloak authentication server
 - Pizzeria Store API (FastEndpoints Web API)
-- Pizzeria Store Web (Blazor Server application)
+- Pizzeria Store Web (Blazor Web App with Interactive Server)
 
 Navigate to the Aspire dashboard to monitor services and view logs.
 

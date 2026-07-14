@@ -189,7 +189,7 @@ For the authentication infrastructure to function:
 
 1. `IHttpContextAccessor` must be registered in the DI container
 2. The user must be authenticated with an `access_token` in the authentication context
-3. `HttpContext` must be accessible (supported in Blazor Server and server-side rendering scenarios)
+3. `HttpContext` must be accessible (supported in Blazor Web Apps with Interactive Server and server-side rendering scenarios)
 
 ## Integration with Lewee DDD Layers
 

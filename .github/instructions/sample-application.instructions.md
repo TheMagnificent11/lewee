@@ -10,7 +10,7 @@ The sample pizzeria application demonstrates Lewee framework usage with a multi-
 
 **Current State:**
 - Pizzeria Store API (`Pizzeria.Store.Api` - FastEndpoints Web API)
-- Pizzeria Store Web (`Pizzeria.Store.Web` - Blazor Server front-end with Interactive Server components)
+- Pizzeria Store Web (`Pizzeria.Store.Web` - Blazor Web App with Interactive Server)
 - PostgreSQL database (managed by Aspire)
 - Keycloak authentication server (managed by Aspire)
 - Authentication services (`Pizzeria.Auth`)
@@ -90,7 +90,7 @@ See `Pizzeria.Store.Application` project for guidance on feature namespace organ
 - **Authentication**: Keycloak for OpenID Connect authentication
 - **No Manual Setup**: Aspire handles container lifecycle
 - **API**: FastEndpoints for CQRS commands/queries
-- **Web**: Blazor Server with Interactive Server render mode
+- **Web**: Blazor Web App with Interactive Server render mode
 - **State Management**: Fluxor for client-side state management
 - **Real-time Updates**: Server-Sent Events for real-time notifications
 - **Message Bus**: RabbitMQ planned for future inter-service communication

@@ -27,7 +27,7 @@ For development guidance in this directory, see the following instruction files:
 | `Pizzeria.Store.StateManagement` | Fluxor state management features |
 | `Pizzeria.Store.Components` | Shared Blazor components |
 | `Pizzeria.Store.Api` | Web API with FastEndpoints for CQRS commands/queries |
-| `Pizzeria.Store.Web` | Blazor Server front-end using Refit to call the API |
+| `Pizzeria.Store.Web` | Blazor Web App with Interactive Server using Refit to call the API |
 
 ## Architecture
 
@@ -69,7 +69,7 @@ This will start:
 - CQRS with MediatR (API side)
 - Entity Framework with PostgreSQL
 - FastEndpoints API
-- Blazor Server with Fluxor state management
+- Blazor Web App with Fluxor state management
 - Refit HTTP client for API communication
 - Server-Sent Events for real-time notifications
 - .NET Aspire orchestration
