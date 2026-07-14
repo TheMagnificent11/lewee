@@ -1,19 +1,18 @@
-﻿@using Pizzeria.Store.Components
-
-<Router
-    AppAssembly="typeof(Program).Assembly"
-    AdditionalAssemblies="new[] { typeof(Home).Assembly }">
-
+<Router AppAssembly="typeof(App).Assembly" AdditionalAssemblies="new[] { typeof(Pizzeria.Store.Components._Imports).Assembly }">
     <Found Context="routeData">
-        <RouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)" />
+        <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)">
+            <NotAuthorized>
+                <RedirectToLogin />
+            </NotAuthorized>
+        </AuthorizeRouteView>
         <FocusOnNavigate RouteData="routeData" Selector="h1" />
     </Found>
-
     <NotFound>
-        <PageTitle>Not found</PageTitle>
-        <LayoutView Layout="@typeof(MainLayout)">
-            <p role="alert">Sorry, there's nothing at this address.</p>
+        <PageTitle>Not Found</PageTitle>
+        <LayoutView Layout="typeof(MainLayout)">
+            <MudText Typo="Typo.h4" GutterBottom="true">Page Not Found</MudText>
+            <MudText Typo="Typo.body1">Sorry, there's nothing at this address.</MudText>
+            <MudButton Href="/" Variant="Variant.Filled" Color="Color.Primary" Class="mt-4">Return to Home</MudButton>
         </LayoutView>
     </NotFound>
-
 </Router>

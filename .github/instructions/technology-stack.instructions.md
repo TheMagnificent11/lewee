@@ -14,7 +14,7 @@ applyTo: "**/*"
 | Entity Framework Core | 10.0 | ORM | [docs.microsoft.com/ef](https://docs.microsoft.com/ef/core) |
 | MediatR | 12.5.0 | Mediator pattern (free version) | [mediatr.io](https://mediatr.io) |
 | FastEndpoints | Latest | API endpoints | [fast-endpoints.com](https://fast-endpoints.com) |
-| FluentValidation | 8.7.0 | Validation (free version) | [fluentvalidation.net](https://fluentvalidation.net) |
+| FluentValidation | 12.1.1 | Validation | [fluentvalidation.net](https://fluentvalidation.net) |
 | Ardalis.Specification | Latest | Specification pattern | [specification.ardalis.com](http://specification.ardalis.com) |
 | Polly | 8.6.5 | Resilience and transient fault handling | [pollydocs.org](https://www.pollydocs.org/) |
 | xUnit | Latest | Testing framework | [xunit.net](https://xunit.net) |
@@ -23,7 +23,7 @@ applyTo: "**/*"
 
 **Pinned Versions:**
 - MediatR 12.5.0 (last free version)
-- FluentValidation 8.7.0 (last free version)
+- FluentValidation 12.1.1
 
 **Latest Versions:**
 - All Microsoft packages (.NET, EF Core, Aspire)

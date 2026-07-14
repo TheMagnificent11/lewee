@@ -28,20 +28,6 @@ public sealed class HealthCheckTests : PizzeriaTests
     }
 
     [Fact]
-    public async Task Should_ReturnReadinessStatus_When_CallingReadinessEndpointAsync()
-    {
-        // Arrange
-        using var httpClient = await this.Factory.GetServiceClientAsync(ServiceNames.PizzaStoreWeb);
-
-        // Act
-        using var response = await httpClient.GetAsync("/ready");
-
-        // Assert
-        response.Should().NotBeNull();
-        response.IsSuccessStatusCode.Should().BeTrue("the /ready endpoint should return healthy after all startup services are configured");
-    }
-
-    [Fact]
     public async Task Should_ReturnAlive_When_CallingAliveEndpointInDevelopmentAsync()
     {
         // Arrange

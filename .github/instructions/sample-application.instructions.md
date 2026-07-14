@@ -9,9 +9,10 @@ applyTo: "sample/**/*"
 The sample pizzeria application demonstrates Lewee framework usage with a multi-service architecture.
 
 **Current State:**
-- Pizzeria Store API (operational)
-- Pizzeria Store Web (`Pizzeria.Store.Web` - Blazor WebAssembly front-end)
+- Pizzeria Store API (`Pizzeria.Store.Api` - FastEndpoints Web API)
+- Pizzeria Store Web (`Pizzeria.Store.Web` - Blazor Web App with Interactive Server)
 - PostgreSQL database (managed by Aspire)
+- Keycloak authentication server (managed by Aspire)
 - Authentication services (`Pizzeria.Auth`)
 - Shared configuration (`Pizzeria.Configuration`)
 
@@ -26,11 +27,13 @@ dotnet run --project ./sample/Pizzeria.AppHost/
 1. .NET Aspire dashboard starts (typically at https://localhost:17268)
 2. PostgreSQL container launches automatically
 3. Pizzeria Store API becomes available
-4. All services are monitored through the Aspire dashboard
+4. Pizzeria Store Web becomes available
+5. All services are monitored through the Aspire dashboard
 
 **Access Points:**
 - Aspire Dashboard: Check console output for URL (typically https://localhost:17268)
 - Store API: URL shown in Aspire dashboard
+- Store Web: URL shown in Aspire dashboard
 
 ## Development Workflow
 
@@ -62,9 +65,32 @@ Follow [code quality instructions](./code-quality.instructions.md), especially f
 
 No need for XML documentation in sample application code. Follow existing patterns and maintain readability.
 
+## Namespace Conventions
+
+**Feature Namespaces:** Use feature-based namespaces (organized by aggregate root) instead of type-based namespaces.
+
+**Correct:**
+```
+Pizzeria.Store.Api.Orders
+Pizzeria.Store.Api.Pizzas
+Pizzeria.Store.Api.Customers
+```
+
+**Incorrect:**
+```
+Pizzeria.Store.Api.Endpoints
+```
+
+See `Pizzeria.Store.Application` project for guidance on feature namespace organization.
+
 ## Architecture Notes
 
 - **Orchestration**: .NET Aspire manages all services and containers
 - **Database**: PostgreSQL with automatic schema management
+- **Authentication**: Keycloak for OpenID Connect authentication
 - **No Manual Setup**: Aspire handles container lifecycle
+- **API**: FastEndpoints for CQRS commands/queries
+- **Web**: Blazor Web App with Interactive Server render mode
+- **State Management**: Fluxor for client-side state management
+- **Real-time Updates**: Server-Sent Events for real-time notifications
 - **Message Bus**: RabbitMQ planned for future inter-service communication

@@ -22,10 +22,26 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 9.0.*
+          dotnet-version: 10.0.*
 
-      - name: Install Aspire Workload
-        run: dotnet workload install aspire
+      # Commented-out steps are because the tests from Pizzeria.Tests.Integration.csproj are filtered-out due to the workflow getting stuck on these tests
+      # Fix as part [#499](https://github.com/TheMagnificent11/lewee/issues/499)
+
+      # - name: Install Aspire Workload
+      #   run: dotnet workload install aspire
+
+      # - name: Cache Docker images
+      #   uses: ScribeMD/docker-cache@0.5.0
+      #   with:
+      #     key: docker-${{ runner.os }}-${{ hashFiles('sample/Pizzeria.AppHost/Program.cs', 'sample/Pizzeria.AppHost/Pizzeria.AppHost.csproj') }}
+      #     restore-keys: |
+      #       docker-${{ runner.os }}-
+
+      # - name: Install HTTPS development certificate
+      #   run: dotnet dev-certs https
+
+      # - name: Install Playwright Browsers
+      #   run: pwsh sample-tests/Pizzeria.Tests.Integration/bin/Release/net10.0/playwright.ps1 install --with-deps chromium
 
       - name: Install dotnet-coverage tool
         run: dotnet tool install --global dotnet-coverage
@@ -33,9 +49,6 @@ jobs:
       - name: Install ReportGenerator
         if: ${{ inputs.is-pr == true }}
         run: dotnet tool install --global dotnet-reportgenerator-globaltool
-
-      - name: Install HTTPS development certificate
-        run: dotnet dev-certs https --trust
 
       - name: Install GitVersion
         uses: gittools/actions/gitversion/setup@v3.1.11
@@ -57,7 +70,7 @@ jobs:
         run: dotnet build --configuration Release --no-restore --nologo
 
       - name: Test
-        run: dotnet-coverage collect "dotnet test --configuration Release --no-build --nologo" --settings coverage.xml -f cobertura -o ./coverage/coverage.cobertura.xml
+        run: dotnet-coverage collect --settings coverage.xml -f cobertura -o ./coverage/coverage.cobertura.xml -- dotnet test --configuration Release --no-build --nologo --filter "Category!=Aspire"
 
       - name: Generate Coverage Report
         if: ${{ inputs.is-pr == true }}

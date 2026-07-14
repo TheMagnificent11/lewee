@@ -11,11 +11,13 @@
     <PackageReference Include="Aspire.Hosting.AppHost" />
     <PackageReference Include="Aspire.Hosting.Keycloak" />
     <PackageReference Include="Aspire.Hosting.PostgreSQL" />
+    <PackageReference Include="MessagePack" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Pizzeria.Common\Pizzeria.Common.csproj" IsAspireProjectResource="false" />
     <ProjectReference Include="..\Pizzeria.Configuration\Pizzeria.Configuration.csproj" />
+    <ProjectReference Include="..\Pizzeria.Store.Api\Pizzeria.Store.Api.csproj" />
     <ProjectReference Include="..\Pizzeria.Store.Web\Pizzeria.Store.Web.csproj" />
   </ItemGroup>
 

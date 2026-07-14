@@ -3,6 +3,7 @@ using FluentValidation;
 using Lewee.Application.Mediation.Behaviors;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+
 namespace Lewee.Application;
 
 /// <summary>
@@ -22,7 +23,11 @@ public static class ApplicationConfiguration
         Assembly applicationAssembly,
         Assembly domainAssembly)
     {
-        services.AddMediatR(config => config.RegisterServicesFromAssemblies(applicationAssembly, domainAssembly));
+        var leweeApplicationAssembly = typeof(ApplicationConfiguration).Assembly;
+        services.AddMediatR(config => config.RegisterServicesFromAssemblies(
+            applicationAssembly,
+            domainAssembly,
+            leweeApplicationAssembly));
         services.AddValidatorsFromAssembly(applicationAssembly, includeInternalTypes: true);
         services.AddPipelineBehaviors();
 
