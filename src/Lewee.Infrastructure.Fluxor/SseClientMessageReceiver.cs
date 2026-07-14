@@ -169,6 +169,7 @@ public class SseClientMessageReceiver : IAsyncDisposable
             }
 
             this.RaiseMessageReceived(message);
+        }
         catch (JsonException ex)
         {
             this.logger.LogSseDeserializationError(ex);
