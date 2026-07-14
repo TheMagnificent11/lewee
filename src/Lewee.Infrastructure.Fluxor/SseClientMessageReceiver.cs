@@ -158,17 +158,17 @@ public class SseClientMessageReceiver : IAsyncDisposable
     {
         try
         {
-            // Deserialize the wrapper object that contains the client message
-            // Note: The server sends SseItem<ClientMessage> serialized as JSON with camelCase property names
+            // The SSE parser returns the `data:` payload for each event.
+            // Depending on server implementation, this may be JSON for `ClientMessage` directly, or a wrapper.
             var wrapper = JsonSerializer.Deserialize<SseItemWrapper>(data, this.sseJsonOptions);
-            if (wrapper?.Data == null)
+            var message = wrapper?.Data ?? JsonSerializer.Deserialize<ClientMessage>(data, this.sseJsonOptions);
+            if (message == null)
             {
                 this.logger.LogSseEventDataNull();
                 return;
             }
 
-            this.RaiseMessageReceived(wrapper.Data);
-        }
+            this.RaiseMessageReceived(message);
         catch (JsonException ex)
         {
             this.logger.LogSseDeserializationError(ex);
