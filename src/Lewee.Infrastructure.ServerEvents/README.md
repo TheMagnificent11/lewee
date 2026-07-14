@@ -39,9 +39,8 @@ builder.Services.AddClientEventBroadcaster();
 ```
 
 This method:
-- Creates an unbounded channel for `ClientEvent` messages
-- Registers the channel reader and writer as singletons
-- Registers `ClientEventChannelHandler` as a notification handler
+- Registers `ConnectionManager` as a singleton to manage per-connection channels
+- Registers `ClientEventChannelHandler` as a notification handler for `ClientEvent` fan-out
 
 #### MapSseEndpoint
 
