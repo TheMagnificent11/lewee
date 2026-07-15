@@ -14,12 +14,15 @@ lewee/
 │   ├── Lewee.Domain/             # Domain layer abstractions and base classes
 │   ├── Lewee.Application/        # Application layer with CQRS and validation
 │   ├── Lewee.Common/             # Cross-cutting utilities, result types, and constants
-│   ├── Lewee.StateManagement/    # Fluxor state management and action interfaces
 │   ├── Lewee.Infrastructure.Data/           # Entity Framework core integration
 │   ├── Lewee.Infrastructure.PostgreSQL/     # PostgreSQL-specific features
-│   ├── Lewee.Infrastructure.AspNet/         # ASP.NET Core integration
-│   ├── Lewee.Infrastructure.AspNet.WebApi/  # Web API utilities
-│   ├── Lewee.Blazor/             # Blazor component library
+│   ├── Lewee.Infrastructure.Auth/           # Authentication infrastructure
+│   ├── Lewee.Infrastructure.Correlate/      # Correlation ID middleware
+│   ├── Lewee.Infrastructure.FastEndpoints/  # FastEndpoints base classes
+│   ├── Lewee.Infrastructure.Fluxor/         # Fluxor state management and SSE client
+│   ├── Lewee.Infrastructure.ServerEvents/   # Server-Sent Events infrastructure
+│   ├── Lewee.Infrastructure.Keycloak/       # Keycloak authentication
+│   ├── Lewee.Infrastructure.Refit/          # Refit HTTP client integration
 │   └── Lewee.Playwright/         # Playwright browser automation for testing
 │
 ├── sample/                       # Example application (demonstrates usage)
@@ -34,7 +37,9 @@ lewee/
 │   ├── Pizzeria.Store.Contracts/ # API DTOs and contracts
 │   ├── Pizzeria.Store.StateManagement/ # Fluxor state management
 │   ├── Pizzeria.Store.Components/ # Shared Blazor components
-│   ├── Pizzeria.Store.Web/       # Blazor WebAssembly front-end
+│   ├── Pizzeria.Store.Api/       # FastEndpoints Web API
+│   ├── Pizzeria.Store.Web/       # Blazor Web App with Interactive Server
+│   ├── Pizzeria.Store/           # Pizzeria Store shared utilities
 │   ├── Pizzeria.Auth/            # Authentication services
 │   ├── Pizzeria.Configuration/   # Shared configuration
 │   └── Pizzeria.DataSeeder/      # Database seeding utilities
@@ -60,10 +65,12 @@ lewee/
 
 | Layer | Purpose | Example Projects | Dependencies Flow |
 |-------|---------|-----------------|-------------------|
-| Domain | Business logic and entities | Lewee.Domain, Pizzeria.Store.Domain | No dependencies on other layers |
+| Common | Shared contracts and utilities | Lewee.Common | No dependencies on other Lewee layers |
+| Domain | Business logic and entities | Lewee.Domain, Pizzeria.Store.Domain | Depends on Common |
 | Application | Use cases and orchestration | Lewee.Application, Pizzeria.Store.Application | Depends on Domain |
-| Infrastructure | External concerns (DB, API) | Lewee.Infrastructure.*, Pizzeria.Store.Data | Depends on Application and Domain |
-| Presentation | User interface | Pizzeria.Store.Api, Lewee.Blazor | Depends on all layers |
+| Infrastructure (Server) | Server-side concerns (DB, API, Auth) | Lewee.Infrastructure.Data, Lewee.Infrastructure.ServerEvents | Depends on Application and Domain |
+| Infrastructure (Client) | Client-side concerns (State, SSE) | Lewee.Infrastructure.Fluxor | Depends on Common |
+| Presentation | User interface | Pizzeria.Store.Api, Pizzeria.Store.Web | Depends on all layers |
 
 ## Configuration Files
 

@@ -4,9 +4,10 @@ Domain-driven design infrastructure for [Refit](https://github.com/reactiveui/re
 
 ## Dependencies
 
-- [Refit](https://github.com/reactiveui/refit) - Type-safe REST client
-- [Correlate](https://github.com/skwasjer/Correlate) - Correlation ID functionality
+- [Refit.HttpClientFactory](https://github.com/reactiveui/refit) - Type-safe REST client with HttpClientFactory integration
+- [Correlate.AspNetCore](https://github.com/skwasjer/Correlate) - Correlation ID functionality for ASP.NET Core
 - [Lewee.Common](../Lewee.Common/README.md) - Shared utilities and constants
+- [Lewee.Infrastructure.Auth](../Lewee.Infrastructure.Auth/README.md) - Authentication infrastructure including token handling
 
 ## Features
 
@@ -15,7 +16,6 @@ This infrastructure package provides:
 - **Refit Client Configuration**: Streamlined setup of type-safe HTTP clients that integrate seamlessly with domain and application layers
 - **Authentication Infrastructure**: Automatic Bearer token propagation from the current user context to external APIs
 - **Correlation ID Infrastructure**: Built-in distributed tracing support using [Correlate](https://github.com/skwasjer/Correlate) to track requests across service boundaries
-- **Domain-Aligned Error Handling**: Structured `ApiException` handling with NSwag compatibility that supports domain-driven error workflows
 
 ## Configuration
 
@@ -33,7 +33,7 @@ services.AddWebApiHttpClient<IMyApiClient>("my-api-service");
 ```
 
 This automatically configures infrastructure components:
-- `AuthTokenDelegatingHandler` - Infrastructure handler that adds Bearer tokens from the authentication context
+- `AuthTokenDelegatingHandler` (from [Lewee.Infrastructure.Auth](../Lewee.Infrastructure.Auth/README.md)) - Infrastructure handler that adds Bearer tokens from the authentication context
 - `CorrelatingHttpMessageHandler` (from Correlate) - Infrastructure handler that propagates correlation IDs across service boundaries
 
 ### Service Discovery Integration
@@ -104,33 +104,6 @@ public class OrderService
 }
 ```
 
-### Infrastructure Exception Handling
-
-The `ApiException` class provides infrastructure-level exception handling with domain-aligned logging:
-
-```cs
-using Lewee.Infrastructure.Refit;
-
-try
-{
-    await apiClient.CreateOrderAsync(request);
-}
-catch (ApiException ex)
-{
-    // Log with appropriate level based on status code
-    ex.Log(logger);
-
-    // Handle the error appropriately
-    throw;
-}
-```
-
-The `Log` extension method automatically categorizes infrastructure errors by HTTP status code:
-- **< 400**: Warning (unexpected infrastructure response)
-- **400**: Information (client error with response body)
-- **401-499**: Information (client-side error)
-- **500+**: Error (server-side infrastructure error)
-
 ### Integration with Application Layer Effects
 
 When using with Fluxor state management in the application layer, handle infrastructure errors in effects:
@@ -162,9 +135,9 @@ public class OrderEffects
                 Order = order
             });
         }
-        catch (ApiException ex)
+        catch (Exception ex)
         {
-            ex.Log(this.logger);
+            this.logger.LogError(ex, "Failed to create order");
             dispatcher.Dispatch(new CreateOrderFailureAction
             {
                 CorrelationId = action.CorrelationId,
@@ -180,10 +153,6 @@ public class OrderEffects
 | Component | Description |
 |-----------|-------------|
 | **[ApiCientConfiguration.cs](./ApiCientConfiguration.cs)** | Infrastructure service registration with `AddWebApiHttpClient<T>` |
-| **[AuthTokenDelegatingHandler.cs](./AuthTokenDelegatingHandler.cs)** | HTTP message handler for authentication token propagation |
-| **[ApiException.cs](./ApiException.cs)** | Infrastructure exception for API communication failures (NSwag-compatible) |
-| **[ApiExceptionExtensions.cs](./ApiExceptionExtensions.cs)** | Extension methods for infrastructure exception logging |
-| **[ApiExceptionLogMessages.cs](./ApiExceptionLogMessages.cs)** | Source-generated infrastructure log messages |
 
 ## Distributed Correlation ID Infrastructure
 
@@ -206,7 +175,7 @@ services.AddCorrelate(options => options.RequestHeaders = [RequestHeaders.Correl
 
 ## Authentication Infrastructure
 
-The `AuthTokenDelegatingHandler` provides infrastructure-level authentication token handling:
+The `AuthTokenDelegatingHandler` (from [Lewee.Infrastructure.Auth](../Lewee.Infrastructure.Auth/README.md)) provides infrastructure-level authentication token handling:
 
 1. Retrieves the `access_token` from the current authentication context (`HttpContext`)
 2. Adds it as a `Bearer` token in the `Authorization` header for outgoing requests
@@ -220,7 +189,7 @@ For the authentication infrastructure to function:
 
 1. `IHttpContextAccessor` must be registered in the DI container
 2. The user must be authenticated with an `access_token` in the authentication context
-3. `HttpContext` must be accessible (supported in Blazor Server and server-side rendering scenarios)
+3. `HttpContext` must be accessible (supported in Blazor Web Apps with Interactive Server and server-side rendering scenarios)
 
 ## Integration with Lewee DDD Layers
 
@@ -229,16 +198,14 @@ This infrastructure package integrates with other Lewee packages across the DDD 
 | Package | Layer | Integration |
 |---------|-------|-------------|
 | **[Lewee.Common](../Lewee.Common/README.md)** | Cross-cutting | Provides `RequestHeaders.CorrelationId` constant for infrastructure |
-| **[Lewee.Blazor](../Lewee.Blazor/README.md)** | Presentation | Uses this infrastructure for API client configuration |
-| **[Lewee.Infrastructure.AspNet](../Lewee.Infrastructure.AspNet/README.md)** | Infrastructure | Server-side infrastructure for correlation ID handling |
+| **[Lewee.Infrastructure.Auth](../Lewee.Infrastructure.Auth/README.md)** | Infrastructure | Provides `AuthTokenDelegatingHandler` for automatic authentication token propagation |
 
 ## Best Practices for DDD Infrastructure
 
 1. **Service Discovery**: Use .NET Aspire service discovery rather than hardcoded URIs for infrastructure service location
-2. **Infrastructure Exception Handling**: Always catch `ApiException` in application layer code and use the `Log` extension method
-3. **Distributed Tracing**: Leverage correlation IDs for tracing requests across infrastructure boundaries
-4. **Bounded Context Separation**: Define focused Refit interfaces per bounded context or aggregate
-5. **REST Conventions**: Follow REST principles in infrastructure interface definitions to align with domain semantics
+2. **Distributed Tracing**: Leverage correlation IDs for tracing requests across infrastructure boundaries
+3. **Bounded Context Separation**: Define focused Refit interfaces per bounded context or aggregate
+4. **REST Conventions**: Follow REST principles in infrastructure interface definitions to align with domain semantics
 
 ## Troubleshooting Infrastructure Issues
 

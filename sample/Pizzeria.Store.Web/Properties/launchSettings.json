@@ -5,7 +5,7 @@
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": false,
-      "applicationUrl": "http://store-web-pizzeria.dev.localhost:5148",
+      "applicationUrl": "http://store-pizzeria.dev.localhost:5148",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -14,7 +14,7 @@
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": false,
-      "applicationUrl": "https://store-web-pizzeria.dev.localhost:7060;http://store-web-pizzeria.dev.localhost:5148",
+      "applicationUrl": "https://store-pizzeria.dev.localhost:7060;http://store-pizzeria.dev.localhost:5148",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

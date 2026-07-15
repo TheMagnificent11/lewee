@@ -77,7 +77,12 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         // Wait for configuration health check to report healthy
         await this.WaitForConfigurationHealthAsync(TimeSpan.FromMinutes(2));
 
-        // Wait for `Pizzeria.Store.Web` to be running
+        // Wait for Pizza Store API to be running
+        await this.resourceNotificationService
+            .WaitForResourceAsync(ServiceNames.PizzaStoreApi, KnownResourceStates.Running)
+            .WaitAsync(TimeSpan.FromMinutes(10)); // To allow Aspire to pull Docker images
+
+        // Wait for Pizza Store Web to be running
         await this.resourceNotificationService
             .WaitForResourceAsync(ServiceNames.PizzaStoreWeb, KnownResourceStates.Running)
             .WaitAsync(TimeSpan.FromMinutes(10)); // To allow Aspire to pull Docker images

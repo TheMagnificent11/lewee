@@ -5,7 +5,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Lewee.Domain\Lewee.Domain.csproj" />
+    <ProjectReference Include="..\Lewee.Common\Lewee.Common.csproj" />
   </ItemGroup>
 
 </Project>
