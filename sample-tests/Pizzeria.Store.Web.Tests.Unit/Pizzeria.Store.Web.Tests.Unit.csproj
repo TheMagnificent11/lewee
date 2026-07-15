@@ -2,7 +2,6 @@
 
   <ItemGroup>
     <PackageReference Include="bunit.web" />
-    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" />
     <PackageReference Include="Moq" />
   </ItemGroup>
 
