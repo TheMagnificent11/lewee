@@ -1,9 +1,5 @@
 using Pizzeria.Common;
 
-// SuppressMessageAttribute cannot suppress this compiler-level experimental diagnostic; #pragma is required.
-// AddCSharpApp is experimental - see https://aka.ms/aspire/diagnostics/ASPIRECSHARPAPPS001
-#pragma warning disable ASPIRECSHARPAPPS001
-
 var builder = DistributedApplication.CreateBuilder(args);
 
 var isTest = Environments.IsIntegrationTesting;

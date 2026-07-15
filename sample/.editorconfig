@@ -1,6 +1,10 @@
 ﻿[*.cs]
 dotnet_diagnostic.CA1873.severity = none           # CA1873: Avoid potentially expensive logging
 
+# AppHost Program - AddCSharpApp is experimental (see https://aka.ms/aspire/diagnostics/ASPIRECSHARPAPPS001)
+[Pizzeria.AppHost/Program.cs]
+dotnet_diagnostic.ASPIRECSHARPAPPS001.severity = none
+
 # Sample Web App Effects rules
 [**/*Effects.cs]
 dotnet_diagnostic.SA1313.severity = none           # Parameter names should begin with lower-case letter
