@@ -1,11 +1,15 @@
 ﻿using Lewee.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Pizzeria.Common;
 using Pizzeria.Configuration;
 using Pizzeria.ServiceDefaults;
 using Pizzeria.Store.Data;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = Host.CreateApplicationBuilder(args);
 
 // Add service defaults (required for service discovery)
 builder.AddServiceDefaults();
@@ -28,20 +32,17 @@ builder.Services.AddDbContext<StoreDbContext>((serviceProvider, options) =>
 // Register database seeder
 builder.Services.AddTransient<IDatabaseSeeder<StoreDbContext>, StoreSeeder>();
 
-// Register configuration services
-builder.Services.AddSingleton<ConfigurationStatusService>();
+// Register configuration service
 builder.Services.AddTransient<PizzeriaStoreDatabaseConfigurationService>();
-builder.Services.AddHostedService<ConfigurationBackgroundService>();
 
-// Add health checks
-builder.Services
-    .AddHealthChecks()
-    .AddCheck<ConfigurationHealthCheck>("configuration_status");
+using var host = builder.Build();
 
-var app = builder.Build();
+var dbConfigService = host.Services.GetRequiredService<PizzeriaStoreDatabaseConfigurationService>();
+var lifetime = host.Services.GetRequiredService<IHostApplicationLifetime>();
+var logger = host.Services.GetRequiredService<ILogger<Program>>();
 
-// Map health check endpoints
-app.MapHealthChecks("/health");
-app.MapHealthChecks("/alive");
+logger.LogInformation("Pizzeria Configuration starting...");
 
-await app.RunAsync();
+await dbConfigService.ConfigureAsync(lifetime.ApplicationStopping);
+
+logger.LogInformation("Pizzeria Configuration completed successfully");
