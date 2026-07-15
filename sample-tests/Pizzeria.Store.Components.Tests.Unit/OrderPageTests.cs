@@ -2,12 +2,9 @@ using Bunit;
 using Correlate;
 using FluentAssertions;
 using Fluxor;
-using Lewee.Common;
-using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using MudBlazor.Services;
-using Pizzeria.Store.Application.Pizzas;
 using Pizzeria.Store.Contracts.Pizzas;
 using Pizzeria.Store.StateManagement;
 using Xunit;
@@ -16,11 +13,11 @@ namespace Pizzeria.Store.Components.Tests.Unit;
 
 public class OrderPageTests : TestContext
 {
-    private readonly Mock<IMediator> mediatorMock = new();
+    private readonly Mock<IStoreApiClient> storeApiClientMock = new();
 
     public OrderPageTests()
     {
-        this.Services.AddSingleton(this.mediatorMock.Object);
+        this.Services.AddSingleton(this.storeApiClientMock.Object);
         this.Services.AddSingleton(Mock.Of<ICorrelationContextAccessor>());
         this.Services.AddLogging();
         this.Services.AddMudServices();
@@ -56,9 +53,9 @@ public class OrderPageTests : TestContext
             new PizzaDto(Guid.NewGuid(), "Pepperoni", "Pepperoni and cheese", 14.99m),
         };
 
-        this.mediatorMock
-            .Setup(x => x.Send(It.IsAny<GetPizzasQuery>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(QueryResult<IEnumerable<PizzaDto>>.Success(testPizzas));
+        this.storeApiClientMock
+            .Setup(x => x.GetPizzasAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(testPizzas);
 
         // Act
         var component = this.RenderComponent<Order>();

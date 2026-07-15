@@ -1,80 +1,79 @@
-using Lewee.Blazor.Messaging;
-using Lewee.Infrastructure.AspNet.SignalR;
-using Lewee.Infrastructure.Auth;
-using Lewee.Infrastructure.Correlate;
-using Lewee.Infrastructure.Data;
+using Lewee.Infrastructure.Fluxor;
 using Lewee.Infrastructure.Keycloak;
-using Lewee.Infrastructure.PostgreSQL;
+using Lewee.Infrastructure.Refit;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using MudBlazor.Services;
 using Pizzeria.Common;
 using Pizzeria.ServiceDefaults;
-using Pizzeria.Store.Application;
 using Pizzeria.Store.Contracts;
-using Pizzeria.Store.Data;
-using Pizzeria.Store.Domain;
 using Pizzeria.Store.StateManagement;
 using Pizzeria.Store.Web;
 using Pizzeria.Store.Web.Infrastructure;
+using CommonEnvironments = Pizzeria.Common.Environments;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
-// Server services
 builder.Services
-    .AddAuthenticatedUserService()
-    .AddLeweePostgreSQL<StoreDbContext>(
-        builder.Configuration.GetConnectionString(ServiceNames.PizzaStoreDatabaseName)!,
-        typeof(Pizza).Assembly,
-        StoreDbContext.SchemaName)
-    .AddLeweeDatabaseServices<StoreDbContext>(typeof(Pizza).Assembly)
-    .AddPizzaStoreApplication()
-    .AddCorrelationIdServices()
-    .AddKeycloakAuthentication(
+    .AddWebApiHttpClient<IStoreApiClient>(ServiceNames.PizzaStoreApi)
+    .AddKeycloakAuthenticationForWebApp(
         keycloakServiceName: ServiceNames.AuthServer,
-        keycloakRealmName: Pizzeria.Common.Environments.Auth.RealmName,
-        keycloakClientId: Pizzeria.Common.Environments.Auth.Clients.StoreWeb,
+        keycloakRealmName: CommonEnvironments.Auth.RealmName,
+        keycloakClientId: CommonEnvironments.Auth.Clients.StoreWeb,
         events: new OpenIdConnectEvents
         {
             OnTokenValidated = async context => await context.CreateCustomerOnFirstLoginAsync(),
-        })
-    .AddLeweeSignalR()
-    .AddDatabaseHealthCheck();
+        },
+        requireHttpsMetadata: false);
 
-// Client services
 builder.Services
     .AddStoreState(builder.Environment.IsDevelopment())
-    .AddSignalRMessageReceiver<MessageToActionMapper>()
+    .AddSseMessageReceiver<MessageToActionMapper>(client =>
+    {
+        client.BaseAddress = new Uri($"https://{ServiceNames.PizzaStoreApi}");
+    })
     .AddMudServices()
     .AddRazorComponents()
     .AddInteractiveServerComponents();
 
 var app = builder.Build();
 
-app.UseHealthEndpoints();
+app.MapDefaultEndpoints();
+
+app.MapGet("/authentication/login", (string? returnUrl) =>
+{
+    var redirectUri = "/";
+    if (!string.IsNullOrWhiteSpace(returnUrl)
+        && returnUrl.StartsWith('/')
+        && !returnUrl.StartsWith("//", StringComparison.Ordinal)
+        && Uri.TryCreate(returnUrl, UriKind.Relative, out _))
+    {
+        redirectUri = returnUrl;
+    }
+
+    return Results.Challenge(
+        new Microsoft.AspNetCore.Authentication.AuthenticationProperties { RedirectUri = redirectUri },
+        [OpenIdConnectDefaults.AuthenticationScheme]);
+});
 
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler(PageRoutes.Error, createScopeForErrors: true);
-
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app
     .UseAntiforgery()
     .UseHttpsRedirection()
-    .UseCorrelationIdMiddleware()
     .UseAuthentication()
     .UseAuthorization();
 
-app.MapLeweeSignalRHub();
-
 app.MapStaticAssets();
 
+app.MapKeycloakSignOut(PageRoutes.SignOut);
+
 app
-    .MapKeycloakSignOut(PageRoutes.SignOut)
     .MapRazorComponents<App>()
     .AddAdditionalAssemblies(typeof(Pizzeria.Store.Components._Imports).Assembly)
     .AddInteractiveServerRenderMode();

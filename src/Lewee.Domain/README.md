@@ -131,10 +131,6 @@ public class OrderCanBeShippedSpecification : ISpecification<Order>
 }
 ```
 
-#### IAuthenticatedUserService
-
-Interface for accessing the current authenticated user's ID.
-
 #### IQueryProjection
 
 Marker interface for query projections with a correlation ID.
@@ -187,7 +183,7 @@ throw new DomainException("Order cannot be modified after completion");
 |---------|-------------|
 | `Lewee.Application` | `DomainExceptionBehavior` handles `DomainException` in MediatR pipeline |
 | `Lewee.Infrastructure.Data` | Implements `IRepository<T>`, dispatches domain events via outbox pattern |
-| `Lewee.Infrastructure.AspNet` | Implements `IAuthenticatedUserService` |
+| `Lewee.Infrastructure.Auth` | Implements `IAuthenticatedUserService` from `Lewee.Common` |
 
 ## Architecture Benefits
 

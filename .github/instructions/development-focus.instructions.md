@@ -21,8 +21,12 @@ applyTo: "**/*.cs"
 **Infrastructure Layer (Lewee.Infrastructure.*)**
 - Entity Framework Core integration
 - PostgreSQL-specific optimizations
-- ASP.NET Core middleware and extensions
-- Blazor components and utilities
+- Authentication and authorization (Keycloak)
+- Correlation ID handling
+- FastEndpoints base classes
+- Fluxor state management
+- Server-Sent Events
+- Refit HTTP client integration
 - **Key Pattern:** Adapters implementing domain interfaces
 
 **Shared Utilities (Lewee.Common)**

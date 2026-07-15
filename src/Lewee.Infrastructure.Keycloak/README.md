@@ -14,7 +14,7 @@ This package provides authentication infrastructure for integrating Keycloak wit
 ### Adding Authentication Services
 
 ```csharp
-services.AddKeycloakAuthentication(
+services.AddKeycloakAuthenticationForWebApp(
     keycloakServiceName: "auth-server",
     keycloakRealmName: "my-realm",
     keycloakClientId: "my-client-id",
@@ -24,7 +24,8 @@ services.AddKeycloakAuthentication(
         {
             // Custom logic when token is validated
         }
-    });
+    },
+    requireHttpsMetadata: false); // Set to true in production
 ```
 
 ### Mapping Sign-Out Endpoint

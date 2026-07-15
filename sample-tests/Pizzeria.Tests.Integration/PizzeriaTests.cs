@@ -7,6 +7,7 @@ using Xunit;
 
 namespace Pizzeria.Tests.Integration;
 
+[Trait("Category", "Aspire")]
 [SuppressMessage(
     "Maintainability",
     "CA1515:Consider making public types internal",

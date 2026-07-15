@@ -1,6 +1,7 @@
 ﻿using Correlate.DependencyInjection;
 using Correlate.Http;
 using Lewee.Common;
+using Lewee.Infrastructure.Auth;
 using Microsoft.Extensions.DependencyInjection;
 using Refit;
 

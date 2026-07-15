@@ -1,6 +1,6 @@
 # Pizzeria Store Web Application
 
-This is the Blazor WebAssembly front-end for the Pizzeria Store application, demonstrating the Lewee framework's Blazor integration capabilities.
+This is the Blazor Web App (interactive rendering) for the Pizzeria Store application, demonstrating the Lewee framework's Flux, Keycloak and Refit capabilities.
 
 ## Copilot Instructions
 
@@ -14,16 +14,11 @@ All Razor components in this project use the code-behind pattern:
 - Component markup is in `.razor` files
 - Component logic is in corresponding `.razor.cs` files (partial classes)
 
-### Example
-
-See `Pages/Home.razor` and `Pages/Home.razor.cs` for a complete example of this pattern.
-
 ### State Management
 
-This project uses Fluxor for state management:
-- States are defined in the `States/` directory
-- Actions and reducers follow Fluxor conventions
-- Components inherit from `FluxorComponent`
+This project uses Fluxor for state management via `Pizzeria.Store.StateManagement` and `Pizzeria.Store.StateManagement.csproj`.
+
+The state management is implemented using the Flux/Redux pattern, which allows for a unidirectional data flow and predictable state changes.
 
 ## Related Instructions
 
