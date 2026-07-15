@@ -37,12 +37,21 @@ builder.Services.AddTransient<PizzeriaStoreDatabaseConfigurationService>();
 
 using var host = builder.Build();
 
+await host.StartAsync();
+
 var dbConfigService = host.Services.GetRequiredService<PizzeriaStoreDatabaseConfigurationService>();
 var lifetime = host.Services.GetRequiredService<IHostApplicationLifetime>();
 var logger = host.Services.GetRequiredService<ILogger<Program>>();
 
-logger.LogInformation("Pizzeria Configuration starting...");
+try
+{
+    logger.LogInformation("Pizzeria Configuration starting...");
 
-await dbConfigService.ConfigureAsync(lifetime.ApplicationStopping);
+    await dbConfigService.ConfigureAsync(lifetime.ApplicationStopping);
 
-logger.LogInformation("Pizzeria Configuration completed successfully");
+    logger.LogInformation("Pizzeria Configuration completed successfully");
+}
+finally
+{
+    await host.StopAsync();
+}
