@@ -118,5 +118,5 @@ None / N/A
 - [ ] Changes are minimal and focused
 - [ ] Tests adequately cover the changes
 - [ ] Documentation is clear and complete
+- [ ] Copilot instructions have been updated (if required)
 - [ ] No unrelated changes included
-- [ ] Commit messages are clear and descriptive

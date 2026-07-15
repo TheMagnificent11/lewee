@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
-using Lewee.Domain;
+using Lewee.Common;
 using Microsoft.AspNetCore.Http;
 
 namespace Lewee.Infrastructure.Auth;

@@ -1,8 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
-
-  <ItemGroup>
-    <ProjectReference Include="..\Lewee.Tests.Contracts\Lewee.Tests.Contracts.csproj" />
-    <ProjectReference Include="..\Lewee.Tests.ServiceDefaults\Lewee.Tests.ServiceDefaults.csproj" />
-  </ItemGroup>
-
-</Project>

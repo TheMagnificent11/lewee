@@ -64,6 +64,7 @@
   <Project Path="sample/Pizzeria.Common/Pizzeria.Common.csproj" />
   <Project Path="sample/Pizzeria.Configuration/Pizzeria.Configuration.csproj" />
   <Project Path="sample/Pizzeria.ServiceDefaults/Pizzeria.ServiceDefaults.csproj" />
+  <Project Path="sample/Pizzeria.Store.Api/Pizzeria.Store.Api.csproj" />
   <Project Path="sample/Pizzeria.Store.Application/Pizzeria.Store.Application.csproj" />
   <Project Path="sample/Pizzeria.Store.Components/Pizzeria.Store.Components.csproj" />
   <Project Path="sample/Pizzeria.Store.Contracts/Pizzeria.Store.Contracts.csproj" />
@@ -72,10 +73,8 @@
   <Project Path="sample/Pizzeria.Store.StateManagement/Pizzeria.Store.StateManagement.csproj" />
   <Project Path="sample/Pizzeria.Store.Web/Pizzeria.Store.Web.csproj" />
   <Project Path="src/Lewee.Application/Lewee.Application.csproj" />
-  <Project Path="src/Lewee.Blazor/Lewee.Blazor.csproj" />
   <Project Path="src/Lewee.Common/Lewee.Common.csproj" />
   <Project Path="src/Lewee.Domain/Lewee.Domain.csproj" />
-  <Project Path="src/Lewee.Infrastructure.AspNet/Lewee.Infrastructure.AspNet.csproj" />
   <Project Path="src/Lewee.Infrastructure.Auth/Lewee.Infrastructure.Auth.csproj" />
   <Project Path="src/Lewee.Infrastructure.Correlate/Lewee.Infrastructure.Correlate.csproj" />
   <Project Path="src/Lewee.Infrastructure.Data/Lewee.Infrastructure.Data.csproj" />
@@ -84,22 +83,14 @@
   <Project Path="src/Lewee.Infrastructure.Keycloak/Lewee.Infrastructure.Keycloak.csproj" />
   <Project Path="src/Lewee.Infrastructure.PostgreSQL/Lewee.Infrastructure.PostgreSQL.csproj" />
   <Project Path="src/Lewee.Infrastructure.Refit/Lewee.Infrastructure.Refit.csproj" />
+  <Project Path="src/Lewee.Infrastructure.ServerEvents/Lewee.Infrastructure.ServerEvents.csproj" />
   <Project Path="src/Lewee.Playwright/Lewee.Playwright.csproj" />
   <Project Path="tests/Lewee.Application.Tests.Unit/Lewee.Application.Tests.Unit.csproj" />
-  <Project Path="tests/Lewee.Blazor.Tests.Api/Lewee.Blazor.Tests.Api.csproj" />
-  <Project Path="tests/Lewee.Blazor.Tests.AppHost/Lewee.Blazor.Tests.AppHost.csproj" />
-  <Project Path="tests/Lewee.Blazor.Tests.Integration/Lewee.Blazor.Tests.Integration.csproj" />
-  <Project Path="tests/Lewee.Blazor.Tests.Web/Lewee.Blazor.Tests.Web.csproj" />
   <Project Path="tests/Lewee.Common.Tests.Unit/Lewee.Common.Tests.Unit.csproj" />
   <Project Path="tests/Lewee.Domain.Tests.Unit/Lewee.Domain.Tests.Unit.csproj" />
-  <Project Path="tests/Lewee.Infrastructure.Data.Tests.Integration/Lewee.Infrastructure.Data.Tests.Integration.csproj" />
   <Project Path="tests/Lewee.Infrastructure.Data.Tests.Unit/Lewee.Infrastructure.Data.Tests.Unit.csproj" />
   <Project Path="tests/Lewee.Infrastructure.Fluxor.Tests.Unit/Lewee.Infrastructure.Fluxor.Tests.Unit.csproj" />
-  <Project Path="tests/Lewee.Infrastructure.Refit.Tests.Integration/Lewee.Infrastructure.Refit.Tests.Integration.csproj" />
   <Project Path="tests/Lewee.Playwright.Tests.Unit/Lewee.Playwright.Tests.Unit.csproj" />
-  <Project Path="tests/Lewee.Tests.Api/Lewee.Tests.Api.csproj" />
-  <Project Path="tests/Lewee.Tests.AppHost/Lewee.Tests.AppHost.csproj" />
   <Project Path="tests/Lewee.Tests.Common/Lewee.Tests.Common.csproj" />
   <Project Path="tests/Lewee.Tests.Contracts/Lewee.Tests.Contracts.csproj" />
-  <Project Path="tests/Lewee.Tests.ServiceDefaults/Lewee.Tests.ServiceDefaults.csproj" />
 </Solution>

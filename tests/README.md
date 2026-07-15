@@ -16,10 +16,12 @@ For development guidance in this directory, see the following instruction files:
 | `Lewee.Domain.Tests.Unit` | Domain layer abstractions and base classes |
 | `Lewee.Application.Tests.Unit` | Application layer and CQRS implementation |
 | `Lewee.Common.Tests.Unit` | Cross-cutting utilities and result types |
-| `Lewee.Infrastructure.Data.Tests.Unit` | Entity Framework Core integration (unit tests) |
-| `Lewee.Infrastructure.Data.Tests.Integration` | Entity Framework Core integration (integration tests) |
-| `Lewee.Blazor.Tests.Integration` | Blazor component library tests |
-| `Lewee.Tests.Common` | Shared test utilities |
+| `Lewee.Infrastructure.Data.Tests.Unit` | Entity Framework Core integration |
+| `Lewee.Infrastructure.Fluxor.Tests.Unit` | Fluxor state management infrastructure |
+| `Lewee.Playwright.Tests.Unit` | Playwright browser automation utilities |
+| `Lewee.Shared.Tests.Unit` | Shared test utilities |
+| `Lewee.Tests.Common` | Common test utilities and helpers |
+| `Lewee.Tests.Contracts` | Test contracts and interfaces |
 
 ## Running Tests
 
