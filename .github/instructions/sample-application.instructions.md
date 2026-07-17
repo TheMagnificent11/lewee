@@ -14,7 +14,7 @@ The sample pizzeria application demonstrates Lewee framework usage with a multi-
 - PostgreSQL database (managed by Aspire)
 - Keycloak authentication server (managed by Aspire)
 - Authentication services (`Pizzeria.Auth`)
-- Shared configuration (`Pizzeria.Configuration`)
+- Database migration/seeding console app (`Pizzeria.Configuration`), run once at startup via Aspire's experimental `AddCSharpApp` API
 
 ## Running the Sample
 
@@ -87,6 +87,7 @@ See `Pizzeria.Store.Application` project for guidance on feature namespace organ
 
 - **Orchestration**: .NET Aspire manages all services and containers
 - **Database**: PostgreSQL with automatic schema management
+- **Database Migration/Seeding**: `Pizzeria.Configuration` is a plain C# console app added to the AppHost via the experimental `AddCSharpApp` API (requires suppressing diagnostic `ASPIRECSHARPAPPS001`). It runs migrations/seeding once and exits; the Pizza Store API uses `WaitForCompletion` to wait for it to finish before starting.
 - **Authentication**: Keycloak for OpenID Connect authentication
 - **No Manual Setup**: Aspire handles container lifecycle
 - **API**: FastEndpoints for CQRS commands/queries
