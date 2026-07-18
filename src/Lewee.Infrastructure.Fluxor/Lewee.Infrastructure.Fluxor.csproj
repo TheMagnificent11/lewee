@@ -3,6 +3,7 @@
   <ItemGroup>
     <PackageReference Include="Correlate.DependencyInjection" />
     <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" VersionOverride="10.0.10" />
     <PackageReference Include="Microsoft.Extensions.Http" />
   </ItemGroup>
 

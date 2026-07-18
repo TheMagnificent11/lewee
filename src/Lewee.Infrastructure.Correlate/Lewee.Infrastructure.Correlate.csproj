@@ -2,6 +2,8 @@
 
   <ItemGroup>
     <PackageReference Include="Correlate.AspNetCore" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" VersionOverride="10.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Http" />
   </ItemGroup>
 
   <ItemGroup>
