@@ -2,7 +2,6 @@
   
   <ItemGroup>
     <PackageReference Include="FastEndpoints" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" VersionOverride="10.0.10" />
   </ItemGroup>
   
   <ItemGroup>
