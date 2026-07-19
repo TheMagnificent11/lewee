@@ -51,11 +51,11 @@ dotnet test --filter "FullyQualifiedName!~Integration" --configuration Release -
 dotnet format
 ```
 
-## Directory-Specific README Files
+## Directory-Specific AGENTS Files
 
-Each major directory contains a README.md file that references the relevant Copilot instructions:
-- `src/README.md` - Framework packages development
-- `tests/README.md` - Framework tests guidance
-- `sample/README.md` - Sample application development
-- `sample/Pizzeria.Store.Web/README.md` - Blazor component development
-- `sample-tests/README.md` - Sample tests guidance
+Each major directory contains an AGENTS.md file that references the relevant Copilot instructions:
+- `src/AGENTS.md` - Framework packages development
+- `tests/AGENTS.md` - Framework tests guidance
+- `sample/AGENTS.md` - Sample application development
+- `sample/Pizzeria.Store.Web/AGENTS.md` - Blazor component development
+- `sample-tests/AGENTS.md` - Sample tests guidance

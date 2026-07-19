@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using Lewee.Infrastructure.Data;
+using Microsoft.Extensions.Logging;
 using Pizzeria.Store.Data;
 
 namespace Pizzeria.Configuration;
@@ -23,17 +24,10 @@ internal sealed class PizzeriaStoreDatabaseConfigurationService
 
     public async Task ConfigureAsync(CancellationToken cancellationToken)
     {
-        try
-        {
-            this.logger.LogInformation("Starting database migration and seeding...");
+        this.logger.LogInformation("Starting database migration and seeding...");
 
-            await this.serviceProvider.MigrateDatabaseAsync<StoreDbContext>(seedData: true, cancellationToken);
+        await this.serviceProvider.MigrateDatabaseAsync<StoreDbContext>(seedData: true, cancellationToken);
 
-            this.logger.LogInformation("Database migration and seeding completed successfully");
-        }
-        catch (Exception ex)
-        {
-            this.logger.LogError(ex, "Database configuration failed: {Message}", ex.Message);
-        }
+        this.logger.LogInformation("Database migration and seeding completed successfully");
     }
 }

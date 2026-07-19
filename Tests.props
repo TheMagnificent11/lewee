@@ -1,6 +1,10 @@
 <Project>
 
   <ItemGroup Condition="'$(IsAspireHost)' != 'true'">
+    <!-- Pinned to override the vulnerable AngleSharp 1.2.0 that bunit.web 1.40.0
+         pulls in transitively (GHSA-pgww-w46g-26qg). Applies to all test
+         projects so any future bunit-using project automatically picks it up. -->
+    <PackageReference Include="AngleSharp" />
     <PackageReference Include="FluentAssertions" />
     <PackageReference Include="FluentAssertions.Analyzers">
       <PrivateAssets>all</PrivateAssets>

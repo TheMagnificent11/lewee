@@ -36,17 +36,16 @@ var databaseServer = Environments.IsIntegrationTesting
 var pizzaStoreDatabaseName = ServiceNames.PizzaStoreDatabaseName;
 var pizzaStoreDatabase = databaseServer.AddDatabase(pizzaStoreDatabaseName);
 
-var configuration = builder.AddProject<Projects.Pizzeria_Configuration>(ServiceNames.ConfigurationService)
+var configuration = builder.AddCSharpApp(ServiceNames.ConfigurationService, "../Pizzeria.Configuration/Pizzeria.Configuration.csproj")
     .WithReference(authServer)
     .WithReference(pizzaStoreDatabase)
     .WaitFor(authServer)
-    .WaitFor(pizzaStoreDatabase)
-    .WithHttpHealthCheck("/health");
+    .WaitFor(pizzaStoreDatabase);
 
 var pizzaStoreApi = builder.AddProject<Projects.Pizzeria_Store_Api>(ServiceNames.PizzaStoreApi)
     .WithReference(pizzaStoreDatabase)
     .WithReference(authServer)
-    .WaitFor(configuration)
+    .WaitForCompletion(configuration)
     .WithHttpHealthCheck("/health");
 
 builder.AddProject<Projects.Pizzeria_Store_Web>(ServiceNames.PizzaStoreWeb)
