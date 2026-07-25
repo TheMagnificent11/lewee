@@ -1,0 +1,40 @@
+schema: spec-driven
+
+# Project context - shown to AI when creating artifacts
+# Full details are maintained in .github/instructions/ - consult those files for complete context
+context: |
+  IMPORTANT: Before creating any artifacts, review the Copilot instructions in .github/instructions/:
+  - overview.instructions.md - Project overview
+  - technology-stack.instructions.md - Complete tech stack details
+  - repository-structure.instructions.md - Detailed structure and organization
+  - code-quality.instructions.md - Code standards and patterns
+  - decision-making.instructions.md - Architectural decision guidance
+
+  Quick Reference:
+  - Tech: .NET 10.0, EF Core, Blazor, FastEndpoints, MediatR, Aspire
+  - Architecture: Clean Architecture with DDD (Domain/Application/Infrastructure/Presentation)
+  - Structure: src/ (framework), sample/ (demo app), tests/, sample-tests/
+  - Key Rule: Domain has no dependencies, maintain clean architecture boundaries
+
+# Per-artifact rules
+# Full architectural guidance is in .github/instructions/decision-making.instructions.md
+rules:
+  proposal:
+    - Consult .github/instructions/decision-making.instructions.md for architectural constraints
+    - Identify whether changes affect framework (src/) or sample app (sample/)
+    - For framework changes, consider backward compatibility
+
+  specs:
+    - Use Given/When/Then format for behavior specifications
+    - Reference existing patterns per .github/instructions/code-quality.instructions.md
+    - Specify affected architectural layer(s)
+
+  design:
+    - Validate against clean architecture principles in .github/instructions/
+    - Show dependency injection registration for new services
+    - Consider Aspire orchestration if adding services
+
+  tasks:
+    - Break by architectural layer (Domain → Application → Infrastructure → Presentation)
+    - Include test coverage per .github/instructions/build-and-test.instructions.md
+    - Include verification steps (build, test commands)
