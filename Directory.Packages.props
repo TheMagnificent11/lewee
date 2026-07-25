@@ -18,8 +18,8 @@
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="9.0.6" />
   </ItemGroup>
   <ItemGroup Label="Refit">
-    <PackageVersion Include="Refit" Version="10.0.1" />
-    <PackageVersion Include="Refit.HttpClientFactory" Version="10.0.1" />
+    <PackageVersion Include="Refit" Version="10.2.0" />
+    <PackageVersion Include="Refit.HttpClientFactory" Version="10.2.0" />
   </ItemGroup>
   <ItemGroup Label="Aspire">
     <PackageVersion Include="Aspire.Hosting.AppHost" Version="13.4.6" />
