@@ -48,20 +48,11 @@ var pizzaStoreApi = builder.AddProject<Projects.Pizzeria_Store_Api>(ServiceNames
     .WaitForCompletion(configuration)
     .WithHttpHealthCheck("/health");
 
-var pizzaStoreWeb = builder.AddProject<Projects.Pizzeria_Store_Web>(ServiceNames.PizzaStoreWeb)
+builder.AddProject<Projects.Pizzeria_Store_Web>(ServiceNames.PizzaStoreWeb)
     .WithReference(pizzaStoreApi)
     .WithReference(authServer)
     .WaitFor(pizzaStoreApi)
     .WithHttpHealthCheck("/health");
-
-if (isTest)
-{
-    // Environment variables set on the AppHost process (such as IS_INTEGRATION_TEST) are not
-    // automatically inherited by project resources launched via DCP, so they must be passed
-    // through explicitly for integration tests to enable JSON console logging with scopes.
-    pizzaStoreApi.WithEnvironment(Environments.IsIntegrationTestEnvironmentVariableName, "TRUE");
-    pizzaStoreWeb.WithEnvironment(Environments.IsIntegrationTestEnvironmentVariableName, "TRUE");
-}
 
 var app = builder.Build();
 

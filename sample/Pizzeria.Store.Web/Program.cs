@@ -2,7 +2,6 @@ using Lewee.Infrastructure.Fluxor;
 using Lewee.Infrastructure.Keycloak;
 using Lewee.Infrastructure.Refit;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.Extensions.Logging;
 using MudBlazor.Services;
 using Pizzeria.Common;
 using Pizzeria.ServiceDefaults;
@@ -15,14 +14,6 @@ using CommonEnvironments = Pizzeria.Common.Environments;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
-
-if (CommonEnvironments.IsIntegrationTesting)
-{
-    // Emit structured logs (including scopes, e.g., CorrelationId) as JSON so integration tests
-    // can inspect the resource's console output via Aspire's ResourceLoggerService.
-    builder.Logging.AddJsonConsole(options => options.IncludeScopes = true);
-    builder.Logging.AddFilter("Lewee.Infrastructure.Fluxor", LogLevel.Debug);
-}
 
 builder.Services
     .AddWebApiHttpClient<IStoreApiClient>(ServiceNames.PizzaStoreApi)
