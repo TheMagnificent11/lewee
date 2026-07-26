@@ -215,27 +215,6 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         return Task.FromResult(this.playwright);
     }
 
-    /// <summary>
-    /// Gets every log line written so far to a resource's console output
-    /// </summary>
-    /// <param name="serviceName">The name of the resource to get logs for</param>
-    /// <returns>The log lines written to the resource's console output</returns>
-    public async Task<IReadOnlyList<string>> GetResourceLogLinesAsync(string serviceName)
-    {
-        var resourceLoggerService = this.app.Services.GetRequiredService<ResourceLoggerService>();
-        var logLines = new List<string>();
-
-        await foreach (var batch in resourceLoggerService.GetAllAsync(serviceName))
-        {
-            foreach (var logLine in batch)
-            {
-                logLines.Add(logLine.Content);
-            }
-        }
-
-        return logLines;
-    }
-
     public async Task DisposeAsync()
     {
         this.playwright?.Dispose();
