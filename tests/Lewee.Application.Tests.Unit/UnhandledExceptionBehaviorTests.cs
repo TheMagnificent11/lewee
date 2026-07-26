@@ -25,7 +25,7 @@ public class UnhandledExceptionBehaviorTests
         var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
 
         var behavior = new UnhandledExceptionBehavior<TestCommand, CommandResult>(logger);
-        var command = new TestCommand("Test", Guid.NewGuid());
+        var command = new TestCommand("Test");
         var nextCalled = false;
 
         RequestHandlerDelegate<CommandResult> next = (ct) =>
@@ -57,7 +57,7 @@ public class UnhandledExceptionBehaviorTests
         var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
 
         var behavior = new UnhandledExceptionBehavior<TestCommand, CommandResult>(logger);
-        var command = new TestCommand("Test", Guid.NewGuid());
+        var command = new TestCommand("Test");
         var exceptionMessage = "Test unhandled exception";
 
         RequestHandlerDelegate<CommandResult> next = (ct) =>

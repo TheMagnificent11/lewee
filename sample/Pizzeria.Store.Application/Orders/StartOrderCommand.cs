@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Correlate;
 using Lewee.Application.Mediation.Requests;
 using Lewee.Common;
 using Lewee.Domain;
@@ -8,7 +9,7 @@ using Pizzeria.Store.Domain;
 
 namespace Pizzeria.Store.Application.Orders;
 
-public record StartOrderCommand(Guid CorrelationId) : ICommand
+public record StartOrderCommand : ICommand
 {
     [SuppressMessage(
         "Performance",
@@ -18,24 +19,29 @@ public record StartOrderCommand(Guid CorrelationId) : ICommand
     {
         private readonly IRepository<Order> repository;
         private readonly IAuthenticatedUserService authenticatedUserService;
+        private readonly ICorrelationContextAccessor correlationContextAccessor;
         private readonly ILogger<Handler> logger;
 
         public Handler(
             IRepository<Order> repository,
             IAuthenticatedUserService authenticatedUserService,
+            ICorrelationContextAccessor correlationContextAccessor,
             ILogger<Handler> logger)
         {
             this.repository = repository;
             this.authenticatedUserService = authenticatedUserService;
+            this.correlationContextAccessor = correlationContextAccessor;
             this.logger = logger;
         }
 
         public async Task<CommandResult> Handle(StartOrderCommand request, CancellationToken cancellationToken)
         {
+            var cid = this.correlationContextAccessor.CorrelationContext?.CorrelationId;
+            var correlationId = cid != null && Guid.TryParse(cid, out var parsed) ? parsed : Guid.NewGuid();
             var userId = this.authenticatedUserService.UserId ?? "Unknown";
             var order = Order.StartNewOrder(
                 userId,
-                request.CorrelationId);
+                correlationId);
 
             await this.repository.AddAsync(order, cancellationToken);
             await this.repository.SaveChangesAsync(cancellationToken);

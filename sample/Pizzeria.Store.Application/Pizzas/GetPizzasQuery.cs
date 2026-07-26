@@ -10,13 +10,6 @@ namespace Pizzeria.Store.Application.Pizzas;
 
 public sealed class GetPizzasQuery : IQuery<IEnumerable<PizzaDto>>
 {
-    public GetPizzasQuery(Guid correlationId)
-    {
-        this.CorrelationId = correlationId;
-    }
-
-    public Guid CorrelationId { get; }
-
     [SuppressMessage(
         "Performance",
         "CA1812: Avoid uninstantiated internal classes",

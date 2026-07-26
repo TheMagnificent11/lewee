@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Correlate.DependencyInjection;
 using FluentValidation;
 using Lewee.Application.Mediation.Behaviors;
 using MediatR;
@@ -44,6 +45,7 @@ public static class ApplicationConfiguration
         this IServiceCollection services,
         params Type[] additionalBehaviors)
     {
+        services.AddCorrelate();
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CorrelationIdLoggingBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TenantLoggingBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehavior<,>));

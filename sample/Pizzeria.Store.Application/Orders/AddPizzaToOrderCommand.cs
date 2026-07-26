@@ -9,7 +9,7 @@ using Pizzeria.Store.Domain;
 
 namespace Pizzeria.Store.Application.Orders;
 
-public record AddPizzaToOrderCommand(Guid OrderId, Guid PizzaId, Guid CorrelationId) : ICommand
+public record AddPizzaToOrderCommand(Guid OrderId, Guid PizzaId) : ICommand
 {
     [SuppressMessage(
         "Performance",

@@ -1,6 +1,6 @@
-﻿using Correlate;
+using Correlate;
 
-namespace Lewee.Infrastructure.FastEndpoints;
+namespace Lewee.Application.Mediation.Behaviors;
 
 internal static class CorrelationContextAccessorExtensions
 {

@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using Correlate;
 using FluentValidation;
 using Lewee.Application.Mediation.Requests;
 using Lewee.Common;
@@ -9,7 +10,7 @@ using Pizzeria.Store.Domain;
 
 namespace Pizzeria.Store.Application.Customers;
 
-public record CreateCustomerCommand(string ExternalUserId, Guid CorrelationId) : ICommand
+public record CreateCustomerCommand(string ExternalUserId) : ICommand
 {
     [SuppressMessage(
         "Performance",
@@ -32,13 +33,16 @@ public record CreateCustomerCommand(string ExternalUserId, Guid CorrelationId) :
     internal sealed class Handler : IRequestHandler<CreateCustomerCommand, CommandResult>
     {
         private readonly IRepository<User> repository;
+        private readonly ICorrelationContextAccessor correlationContextAccessor;
         private readonly ILogger<Handler> logger;
 
         public Handler(
             IRepository<User> repository,
+            ICorrelationContextAccessor correlationContextAccessor,
             ILogger<Handler> logger)
         {
             this.repository = repository;
+            this.correlationContextAccessor = correlationContextAccessor;
             this.logger = logger;
         }
 
@@ -55,8 +59,11 @@ public record CreateCustomerCommand(string ExternalUserId, Guid CorrelationId) :
                 return CommandResult.Success();
             }
 
+            var cid = this.correlationContextAccessor.CorrelationContext?.CorrelationId;
+            var correlationId = cid != null && Guid.TryParse(cid, out var parsed) ? parsed : Guid.NewGuid();
+
             // Create user entity with Keycloak user ID
-            var user = User.Create(request.ExternalUserId, request.CorrelationId);
+            var user = User.Create(request.ExternalUserId, correlationId);
 
             await this.repository.AddAsync(user, cancellationToken);
             await this.repository.SaveChangesAsync(cancellationToken);

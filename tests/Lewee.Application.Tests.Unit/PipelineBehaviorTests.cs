@@ -35,7 +35,7 @@ public class PipelineBehaviorTests
 
         using var client = testServer.CreateClient();
         var logCollector = testServer.Services.GetRequiredService<FakeLogCollector>();
-        var invalidCommand = new TestCommand(string.Empty, Guid.NewGuid()); // Empty name should fail validation
+        var invalidCommand = new TestCommand(string.Empty); // Empty name should fail validation
 
         // Act
         using var response = await client.PostAsJsonAsync("/test-command", invalidCommand);
@@ -64,7 +64,7 @@ public class PipelineBehaviorTests
 
         using var client = testServer.CreateClient();
         var logCollector = testServer.Services.GetRequiredService<FakeLogCollector>();
-        var validCommand = new TestCommand("Valid Name", Guid.NewGuid());
+        var validCommand = new TestCommand("Valid Name");
 
         // Act
         using var response = await client.PostAsJsonAsync("/test-command", validCommand);
@@ -93,7 +93,7 @@ public class PipelineBehaviorTests
 
         using var client = testServer.CreateClient();
         var logCollector = testServer.Services.GetRequiredService<FakeLogCollector>();
-        var command = new TestDomainExceptionCommand(Guid.NewGuid());
+        var command = new TestDomainExceptionCommand();
 
         // Act
         using var response = await client.PostAsJsonAsync("/test-domain-exception", command);
@@ -122,7 +122,7 @@ public class PipelineBehaviorTests
 
         using var client = testServer.CreateClient();
         var logCollector = testServer.Services.GetRequiredService<FakeLogCollector>();
-        var command = new TestCommand("Valid Name", Guid.NewGuid());
+        var command = new TestCommand("Valid Name");
 
         // Act
         using var response = await client.PostAsJsonAsync("/test-command", command);
@@ -162,7 +162,7 @@ public class PipelineBehaviorTests
         using var testServer = app.GetTestServer();
         using var client = testServer.CreateClient();
         var logCollector = app.Services.GetRequiredService<FakeLogCollector>();
-        var command = new TestBadRequestCommand(Guid.NewGuid());
+        var command = new TestBadRequestCommand();
 
         // Act
         using var response = await client.PostAsJsonAsync("/test-bad-request", command);
@@ -184,7 +184,7 @@ public class PipelineBehaviorTests
         {
             endpoints.MapGet("/test-query", async (IMediator mediator, CancellationToken ct) =>
             {
-                var query = new TestQuery(Guid.NewGuid());
+                var query = new TestQuery();
                 var result = await mediator.Send(query, ct);
                 return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);
             });

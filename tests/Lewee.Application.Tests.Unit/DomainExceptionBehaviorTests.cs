@@ -26,7 +26,7 @@ public class DomainExceptionBehaviorTests
         var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
 
         var behavior = new DomainExceptionBehavior<TestCommand, CommandResult>(logger);
-        var command = new TestCommand("Test", Guid.NewGuid());
+        var command = new TestCommand("Test");
         var nextCalled = false;
 
         RequestHandlerDelegate<CommandResult> next = (ct) =>
@@ -58,7 +58,7 @@ public class DomainExceptionBehaviorTests
         var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
 
         var behavior = new DomainExceptionBehavior<TestCommand, CommandResult>(logger);
-        var command = new TestCommand("Test", Guid.NewGuid());
+        var command = new TestCommand("Test");
         var exceptionMessage = "Test domain exception";
 
         RequestHandlerDelegate<CommandResult> next = (ct) =>
@@ -96,7 +96,7 @@ public class DomainExceptionBehaviorTests
         var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
 
         var behavior = new DomainExceptionBehavior<TestCommand, CommandResult>(logger);
-        var command = new TestCommand("Test", Guid.NewGuid());
+        var command = new TestCommand("Test");
         var exceptionMessage = "Test regular exception";
 
         RequestHandlerDelegate<CommandResult> next = (ct) =>

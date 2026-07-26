@@ -21,7 +21,7 @@ public static class OrderReducer
         [NotNull] OrderState state,
         [NotNull] StartOrderSuccessAction action)
     {
-       return state.OnCommandSuccess<OrderState, OrderDto, StartOrderSuccessAction>(action);
+        return state.OnCommandSuccess<OrderState, OrderDto, StartOrderSuccessAction>(action);
     }
 
     [ReducerMethod]

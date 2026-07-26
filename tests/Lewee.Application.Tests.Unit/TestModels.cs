@@ -15,7 +15,7 @@ namespace Lewee.Application.Tests.Unit;
     "Performance",
     "CA1812: Avoid uninstantiated internal classes",
     Justification = "Used via mediation")]
-internal sealed record TestCommand(string Name, Guid CorrelationId) : ICommand
+internal sealed record TestCommand(string Name) : ICommand
 {
     [SuppressMessage(
         "Performance",
@@ -50,7 +50,7 @@ internal sealed record TestCommand(string Name, Guid CorrelationId) : ICommand
     "Performance",
     "CA1812: Avoid uninstantiated internal classes",
     Justification = "Used via mediation")]
-internal sealed record TestDomainExceptionCommand(Guid CorrelationId) : ICommand
+internal sealed record TestDomainExceptionCommand : ICommand
 {
     [SuppressMessage(
         "Performance",
@@ -73,7 +73,7 @@ internal sealed record TestDomainExceptionCommand(Guid CorrelationId) : ICommand
     "Performance",
     "CA1812: Avoid uninstantiated internal classes",
     Justification = "Used via mediation")]
-internal sealed record TestUnhandledExceptionCommand(Guid CorrelationId) : ICommand
+internal sealed record TestUnhandledExceptionCommand : ICommand
 {
     [SuppressMessage(
         "Performance",
@@ -96,7 +96,7 @@ internal sealed record TestUnhandledExceptionCommand(Guid CorrelationId) : IComm
     "Performance",
     "CA1812: Avoid uninstantiated internal classes",
     Justification = "Used via mediation")]
-internal sealed record TestQuery(Guid CorrelationId) : IQuery<TestData>
+internal sealed record TestQuery : IQuery<TestData>
 {
     [SuppressMessage(
         "Performance",
@@ -126,7 +126,7 @@ internal sealed record TestData(string Value);
     "Performance",
     "CA1812: Avoid uninstantiated internal classes",
     Justification = "Used via mediation")]
-internal sealed record TestTenantCommand(Guid TenantId, string Name, Guid CorrelationId) : ICommand, ITenantRequest
+internal sealed record TestTenantCommand(Guid TenantId, string Name) : ICommand, ITenantRequest
 {
     [SuppressMessage(
         "Performance",
@@ -149,7 +149,7 @@ internal sealed record TestTenantCommand(Guid TenantId, string Name, Guid Correl
     "Performance",
     "CA1812: Avoid uninstantiated internal classes",
     Justification = "Used via mediation")]
-internal sealed record TestServerErrorCommand(Guid CorrelationId) : ICommand
+internal sealed record TestServerErrorCommand : ICommand
 {
     [SuppressMessage(
         "Performance",
@@ -174,7 +174,7 @@ internal sealed record TestServerErrorCommand(Guid CorrelationId) : ICommand
     "Performance",
     "CA1812: Avoid uninstantiated internal classes",
     Justification = "Used via mediation")]
-internal sealed record TestBadRequestCommand(Guid CorrelationId) : ICommand
+internal sealed record TestBadRequestCommand : ICommand
 {
     [SuppressMessage(
         "Performance",

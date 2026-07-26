@@ -26,7 +26,7 @@ public class TenantLoggingBehaviorTests
 
         var behavior = new TenantLoggingBehavior<TestTenantCommand, CommandResult>(logger);
         var tenantId = Guid.NewGuid();
-        var command = new TestTenantCommand(tenantId, "Test", Guid.NewGuid());
+        var command = new TestTenantCommand(tenantId, "Test");
         var nextCalled = false;
 
         RequestHandlerDelegate<CommandResult> next = (ct) =>
@@ -74,7 +74,7 @@ public class TenantLoggingBehaviorTests
 
         var behavior = new TenantLoggingBehavior<TestTenantCommand, CommandResult>(logger);
         var tenantId = Guid.NewGuid();
-        var command = new TestTenantCommand(tenantId, "Test", Guid.NewGuid());
+        var command = new TestTenantCommand(tenantId, "Test");
         var exceptionMessage = "Test exception";
 
         RequestHandlerDelegate<CommandResult> next = (ct) =>
@@ -118,7 +118,7 @@ public class TenantLoggingBehaviorTests
 
         var behavior = new TenantLoggingBehavior<TestTenantCommand, CommandResult>(logger);
         var tenantId = Guid.NewGuid();
-        var command = new TestTenantCommand(tenantId, "Test", Guid.NewGuid());
+        var command = new TestTenantCommand(tenantId, "Test");
         var nextCalled = false;
 
         RequestHandlerDelegate<CommandResult> next = (ct) =>

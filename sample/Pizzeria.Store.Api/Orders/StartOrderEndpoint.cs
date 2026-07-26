@@ -18,7 +18,7 @@ internal sealed class StartOrderEndpoint : CommandEndpoint<EmptyRequest>
 
     public override async Task HandleAsync(EmptyRequest request, CancellationToken ct)
     {
-        var result = await this.Mediator.Send(new StartOrderCommand(this.CorrelationId), ct);
+        var result = await this.Mediator.Send(new StartOrderCommand(), ct);
         await this.ToResponseAsync(result, ct);
     }
 }

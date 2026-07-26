@@ -25,7 +25,7 @@ public class FailureLoggingBehaviorTests
         var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
 
         var behavior = new FailureLoggingBehavior<TestCommand, CommandResult>(logger);
-        var command = new TestCommand("Test", Guid.NewGuid());
+        var command = new TestCommand("Test");
         var nextCalled = false;
 
         RequestHandlerDelegate<CommandResult> next = (ct) =>
@@ -57,7 +57,7 @@ public class FailureLoggingBehaviorTests
         var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
 
         var behavior = new FailureLoggingBehavior<TestCommand, CommandResult>(logger);
-        var command = new TestCommand("Test", Guid.NewGuid());
+        var command = new TestCommand("Test");
         var nextCalled = false;
 
         RequestHandlerDelegate<CommandResult> next = (ct) =>
@@ -93,7 +93,7 @@ public class FailureLoggingBehaviorTests
         var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
 
         var behavior = new FailureLoggingBehavior<TestCommand, CommandResult>(logger);
-        var command = new TestCommand("Test", Guid.NewGuid());
+        var command = new TestCommand("Test");
         var exceptionMessage = "Test exception";
 
         RequestHandlerDelegate<CommandResult> next = (ct) =>
@@ -121,7 +121,7 @@ public class FailureLoggingBehaviorTests
         var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
 
         var behavior = new FailureLoggingBehavior<TestCommand, CommandResult>(logger);
-        var command = new TestCommand("Test", Guid.NewGuid());
+        var command = new TestCommand("Test");
         var nextCalled = false;
 
         RequestHandlerDelegate<CommandResult> next = (ct) =>

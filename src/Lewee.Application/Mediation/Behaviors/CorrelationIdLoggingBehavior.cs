@@ -1,4 +1,4 @@
-﻿using Lewee.Application.Mediation.Requests;
+﻿using Correlate;
 using Lewee.Common;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -8,10 +8,14 @@ namespace Lewee.Application.Mediation.Behaviors;
 internal class CorrelationIdLoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
+    private readonly ICorrelationContextAccessor correlationContextAccessor;
     private readonly ILogger<CorrelationIdLoggingBehavior<TRequest, TResponse>> logger;
 
-    public CorrelationIdLoggingBehavior(ILogger<CorrelationIdLoggingBehavior<TRequest, TResponse>> logger)
+    public CorrelationIdLoggingBehavior(
+        ICorrelationContextAccessor correlationContextAccessor,
+        ILogger<CorrelationIdLoggingBehavior<TRequest, TResponse>> logger)
     {
+        this.correlationContextAccessor = correlationContextAccessor;
         this.logger = logger;
     }
 
@@ -20,9 +24,7 @@ internal class CorrelationIdLoggingBehavior<TRequest, TResponse> : IPipelineBeha
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
-        var correlationId = request is IApplicationRequest applicationRequest
-            ? applicationRequest.CorrelationId
-            : Guid.NewGuid();
+        var correlationId = this.correlationContextAccessor.GetCorrelationId();
 
         using (this.logger.BeginScope(new Dictionary<string, object>(StringComparer.Ordinal)
         {

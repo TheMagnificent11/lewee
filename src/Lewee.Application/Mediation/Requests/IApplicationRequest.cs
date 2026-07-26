@@ -1,12 +1,8 @@
 ﻿namespace Lewee.Application.Mediation.Requests;
 
 /// <summary>
-/// Request Interface
+/// Application Request Marker Interface
 /// </summary>
 public interface IApplicationRequest
 {
-    /// <summary>
-    /// Gets the correlation
-    /// </summary>
-    Guid CorrelationId { get; }
 }
