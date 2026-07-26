@@ -18,7 +18,7 @@ builder.AddServiceDefaults();
 
 if (CommonEnvironments.IsIntegrationTesting)
 {
-    // Emit structured logs (including scopes, e.g. CorrelationId) as JSON so integration tests
+    // Emit structured logs (including scopes, e.g., CorrelationId) as JSON so integration tests
     // can inspect the resource's console output via Aspire's ResourceLoggerService.
     builder.Logging.AddJsonConsole(options => options.IncludeScopes = true);
     builder.Logging.AddFilter("Lewee.Infrastructure.Fluxor", LogLevel.Debug);

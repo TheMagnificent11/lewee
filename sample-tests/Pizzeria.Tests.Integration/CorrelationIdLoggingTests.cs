@@ -19,7 +19,7 @@ public sealed class CorrelationIdLoggingTests : PizzeriaTests
     }
 
     [Fact]
-    public async Task Should_ScopeAllSubsequentLogMessages_WithSameCorrelationId_When_CorrelationIdGeneratedOnWebClient()
+    public async Task Should_UseConsistentCorrelationId_AcrossRequestLifecycle_When_CorrelationIdGeneratedOnWebClient()
     {
         // Arrange
         var webClientUrl = await this.Factory.GetWebClientBaseUrlAsync();
@@ -72,12 +72,7 @@ public sealed class CorrelationIdLoggingTests : PizzeriaTests
                 continue;
             }
 
-            JsonDocument document;
-            try
-            {
-                document = JsonDocument.Parse(logLine);
-            }
-            catch (JsonException)
+            if (!TryParseJson(logLine, out var document))
             {
                 continue;
             }
@@ -102,5 +97,19 @@ public sealed class CorrelationIdLoggingTests : PizzeriaTests
         }
 
         return correlationIds;
+    }
+
+    private static bool TryParseJson(string logLine, out JsonDocument document)
+    {
+        try
+        {
+            document = JsonDocument.Parse(logLine);
+            return true;
+        }
+        catch (JsonException)
+        {
+            document = default;
+            return false;
+        }
     }
 }
