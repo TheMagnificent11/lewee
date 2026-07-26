@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Correlate;
 using FluentValidation;
+using Lewee.Application.Mediation.Behaviors;
 using Lewee.Application.Mediation.Requests;
 using Lewee.Common;
 using Lewee.Domain;
@@ -59,8 +60,7 @@ public record CreateCustomerCommand(string ExternalUserId) : ICommand
                 return CommandResult.Success();
             }
 
-            var cid = this.correlationContextAccessor.CorrelationContext?.CorrelationId;
-            var correlationId = cid != null && Guid.TryParse(cid, out var parsed) ? parsed : Guid.NewGuid();
+            var correlationId = this.correlationContextAccessor.GetCorrelationId();
 
             // Create user entity with Keycloak user ID
             var user = User.Create(request.ExternalUserId, correlationId);

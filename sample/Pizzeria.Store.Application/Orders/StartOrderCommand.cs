@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Correlate;
+using Lewee.Application.Mediation.Behaviors;
 using Lewee.Application.Mediation.Requests;
 using Lewee.Common;
 using Lewee.Domain;
@@ -36,8 +37,7 @@ public record StartOrderCommand : ICommand
 
         public async Task<CommandResult> Handle(StartOrderCommand request, CancellationToken cancellationToken)
         {
-            var cid = this.correlationContextAccessor.CorrelationContext?.CorrelationId;
-            var correlationId = cid != null && Guid.TryParse(cid, out var parsed) ? parsed : Guid.NewGuid();
+            var correlationId = this.correlationContextAccessor.GetCorrelationId();
             var userId = this.authenticatedUserService.UserId ?? "Unknown";
             var order = Order.StartNewOrder(
                 userId,
