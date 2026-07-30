@@ -25,7 +25,7 @@ public class ValidationBehaviorTests
         var validators = serviceProvider.GetServices<IValidator<TestCommand>>();
 
         var behavior = new ValidationBehavior<TestCommand, CommandResult>(validators);
-        var validCommand = new TestCommand("Valid Name", Guid.NewGuid());
+        var validCommand = new TestCommand("Valid Name");
         var nextCalled = false;
 
         RequestHandlerDelegate<CommandResult> next = (ct) =>
@@ -55,7 +55,7 @@ public class ValidationBehaviorTests
         var validators = serviceProvider.GetServices<IValidator<TestCommand>>();
 
         var behavior = new ValidationBehavior<TestCommand, CommandResult>(validators);
-        var invalidCommand = new TestCommand(string.Empty, Guid.NewGuid()); // Empty name should fail validation
+        var invalidCommand = new TestCommand(string.Empty); // Empty name should fail validation
         var nextCalled = false;
 
         RequestHandlerDelegate<CommandResult> next = (ct) =>
@@ -81,7 +81,7 @@ public class ValidationBehaviorTests
     {
         // Arrange
         var behavior = new ValidationBehavior<TestCommand, CommandResult>(Enumerable.Empty<IValidator<TestCommand>>());
-        var command = new TestCommand("Test", Guid.NewGuid());
+        var command = new TestCommand("Test");
         var nextCalled = false;
 
         RequestHandlerDelegate<CommandResult> next = (ct) =>

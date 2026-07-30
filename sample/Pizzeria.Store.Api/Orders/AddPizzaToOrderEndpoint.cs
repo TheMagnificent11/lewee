@@ -18,7 +18,7 @@ internal sealed class AddPizzaToOrderEndpoint : CommandEndpoint<AddPizzaToOrderR
     public override async Task HandleAsync(AddPizzaToOrderRequest request, CancellationToken ct)
     {
         var result = await this.Mediator.Send(
-            new AddPizzaToOrderCommand(request.OrderId, request.PizzaId, this.CorrelationId),
+            new AddPizzaToOrderCommand(request.OrderId, request.PizzaId),
             ct);
 
         await this.ToResponseAsync(result, ct);

@@ -25,7 +25,7 @@ public static class LoggingExtensions
         ArgumentNullException.ThrowIfNull(accessor);
         ArgumentNullException.ThrowIfNull(action);
 
-        accessor.SetNewCorrelationId(action);
+        accessor.SetCorrelationId(action);
 
         var loggingProps = new Dictionary<string, object>(StringComparer.Ordinal)
         {

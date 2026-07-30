@@ -1,9 +1,11 @@
+using Correlate;
 using FluentAssertions;
 using Lewee.Application.Mediation.Behaviors;
 using Lewee.Common;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Testing;
+using Moq;
 using Xunit;
 
 namespace Lewee.Application.Tests.Unit;
@@ -14,7 +16,7 @@ namespace Lewee.Application.Tests.Unit;
 public class CorrelationIdLoggingBehaviorTests
 {
     [Fact]
-    public async Task CorrelationIdLoggingBehavior_WithNormalExecution_ShouldCallNextAndLogCorrelationIdAsync()
+    public async Task CorrelationIdLoggingBehavior_WithPopulatedAccessor_ShouldUseAccessorCorrelationIdAsync()
     {
         // Arrange
         var services = new ServiceCollection();
@@ -23,9 +25,13 @@ public class CorrelationIdLoggingBehaviorTests
         var logger = serviceProvider.GetRequiredService<ILogger<CorrelationIdLoggingBehavior<TestCommand, CommandResult>>>();
         var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
 
-        var behavior = new CorrelationIdLoggingBehavior<TestCommand, CommandResult>(logger);
         var correlationId = Guid.NewGuid();
-        var command = new TestCommand("Test", correlationId);
+        var correlationContextAccessor = new Mock<ICorrelationContextAccessor>();
+        correlationContextAccessor.Setup(x => x.CorrelationContext)
+            .Returns(new CorrelationContext { CorrelationId = correlationId.ToString() });
+
+        var behavior = new CorrelationIdLoggingBehavior<TestCommand, CommandResult>(correlationContextAccessor.Object, logger);
+        var command = new TestCommand("Test");
         var nextCalled = false;
 
         Task<CommandResult> NextAsync(CancellationToken ct = default)
@@ -53,12 +59,57 @@ public class CorrelationIdLoggingBehaviorTests
         // Should have correlation ID added to logging scope
         logEntry.Scopes.Should().NotBeEmpty("because CorrelationIdLoggingBehavior should add correlation ID to logging scope");
 
-        // Assert that the correlation ID value is correctly set in the scope
+        // Assert that the correlation ID value from the accessor is correctly set in the scope
         var scopeDict = logEntry.Scopes.Cast<IEnumerable<KeyValuePair<string, object>>>().FirstOrDefault();
         scopeDict.Should().NotBeNull();
         var correlationIdScope = scopeDict.FirstOrDefault(kvp => kvp.Key == LoggingConsts.CorrelationId);
         correlationIdScope.Should().NotBeNull();
         correlationIdScope.Value.ToString().Should().Be(correlationId.ToString());
+    }
+
+    [Fact]
+    public async Task CorrelationIdLoggingBehavior_WithEmptyAccessor_ShouldGenerateNewCorrelationIdAsync()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+        services.AddFakeLogging();
+        var serviceProvider = services.BuildServiceProvider();
+        var logger = serviceProvider.GetRequiredService<ILogger<CorrelationIdLoggingBehavior<TestCommand, CommandResult>>>();
+        var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
+
+        var correlationContextAccessor = new Mock<ICorrelationContextAccessor>();
+        correlationContextAccessor.Setup(x => x.CorrelationContext).Returns((CorrelationContext)null!);
+
+        var behavior = new CorrelationIdLoggingBehavior<TestCommand, CommandResult>(correlationContextAccessor.Object, logger);
+        var command = new TestCommand("Test");
+        var nextCalled = false;
+
+        Task<CommandResult> NextAsync(CancellationToken ct = default)
+        {
+            nextCalled = true;
+            logger.LogInformation("Test log with fallback correlation ID");
+            return Task.FromResult(CommandResult.Success());
+        }
+
+        // Act
+        var result = await behavior.Handle(command, NextAsync, CancellationToken.None);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.IsSuccess.Should().BeTrue();
+        nextCalled.Should().BeTrue();
+
+        // Should have one log message from within the scope
+        fakeLogCollector.Count.Should().Be(1);
+        var logEntry = fakeLogCollector.GetSnapshot().Single();
+
+        // Should have correlation ID added to logging scope (a new Guid generated as fallback)
+        logEntry.Scopes.Should().NotBeEmpty("because CorrelationIdLoggingBehavior should add a fallback correlation ID to logging scope");
+        var scopeDict = logEntry.Scopes.Cast<IEnumerable<KeyValuePair<string, object>>>().FirstOrDefault();
+        scopeDict.Should().NotBeNull();
+        var correlationIdScope = scopeDict.FirstOrDefault(kvp => kvp.Key == LoggingConsts.CorrelationId);
+        correlationIdScope.Should().NotBeNull();
+        Guid.TryParse(correlationIdScope.Value.ToString(), out _).Should().BeTrue("because fallback should be a valid Guid");
     }
 
     [Fact]
@@ -71,9 +122,13 @@ public class CorrelationIdLoggingBehaviorTests
         var logger = serviceProvider.GetRequiredService<ILogger<CorrelationIdLoggingBehavior<TestCommand, CommandResult>>>();
         var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
 
-        var behavior = new CorrelationIdLoggingBehavior<TestCommand, CommandResult>(logger);
         var correlationId = Guid.NewGuid();
-        var command = new TestCommand("Test", correlationId);
+        var correlationContextAccessor = new Mock<ICorrelationContextAccessor>();
+        correlationContextAccessor.Setup(x => x.CorrelationContext)
+            .Returns(new CorrelationContext { CorrelationId = correlationId.ToString() });
+
+        var behavior = new CorrelationIdLoggingBehavior<TestCommand, CommandResult>(correlationContextAccessor.Object, logger);
+        var command = new TestCommand("Test");
         var exceptionMessage = "Test exception";
 
         Task<CommandResult> NextAsync(CancellationToken ct = default)
@@ -115,9 +170,13 @@ public class CorrelationIdLoggingBehaviorTests
         var logger = serviceProvider.GetRequiredService<ILogger<CorrelationIdLoggingBehavior<TestCommand, CommandResult>>>();
         var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
 
-        var behavior = new CorrelationIdLoggingBehavior<TestCommand, CommandResult>(logger);
         var correlationId = Guid.NewGuid();
-        var command = new TestCommand("Test", correlationId);
+        var correlationContextAccessor = new Mock<ICorrelationContextAccessor>();
+        correlationContextAccessor.Setup(x => x.CorrelationContext)
+            .Returns(new CorrelationContext { CorrelationId = correlationId.ToString() });
+
+        var behavior = new CorrelationIdLoggingBehavior<TestCommand, CommandResult>(correlationContextAccessor.Object, logger);
+        var command = new TestCommand("Test");
         var nextCalled = false;
 
         Task<CommandResult> NextAsync(CancellationToken ct = default)

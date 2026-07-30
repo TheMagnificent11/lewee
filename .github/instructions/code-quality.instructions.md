@@ -156,6 +156,11 @@ dotnet format lewee.sln
 - Enforced during build
 - Must be applied before committing
 
+**Line Endings:** All files must use **LF** (`\n`) line endings. This is enforced by the `end_of_line = lf` setting in `.editorconfig`. When editing files:
+- Configure your editor/IDE to use LF line endings for this repository
+- Avoid mixing CRLF and LF endings within the same PR, as it makes diffs hard to read
+- Run `dotnet format` before committing to normalize line endings
+
 **Early Return Pattern:** Use early returns to reduce indentation and improve readability. Check for error/null conditions first and return early.
 
 **Correct:**

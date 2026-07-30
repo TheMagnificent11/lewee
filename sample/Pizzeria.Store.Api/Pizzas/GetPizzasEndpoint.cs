@@ -16,7 +16,7 @@ internal sealed class GetPizzasEndpoint : QueryEndpoint<IEnumerable<PizzaDto>>
 
     public override async Task HandleAsync(CancellationToken ct)
     {
-        var result = await this.Mediator.Send(new GetPizzasQuery(this.CorrelationId), ct);
+        var result = await this.Mediator.Send(new GetPizzasQuery(), ct);
         await this.ToResponseAsync(result, ct);
     }
 }
