@@ -83,7 +83,7 @@ SELECT EXISTS
     {
         await using var command = new NpgsqlCommand(TableExistsSql, connection);
 
-        var anyTablesExist = (bool)(await command.ExecuteScalarAsync())!;
+        var anyTablesExist = (bool)(await command.ExecuteScalarAsync());
 
         return anyTablesExist;
     }

@@ -78,7 +78,9 @@ public class CorrelationIdLoggingBehaviorTests
         var fakeLogCollector = serviceProvider.GetRequiredService<FakeLogCollector>();
 
         var correlationContextAccessor = new Mock<ICorrelationContextAccessor>();
-        correlationContextAccessor.Setup(x => x.CorrelationContext).Returns((CorrelationContext)null!);
+        correlationContextAccessor
+            .Setup(x => x.CorrelationContext)
+            .Returns((CorrelationContext)null);
 
         var behavior = new CorrelationIdLoggingBehavior<TestCommand, CommandResult>(correlationContextAccessor.Object, logger);
         var command = new TestCommand("Test");

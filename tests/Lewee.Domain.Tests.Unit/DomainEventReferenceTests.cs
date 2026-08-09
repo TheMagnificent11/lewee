@@ -114,6 +114,6 @@ public static class DomainEventReferenceTests
 
         // Assert
         result.Should().NotBeNull();
-        result!.UserId.Should().Be(userId);
+        result.UserId.Should().Be(userId);
     }
 }

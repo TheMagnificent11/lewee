@@ -59,7 +59,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
         // Get auth server base URL for token requests using CreateHttpClient
         using var authServerHttpClient = this.app.CreateHttpClient(ServiceNames.AuthServer);
-        var baseAddress = authServerHttpClient.BaseAddress!.ToString().TrimEnd('/');
+        var baseAddress = authServerHttpClient.BaseAddress.ToString().TrimEnd('/');
 
         // If the scheme is tcp, replace it with http (Aspire Keycloak might return tcp scheme)
         if (baseAddress.StartsWith("tcp://", StringComparison.OrdinalIgnoreCase))
@@ -199,7 +199,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
     public async Task<string> GetWebClientBaseUrlAsync()
     {
         using var httpClient = await this.GetServiceClientAsync(ServiceNames.PizzaStoreWeb);
-        var baseAddress = httpClient.BaseAddress!.ToString().TrimEnd('/');
+        var baseAddress = httpClient.BaseAddress.ToString().TrimEnd('/');
 
         // If the scheme is tcp, replace it with http (Aspire might return tcp scheme)
         if (baseAddress.StartsWith("tcp://", StringComparison.OrdinalIgnoreCase))

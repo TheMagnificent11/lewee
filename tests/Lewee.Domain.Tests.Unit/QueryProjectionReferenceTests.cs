@@ -46,7 +46,7 @@ public class QueryProjectionReferenceTests
         // Assert
         result.Should().NotBeNull();
         result.Should().BeOfType<TestQueryProjection>();
-        var typedResult = (TestQueryProjection)result!;
+        var typedResult = (TestQueryProjection)result;
         typedResult.CorrelationId.Should().Be(correlationId);
         typedResult.Name.Should().Be(name);
         typedResult.Count.Should().Be(count);
@@ -71,7 +71,7 @@ public class QueryProjectionReferenceTests
 
         var result = reference.ToQueryProjection();
         result.Should().NotBeNull();
-        var typedResult = (TestQueryProjection)result!;
+        var typedResult = (TestQueryProjection)result;
         typedResult.Name.Should().Be("Name2");
         typedResult.Count.Should().Be(2);
     }
