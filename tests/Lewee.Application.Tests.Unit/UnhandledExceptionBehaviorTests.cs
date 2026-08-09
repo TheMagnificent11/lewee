@@ -78,6 +78,6 @@ public class UnhandledExceptionBehaviorTests
         logEntry.Message.Should().Contain("Unhandled Exception for Request");
         logEntry.Message.Should().Contain("TestCommand");
         logEntry.Exception.Should().BeOfType<InvalidOperationException>();
-        logEntry.Exception!.Message.Should().Be(exceptionMessage);
+        logEntry.Exception.Message.Should().Be(exceptionMessage);
     }
 }

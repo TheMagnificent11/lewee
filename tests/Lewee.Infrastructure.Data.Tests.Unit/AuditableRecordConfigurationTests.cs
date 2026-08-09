@@ -25,9 +25,9 @@ public class AuditableRecordConfigurationTests
 
         // Assert
         entityType.Should().NotBeNull();
-        var versionProperty = entityType!.FindProperty("Version");
+        var versionProperty = entityType.FindProperty("Version");
         versionProperty.Should().NotBeNull();
-        versionProperty!.ClrType.Should().Be<uint>();
+        versionProperty.ClrType.Should().Be<uint>();
         versionProperty.IsConcurrencyToken.Should().BeTrue();
         versionProperty.GetColumnType().Should().Be("xid");
     }
@@ -48,9 +48,9 @@ public class AuditableRecordConfigurationTests
 
         // Assert
         entityType.Should().NotBeNull();
-        var versionProperty = entityType!.FindProperty("Version");
+        var versionProperty = entityType.FindProperty("Version");
         versionProperty.Should().NotBeNull();
-        versionProperty!.ClrType.Should().Be<byte[]>();
+        versionProperty.ClrType.Should().Be<byte[]>();
         versionProperty.IsConcurrencyToken.Should().BeTrue();
     }
 
@@ -70,7 +70,7 @@ public class AuditableRecordConfigurationTests
 
         // Assert
         entityType.Should().NotBeNull();
-        var versionProperty = entityType!.FindProperty("Version");
+        var versionProperty = entityType.FindProperty("Version");
         versionProperty.Should().BeNull("because InMemory provider is not PostgreSQL or SQL Server");
     }
 
@@ -90,14 +90,14 @@ public class AuditableRecordConfigurationTests
 
         // Assert
         entityType.Should().NotBeNull();
-        var createdByProperty = entityType!.FindProperty(nameof(AuditableRecord.CreatedBy));
+        var createdByProperty = entityType.FindProperty(nameof(AuditableRecord.CreatedBy));
         createdByProperty.Should().NotBeNull();
-        createdByProperty!.IsNullable.Should().BeFalse();
+        createdByProperty.IsNullable.Should().BeFalse();
         createdByProperty.GetMaxLength().Should().Be(255);
 
         var modifiedByProperty = entityType.FindProperty(nameof(AuditableRecord.ModifiedBy));
         modifiedByProperty.Should().NotBeNull();
-        modifiedByProperty!.IsNullable.Should().BeFalse();
+        modifiedByProperty.IsNullable.Should().BeFalse();
         modifiedByProperty.GetMaxLength().Should().Be(255);
     }
 
@@ -117,9 +117,9 @@ public class AuditableRecordConfigurationTests
 
         // Assert
         entityType.Should().NotBeNull();
-        var primaryKey = entityType!.FindPrimaryKey();
+        var primaryKey = entityType.FindPrimaryKey();
         primaryKey.Should().NotBeNull();
-        primaryKey!.Properties.Should().ContainSingle();
+        primaryKey.Properties.Should().ContainSingle();
         primaryKey.Properties[0].Name.Should().Be("Id");
     }
 
@@ -149,7 +149,11 @@ public class AuditableRecordConfigurationTests
         {
         }
 
-        public DbSet<TestEntity> TestEntities { get; set; } = null!;
+        [SuppressMessage(
+            "Major Code Smell",
+            "S1144:Unused private types or members should be removed",
+            Justification = "Needed for EF")]
+        public DbSet<TestEntity> TestEntities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -165,7 +169,11 @@ public class AuditableRecordConfigurationTests
         {
         }
 
-        public DbSet<TestEntity> TestEntities { get; set; } = null!;
+        [SuppressMessage(
+            "Major Code Smell",
+            "S1144:Unused private types or members should be removed",
+            Justification = "Needed for EF")]
+        public DbSet<TestEntity> TestEntities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -181,7 +189,11 @@ public class AuditableRecordConfigurationTests
         {
         }
 
-        public DbSet<TestEntity> TestEntities { get; set; } = null!;
+        [SuppressMessage(
+            "Major Code Smell",
+            "S1144:Unused private types or members should be removed",
+            Justification = "Needed for EF")]
+        public DbSet<TestEntity> TestEntities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

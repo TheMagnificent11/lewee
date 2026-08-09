@@ -82,7 +82,7 @@ public class DomainExceptionBehaviorTests
         logEntry.Level.Should().Be(LogLevel.Information);
         logEntry.Message.Should().Contain("Domain exception caught");
         logEntry.Exception.Should().BeOfType<DomainException>();
-        logEntry.Exception!.Message.Should().Be(exceptionMessage);
+        logEntry.Exception.Message.Should().Be(exceptionMessage);
     }
 
     [Fact]

@@ -150,7 +150,7 @@ public class SseClientMessageReceiver : IAsyncDisposable
                 .EnumerateAsync(cancellationToken)
                 .Select(x => x.Data)
                 .Where(static x => !string.IsNullOrEmpty(x))
-                .Select(static x => x!);
+                .Select(static x => x);
         }
     }
 

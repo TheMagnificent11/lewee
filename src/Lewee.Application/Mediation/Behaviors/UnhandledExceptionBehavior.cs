@@ -26,13 +26,13 @@ internal class UnhandledExceptionBehavior<TRequest, TResponse> : IPipelineBehavi
             using (this.logger.BeginScope(new Dictionary<string, object>(StringComparer.Ordinal)
             {
                 { "RequestName", requestName },
-                { "Request", request! }
+                { "Request", request }
             }))
             {
                 this.logger.LogUnhandledException(
                     ex,
                     requestName,
-                    request!);
+                    request);
             }
 
             // TODO: instead of re-throwing, return `Result`

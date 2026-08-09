@@ -81,7 +81,7 @@ public class RepositoryTests
 
         // Assert
         result.Should().NotBeNull();
-        result!.Id.Should().Be(entity1.Id);
+        result.Id.Should().Be(entity1.Id);
     }
 
     [Fact]
@@ -150,7 +150,7 @@ public class RepositoryTests
 
         // Assert
         result.Should().NotBeNull();
-        result!.Id.Should().Be(entity.Id);
+        result.Id.Should().Be(entity.Id);
     }
 
     [Fact]
@@ -247,6 +247,10 @@ public class RepositoryTests
         {
         }
 
-        public DbSet<TestEntity> TestEntities { get; set; } = null!;
+        [SuppressMessage(
+            "Major Code Smell",
+            "S1144:Unused private types or members should be removed",
+            Justification = "Needed for EF")]
+        public DbSet<TestEntity> TestEntities { get; set; }
     }
 }

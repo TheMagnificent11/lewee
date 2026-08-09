@@ -34,8 +34,8 @@ public static class SseItemWrapperJsonDeserializationTests
         var wrapper = JsonSerializer.Deserialize<SseItemWrapper>(json, options);
 
         wrapper.Should().NotBeNull();
-        wrapper!.Data.Should().NotBeNull();
-        wrapper.Data!.CorrelationId.Should().NotBeEmpty();
+        wrapper.Data.Should().NotBeNull();
+        wrapper.Data.CorrelationId.Should().NotBeEmpty();
         wrapper.Data.ContractAssemblyName.Should().NotBeNullOrWhiteSpace();
         wrapper.Data.ContractFullClassName.Should().NotBeNullOrWhiteSpace();
         wrapper.Data.MessageJson.Should().NotBeNullOrWhiteSpace();
