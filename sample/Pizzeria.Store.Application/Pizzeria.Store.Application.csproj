@@ -2,6 +2,8 @@
 
   <ItemGroup>
     <PackageReference Include="Correlate" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" VersionOverride="10.0.11" />
+    <PackageReference Include="Microsoft.Extensions.Http" />
   </ItemGroup>
 
   <ItemGroup>
