@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <PackageReference Include="Correlate" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" />
   </ItemGroup>
 
   <ItemGroup>
