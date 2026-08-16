@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <PackageReference Include="bunit.web" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" VersionOverride="9.0.19" />
     <PackageReference Include="Moq" />
   </ItemGroup>
 
