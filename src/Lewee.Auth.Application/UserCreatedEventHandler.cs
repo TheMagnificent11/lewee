@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Lewee.Application.Mediation.Notifications;
 using Lewee.Auth.Domain;
 using MediatR;
@@ -8,7 +9,11 @@ namespace Lewee.Auth.Application;
 /// <summary>
 /// Publishes newly created users to clients.
 /// </summary>
-public sealed class UserCreatedEventHandler : INotificationHandler<UserCreatedEvent>
+[SuppressMessage(
+    "Performance",
+    "CA1812:Avoid uninstantiated internal classes",
+    Justification = "Registered via MediatR assembly scanning")]
+internal sealed class UserCreatedEventHandler : INotificationHandler<UserCreatedEvent>
 {
     private readonly IMediator mediator;
     private readonly ILogger<UserCreatedEventHandler> logger;
