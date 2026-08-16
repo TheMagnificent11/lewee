@@ -8,9 +8,16 @@ namespace Lewee.Auth.Infrastructure.Data.Migrations;
 /// <inheritdoc />
 public partial class InitialAuth : Migration
 {
+    private static readonly string[] DomainEventIndexColumns = ["Dispatched", "PersistedAt"];
+    private static readonly string[] QueryProjectionIndexColumns =
+        ["QueryProjectionAssemblyName", "QueryProjectionClassName", "Key"];
+    private static readonly string[] MembershipIndexColumns = ["UserId", "TenantId"];
+
     /// <inheritdoc />
     protected override void Up(MigrationBuilder migrationBuilder)
     {
+        ArgumentNullException.ThrowIfNull(migrationBuilder);
+
         migrationBuilder.EnsureSchema(
             name: "auth");
 
@@ -128,13 +135,13 @@ public partial class InitialAuth : Migration
             name: "IX_DomainEventReferences_Dispatched_PersistedAt",
             schema: "auth",
             table: "DomainEventReferences",
-            columns: new[] { "Dispatched", "PersistedAt" });
+            columns: DomainEventIndexColumns);
 
         migrationBuilder.CreateIndex(
             name: "IX_QueryProjectionReferences_QueryProjectionAssemblyName_Query~",
             schema: "auth",
             table: "QueryProjectionReferences",
-            columns: new[] { "QueryProjectionAssemblyName", "QueryProjectionClassName", "Key" },
+            columns: QueryProjectionIndexColumns,
             unique: true);
 
         migrationBuilder.CreateIndex(
@@ -154,7 +161,7 @@ public partial class InitialAuth : Migration
             name: "IX_UserTenantMemberships_UserId_TenantId",
             schema: "auth",
             table: "UserTenantMemberships",
-            columns: new[] { "UserId", "TenantId" },
+            columns: MembershipIndexColumns,
             unique: true);
 
         migrationBuilder.Sql(
@@ -178,6 +185,8 @@ public partial class InitialAuth : Migration
     /// <inheritdoc />
     protected override void Down(MigrationBuilder migrationBuilder)
     {
+        ArgumentNullException.ThrowIfNull(migrationBuilder);
+
         migrationBuilder.DropTable(
             name: "DomainEventReferences",
             schema: "auth");
