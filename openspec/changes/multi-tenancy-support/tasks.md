@@ -2,12 +2,12 @@
 
 - [ ] 1.1 Create `src/Lewee.Auth.Domain` project referencing `Lewee.Domain` only, and add it to `lewee.slnx`
 - [ ] 1.2 Add `Tenant : AggregateRoot` with a `Name` (or equivalent) property, as its own independent aggregate root (no `Users` navigation/ownership)
-- [ ] 1.3 Move `User` from `sample/Pizzeria.Store.Domain/User.cs` into `Lewee.Auth.Domain`, keeping it an `AggregateRoot`; add a `TenantMemberships` collection navigation and an `AssignToTenant(tenantId, correlationId)` method that idempotently adds a `TenantMembership` and raises `UserAssignedToTenantEvent`. A newly-created `User` SHALL have zero memberships.
+- [ ] 1.3 Move `User` from `sample/Pizzeria.Store.Domain/User.cs` into `Lewee.Auth.Domain`, keeping it an `AggregateRoot`; add a `TenantMemberships` collection navigation, an `AssignToTenant(tenantId, correlationId)` method that idempotently adds a `TenantMembership` and raises `TenantMembershipCreatedEvent`, and a `RemoveFromTenant(tenantId, correlationId)` method that idempotently removes the matching `TenantMembership` and raises `TenantMembershipRemovedEvent`. A newly-created `User` SHALL have zero memberships.
 - [ ] 1.4 Add `TenantMembership` as a child entity owned by `User`, holding a `TenantId` (and any audit fields consistent with `Lewee.Domain.Entity`)
-- [ ] 1.5 Move `UserCreatedEvent` from `sample/Pizzeria.Store.Domain/UserCreatedEvent.cs` into `Lewee.Auth.Domain` unchanged in shape; add `UserAssignedToTenantEvent`
+- [ ] 1.5 Move `UserCreatedEvent` from `sample/Pizzeria.Store.Domain/UserCreatedEvent.cs` into `Lewee.Auth.Domain` unchanged in shape; add `TenantMembershipCreatedEvent` (raised when a user is added to a tenant) and `TenantMembershipRemovedEvent` (raised when a user is removed from a tenant)
 - [ ] 1.6 Move `UserByExternalIdSpecification` from `sample/Pizzeria.Store.Domain/UserByExternalIdSpecification.cs` into `Lewee.Auth.Domain` unchanged (global external-ID lookup, not tenant-scoped)
 - [ ] 1.7 Add a `TenantCreatedEvent` (or reuse an existing pattern) raised when a `Tenant` is created
-- [ ] 1.8 Create `tests/Lewee.Auth.Domain.Tests.Unit` covering: tenant creation, user creation with zero memberships, assigning a user to a tenant, idempotent re-assignment to the same tenant, and assigning the same user to multiple tenants (per `auth/tenant-management` spec scenarios)
+- [ ] 1.8 Create `tests/Lewee.Auth.Domain.Tests.Unit` covering: tenant creation, user creation with zero memberships, assigning a user to a tenant (raises `TenantMembershipCreatedEvent`), idempotent re-assignment to the same tenant (no duplicate event), assigning the same user to multiple tenants, removing a user from a tenant (raises `TenantMembershipRemovedEvent`), and idempotent removal of a membership that does not exist (no event raised) - per `auth/tenant-management` spec scenarios
 
 ## 2. Lewee.Auth.Infrastructure.Data (new project)
 
