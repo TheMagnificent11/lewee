@@ -8,6 +8,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Lewee.Auth.Api\Lewee.Auth.Api.csproj" />
+    <ProjectReference Include="..\..\src\Lewee.Auth.Infrastructure.Data\Lewee.Auth.Infrastructure.Data.csproj" />
     <ProjectReference Include="..\..\src\Lewee.Infrastructure.Auth\Lewee.Infrastructure.Auth.csproj" />
     <ProjectReference Include="..\..\src\Lewee.Infrastructure.Correlate\Lewee.Infrastructure.Correlate.csproj" />
     <ProjectReference Include="..\..\src\Lewee.Infrastructure.FastEndpoints\Lewee.Infrastructure.FastEndpoints.csproj" />

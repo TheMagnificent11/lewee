@@ -8,6 +8,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Lewee.Auth.Infrastructure.Data\Lewee.Auth.Infrastructure.Data.csproj" />
     <ProjectReference Include="..\..\sample\Pizzeria.AppHost\Pizzeria.AppHost.csproj" />
     <ProjectReference Include="..\..\sample\Pizzeria.Auth\Pizzeria.Auth.csproj" />
     <ProjectReference Include="..\..\sample\Pizzeria.Store.Data\Pizzeria.Store.Data.csproj" />

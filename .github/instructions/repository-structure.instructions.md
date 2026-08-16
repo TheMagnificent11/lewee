@@ -11,6 +11,10 @@ lewee/
 │
 ├── src/                          # Framework packages (core product)
 │   ├── Directory.Build.props     # Framework-specific build properties
+│   ├── Lewee.Auth.Api/           # Authentication HTTP endpoints
+│   ├── Lewee.Auth.Application/   # Authentication use cases
+│   ├── Lewee.Auth.Domain/        # Tenant and user domain model
+│   ├── Lewee.Auth.Infrastructure.Data/ # Authentication persistence
 │   ├── Lewee.Domain/             # Domain layer abstractions and base classes
 │   ├── Lewee.Application/        # Application layer with CQRS and validation
 │   ├── Lewee.Common/             # Cross-cutting utilities, result types, and constants

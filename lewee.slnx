@@ -73,6 +73,10 @@
   <Project Path="sample/Pizzeria.Store.StateManagement/Pizzeria.Store.StateManagement.csproj" />
   <Project Path="sample/Pizzeria.Store.Web/Pizzeria.Store.Web.csproj" />
   <Project Path="src/Lewee.Application/Lewee.Application.csproj" />
+  <Project Path="src/Lewee.Auth.Api/Lewee.Auth.Api.csproj" />
+  <Project Path="src/Lewee.Auth.Application/Lewee.Auth.Application.csproj" />
+  <Project Path="src/Lewee.Auth.Domain/Lewee.Auth.Domain.csproj" />
+  <Project Path="src/Lewee.Auth.Infrastructure.Data/Lewee.Auth.Infrastructure.Data.csproj" />
   <Project Path="src/Lewee.Common/Lewee.Common.csproj" />
   <Project Path="src/Lewee.Domain/Lewee.Domain.csproj" />
   <Project Path="src/Lewee.Infrastructure.Auth/Lewee.Infrastructure.Auth.csproj" />
@@ -86,6 +90,9 @@
   <Project Path="src/Lewee.Infrastructure.ServerEvents/Lewee.Infrastructure.ServerEvents.csproj" />
   <Project Path="src/Lewee.Playwright/Lewee.Playwright.csproj" />
   <Project Path="tests/Lewee.Application.Tests.Unit/Lewee.Application.Tests.Unit.csproj" />
+  <Project Path="tests/Lewee.Auth.Application.Tests.Unit/Lewee.Auth.Application.Tests.Unit.csproj" />
+  <Project Path="tests/Lewee.Auth.Domain.Tests.Unit/Lewee.Auth.Domain.Tests.Unit.csproj" />
+  <Project Path="tests/Lewee.Auth.Infrastructure.Data.Tests.Unit/Lewee.Auth.Infrastructure.Data.Tests.Unit.csproj" />
   <Project Path="tests/Lewee.Common.Tests.Unit/Lewee.Common.Tests.Unit.csproj" />
   <Project Path="tests/Lewee.Domain.Tests.Unit/Lewee.Domain.Tests.Unit.csproj" />
   <Project Path="tests/Lewee.Infrastructure.Data.Tests.Unit/Lewee.Infrastructure.Data.Tests.Unit.csproj" />

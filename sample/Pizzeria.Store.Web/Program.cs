@@ -23,7 +23,7 @@ builder.Services
         keycloakClientId: CommonEnvironments.Auth.Clients.StoreWeb,
         events: new OpenIdConnectEvents
         {
-            OnTokenValidated = async context => await context.CreateCustomerOnFirstLoginAsync(),
+            OnTokenValidated = async context => await context.CreateUserOnFirstLoginAsync(),
         },
         requireHttpsMetadata: false);
 

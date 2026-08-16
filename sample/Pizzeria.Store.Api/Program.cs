@@ -1,4 +1,8 @@
 using FastEndpoints;
+using Lewee.Auth.Api;
+using Lewee.Auth.Application;
+using Lewee.Auth.Domain;
+using Lewee.Auth.Infrastructure.Data;
 using Lewee.Infrastructure.Auth;
 using Lewee.Infrastructure.Correlate;
 using Lewee.Infrastructure.Data;
@@ -19,12 +23,18 @@ builder.AddServiceDefaults();
 
 builder.Services
     .AddAuthenticatedUserService()
+    .AddLeweePostgreSQL<AuthDbContext>(
+        builder.Configuration.GetConnectionString(ServiceNames.PizzaStoreDatabaseName)!,
+        typeof(User).Assembly,
+        AuthDbContext.SchemaName)
+    .AddLeweeDatabaseServices<AuthDbContext>(typeof(User).Assembly)
     .AddLeweePostgreSQL<StoreDbContext>(
         builder.Configuration.GetConnectionString(ServiceNames.PizzaStoreDatabaseName)!,
         typeof(Pizza).Assembly,
         StoreDbContext.SchemaName)
     .AddLeweeDatabaseServices<StoreDbContext>(typeof(Pizza).Assembly)
     .AddPizzaStoreApplication()
+    .AddLeweeAuthApplication()
     .AddCorrelationIdServices()
     .AddKeycloakAuthenticationForWebApi(
         keycloakServiceName: ServiceNames.AuthServer,
@@ -32,8 +42,12 @@ builder.Services
         keycloakClientId: CommonEnvironments.Auth.Clients.StoreApi,
         requireHttpsMetadata: false)
     .AddDatabaseHealthCheck<StoreDbContext>()
+    .AddDatabaseHealthCheck<AuthDbContext>()
     .AddClientEventBroadcaster()
-    .AddFastEndpoints();
+    .AddFastEndpoints(options =>
+    {
+        options.Assemblies = [typeof(Program).Assembly, typeof(CreateUserRequest).Assembly];
+    });
 
 var app = builder.Build();
 

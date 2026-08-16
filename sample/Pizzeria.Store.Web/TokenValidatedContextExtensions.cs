@@ -1,13 +1,13 @@
 using System.Security.Claims;
+using Lewee.Auth.Api;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Pizzeria.Store.Contracts.Users;
 using Pizzeria.Store.StateManagement;
 
 namespace Pizzeria.Store.Web.Infrastructure;
 
 internal static class TokenValidatedContextExtensions
 {
-    public static async Task CreateCustomerOnFirstLoginAsync(this TokenValidatedContext context)
+    public static async Task CreateUserOnFirstLoginAsync(this TokenValidatedContext context)
     {
         var externalUserId = context.Principal?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -21,8 +21,8 @@ internal static class TokenValidatedContextExtensions
 
         try
         {
-            await apiClient.CreateCustomerAsync(
-                new CreateCustomerRequest { ExternalUserId = externalUserId },
+            await apiClient.CreateUserAsync(
+                new CreateUserRequest { ExternalUserId = externalUserId },
                 context.HttpContext.RequestAborted);
         }
         catch (Exception ex)
@@ -31,7 +31,7 @@ internal static class TokenValidatedContextExtensions
             // or API might be temporarily unavailable
             logger.LogError(
                 ex,
-                "Failed to create customer during first login for user {ExternalUserId}",
+                "Failed to create user during first login for external user {ExternalUserId}",
                 externalUserId);
         }
     }

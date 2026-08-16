@@ -2,6 +2,8 @@
 using Aspire.Hosting;
 using Aspire.Hosting.ApplicationModel;
 using Aspire.Hosting.Testing;
+using Lewee.Auth.Domain;
+using Lewee.Auth.Infrastructure.Data;
 using Lewee.Domain;
 using Lewee.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -93,6 +95,10 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         {
             options.UseNpgsql(storeDbConnectionString);
         });
+        services.AddDbContext<AuthDbContext>(options =>
+        {
+            options.UseNpgsql(storeDbConnectionString);
+        });
         services.AddTransient<IQueryProjectionService, QueryProjectionService<StoreDbContext>>();
         services.AddKeycloakAdminClient(
             Environments.Auth.RealmName,
@@ -138,9 +144,9 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
     public async Task<User> GetLatestCustomerAsync()
     {
-        var storeDbContext = this.serviceProvider.GetRequiredService<StoreDbContext>();
+        var authDbContext = this.serviceProvider.GetRequiredService<AuthDbContext>();
 
-        var user = await storeDbContext
+        var user = await authDbContext
             .Users
             .OrderByDescending(x => x.ModifiedAtUtc)
             .FirstOrDefaultAsync();
@@ -150,9 +156,9 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
     public async Task<User> GetCustomerByExternalIdAsync(string externalId)
     {
-        var storeDbContext = this.serviceProvider.GetRequiredService<StoreDbContext>();
+        var authDbContext = this.serviceProvider.GetRequiredService<AuthDbContext>();
 
-        var user = await storeDbContext
+        var user = await authDbContext
             .Users
             .FirstOrDefaultAsync(x => x.ExternalId == externalId);
 

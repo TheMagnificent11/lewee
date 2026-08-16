@@ -10,6 +10,10 @@ Lewee is an opinionated set of packages to assist with setting up a domain-drive
 
 | Package | Description |
 |---------|-------------|
+| `Lewee.Auth.Api` | Anonymous user-provisioning endpoint and contracts |
+| `Lewee.Auth.Application` | Authentication and user-provisioning use cases |
+| `Lewee.Auth.Domain` | Tenant, user, and tenant-membership domain model |
+| `Lewee.Auth.Infrastructure.Data` | Authentication persistence in the `auth` schema |
 | `Lewee.Domain` | Domain layer abstractions including entities, aggregate roots, value objects, domain events, specifications, and repository interfaces |
 | `Lewee.Application` | Application layer with CQRS using MediatR, pipeline behaviors for logging, validation, and exception handling |
 | `Lewee.Common` | Cross-cutting utilities including result types, client messaging contracts, logging constants, and HTTP headers |

@@ -1,5 +1,5 @@
+using Lewee.Auth.Api;
 using Pizzeria.Store.Contracts.Pizzas;
-using Pizzeria.Store.Contracts.Users;
 using Refit;
 
 namespace Pizzeria.Store.StateManagement;
@@ -18,8 +18,8 @@ public interface IStoreApiClient
         Guid pizzaId,
         CancellationToken cancellationToken = default);
 
-    [Post("/customers")]
-    Task CreateCustomerAsync(
-        [Body] CreateCustomerRequest request,
+    [Post("/users")]
+    Task CreateUserAsync(
+        [Body] CreateUserRequest request,
         CancellationToken cancellationToken = default);
 }

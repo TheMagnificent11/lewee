@@ -3,25 +3,28 @@ using Correlate;
 using FluentValidation;
 using Lewee.Application.Mediation.Behaviors;
 using Lewee.Application.Mediation.Requests;
+using Lewee.Auth.Domain;
 using Lewee.Common;
 using Lewee.Domain;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Pizzeria.Store.Domain;
 
-namespace Pizzeria.Store.Application.Customers;
+namespace Lewee.Auth.Application;
 
-public record CreateCustomerCommand(string ExternalUserId) : ICommand
+/// <summary>
+/// Creates a user for an external identity.
+/// </summary>
+public sealed record CreateUserCommand(string ExternalUserId) : ICommand
 {
     [SuppressMessage(
         "Performance",
-        "CA1812: Avoid uninstantiated internal classes",
+        "CA1812:Avoid uninstantiated internal classes",
         Justification = "Used via mediation")]
-    internal sealed class Validator : AbstractValidator<CreateCustomerCommand>
+    internal sealed class Validator : AbstractValidator<CreateUserCommand>
     {
         public Validator()
         {
-            this.RuleFor(x => x.ExternalUserId)
+            this.RuleFor(command => command.ExternalUserId)
                 .NotEmpty()
                 .MaximumLength(User.FieldLengths.ExternalId);
         }
@@ -29,9 +32,9 @@ public record CreateCustomerCommand(string ExternalUserId) : ICommand
 
     [SuppressMessage(
         "Performance",
-        "CA1812: Avoid uninstantiated internal classes",
+        "CA1812:Avoid uninstantiated internal classes",
         Justification = "Used via mediation")]
-    internal sealed class Handler : IRequestHandler<CreateCustomerCommand, CommandResult>
+    internal sealed class Handler : IRequestHandler<CreateUserCommand, CommandResult>
     {
         private readonly IRepository<User> repository;
         private readonly ICorrelationContextAccessor correlationContextAccessor;
@@ -47,31 +50,25 @@ public record CreateCustomerCommand(string ExternalUserId) : ICommand
             this.logger = logger;
         }
 
-        public async Task<CommandResult> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
+        public async Task<CommandResult> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-            // Check if user already exists
             var specification = new UserByExternalIdSpecification(request.ExternalUserId);
             var existingUser = await this.repository.QueryOneAsync(specification, cancellationToken);
 
             if (existingUser != null)
             {
-                // User already exists, return success
-                this.logger.LogCustomerAlreadyExists(existingUser.Id, request.ExternalUserId);
+                this.logger.LogUserAlreadyExists(existingUser.Id, request.ExternalUserId);
                 return CommandResult.Success();
             }
 
-            var correlationId = this.correlationContextAccessor.GetCorrelationId();
-
-            // Create user entity with Keycloak user ID
-            var user = User.Create(request.ExternalUserId, correlationId);
+            var user = User.Create(
+                request.ExternalUserId,
+                this.correlationContextAccessor.GetCorrelationId());
 
             await this.repository.AddAsync(user, cancellationToken);
             await this.repository.SaveChangesAsync(cancellationToken);
 
-            this.logger.LogCustomerCreated(
-                user.Id,
-                request.ExternalUserId);
-
+            this.logger.LogUserCreated(user.Id, request.ExternalUserId);
             return CommandResult.Success();
         }
     }

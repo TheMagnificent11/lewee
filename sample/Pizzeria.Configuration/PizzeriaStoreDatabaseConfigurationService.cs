@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using Lewee.Auth.Infrastructure.Data;
 using Lewee.Infrastructure.Data;
 using Microsoft.Extensions.Logging;
 using Pizzeria.Store.Data;
@@ -26,6 +27,7 @@ internal sealed class PizzeriaStoreDatabaseConfigurationService
     {
         this.logger.LogInformation("Starting database migration and seeding...");
 
+        await this.serviceProvider.MigrateDatabaseAsync<AuthDbContext>(seedData: true, cancellationToken);
         await this.serviceProvider.MigrateDatabaseAsync<StoreDbContext>(seedData: true, cancellationToken);
 
         this.logger.LogInformation("Database migration and seeding completed successfully");

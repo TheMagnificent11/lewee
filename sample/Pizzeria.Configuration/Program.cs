@@ -1,13 +1,17 @@
-﻿using Lewee.Infrastructure.Data;
+﻿using Lewee.Auth.Infrastructure.Data;
+using Lewee.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Pizzeria.Auth;
 using Pizzeria.Common;
 using Pizzeria.Configuration;
 using Pizzeria.ServiceDefaults;
 using Pizzeria.Store.Data;
+
+using CommonEnvironments = Pizzeria.Common.Environments;
 
 var builder = Host.CreateApplicationBuilder(args);
 
@@ -29,8 +33,24 @@ builder.Services.AddDbContext<StoreDbContext>((serviceProvider, options) =>
     }
 });
 
+builder.Services.AddDbContext<AuthDbContext>((serviceProvider, options) =>
+{
+    var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+    var connectionString = configuration.GetConnectionString(databaseName);
+
+    if (!string.IsNullOrWhiteSpace(connectionString))
+    {
+        options.UseNpgsql(connectionString);
+    }
+});
+
+builder.Services.AddKeycloakAdminClient(
+    CommonEnvironments.Auth.RealmName,
+    client => client.BaseAddress = new Uri($"https+http://{ServiceNames.AuthServer}"));
+
 // Register database seeder
 builder.Services.AddTransient<IDatabaseSeeder<StoreDbContext>, StoreSeeder>();
+builder.Services.AddTransient<IDatabaseSeeder<AuthDbContext>, AuthSeeder>();
 
 // Register configuration service
 builder.Services.AddTransient<PizzeriaStoreDatabaseConfigurationService>();
