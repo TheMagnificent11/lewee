@@ -55,7 +55,7 @@ Constraints:
    *Alternative considered*: Require `TenantId` on `CreateUserCommand` and assign the new user to that tenant as part of creation (the shape originally proposed in this plan). Rejected per direct clarification from the issue owner: user creation and tenant assignment are separate concerns, and a user must be able to exist without any tenant membership.
 
 7. **The sample exposes separate auth and store APIs behind a BFF.**
-   `Pizzeria.Auth.Api` hosts the reusable `Lewee.Auth.Api` endpoints and auth persistence, while `Pizzeria.Store.Api` retains only store concerns. `Pizzeria.Bff` uses YARP with Aspire service discovery to route `/users` to the auth API and all store routes, including SSE, to the store API. `Pizzeria.Store.Web` communicates only with the BFF through `IBffApiClient`.
+   `Pizzeria.Auth.Api` hosts the reusable `Lewee.Auth.Api` endpoints and auth persistence, while `Pizzeria.Store.Api` retains only store concerns. `Pizzeria.Bff` uses YARP with Aspire service discovery to route `/users` and its sub-routes to the auth API and all store routes, including SSE, to the store API. `Pizzeria.Store.Web` communicates only with the BFF through `IBffApiClient`.
    *Alternative considered*: Continue hosting auth endpoints inside `Pizzeria.Store.Api`. Rejected because it couples bounded contexts and gives the frontend direct knowledge of multiple backend APIs.
 
 ## Risks / Trade-offs
