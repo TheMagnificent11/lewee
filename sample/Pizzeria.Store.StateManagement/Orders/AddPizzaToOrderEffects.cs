@@ -12,23 +12,23 @@ namespace Pizzeria.Store.StateManagement.Orders;
 public sealed class AddPizzaToOrderEffects :
     CommandEffects<OrderState, OrderDto, AddPizzaToOrderAction, AddPizzaToOrderSuccessAction, AddPizzaToOrderFailureAction, AddPizzaToOrderCompletedAction>
 {
-    private readonly IStoreApiClient storeApiClient;
+    private readonly IBffApiClient bffApiClient;
 
     public AddPizzaToOrderEffects(
         IState<OrderState> state,
-        IStoreApiClient storeApiClient,
+        IBffApiClient bffApiClient,
         ICorrelationContextAccessor correlationContextAccessor,
         ILogger<AddPizzaToOrderEffects> logger)
         : base(state, correlationContextAccessor, logger)
     {
-        this.storeApiClient = storeApiClient;
+        this.bffApiClient = bffApiClient;
     }
 
     protected override async Task<CommandResult> ExecuteCommandAsync(
         [NotNull] AddPizzaToOrderAction action,
         [NotNull] IDispatcher dispatcher)
     {
-        await this.storeApiClient.AddPizzaToOrderAsync(action.OrderId, action.PizzaId);
+        await this.bffApiClient.AddPizzaToOrderAsync(action.OrderId, action.PizzaId);
 
         return CommandResult.Success();
     }

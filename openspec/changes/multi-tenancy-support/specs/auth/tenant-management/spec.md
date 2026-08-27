@@ -5,11 +5,15 @@ Defines the `Tenant` aggregate root and the invariants governing how a `User` (i
 ## ADDED Requirements
 
 ### Requirement: Tenant is its own aggregate root
-`Tenant` SHALL be an aggregate root (deriving from `Lewee.Domain.AggregateRoot`), independent of `User`. `Tenant` SHALL NOT own or require the existence of any `User` at creation time.
+`Tenant` SHALL be an aggregate root (deriving from `Lewee.Domain.AggregateRoot`), independent of `User`. It SHALL have a unique `Code` with a maximum length of 10 characters for lookup. `Tenant` SHALL NOT own or require the existence of any `User` at creation time.
 
 #### Scenario: Creating a tenant
-- **WHEN** a new `Tenant` is created with a name
-- **THEN** the `Tenant` SHALL be assigned a unique identifier and SHALL raise a tenant-created domain event
+- **WHEN** a new `Tenant` is created with a code and name
+- **THEN** the `Tenant` SHALL be assigned a unique identifier and SHALL raise a tenant-created domain event exposing its code and name
+
+#### Scenario: Duplicate tenant code
+- **WHEN** a second `Tenant` is persisted with a code that already exists
+- **THEN** persistence SHALL reject the duplicate code
 
 ### Requirement: User remains an aggregate root and may belong to zero or more tenants
 `User` SHALL remain an aggregate root (deriving from `Lewee.Domain.AggregateRoot`), constructed independently of any `Tenant`. A `User` SHALL be able to exist as a member of zero tenants (e.g. immediately after creation), and SHALL be able to be a member of one or more tenants via an explicit membership relationship.

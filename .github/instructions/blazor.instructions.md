@@ -52,7 +52,7 @@ public partial class Home
 }
 ```
 
-### Logic-Only Component (`RedirectToLogin.cs`)
+### Logic-Only Component (`RedirectToSignIn.cs`)
 
 When a component only contains logic and no markup, use a pure C# class:
 
@@ -66,7 +66,7 @@ namespace Pizzeria.Store;
     "Design",
     "CA1515:Consider making public types internal",
     Justification = "Blazor components must be public to be rendered")]
-public sealed class RedirectToLogin : ComponentBase
+public sealed class RedirectToSignIn : ComponentBase
 {
     [Inject]
     private NavigationManager Navigation { get; set; } = null!;
@@ -74,7 +74,7 @@ public sealed class RedirectToLogin : ComponentBase
     protected override void OnInitialized()
     {
         var returnUrl = Uri.EscapeDataString(this.Navigation.Uri);
-        this.Navigation.NavigateTo($"authentication/login?returnUrl={returnUrl}", forceLoad: true);
+        this.Navigation.NavigateTo($"authentication/sign-in?returnUrl={returnUrl}", forceLoad: true);
     }
 }
 ```

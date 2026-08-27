@@ -13,11 +13,11 @@ namespace Pizzeria.Store.Components.Tests.Unit;
 
 public class OrderPageTests : TestContext
 {
-    private readonly Mock<IStoreApiClient> storeApiClientMock = new();
+    private readonly Mock<IBffApiClient> bffApiClientMock = new();
 
     public OrderPageTests()
     {
-        this.Services.AddSingleton(this.storeApiClientMock.Object);
+        this.Services.AddSingleton(this.bffApiClientMock.Object);
         this.Services.AddSingleton(Mock.Of<ICorrelationContextAccessor>());
         this.Services.AddLogging();
         this.Services.AddMudServices();
@@ -53,7 +53,7 @@ public class OrderPageTests : TestContext
             new PizzaDto(Guid.NewGuid(), "Pepperoni", "Pepperoni and cheese", 14.99m),
         };
 
-        this.storeApiClientMock
+        this.bffApiClientMock
             .Setup(x => x.GetPizzasAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(testPizzas);
 

@@ -60,7 +60,9 @@
   <Project Path="sample-tests/Pizzeria.Store.Web.Tests.Unit/Pizzeria.Store.Web.Tests.Unit.csproj" />
   <Project Path="sample-tests/Pizzeria.Tests.Integration/Pizzeria.Tests.Integration.csproj" />
   <Project Path="sample/Pizzeria.AppHost/Pizzeria.AppHost.csproj" />
+  <Project Path="sample/Pizzeria.Auth.Api/Pizzeria.Auth.Api.csproj" />
   <Project Path="sample/Pizzeria.Auth/Pizzeria.Auth.csproj" />
+  <Project Path="sample/Pizzeria.Bff/Pizzeria.Bff.csproj" />
   <Project Path="sample/Pizzeria.Common/Pizzeria.Common.csproj" />
   <Project Path="sample/Pizzeria.Configuration/Pizzeria.Configuration.csproj" />
   <Project Path="sample/Pizzeria.ServiceDefaults/Pizzeria.ServiceDefaults.csproj" />

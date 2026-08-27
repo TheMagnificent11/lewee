@@ -66,6 +66,7 @@ public partial class InitialAuth : Migration
             columns: table => new
             {
                 Id = table.Column<Guid>(type: "uuid", nullable: false),
+                Code = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
                 Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                 xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false),
                 CreatedBy = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
@@ -142,6 +143,13 @@ public partial class InitialAuth : Migration
             schema: "auth",
             table: "QueryProjectionReferences",
             columns: QueryProjectionIndexColumns,
+            unique: true);
+
+        migrationBuilder.CreateIndex(
+            name: "IX_Tenants_Code",
+            schema: "auth",
+            table: "Tenants",
+            column: "Code",
             unique: true);
 
         migrationBuilder.CreateIndex(

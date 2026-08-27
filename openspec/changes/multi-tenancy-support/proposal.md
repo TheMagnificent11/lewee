@@ -6,12 +6,12 @@ The sample application currently treats every Keycloak-authenticated principal a
 
 - Add four new framework packages: `Lewee.Auth.Domain`, `Lewee.Auth.Infrastructure.Data`, `Lewee.Auth.Application`, `Lewee.Auth.Api`.
 - **BREAKING**: Move `User`, `UserByExternalIdSpecification`, and `UserCreatedEvent` out of `Pizzeria.Store.Domain` into `Lewee.Auth.Domain`. `User` remains an `AggregateRoot` (it is not owned by `Tenant`).
-- Add a new `Tenant : AggregateRoot` to `Lewee.Auth.Domain`, as a second, independent aggregate root. A `User` can belong to zero, one, or many `Tenant`s; this membership is modeled as a `TenantMembership` child entity owned by `User` (not a `TenantId` foreign key on `User`, and not a `Users` collection owned by `Tenant`).
+- Add a new `Tenant : AggregateRoot` to `Lewee.Auth.Domain`, as a second, independent aggregate root with a unique, maximum-10-character `Code` for lookup. A `User` can belong to zero, one, or many `Tenant`s; this membership is modeled as a `TenantMembership` child entity owned by `User` (not a `TenantId` foreign key on `User`, and not a `Users` collection owned by `Tenant`).
 - Add a new `AuthDbContext` in `Lewee.Auth.Infrastructure.Data` (schema `auth`), with `Tenants` and `Users` `DbSet`s (replacing the `Users` `DbSet` currently on `StoreDbContext`) and EF Core configuration for `Tenant`, `User`, and the `TenantMembership` join table; add the EF migration(s) required to create the `auth` schema tables and migrate existing `sto.Users` data into `auth.Users`.
 - **BREAKING**: Remove the `Users` `DbSet` from `Pizzeria.Store.Data.StoreDbContext`.
 - Move `CreateCustomerCommand` (and its validator/handler) from `Pizzeria.Store.Application.Customers` to `Lewee.Auth.Application`, renaming it to `CreateUserCommand`. The command continues to accept only the external user identifier; it creates a `User` with no tenant membership. Assigning a `User` to one or more `Tenant`s is separate, later work (see Non-Goals in `design.md`).
-- Move `CreateCustomerEndpoint` from `Pizzeria.Store.Api.Customers` to `Lewee.Auth.Api`, renaming it to `CreateUserEndpoint`; add a project reference from `Pizzeria.Store.Api` to `Lewee.Auth.Api` so the endpoint is still exposed by the sample API.
-- Update `Pizzeria.Store.Web`'s `OnTokenValidated` handler (via `AddKeycloakAuthenticationForWebApp`) to call the new create-user endpoint instead of the old create-customer endpoint.
+- Move `CreateCustomerEndpoint` from `Pizzeria.Store.Api.Customers` to `Lewee.Auth.Api`, renaming it to `CreateUserEndpoint`; host it in a dedicated sample `Pizzeria.Auth.Api`.
+- Add a `Pizzeria.Bff` reverse proxy that routes auth requests to `Pizzeria.Auth.Api` and store requests to `Pizzeria.Store.Api`. Update the web application's API client, SSE connection, and first-login provisioning callback to call only the BFF.
 - Evolve the database migration/seeding story so a Lewee-level configuration/seeding component can migrate `AuthDbContext` in addition to application-specific `DbContext`s, including seeding an initial administrative tenant/user and resolving/assigning its Keycloak user ID as the `User.ExternalId` on first run.
 
 ## Capabilities
@@ -31,11 +31,12 @@ The sample application currently treats every Keycloak-authenticated principal a
   - `sample/Pizzeria.Store.Domain/User.cs`, `UserByExternalIdSpecification.cs`, `UserCreatedEvent.cs` (removed, replaced by `Lewee.Auth.Domain` equivalents).
   - `sample/Pizzeria.Store.Data/StoreDbContext.cs` (remove `Users` `DbSet`), `sample/Pizzeria.Store.Data/Configuration/UserConfiguration.cs` (removed).
   - `sample/Pizzeria.Store.Application/Customers/**` and `sample/Pizzeria.Store.Api/Customers/**` (removed, replaced by `Lewee.Auth.Application`/`Lewee.Auth.Api` equivalents), `sample/Pizzeria.Store.Contracts/Users/**` (updated/renamed DTOs as needed).
-  - `sample/Pizzeria.Store.Web/TokenValidatedContextExtensions.cs` and `Program.cs` (call the new create-user endpoint).
+  - New sample hosts: `sample/Pizzeria.Auth.Api` and `sample/Pizzeria.Bff`.
+  - `sample/Pizzeria.Store.Web/TokenValidatedContextExtensions.cs` and `Program.cs` (call the BFF).
   - `sample/Pizzeria.Configuration/**` (extended, or superseded by a new `Lewee.Configuration`, to migrate/seed `AuthDbContext` alongside `StoreDbContext`).
   - EF Core migrations: a new initial migration for `AuthDbContext` (`auth` schema) and a `Pizzeria.Store.Data` migration removing the `Users` table from the `sto` schema.
 - **Breaking change**: Consumers of `Pizzeria.Store.Domain.User`/`UserCreatedEvent`/`UserByExternalIdSpecification`, and of `StoreDbContext.Users`, must move to the new `Lewee.Auth.Domain`/`Lewee.Auth.Infrastructure.Data` types. `CreateCustomerCommand`/`CreateCustomerEndpoint`/`CreateCustomerRequest` are renamed/relocated. This is a framework and sample breaking change; acceptable pre-1.0 per `decision-making.instructions.md`.
-- **Dependencies**: No new third-party NuGet packages are anticipated; the new packages reuse existing dependencies (`Lewee.Domain`, `Lewee.Infrastructure.Data`, `Lewee.Application`, `Lewee.Infrastructure.FastEndpoints`, EF Core, MediatR, FluentValidation).
+- **Dependencies**: The framework packages reuse existing dependencies (`Lewee.Domain`, `Lewee.Infrastructure.Data`, `Lewee.Application`, `Lewee.Infrastructure.FastEndpoints`, EF Core, MediatR, FluentValidation). The sample BFF uses `Microsoft.Extensions.ServiceDiscovery.Yarp`.
 
 ## Note
 

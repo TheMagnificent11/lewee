@@ -23,7 +23,7 @@ If a `User` with the given external ID already exists, `CreateUserCommand` SHALL
 - **THEN** only one `User` record SHALL exist for that external ID, and both dispatches SHALL report success
 
 ### Requirement: HTTP endpoint provisions a user without requiring authentication
-`CreateUserEndpoint` SHALL accept anonymous requests (mirroring the existing `CreateCustomerEndpoint` behavior), since it is invoked during the authentication handshake (`OnTokenValidated`) before the caller has an established application session.
+`CreateUserEndpoint` SHALL be hosted by the auth API and accept anonymous requests (mirroring the existing `CreateCustomerEndpoint` behavior), since it is invoked during the authentication handshake (`OnTokenValidated`) before the caller has an established application session. The web application SHALL invoke it through the BFF rather than calling the auth API directly.
 
 #### Scenario: First login triggers user provisioning
 - **WHEN** a user completes Keycloak authentication for the first time and the web application's `OnTokenValidated` handler calls the create-user endpoint with that user's external ID

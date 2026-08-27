@@ -7,20 +7,22 @@ namespace Lewee.Auth.Domain.Tests.Unit;
 public sealed class UserTests
 {
     [Fact]
-    public void Create_Should_Create_User_Without_Memberships()
+    public void Should_CreateUserWithoutMemberships_When_UserCreated()
     {
-        var user = User.Create("external-id", Guid.NewGuid());
+        const string externalUserId = "external-id";
+        var user = User.Create(externalUserId, Guid.NewGuid());
 
-        user.ExternalId.Should().Be("external-id");
+        user.ExternalId.Should().Be(externalUserId);
         user.TenantMemberships.Should().BeEmpty();
         user.DomainEvents.GetAndClear().Should().ContainSingle()
             .Which.Should().BeOfType<UserCreatedEvent>();
     }
 
     [Fact]
-    public void AssignToTenant_Should_Add_Memberships_And_Raise_Events()
+    public void Should_AddMembershipsAndRaiseEvents_When_UserAssignedToTenants()
     {
-        var user = User.Create("external-id", Guid.NewGuid());
+        const string externalUserId = "external-id";
+        var user = User.Create(externalUserId, Guid.NewGuid());
         var firstTenantId = Guid.NewGuid();
         var secondTenantId = Guid.NewGuid();
         user.DomainEvents.GetAndClear();
@@ -36,9 +38,10 @@ public sealed class UserTests
     }
 
     [Fact]
-    public void RemoveFromTenant_Should_Be_Idempotent_And_Raise_Event()
+    public void Should_RemoveMembershipAndRaiseSingleEvent_When_UserRemovedFromTenantTwice()
     {
-        var user = User.Create("external-id", Guid.NewGuid());
+        const string externalUserId = "external-id";
+        var user = User.Create(externalUserId, Guid.NewGuid());
         var tenantId = Guid.NewGuid();
         user.AssignToTenant(tenantId, Guid.NewGuid());
         user.DomainEvents.GetAndClear();

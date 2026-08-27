@@ -42,16 +42,29 @@ var configuration = builder.AddCSharpApp(ServiceNames.ConfigurationService, "../
     .WaitFor(authServer)
     .WaitFor(pizzaStoreDatabase);
 
+var authApi = builder.AddProject<Projects.Pizzeria_Auth_Api>(ServiceNames.AuthApi)
+    .WithReference(pizzaStoreDatabase)
+    .WithReference(authServer)
+    .WaitForCompletion(configuration)
+    .WithHttpHealthCheck("/health");
+
 var pizzaStoreApi = builder.AddProject<Projects.Pizzeria_Store_Api>(ServiceNames.PizzaStoreApi)
     .WithReference(pizzaStoreDatabase)
     .WithReference(authServer)
     .WaitForCompletion(configuration)
     .WithHttpHealthCheck("/health");
 
-builder.AddProject<Projects.Pizzeria_Store_Web>(ServiceNames.PizzaStoreWeb)
+var bff = builder.AddProject<Projects.Pizzeria_Bff>(ServiceNames.Bff)
+    .WithReference(authApi)
     .WithReference(pizzaStoreApi)
-    .WithReference(authServer)
+    .WaitFor(authApi)
     .WaitFor(pizzaStoreApi)
+    .WithHttpHealthCheck("/health");
+
+builder.AddProject<Projects.Pizzeria_Store_Web>(ServiceNames.PizzaStoreWeb)
+    .WithReference(bff)
+    .WithReference(authServer)
+    .WaitFor(bff)
     .WithHttpHealthCheck("/health");
 
 var app = builder.Build();

@@ -10,14 +10,14 @@ namespace Pizzeria.Configuration;
     "Performance",
     "CA1812: Avoid uninstantiated internal classes",
     Justification = "Use via DI")]
-internal sealed class PizzeriaStoreDatabaseConfigurationService
+internal sealed class PizzeriaConfigurationService
 {
     private readonly IServiceProvider serviceProvider;
-    private readonly ILogger<PizzeriaStoreDatabaseConfigurationService> logger;
+    private readonly ILogger<PizzeriaConfigurationService> logger;
 
-    public PizzeriaStoreDatabaseConfigurationService(
+    public PizzeriaConfigurationService(
         IServiceProvider serviceProvider,
-        ILogger<PizzeriaStoreDatabaseConfigurationService> logger)
+        ILogger<PizzeriaConfigurationService> logger)
     {
         this.serviceProvider = serviceProvider;
         this.logger = logger;

@@ -10,7 +10,7 @@ namespace Lewee.Auth.Application.Tests.Unit;
 public sealed class CreateUserCommandTests
 {
     [Fact]
-    public void Validator_Should_Reject_Empty_ExternalUserId()
+    public void Should_RejectCommand_When_ExternalUserIdEmpty()
     {
         var validator = new CreateUserCommand.Validator();
 
@@ -20,18 +20,20 @@ public sealed class CreateUserCommandTests
     }
 
     [Fact]
-    public void Validator_Should_Accept_Valid_ExternalUserId()
+    public void Should_AcceptCommand_When_ExternalUserIdValid()
     {
+        const string externalUserId = "external-id";
         var validator = new CreateUserCommand.Validator();
 
-        var result = validator.Validate(new CreateUserCommand("external-id"));
+        var result = validator.Validate(new CreateUserCommand(externalUserId));
 
         result.IsValid.Should().BeTrue();
     }
 
     [Fact]
-    public async Task Handler_Should_Create_User_Without_Membership()
+    public async Task Should_CreateUserWithoutMembership_When_UserDoesNotExist()
     {
+        const string externalUserId = "external-id";
         var repository = new Mock<IRepository<User>>();
         User createdUser = null;
         repository
@@ -42,18 +44,19 @@ public sealed class CreateUserCommandTests
             Mock.Of<Correlate.ICorrelationContextAccessor>(),
             NullLogger<CreateUserCommand.Handler>.Instance);
 
-        await handler.Handle(new CreateUserCommand("external-id"), CancellationToken.None);
+        await handler.Handle(new CreateUserCommand(externalUserId), CancellationToken.None);
 
         createdUser.Should().NotBeNull();
-        createdUser.ExternalId.Should().Be("external-id");
+        createdUser.ExternalId.Should().Be(externalUserId);
         createdUser.TenantMemberships.Should().BeEmpty();
         repository.Verify(item => item.SaveChangesAsync(CancellationToken.None), Times.Once);
     }
 
     [Fact]
-    public async Task Handler_Should_Not_Create_Duplicate_User()
+    public async Task Should_NotCreateDuplicateUser_When_UserAlreadyExists()
     {
-        var existingUser = User.Create("external-id", Guid.NewGuid());
+        const string externalUserId = "external-id";
+        var existingUser = User.Create(externalUserId, Guid.NewGuid());
         var repository = new Mock<IRepository<User>>();
         repository
             .Setup(item => item.QueryOneAsync(
@@ -65,7 +68,7 @@ public sealed class CreateUserCommandTests
             Mock.Of<Correlate.ICorrelationContextAccessor>(),
             NullLogger<CreateUserCommand.Handler>.Instance);
 
-        await handler.Handle(new CreateUserCommand("external-id"), CancellationToken.None);
+        await handler.Handle(new CreateUserCommand(externalUserId), CancellationToken.None);
 
         repository.Verify(
             item => item.AddAsync(It.IsAny<User>(), It.IsAny<CancellationToken>()),

@@ -9,6 +9,7 @@ namespace Pizzeria.Configuration;
 
 internal sealed class AuthSeeder : IDatabaseSeeder<AuthDbContext>
 {
+    private const string AdministrativeTenantCode = "ADMIN";
     private const string AdministrativeTenantName = "Pizzeria Administration";
     private readonly AuthDbContext dbContext;
     private readonly IAuthServerAdminClient authServerAdminClient;
@@ -30,10 +31,10 @@ internal sealed class AuthSeeder : IDatabaseSeeder<AuthDbContext>
             cancellationToken);
 
         var tenant = await this.dbContext.Tenants
-            .SingleOrDefaultAsync(item => item.Name == AdministrativeTenantName, cancellationToken);
+            .SingleOrDefaultAsync(item => item.Code == AdministrativeTenantCode, cancellationToken);
         if (tenant == null)
         {
-            tenant = Tenant.Create(AdministrativeTenantName, Guid.NewGuid());
+            tenant = Tenant.Create(AdministrativeTenantCode, AdministrativeTenantName, Guid.NewGuid());
             this.dbContext.Tenants.Add(tenant);
         }
 

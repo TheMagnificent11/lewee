@@ -7,7 +7,7 @@ namespace Pizzeria.Store.Web;
     "Design",
     "CA1515:Consider making public types internal",
     Justification = "Blazor components must be public to be rendered")]
-public sealed class RedirectToLogin : ComponentBase
+public sealed class RedirectToSignIn : ComponentBase
 {
     [Inject]
     private NavigationManager Navigation { get; set; } = null!;
@@ -16,6 +16,6 @@ public sealed class RedirectToLogin : ComponentBase
     {
         var relativePath = this.Navigation.ToBaseRelativePath(this.Navigation.Uri);
         var returnUrl = Uri.EscapeDataString($"/{relativePath}");
-        this.Navigation.NavigateTo($"/authentication/login?returnUrl={returnUrl}", forceLoad: true);
+        this.Navigation.NavigateTo($"/authentication/sign-in?returnUrl={returnUrl}", forceLoad: true);
     }
 }

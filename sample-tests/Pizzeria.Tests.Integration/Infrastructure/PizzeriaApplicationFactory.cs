@@ -87,17 +87,17 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
             .WaitAsync(TimeSpan.FromMinutes(10)); // To allow Aspire to pull Docker images
 
         var databaseName = ServiceNames.PizzaStoreDatabaseName;
-        var storeDbConnectionString = await this.app.GetConnectionStringAsync(databaseName);
+        var databaseConnectionString = await this.app.GetConnectionStringAsync(databaseName);
 
         // Setup service provider
         var services = new ServiceCollection();
         services.AddDbContext<StoreDbContext>(options =>
         {
-            options.UseNpgsql(storeDbConnectionString);
+            options.UseNpgsql(databaseConnectionString);
         });
         services.AddDbContext<AuthDbContext>(options =>
         {
-            options.UseNpgsql(storeDbConnectionString);
+            options.UseNpgsql(databaseConnectionString);
         });
         services.AddTransient<IQueryProjectionService, QueryProjectionService<StoreDbContext>>();
         services.AddKeycloakAdminClient(

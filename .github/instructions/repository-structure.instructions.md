@@ -33,7 +33,9 @@ lewee/
 │   ├── Directory.Build.props     # Sample-specific build properties
 │   ├── .editorconfig             # Sample-specific analyzer rules
 │   ├── Pizzeria.AppHost/         # .NET Aspire orchestration entry point
+│   ├── Pizzeria.Auth.Api/        # Authentication API host
 │   ├── Pizzeria.ServiceDefaults/ # Shared Aspire configurations
+│   ├── Pizzeria.Bff/             # Backend-for-frontend reverse proxy
 │   ├── Pizzeria.Common/          # Shared utilities and constants
 │   ├── Pizzeria.Store.Domain/    # Domain models and business logic
 │   ├── Pizzeria.Store.Application/  # CQRS commands/queries

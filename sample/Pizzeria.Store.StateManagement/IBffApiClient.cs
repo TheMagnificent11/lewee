@@ -4,7 +4,7 @@ using Refit;
 
 namespace Pizzeria.Store.StateManagement;
 
-public interface IStoreApiClient
+public interface IBffApiClient
 {
     [Get("/pizzas")]
     Task<IEnumerable<PizzaDto>> GetPizzasAsync(CancellationToken cancellationToken = default);

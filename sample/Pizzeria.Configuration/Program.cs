@@ -53,13 +53,13 @@ builder.Services.AddTransient<IDatabaseSeeder<StoreDbContext>, StoreSeeder>();
 builder.Services.AddTransient<IDatabaseSeeder<AuthDbContext>, AuthSeeder>();
 
 // Register configuration service
-builder.Services.AddTransient<PizzeriaStoreDatabaseConfigurationService>();
+builder.Services.AddTransient<PizzeriaConfigurationService>();
 
 using var host = builder.Build();
 
 await host.StartAsync();
 
-var dbConfigService = host.Services.GetRequiredService<PizzeriaStoreDatabaseConfigurationService>();
+var configurationService = host.Services.GetRequiredService<PizzeriaConfigurationService>();
 var lifetime = host.Services.GetRequiredService<IHostApplicationLifetime>();
 var logger = host.Services.GetRequiredService<ILogger<Program>>();
 
@@ -67,7 +67,7 @@ try
 {
     logger.LogInformation("Pizzeria Configuration starting...");
 
-    await dbConfigService.ConfigureAsync(lifetime.ApplicationStopping);
+    await configurationService.ConfigureAsync(lifetime.ApplicationStopping);
 
     logger.LogInformation("Pizzeria Configuration completed successfully");
 }

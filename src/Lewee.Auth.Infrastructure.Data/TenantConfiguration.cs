@@ -10,6 +10,13 @@ internal sealed class TenantConfiguration : AggregateRootConfiguration<Tenant>
 {
     protected override void ConfigureEntity(EntityTypeBuilder<Tenant> builder)
     {
+        builder.Property(tenant => tenant.Code)
+            .IsRequired()
+            .HasMaxLength(Tenant.FieldLengths.Code);
+
+        builder.HasIndex(tenant => tenant.Code)
+            .IsUnique();
+
         builder.Property(tenant => tenant.Name)
             .IsRequired()
             .HasMaxLength(Tenant.FieldLengths.Name);

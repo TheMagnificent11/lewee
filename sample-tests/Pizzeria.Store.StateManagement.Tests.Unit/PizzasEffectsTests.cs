@@ -12,14 +12,14 @@ namespace Pizzeria.Store.StateManagement.Tests.Unit;
 
 public class PizzasEffectsTests
 {
-    private readonly Mock<IStoreApiClient> storeApiClientMock = new();
+    private readonly Mock<IBffApiClient> bffApiClientMock = new();
     private readonly Mock<IDispatcher> dispatcherMock = new();
     private readonly PizzasEffects effects;
 
     public PizzasEffectsTests()
     {
         this.effects = new PizzasEffects(
-            this.storeApiClientMock.Object,
+            this.bffApiClientMock.Object,
             Mock.Of<IState<PizzasState>>(),
             Mock.Of<ICorrelationContextAccessor>(),
             Mock.Of<ILogger<PizzasEffects>>());
@@ -35,7 +35,7 @@ public class PizzasEffectsTests
             new(Guid.NewGuid(), "Pepperoni", "Spicy pizza", 11.99m),
         };
 
-        this.storeApiClientMock
+        this.bffApiClientMock
             .Setup(x => x.GetPizzasAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(pizzas);
 
@@ -55,7 +55,7 @@ public class PizzasEffectsTests
     {
         // Arrange
         var exceptionMessage = "Something went wrong";
-        this.storeApiClientMock
+        this.bffApiClientMock
             .Setup(x => x.GetPizzasAsync(It.IsAny<CancellationToken>()))
             .ThrowsAsync(new InvalidOperationException(exceptionMessage));
 

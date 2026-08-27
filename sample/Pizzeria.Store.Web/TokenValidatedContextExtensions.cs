@@ -16,8 +16,8 @@ internal static class TokenValidatedContextExtensions
             return;
         }
 
-        var apiClient = context.HttpContext.RequestServices.GetRequiredService<IStoreApiClient>();
-        var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<IStoreApiClient>>();
+        var apiClient = context.HttpContext.RequestServices.GetRequiredService<IBffApiClient>();
+        var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<IBffApiClient>>();
 
         try
         {

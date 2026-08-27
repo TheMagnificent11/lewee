@@ -16,7 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
 
 builder.Services
-    .AddWebApiHttpClient<IStoreApiClient>(ServiceNames.PizzaStoreApi)
+    .AddWebApiHttpClient<IBffApiClient>(ServiceNames.Bff)
     .AddKeycloakAuthenticationForWebApp(
         keycloakServiceName: ServiceNames.AuthServer,
         keycloakRealmName: CommonEnvironments.Auth.RealmName,
@@ -31,7 +31,7 @@ builder.Services
     .AddStoreState(builder.Environment.IsDevelopment())
     .AddSseMessageReceiver<MessageToActionMapper>(client =>
     {
-        client.BaseAddress = new Uri($"https://{ServiceNames.PizzaStoreApi}");
+        client.BaseAddress = new Uri($"https://{ServiceNames.Bff}");
     })
     .AddMudServices()
     .AddRazorComponents()
@@ -41,7 +41,7 @@ var app = builder.Build();
 
 app.MapDefaultEndpoints();
 
-app.MapGet("/authentication/login", (string? returnUrl) =>
+app.MapGet("/authentication/sign-in", (string? returnUrl) =>
 {
     var redirectUri = "/";
     if (!string.IsNullOrWhiteSpace(returnUrl)

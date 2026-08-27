@@ -10,6 +10,10 @@ public static class ServiceNames
 
     public const string PizzaStoreApi = "pizza-store-api";
 
+    public const string AuthApi = "auth-api";
+
+    public const string Bff = "bff";
+
     public const string PizzaStoreWeb = "pizza-store-web";
 
     public const string AuthServer = "auth-server";

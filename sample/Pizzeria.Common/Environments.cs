@@ -22,6 +22,7 @@ public static class Environments
 
         public static class Clients
         {
+            public const string AuthApi = "pizzeria-auth-api";
             public const string StoreApi = "pizzeria-store-api";
             public const string StoreWeb = "pizzeria-store-web";
         }

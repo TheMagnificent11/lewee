@@ -5,7 +5,7 @@ Defines the persistence boundary for authorization data: a dedicated `auth` data
 ## ADDED Requirements
 
 ### Requirement: Authorization data is persisted in a dedicated auth schema
-`Tenant` and `User` data SHALL be persisted via a database context whose default schema is `auth`, separate from any application-specific schema (such as `sto`). This context SHALL NOT contain application-specific aggregates (e.g. `Order`, `Pizza`). `Tenant` and `User` SHALL each be persisted as their own top-level aggregate (each with its own table), and the membership between them SHALL be persisted in a separate table.
+`Tenant` and `User` data SHALL be persisted via a database context whose default schema is `auth`, separate from any application-specific schema (such as `sto`). This context SHALL NOT contain application-specific aggregates (e.g. `Order`, `Pizza`). `Tenant` and `User` SHALL each be persisted as their own top-level aggregate (each with its own table), and the membership between them SHALL be persisted in a separate table. Tenant codes SHALL have a unique index.
 
 #### Scenario: Auth tables are created in the auth schema
 - **WHEN** the database context responsible for `Tenant`/`User` persistence applies its migrations

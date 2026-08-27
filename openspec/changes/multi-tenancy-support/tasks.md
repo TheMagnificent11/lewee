@@ -1,7 +1,7 @@
 ## 1. Lewee.Auth.Domain (new project)
 
 - [x] 1.1 Create `src/Lewee.Auth.Domain` project referencing `Lewee.Domain` only, and add it to `lewee.slnx`
-- [x] 1.2 Add `Tenant : AggregateRoot` with a `Name` (or equivalent) property, as its own independent aggregate root (no `Users` navigation/ownership)
+- [x] 1.2 Add `Tenant : AggregateRoot` with a unique, maximum-10-character `Code` and a `Name`, as its own independent aggregate root (no `Users` navigation/ownership)
 - [x] 1.3 Move `User` from `sample/Pizzeria.Store.Domain/User.cs` into `Lewee.Auth.Domain`, keeping it an `AggregateRoot`; add a `TenantMemberships` collection navigation, an `AssignToTenant(tenantId, correlationId)` method that idempotently adds a `TenantMembership` and raises `TenantMembershipCreatedEvent`, and a `RemoveFromTenant(tenantId, correlationId)` method that idempotently removes the matching `TenantMembership` and raises `TenantMembershipRemovedEvent`. A newly-created `User` SHALL have zero memberships.
 - [x] 1.4 Add `TenantMembership` as a child entity owned by `User`, holding a `TenantId` (and any audit fields consistent with `Lewee.Domain.Entity`)
 - [x] 1.5 Move `UserCreatedEvent` from `sample/Pizzeria.Store.Domain/UserCreatedEvent.cs` into `Lewee.Auth.Domain` unchanged in shape; add `TenantMembershipCreatedEvent` (raised when a user is added to a tenant) and `TenantMembershipRemovedEvent` (raised when a user is removed from a tenant)
@@ -13,7 +13,7 @@
 
 - [x] 2.1 Create `src/Lewee.Auth.Infrastructure.Data` project referencing `Lewee.Infrastructure.Data` and `Lewee.Auth.Domain`, and add it to `lewee.slnx`
 - [x] 2.2 Add `AuthDbContext : ApplicationDbContext<AuthDbContext>` with `Schema => "auth"`, `DbSet<Tenant> Tenants`, and `DbSet<User> Users`
-- [x] 2.3 Add `TenantConfiguration : AggregateRootConfiguration<Tenant>` configuring `Tenant`'s own properties (no `Users` navigation)
+- [x] 2.3 Add `TenantConfiguration : AggregateRootConfiguration<Tenant>` configuring its unique, maximum-10-character `Code` and other properties (no `Users` navigation)
 - [x] 2.4 Add `UserConfiguration : AggregateRootConfiguration<User>` configuring the global unique index on `ExternalId` and the owned `TenantMemberships` collection, mapped to an `auth.UserTenantMemberships` table with a unique index on `(UserId, TenantId)` and a foreign key to `auth.Tenants`
 - [x] 2.5 Add the initial EF Core migration creating the `auth` schema with `Tenants`/`Users`/`UserTenantMemberships` tables
 - [x] 2.6 Create `tests/Lewee.Auth.Infrastructure.Data.Tests.Unit` covering the EF configuration (schema name, global unique index on `ExternalId`, unique membership index), following existing patterns in `tests/Lewee.Infrastructure.Data.Tests.Unit`
@@ -32,8 +32,9 @@
 - [x] 4.1 Create `src/Lewee.Auth.Api` project referencing `Lewee.Infrastructure.FastEndpoints` and `Lewee.Auth.Application`, and add it to `lewee.slnx`
 - [x] 4.2 Add `CreateUserRequest`/`UserDto` contracts (in `Lewee.Auth.Api` or a new `Lewee.Auth.Contracts` project, matching how `Pizzeria.Store.Contracts.Users` is structured today) with just `ExternalUserId` (no `TenantId`)
 - [x] 4.3 Add `CreateUserEndpoint : CommandEndpoint<CreateUserRequest>` (anonymous access allowed) ported from `sample/Pizzeria.Store.Api/Customers/CreateCustomerEndpoint.cs`
-- [x] 4.4 Add a project reference from `Pizzeria.Store.Api` to `Lewee.Auth.Api` (and `Lewee.Auth.Application`/`Lewee.Auth.Infrastructure.Data` for DI registration) so the endpoint is exposed by the sample API
-- [x] 4.5 Register `AddLeweeDatabaseServices<AuthDbContext>(...)` and any `Lewee.Auth.Application`/`Lewee.Auth.Api` DI extension methods in `Pizzeria.Store.Api`'s `Program.cs`
+- [x] 4.4 Add `Pizzeria.Auth.Api` to host `Lewee.Auth.Api` independently of the store API
+- [x] 4.5 Register `AddLeweeDatabaseServices<AuthDbContext>(...)` and the `Lewee.Auth.Application`/`Lewee.Auth.Api` services in `Pizzeria.Auth.Api`
+- [x] 4.6 Add `Pizzeria.Bff` with YARP routes to the auth and store APIs
 
 ## 5. Database Migration and Seeding
 
@@ -50,7 +51,7 @@
 - [x] 6.3 Remove `sample/Pizzeria.Store.Application/Customers/**` (`CreateCustomerCommand`, `CustomerCreatedEventHandler`, and related log message classes)
 - [x] 6.4 Remove `sample/Pizzeria.Store.Api/Customers/CreateCustomerEndpoint.cs`
 - [x] 6.5 Update or remove `sample/Pizzeria.Store.Contracts/Users/CreateCustomerRequest.cs` and `CustomerDto.cs` in favor of the new `Lewee.Auth.Api`/`Lewee.Auth.Contracts` DTOs, updating `Pizzeria.Common.Endpoints.StoreApi.Customers` route usage accordingly
-- [x] 6.6 Update `sample/Pizzeria.Store.Web/TokenValidatedContextExtensions.cs` (and `IStoreApiClient`) to call the new create-user endpoint/route instead of the create-customer one
+- [x] 6.6 Update `sample/Pizzeria.Store.Web/TokenValidatedContextExtensions.cs`, `IBffApiClient`, and the SSE client to call the BFF
 
 ## 7. Test Updates and Verification
 
