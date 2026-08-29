@@ -76,6 +76,6 @@ public partial class Order : FluxorComponent
 
     public static class Selectors
     {
-        public const string PizzaMenuHeading = "[role='heading'][aria-level='2']";
+        public const string PizzaMenuHeading = "[role='heading'][aria-level='4']";
     }
 }
