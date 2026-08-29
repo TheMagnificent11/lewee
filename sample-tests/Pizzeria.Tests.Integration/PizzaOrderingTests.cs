@@ -47,6 +47,9 @@ public sealed class PizzaOrderingTests : PizzeriaTests
             currentUrl.Should().Contain("/orders/", "the app should navigate to the order page after receiving the SSE message");
 
             // Verify the page shows order-related content
+            await playwrightPage.Page.WaitForSelectorAsync(
+                Pizzeria.Store.Components.Order.Selectors.PizzaMenuHeading,
+                new PageWaitForSelectorOptions { Timeout = 30000 });
             var orderPageContent = await playwrightPage.Page.ContentAsync();
             orderPageContent.Should().Contain("Pizza Menu", "the order page should show the pizza menu");
         }

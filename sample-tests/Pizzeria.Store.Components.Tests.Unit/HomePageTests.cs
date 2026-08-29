@@ -14,7 +14,7 @@ public class HomePageTests : TestContext
 {
     public HomePageTests()
     {
-        this.Services.AddSingleton(Mock.Of<IStoreApiClient>());
+        this.Services.AddSingleton(Mock.Of<IBffApiClient>());
         this.Services.AddSingleton(Mock.Of<ICorrelationContextAccessor>());
         this.Services.AddLogging();
         this.Services.AddMudServices();

@@ -14,6 +14,10 @@ For development guidance in this directory, see the following instruction files:
 
 | Package | Description |
 |---------|-------------|
+| `Lewee.Auth.Api` | Anonymous user-provisioning endpoint and contracts |
+| `Lewee.Auth.Application` | Authentication and user-provisioning use cases |
+| `Lewee.Auth.Domain` | Tenant, user, and tenant-membership domain model |
+| `Lewee.Auth.Infrastructure.Data` | Authentication persistence in the `auth` schema |
 | `Lewee.Domain` | Domain layer abstractions including base classes for entities, aggregate roots, value objects, domain events, specifications, and repository interfaces |
 | `Lewee.Application` | Application layer with CQRS implementation using MediatR, including commands, queries, pipeline behaviors for logging, validation, and exception handling |
 | `Lewee.Common` | Cross-cutting utilities including result types (CommandResult, QueryResult), client messaging contracts, logging constants, HTTP context constants, request headers, and enum extension methods |

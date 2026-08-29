@@ -12,23 +12,23 @@ namespace Pizzeria.Store.StateManagement.Pizzas;
 public class PizzasEffects
     : QueryEffects<PizzasState, IEnumerable<PizzaDto>, LoadPizzasAction, LoadPizzasSuccessAction, LoadPizzasFailureAction>
 {
-    private readonly IStoreApiClient storeApiClient;
+    private readonly IBffApiClient bffApiClient;
 
     public PizzasEffects(
-        IStoreApiClient storeApiClient,
+        IBffApiClient bffApiClient,
         IState<PizzasState> state,
         ICorrelationContextAccessor correlationContextAccessor,
         ILogger<PizzasEffects> logger)
         : base(state, correlationContextAccessor, logger)
     {
-        this.storeApiClient = storeApiClient;
+        this.bffApiClient = bffApiClient;
     }
 
     protected override async Task<QueryResult<IEnumerable<PizzaDto>>> ExecuteQueryAsync(
         [NotNull] LoadPizzasAction action,
         [NotNull] IDispatcher dispatcher)
     {
-        var result = await this.storeApiClient.GetPizzasAsync();
+        var result = await this.bffApiClient.GetPizzasAsync();
 
         return QueryResult<IEnumerable<PizzaDto>>.Success(result);
     }

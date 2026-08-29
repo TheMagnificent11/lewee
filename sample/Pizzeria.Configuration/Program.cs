@@ -1,13 +1,17 @@
-﻿using Lewee.Infrastructure.Data;
+﻿using Lewee.Auth.Infrastructure.Data;
+using Lewee.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Pizzeria.Auth;
 using Pizzeria.Common;
 using Pizzeria.Configuration;
 using Pizzeria.ServiceDefaults;
 using Pizzeria.Store.Data;
+
+using CommonEnvironments = Pizzeria.Common.Environments;
 
 var builder = Host.CreateApplicationBuilder(args);
 
@@ -29,17 +33,33 @@ builder.Services.AddDbContext<StoreDbContext>((serviceProvider, options) =>
     }
 });
 
+builder.Services.AddDbContext<AuthDbContext>((serviceProvider, options) =>
+{
+    var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+    var connectionString = configuration.GetConnectionString(databaseName);
+
+    if (!string.IsNullOrWhiteSpace(connectionString))
+    {
+        options.UseNpgsql(connectionString);
+    }
+});
+
+builder.Services.AddKeycloakAdminClient(
+    CommonEnvironments.Auth.RealmName,
+    client => client.BaseAddress = new Uri($"https+http://{ServiceNames.AuthServer}"));
+
 // Register database seeder
 builder.Services.AddTransient<IDatabaseSeeder<StoreDbContext>, StoreSeeder>();
+builder.Services.AddTransient<IDatabaseSeeder<AuthDbContext>, AuthSeeder>();
 
 // Register configuration service
-builder.Services.AddTransient<PizzeriaStoreDatabaseConfigurationService>();
+builder.Services.AddTransient<PizzeriaConfigurationService>();
 
 using var host = builder.Build();
 
 await host.StartAsync();
 
-var dbConfigService = host.Services.GetRequiredService<PizzeriaStoreDatabaseConfigurationService>();
+var configurationService = host.Services.GetRequiredService<PizzeriaConfigurationService>();
 var lifetime = host.Services.GetRequiredService<IHostApplicationLifetime>();
 var logger = host.Services.GetRequiredService<ILogger<Program>>();
 
@@ -47,7 +67,7 @@ try
 {
     logger.LogInformation("Pizzeria Configuration starting...");
 
-    await dbConfigService.ConfigureAsync(lifetime.ApplicationStopping);
+    await configurationService.ConfigureAsync(lifetime.ApplicationStopping);
 
     logger.LogInformation("Pizzeria Configuration completed successfully");
 }

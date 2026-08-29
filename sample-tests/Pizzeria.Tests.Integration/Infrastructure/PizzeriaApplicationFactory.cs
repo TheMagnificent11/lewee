@@ -2,6 +2,8 @@
 using Aspire.Hosting;
 using Aspire.Hosting.ApplicationModel;
 using Aspire.Hosting.Testing;
+using Lewee.Auth.Domain;
+using Lewee.Auth.Infrastructure.Data;
 using Lewee.Domain;
 using Lewee.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -85,13 +87,17 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
             .WaitAsync(TimeSpan.FromMinutes(10)); // To allow Aspire to pull Docker images
 
         var databaseName = ServiceNames.PizzaStoreDatabaseName;
-        var storeDbConnectionString = await this.app.GetConnectionStringAsync(databaseName);
+        var databaseConnectionString = await this.app.GetConnectionStringAsync(databaseName);
 
         // Setup service provider
         var services = new ServiceCollection();
         services.AddDbContext<StoreDbContext>(options =>
         {
-            options.UseNpgsql(storeDbConnectionString);
+            options.UseNpgsql(databaseConnectionString);
+        });
+        services.AddDbContext<AuthDbContext>(options =>
+        {
+            options.UseNpgsql(databaseConnectionString);
         });
         services.AddTransient<IQueryProjectionService, QueryProjectionService<StoreDbContext>>();
         services.AddKeycloakAdminClient(
@@ -138,9 +144,9 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
     public async Task<User> GetLatestCustomerAsync()
     {
-        var storeDbContext = this.serviceProvider.GetRequiredService<StoreDbContext>();
+        var authDbContext = this.serviceProvider.GetRequiredService<AuthDbContext>();
 
-        var user = await storeDbContext
+        var user = await authDbContext
             .Users
             .OrderByDescending(x => x.ModifiedAtUtc)
             .FirstOrDefaultAsync();
@@ -150,9 +156,9 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
     public async Task<User> GetCustomerByExternalIdAsync(string externalId)
     {
-        var storeDbContext = this.serviceProvider.GetRequiredService<StoreDbContext>();
+        var authDbContext = this.serviceProvider.GetRequiredService<AuthDbContext>();
 
-        var user = await storeDbContext
+        var user = await authDbContext
             .Users
             .FirstOrDefaultAsync(x => x.ExternalId == externalId);
 

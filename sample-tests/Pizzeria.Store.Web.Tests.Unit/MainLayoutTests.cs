@@ -28,7 +28,7 @@ public class MainLayoutTests : TestContext
         var logger = Mock.Of<ILogger<SseClientMessageReceiver>>();
         this.testMessageReceiver = new TestSseClientMessageReceiver(httpClient, logger);
 
-        this.Services.AddSingleton(Mock.Of<IStoreApiClient>());
+        this.Services.AddSingleton(Mock.Of<IBffApiClient>());
         this.Services.AddSingleton(Mock.Of<ICorrelationContextAccessor>());
         this.Services.AddSingleton<SseClientMessageReceiver>(this.testMessageReceiver);
         this.Services.AddSingleton(Mock.Of<IMessageToActionMapper>());

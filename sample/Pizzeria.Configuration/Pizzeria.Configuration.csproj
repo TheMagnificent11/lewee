@@ -5,6 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Lewee.Auth.Infrastructure.Data\Lewee.Auth.Infrastructure.Data.csproj" />
+    <ProjectReference Include="..\Pizzeria.Auth\Pizzeria.Auth.csproj" />
     <ProjectReference Include="..\Pizzeria.Common\Pizzeria.Common.csproj" />
     <ProjectReference Include="..\Pizzeria.ServiceDefaults\Pizzeria.ServiceDefaults.csproj" />
     <ProjectReference Include="..\Pizzeria.Store.Data\Pizzeria.Store.Data.csproj" />

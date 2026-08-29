@@ -146,6 +146,22 @@ All build configuration is centrally managed through a hierarchy of configuratio
 
 ## Coding Style
 
+### Magic Strings
+
+- Do not use magic strings when the same value is used more than once; assign the value to a descriptively named
+  constant or variable and reuse it.
+
+### Test Method Names
+
+- Name test methods using `Should_<ExpectedResultInPascalCase>_When_<ConditionInPascalCase>`.
+- Add `_And_<ExtraConditionInPascalCase>` when another condition is required.
+
+### NuGet Package README Files
+
+- Every C# project in `src/` is intended to be published as a NuGet package and must have a detailed `README.md`.
+- Describe the package purpose, dependencies, configuration, usage, main components, and relevant integration points.
+- Update the project README whenever its public behavior or setup changes.
+
 **Format Command:**
 ```bash
 dotnet format lewee.sln
@@ -192,6 +208,7 @@ public void DoSomething(string? value)
 - [ ] No style violations
 - [ ] No unused usings or variables
 - [ ] No magic strings or numbers, use constants or enums
+- [ ] No repeated magic strings; use a descriptively named constant or variable
 - [ ] Address compiler information messages that result for Roslyn analyzers
 - [ ] XML documentation for public and protected APIs **only** for C# projects within the `src` directory (Lewee framework packages)
 - [ ] No XML documentation for sample application code (`sample/` directory)

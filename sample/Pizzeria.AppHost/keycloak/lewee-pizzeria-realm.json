@@ -36,12 +36,23 @@
       },
       "protocolMappers": [
         {
-          "name": "audience-mapper",
+          "name": "store-api-audience-mapper",
           "protocol": "openid-connect",
           "protocolMapper": "oidc-audience-mapper",
           "consentRequired": false,
           "config": {
             "included.client.audience": "pizzeria-store-api",
+            "id.token.claim": "false",
+            "access.token.claim": "true"
+          }
+        },
+        {
+          "name": "auth-api-audience-mapper",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "consentRequired": false,
+          "config": {
+            "included.client.audience": "pizzeria-auth-api",
             "id.token.claim": "false",
             "access.token.claim": "true"
           }

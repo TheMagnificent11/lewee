@@ -17,7 +17,7 @@ namespace Pizzeria.Store.StateManagement.Tests.Unit;
 
 public class OrdersEffectsTests : TestContext
 {
-    private readonly Mock<IStoreApiClient> storeApiClientMock = new();
+    private readonly Mock<IBffApiClient> bffApiClientMock = new();
     private readonly Mock<IDispatcher> dispatcherMock = new();
     private readonly Mock<IState<OrderState>> stateMock = new();
     private readonly StartOrderEffects effects;
@@ -30,7 +30,7 @@ public class OrdersEffectsTests : TestContext
 
         this.effects = new StartOrderEffects(
             this.stateMock.Object,
-            this.storeApiClientMock.Object,
+            this.bffApiClientMock.Object,
             this.Services.GetRequiredService<NavigationManager>(),
             Mock.Of<ICorrelationContextAccessor>(),
             Mock.Of<ILogger<StartOrderEffects>>());
@@ -116,7 +116,7 @@ public class OrdersEffectsTests : TestContext
     public async Task ExecuteRequestAsync_Success_DispatchesSuccessActionAsync()
     {
         // Arrange
-        this.storeApiClientMock
+        this.bffApiClientMock
             .Setup(x => x.StartOrderAsync(It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
@@ -137,7 +137,7 @@ public class OrdersEffectsTests : TestContext
     {
         // Arrange
         var exceptionMessage = "Unexpected error";
-        this.storeApiClientMock
+        this.bffApiClientMock
             .Setup(x => x.StartOrderAsync(It.IsAny<CancellationToken>()))
             .ThrowsAsync(new InvalidOperationException(exceptionMessage));
 
