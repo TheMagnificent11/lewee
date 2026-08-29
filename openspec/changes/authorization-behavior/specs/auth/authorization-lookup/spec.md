@@ -5,7 +5,7 @@ Defines a fast, tenant-and-user-keyed lookup of a caller's roles that pipeline a
 ## ADDED Requirements
 
 ### Requirement: Authorization lookup resolves a caller's roles for a tenant without a per-request join
-The system SHALL provide a lookup, keyed by a user's external identity and a tenant ID, that resolves to the set of role codes the user holds for that tenant (per `auth/role-management`). Consumers (such as pipeline authorization behaviors) SHALL be able to query this lookup with a single key-based read rather than joining membership and role tables at request time.
+The system SHALL provide a lookup, keyed by a user's external identity and a tenant ID, that resolves to the set of role codes the user holds for that tenant (per `auth/role-management`). Consumers (such as pipeline authorization behaviors) SHALL be able to query this lookup with a single key-based read rather than joining membership and role-assignment tables at request time.
 
 #### Scenario: Looking up an existing member's roles
 - **WHEN** the authorization lookup is queried with the external identity of a `User` who is a member of a `Tenant`, for that tenant's ID
@@ -24,12 +24,12 @@ Whenever a `TenantMembership` is created or removed (per `auth/tenant-management
 
 #### Scenario: Membership removed
 - **WHEN** a `User` is removed from a `Tenant`
-- **THEN** the authorization lookup SHALL no longer report that user as a member of that tenant, and SHALL no longer return any of that membership's previously assigned roles
+- **THEN** the authorization lookup SHALL no longer report that user as a member of that tenant, and SHALL no longer return any of that membership's previously assigned role codes
 
 #### Scenario: Role assigned
-- **WHEN** a `Role` is assigned to a `User`'s `TenantMembership`
-- **THEN** the authorization lookup for that user and tenant SHALL include the newly assigned role's code
+- **WHEN** a role code is assigned to a `User`'s `TenantMembership`
+- **THEN** the authorization lookup for that user and tenant SHALL include the newly assigned role code
 
 #### Scenario: Role removed
-- **WHEN** a `Role` is removed from a `User`'s `TenantMembership`
-- **THEN** the authorization lookup for that user and tenant SHALL no longer include the removed role's code
+- **WHEN** a role code is removed from a `User`'s `TenantMembership`
+- **THEN** the authorization lookup for that user and tenant SHALL no longer include the removed role code

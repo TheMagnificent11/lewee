@@ -1,43 +1,46 @@
-## 1. Lewee.Auth.Domain: roles
+## 1. Lewee.Auth.Domain: site administrator and roles
 
-- [ ] 1.1 Add `Role` as a child entity owned by `Tenant`, with a code unique within that tenant (not globally) and a name; add `Tenant.DefineRole(code, name, correlationId)` (idempotent-by-code within the tenant) and verify with a unit test that duplicate codes within the same tenant are rejected while the same code across different tenants succeeds (`auth/role-management` - "A tenant defines its own roles")
-- [ ] 1.2 Add a role-defined domain event (e.g. `RoleDefinedEvent`) raised by `Tenant.DefineRole`, exposing tenant ID, role ID, code, and name, and verify it is raised with a unit test
-- [ ] 1.3 Add `TenantMembership.AssignRole(roleId, correlationId)` (idempotent - assigning an already-held role is a no-op) and `RemoveRole(roleId, correlationId)` (idempotent - removing a role not held is a no-op), each validating the role belongs to the membership's own tenant, rejecting cross-tenant role assignment; verify all four behaviors (assign new, assign duplicate, remove held, remove not-held) plus the cross-tenant rejection with unit tests (`auth/role-management`)
-- [ ] 1.4 Add `TenantMembershipRoleAssignedEvent`/`TenantMembershipRoleRemovedEvent` domain events raised by `AssignRole`/`RemoveRole` respectively (only when state actually changes), and verify with unit tests that idempotent no-ops do not raise them
-- [ ] 1.5 Verify a newly-created `TenantMembership` has zero roles with a unit test (`auth/role-management` - "A newly created tenant membership has no roles")
+- [ ] 1.1 Add `IsSiteAdministrator` (boolean, defaulting to `false`) to `User`, with no domain method to set it (it is expected to be set directly against the database - see design.md Decision 1); verify the default with a unit test (`application/administrator-authorization` reads it, `auth/role-management` is unaffected by it)
+- [ ] 1.2 Add `TenantMembership.AssignRole(roleCode, correlationId)` (idempotent - assigning an already-held role code is a no-op) and `RemoveRole(roleCode, correlationId)` (idempotent - removing a role code not held is a no-op); verify all four behaviors (assign new, assign duplicate, remove held, remove not-held) with unit tests (`auth/role-management`)
+- [ ] 1.3 Add `TenantMembershipRoleAssignedEvent`/`TenantMembershipRoleRemovedEvent` domain events raised by `AssignRole`/`RemoveRole` respectively (only when state actually changes), and verify with unit tests that idempotent no-ops do not raise them
+- [ ] 1.4 Verify a newly-created `TenantMembership` has zero roles with a unit test (`auth/role-management` - "A newly created tenant membership has no roles")
+- [ ] 1.5 Verify a `TenantMembership` can hold more than one role code at once, with a unit test (`auth/role-management` - "Assigning multiple roles to a tenant membership")
 - [ ] 1.6 Verify that removing a `TenantMembership` (existing `RemoveFromTenant`) also removes its role assignments, with a unit test (`auth/role-management` - "Removing a tenant membership removes its role assignments")
-- [ ] 1.7 Promote the reserved administrative tenant code (currently a private constant in `sample/Pizzeria.Configuration/AuthSeeder.cs`) to a shared, public constant on `Lewee.Auth.Domain.Tenant` (or equivalent), and update `AuthSeeder` to reference it, verified by `AuthSeeder`'s existing behavior being unchanged (design.md Decision 1 / Risk 3)
 
 ## 2. Lewee.Auth.Infrastructure.Data: persistence
 
-- [ ] 2.1 Add EF Core configuration for `Role` (owned by `Tenant`, unique index on `(TenantId, Code)`) and the `TenantMembership`-to-`Role` assignment (join table under the `auth` schema), and verify with unit tests following the existing patterns in `tests/Lewee.Auth.Infrastructure.Data.Tests.Unit`
-- [ ] 2.2 Add the EF Core migration for the new `Role`/membership-role tables and verify it applies cleanly against a fresh `auth` schema (`dotnet ef database update` or equivalent, per `build-and-test.instructions.md`)
+- [ ] 2.1 Add EF Core configuration for `User.IsSiteAdministrator` and the `TenantMembership`-to-role-code assignment (a simple table under the `auth` schema keyed by membership + role code, no separate `Role` catalog table), and verify with unit tests following the existing patterns in `tests/Lewee.Auth.Infrastructure.Data.Tests.Unit`
+- [ ] 2.2 Add the EF Core migration for `IsSiteAdministrator` and the membership-role assignment table and verify it applies cleanly against a fresh `auth` schema (`dotnet ef database update` or equivalent, per `build-and-test.instructions.md`)
 
 ## 3. Lewee.Auth.Application: authorization lookup
 
 - [ ] 3.1 Add `TenantMembershipRolesQueryProjection : IQueryProjection` (role codes + `CorrelationId`), keyed by `$"{tenantId}:{externalUserId}"`, per design.md Decision 3
 - [ ] 3.2 Add a domain event handler in `Lewee.Auth.Application` that creates/updates/removes the projection (via `IQueryProjectionService` against `AuthDbContext`) in response to `TenantMembershipCreatedEvent`, `TenantMembershipRemovedEvent`, `TenantMembershipRoleAssignedEvent`, and `TenantMembershipRoleRemovedEvent`, and verify each event's effect on the projection with unit tests (`auth/authorization-lookup` scenarios: membership created/removed, role assigned/removed)
-- [ ] 3.3 Add `ITenantRoleAuthorizationService` to `Lewee.Application` (contract only - no dependency on `Lewee.Auth.*`), exposing an async "does this external user hold this role for this tenant ID?" check
-- [ ] 3.4 Implement `ITenantRoleAuthorizationService` in `Lewee.Auth.Application`, querying the projection from 3.1 via `RetrieveByKeyAsync`, and verify with unit tests covering: existing member with the role, existing member without the role, and non-member (`auth/authorization-lookup` scenarios: looking up an existing member's roles, looking up a non-member)
 
-## 4. Lewee.Application: pipeline behaviors
+## 4. Lewee.Auth.Application: pipeline behaviors
 
-- [ ] 4.1 Add `IAdministratorRequest` to `Lewee.Application.Mediation.Requests`, exposing the required role, and verify a request implementing it compiles and exposes the role (`application/administrator-authorization` - "Defining an administrator-only command")
-- [ ] 4.2 Add `ITenantRoleRequest` (extending `ITenantRequest`) to `Lewee.Application.Mediation.Requests`, exposing the required role in addition to `TenantId`, and verify a request implementing it compiles and exposes both (`application/tenant-role-authorization` - "Defining a tenant-role-restricted command")
-- [ ] 4.3 Add `AdministratorAuthorizationBehavior<TRequest, TResponse>` to `Lewee.Application.Mediation.Behaviors`, resolving the caller via `IAuthenticatedUserService`, short-circuiting with `Unauthenticated` when no caller is resolved, checking membership/role in the reserved administrative tenant (task 1.7) via `ITenantRoleAuthorizationService`, and short-circuiting with `Unauthorized` on failure; verify all three outcomes (authorized, unauthorized, unauthenticated) with unit tests (`application/administrator-authorization` - all three pipeline scenarios)
-- [ ] 4.4 Add `TenantRoleAuthorizationBehavior<TRequest, TResponse>` to `Lewee.Application.Mediation.Behaviors`, performing the same checks as 4.3 but against `request.TenantId`; verify all four outcomes (authorized, not a member, member without the role, unauthenticated) with unit tests (`application/tenant-role-authorization` - all four pipeline scenarios)
-- [ ] 4.5 Verify with unit tests that requests not implementing `IAdministratorRequest`/`ITenantRoleRequest` are unaffected by these behaviors (`application/administrator-authorization` and `application/tenant-role-authorization` - "unaffected" scenarios), and that a request implementing only `ITenantRequest` (not `ITenantRoleRequest`) is not subject to tenant-role authorization
-- [ ] 4.6 Register both behaviors as opt-in entries via `ApplicationConfiguration.AddPipelineBehaviors`'s existing `additionalBehaviors` parameter, ordered after `ValidationBehavior` and before `PerformanceBehavior` (design.md Decision 5), and document the registration/opt-in mechanism in `Lewee.Application`'s `README.md`
+- [ ] 4.1 Add `IAdministratorRequest` (an empty marker interface) to `Lewee.Auth.Application`, and verify a request implementing it compiles (`application/administrator-authorization` - "Defining an administrator-only command")
+- [ ] 4.2 Add `ITenantRoleRequest` (extending `Lewee.Application.Mediation.Requests.ITenantRequest`) to `Lewee.Auth.Application`, exposing the set of roles that satisfy the request in addition to `TenantId`, and verify a request implementing it compiles and exposes both (`application/tenant-role-authorization` - "Defining a tenant-role-restricted command")
+- [ ] 4.3 Move `TenantLoggingBehavior` from `Lewee.Application.Mediation.Behaviors` to `Lewee.Auth.Application`, updating its namespace and any references, and verify existing unit tests for it still pass after the move
+- [ ] 4.4 Add `AdministratorAuthorizationBehavior<TRequest, TResponse>` to `Lewee.Auth.Application`, resolving the caller via `IAuthenticatedUserService`, short-circuiting with `Unauthenticated` when no caller is resolved, looking up the caller's `User` by external ID and checking `IsSiteAdministrator` directly (no tenant/role lookup), and short-circuiting with `Unauthorized` on failure; verify all three outcomes (authorized, unauthorized, unauthenticated) with unit tests (`application/administrator-authorization` - all three pipeline scenarios)
+- [ ] 4.5 Add `TenantRoleAuthorizationBehavior<TRequest, TResponse>` to `Lewee.Auth.Application`, resolving the caller via `IAuthenticatedUserService`, short-circuiting with `Unauthenticated` when no caller is resolved, checking (via the authorization lookup from section 3) whether the caller is a member of `request.TenantId` and holds at least one of the request's required roles, and short-circuiting with `Unauthorized` on failure; verify all four outcomes (authorized, not a member, member without any required role, unauthenticated) with unit tests (`application/tenant-role-authorization` - all four pipeline scenarios)
+- [ ] 4.6 Verify with unit tests that requests not implementing `IAdministratorRequest`/`ITenantRoleRequest` are unaffected by these behaviors (`application/administrator-authorization` and `application/tenant-role-authorization` - "unaffected" scenarios), and that a request implementing only `ITenantRequest` (not `ITenantRoleRequest`) is not subject to tenant-role authorization
+- [ ] 4.7 Add `ApplicationAuthConfiguration` to `Lewee.Auth.Application` (distinct from the existing `AuthApplicationConfiguration`), exposing a method that registers `TenantLoggingBehavior`, `AdministratorAuthorizationBehavior`, and `TenantRoleAuthorizationBehavior` as opt-in entries via `ApplicationConfiguration.AddPipelineBehaviors`'s existing `additionalBehaviors` parameter, ordered after `ValidationBehavior` and before `PerformanceBehavior` (design.md Decision 5); verify with a unit test that calling it registers all three behaviors
 
-## 5. Verification
+## 5. sample/Pizzeria.Configuration: remove the reserved ADMIN tenant
 
-- [ ] 5.1 Search the repo for any existing usage of `ApplicationConfiguration.AddPipelineBehaviors`'s `additionalBehaviors` parameter to confirm the new behaviors' registration does not conflict with host-supplied behaviors
-- [ ] 5.2 Run `dotnet build --configuration Release --nologo` and confirm no errors or warnings
-- [ ] 5.3 Run `dotnet test --filter "FullyQualifiedName!~Integration" --configuration Release --no-build --nologo` and confirm all unit tests (including the new ones from sections 1-4) pass
-- [ ] 5.4 Run `dotnet format` and confirm code style compliance
-- [ ] 5.5 Update `README.md` files for `Lewee.Auth.Domain`, `Lewee.Auth.Application`, and `Lewee.Application` to document `Role`, `ITenantRoleAuthorizationService`, `IAdministratorRequest`, and `ITenantRoleRequest`
+- [ ] 5.1 Remove `AuthSeeder`'s reserved `"ADMIN"` tenant creation and the seeded admin user's assignment to it; set the seeded admin user's `IsSiteAdministrator` to `true` directly instead, and verify `AuthSeeder`'s updated behavior with a unit test
+- [ ] 5.2 Confirm no other sample code depends on the removed `"ADMIN"` tenant (search the repo); no data migration is required since the sample's database can simply be recreated (design.md Migration Plan step 7)
 
-## 6. Deferred follow-up (tracked only, not implemented by this plan)
+## 6. Verification
 
-- [ ] 6.1 Design and implement role-management commands/endpoints (e.g. `DefineRoleCommand`, `AssignRoleCommand`, `RemoveRoleCommand`) so tenant administrators can manage roles without direct database access
-- [ ] 6.2 Adopt `IAdministratorRequest`/`ITenantRoleRequest` on real Pizzeria sample commands/queries to demonstrate end-to-end authorization behavior
+- [ ] 6.1 Search the repo for any existing usage of `ApplicationConfiguration.AddPipelineBehaviors`'s `additionalBehaviors` parameter, and any direct references to `Lewee.Application`'s `TenantLoggingBehavior`, to confirm the move/new registration does not conflict with host-supplied behaviors
+- [ ] 6.2 Run `dotnet build --configuration Release --nologo` and confirm no errors or warnings
+- [ ] 6.3 Run `dotnet test --filter "FullyQualifiedName!~Integration" --configuration Release --no-build --nologo` and confirm all unit tests (including the new ones from sections 1-5) pass
+- [ ] 6.4 Run `dotnet format` and confirm code style compliance
+- [ ] 6.5 Update `README.md` files for `Lewee.Auth.Domain` and `Lewee.Auth.Application` to document `IsSiteAdministrator`, role assignment, `IAdministratorRequest`, `ITenantRoleRequest`, and `ApplicationAuthConfiguration`
+
+## 7. Deferred follow-up (tracked only, not implemented by this plan)
+
+- [ ] 7.1 Design and implement role-management commands/endpoints (e.g. `AssignRoleCommand`, `RemoveRoleCommand`) so tenant administrators can manage roles without direct database access
+- [ ] 7.2 Adopt `IAdministratorRequest`/`ITenantRoleRequest` on real Pizzeria sample commands/queries to demonstrate end-to-end authorization behavior
