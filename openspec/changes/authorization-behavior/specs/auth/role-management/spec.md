@@ -5,7 +5,7 @@ Defines how a site administrator defines a global catalog of roles, and how thos
 ## ADDED Requirements
 
 ### Requirement: A site administrator defines a global catalog of roles
-`Role`s are defined once, globally - not per `Tenant` - and are available for any `Tenant` to assign to its own members. Each `Role` SHALL be identified by a code that is unique across the whole system (not merely within a tenant) and a name.
+`Role`s are defined once, globally - not per `Tenant` - and are available for any `Tenant` to assign to its own members. Each `Role` SHALL be identified by a unique identifier and a code that is unique across the whole system (not merely within a tenant), plus a name that is not required to be unique.
 
 #### Scenario: Defining a role
 - **WHEN** a `Role` is defined with a code and a name
@@ -14,6 +14,10 @@ Defines how a site administrator defines a global catalog of roles, and how thos
 #### Scenario: Duplicate role code is rejected
 - **WHEN** a `Role` is defined using a code that already exists
 - **THEN** persistence SHALL reject the duplicate code, since role codes are unique across the whole system, not per tenant
+
+#### Scenario: Duplicate role name is allowed
+- **WHEN** a `Role` is defined using a name that already exists on another `Role`
+- **THEN** the `Role` SHALL be created successfully, since only a `Role`'s code is required to be unique, not its name
 
 ### Requirement: A newly created tenant membership has no roles
 A `TenantMembership` SHALL have zero roles until a `Role` is explicitly assigned to it.
