@@ -219,7 +219,7 @@ public void DoSomething(string? value)
 
 ## Logging
 
-- Use high-performance logging (LoggerMessage source generator) for all Lewee framework projects in the `src/` directory
+- Use high-performance logging (LoggerMessage source generator) for all Lewee framework projects in the `src/` directory:
   - Create a separate `*LogMessages.cs` file with partial static class containing LoggerMessage methods
   - Use extension methods on ILogger for consistent API
   - See `src/Lewee.Infrastructure.Refit/ApiExceptionLogMessages.cs` for reference implementation
