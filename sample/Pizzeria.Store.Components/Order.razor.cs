@@ -73,4 +73,9 @@ public partial class Order : FluxorComponent
     {
         this.Dispatcher.Dispatch(new ClearOrderErrorAction());
     }
+
+    public static class Selectors
+    {
+        public const string PizzaMenuHeading = "[role='heading'][aria-level='2']";
+    }
 }
