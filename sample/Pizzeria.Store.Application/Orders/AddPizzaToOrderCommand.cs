@@ -67,7 +67,7 @@ public record AddPizzaToOrderCommand(Guid OrderId, Guid PizzaId) : ICommand
 
             await this.orderRepository.SaveChangesAsync(cancellationToken);
 
-            this.logger.LogPizzaAddedToOrder(request.PizzaId);
+            this.logger.LogInformation("Pizza {PizzaId} added to order", request.PizzaId);
 
             return CommandResult.Success();
         }

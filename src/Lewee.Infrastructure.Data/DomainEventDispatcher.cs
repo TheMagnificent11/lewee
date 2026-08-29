@@ -80,9 +80,7 @@ internal sealed class DomainEventDispatcher<TContext>
 
                 if (domainEvent == null)
                 {
-                    this.logger.LogWarning(
-                        "Could not deserialize DomainEventReference {Id}",
-                        domainEventReference.Id);
+                    this.logger.LogCouldNotDeserializeDomainEventReference(domainEventReference.Id);
                 }
                 else
                 {

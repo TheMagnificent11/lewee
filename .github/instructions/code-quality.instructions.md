@@ -219,10 +219,11 @@ public void DoSomething(string? value)
 
 ## Logging
 
-- Use high-performance logging (LoggerMessage source generator) for all Lewee framework projects in the `src/` directory
+- Use high-performance logging (LoggerMessage source generator) for all Lewee framework projects in the `src/` directory:
   - Create a separate `*LogMessages.cs` file with partial static class containing LoggerMessage methods
   - Use extension methods on ILogger for consistent API
   - See `src/Lewee.Infrastructure.Refit/ApiExceptionLogMessages.cs` for reference implementation
+- Sample application projects in the `sample/` directory do not need to use high-performance logging.
 - Use logging scopes where possible to provide context as opposed to structured properties within a log message
   - Prefer to inherit structured properties from the scope when they are passed in as parameters
     - Values like CorrelationId, TenantId, UserId etc that are passed in as method parameters should be added to the logging scope at the entry point of the request
