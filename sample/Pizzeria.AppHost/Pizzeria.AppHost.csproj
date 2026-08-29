@@ -3,6 +3,7 @@
   <Sdk Name="Aspire.AppHost.Sdk" Version="13.5.3" />
 
   <PropertyGroup>
+    <AspireUseCliBundle>true</AspireUseCliBundle>
     <OutputType>Exe</OutputType>
     <UserSecretsId>8b64ec13-a446-472c-929b-b427e166aafd</UserSecretsId>
   </PropertyGroup>
