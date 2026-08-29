@@ -27,7 +27,7 @@ A `TenantMembership` SHALL have zero roles until a `Role` is explicitly assigned
 - **THEN** that `TenantMembership` SHALL have zero roles until a `Role` is explicitly assigned to it
 
 ### Requirement: Assigning a role to a tenant membership is idempotent and raises a domain event
-A `Role` SHALL only be assignable to a `TenantMembership` for the same `Tenant` that defined the `Role`. Assigning a `Role` a `TenantMembership` already holds SHALL be a no-op. Assigning a `Role` a `TenantMembership` does not already hold SHALL raise a role-assigned domain event.
+A `Role` SHALL only be assignable to a `TenantMembership` for the same `Tenant` that defined the `Role`. Assigning a `Role` to a `TenantMembership` that already holds it SHALL be a no-op. Assigning a `Role` to a `TenantMembership` that does not already hold it SHALL raise a role-assigned domain event.
 
 #### Scenario: Assigning a new role to an existing tenant membership
 - **WHEN** a `User` who is already a member of a `Tenant` is assigned a `Role` defined by that same `Tenant`
@@ -42,7 +42,7 @@ A `Role` SHALL only be assignable to a `TenantMembership` for the same `Tenant` 
 - **THEN** the operation SHALL be rejected, since a `Role` only applies within the `Tenant` that defined it
 
 ### Requirement: Removing a role from a tenant membership is idempotent and raises a domain event
-Removing a `Role` a `TenantMembership` holds SHALL raise a role-removed domain event. Removing a `Role` a `TenantMembership` does not hold SHALL be a no-op.
+Removing a `Role` from a `TenantMembership` that holds it SHALL raise a role-removed domain event. Removing a `Role` from a `TenantMembership` that does not hold it SHALL be a no-op.
 
 #### Scenario: Removing an assigned role
 - **WHEN** a `Role` held by a `User`'s `TenantMembership` is removed from that membership
