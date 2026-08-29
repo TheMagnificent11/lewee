@@ -51,7 +51,7 @@ public abstract class QueryEffects<TState, TData, TRequestAction, TRequestSucces
     {
         using (this.Logger.BeginCorrelationIdScope(this.CorrelationContextAccessor, action))
         {
-            this.Logger.LogDebug("Executing request...");
+            this.Logger.LogRequestExecuting();
 
             try
             {
@@ -75,10 +75,7 @@ public abstract class QueryEffects<TState, TData, TRequestAction, TRequestSucces
             }
             catch (Exception ex)
             {
-                this.Logger.LogError(
-                    ex,
-                    "An error occurred while executing the query request: {ErrorMessage}",
-                    ex.Message);
+                this.Logger.LogRequestExecutionFailed(ex, ex.Message);
 
                 dispatcher.Dispatch(new TRequestErrorAction
                 {

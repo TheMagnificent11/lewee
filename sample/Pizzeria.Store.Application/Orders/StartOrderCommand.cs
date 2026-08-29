@@ -46,7 +46,7 @@ public record StartOrderCommand : ICommand
             await this.repository.AddAsync(order, cancellationToken);
             await this.repository.SaveChangesAsync(cancellationToken);
 
-            this.logger.LogOrderStarted(order.Id, userId);
+            this.logger.LogInformation("Order {OrderId} started by user {UserId}", order.Id, userId);
 
             return CommandResult.Success();
         }

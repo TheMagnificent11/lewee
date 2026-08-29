@@ -64,7 +64,7 @@ public abstract class RequestEffects<TState, TData, TRequestSuccessAction, TRequ
     {
         using (this.Logger.BeginCorrelationIdScope(this.CorrelationContextAccessor, action))
         {
-            this.Logger.LogDebug("Executing query request...success");
+            this.Logger.LogQueryRequestSucceeded();
             return Task.FromResult(true);
         }
     }
@@ -82,9 +82,7 @@ public abstract class RequestEffects<TState, TData, TRequestSuccessAction, TRequ
     {
         using (this.Logger.BeginCorrelationIdScope(this.CorrelationContextAccessor, action))
         {
-            this.Logger.LogError(
-                "Executing query request...error (Error Message: {ErrorMessage})",
-                action.ErrorMessage);
+            this.Logger.LogQueryRequestFailed(action.ErrorMessage);
 
             return Task.FromResult(false);
         }
