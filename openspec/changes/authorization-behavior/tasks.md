@@ -1,16 +1,18 @@
 ## 1. Lewee.Auth.Domain: site administrator and roles
 
 - [ ] 1.1 Add `IsSiteAdministrator` (boolean, defaulting to `false`) to `User`, with no domain method to set it (it is expected to be set directly against the database - see design.md Decision 1); verify the default with a unit test (`application/administrator-authorization` reads it, `auth/role-management` is unaffected by it)
-- [ ] 1.2 Add `TenantMembership.AssignRole(roleCode, correlationId)` (idempotent - assigning an already-held role code is a no-op) and `RemoveRole(roleCode, correlationId)` (idempotent - removing a role code not held is a no-op); verify all four behaviors (assign new, assign duplicate, remove held, remove not-held) with unit tests (`auth/role-management`)
-- [ ] 1.3 Add `TenantMembershipRoleAssignedEvent`/`TenantMembershipRoleRemovedEvent` domain events raised by `AssignRole`/`RemoveRole` respectively (only when state actually changes), and verify with unit tests that idempotent no-ops do not raise them
-- [ ] 1.4 Verify a newly-created `TenantMembership` has zero roles with a unit test (`auth/role-management` - "A newly created tenant membership has no roles")
-- [ ] 1.5 Verify a `TenantMembership` can hold more than one role code at once, with a unit test (`auth/role-management` - "Assigning multiple roles to a tenant membership")
-- [ ] 1.6 Verify that removing a `TenantMembership` (existing `RemoveFromTenant`) also removes its role assignments, with a unit test (`auth/role-management` - "Removing a tenant membership removes its role assignments")
+- [ ] 1.2 Add `Role` as a root entity (not owned by `Tenant`), with a globally-unique code and a name; add `Role.Create(code, name, correlationId)` (idempotent-by-code) and verify with a unit test that a duplicate code is rejected (`auth/role-management` - "A site administrator defines a global catalog of roles")
+- [ ] 1.3 Add a role-defined domain event (e.g. `RoleDefinedEvent`) raised by `Role.Create`, exposing role ID, code, and name, and verify it is raised with a unit test
+- [ ] 1.4 Add `TenantMembership.AssignRole(roleId, correlationId)` (idempotent - assigning an already-held role is a no-op) and `RemoveRole(roleId, correlationId)` (idempotent - removing a role not held is a no-op), with no per-tenant ownership check (any defined `Role` may be assigned to any tenant's membership); verify all four behaviors (assign new, assign duplicate, remove held, remove not-held) with unit tests (`auth/role-management`)
+- [ ] 1.5 Add `TenantMembershipRoleAssignedEvent`/`TenantMembershipRoleRemovedEvent` domain events raised by `AssignRole`/`RemoveRole` respectively (only when state actually changes), and verify with unit tests that idempotent no-ops do not raise them
+- [ ] 1.6 Verify a newly-created `TenantMembership` has zero roles with a unit test (`auth/role-management` - "A newly created tenant membership has no roles")
+- [ ] 1.7 Verify a `TenantMembership` can hold more than one role at once, with a unit test (`auth/role-management` - "Assigning multiple roles to a tenant membership")
+- [ ] 1.8 Verify that removing a `TenantMembership` (existing `RemoveFromTenant`) also removes its role assignments, with a unit test (`auth/role-management` - "Removing a tenant membership removes its role assignments")
 
 ## 2. Lewee.Auth.Infrastructure.Data: persistence
 
-- [ ] 2.1 Add EF Core configuration for `User.IsSiteAdministrator` and the `TenantMembership`-to-role-code assignment (a simple table under the `auth` schema keyed by membership + role code, no separate `Role` catalog table), and verify with unit tests following the existing patterns in `tests/Lewee.Auth.Infrastructure.Data.Tests.Unit`
-- [ ] 2.2 Add the EF Core migration for `IsSiteAdministrator` and the membership-role assignment table and verify it applies cleanly against a fresh `auth` schema (`dotnet ef database update` or equivalent, per `build-and-test.instructions.md`)
+- [ ] 2.1 Add EF Core configuration for `User.IsSiteAdministrator`, the `Role` entity (unique index on `Code`), and the `TenantMembership`-to-`Role` assignment (join table under the `auth` schema), and verify with unit tests following the existing patterns in `tests/Lewee.Auth.Infrastructure.Data.Tests.Unit`
+- [ ] 2.2 Add the EF Core migration for the new `Role`/membership-role tables and `IsSiteAdministrator` column, and verify it applies cleanly against a fresh `auth` schema (`dotnet ef database update` or equivalent, per `build-and-test.instructions.md`)
 
 ## 3. Lewee.Auth.Application: authorization lookup
 
@@ -42,5 +44,5 @@
 
 ## 7. Deferred follow-up (tracked only, not implemented by this plan)
 
-- [ ] 7.1 Design and implement role-management commands/endpoints (e.g. `AssignRoleCommand`, `RemoveRoleCommand`) so tenant administrators can manage roles without direct database access
+- [ ] 7.1 Design and implement role-management commands/endpoints (e.g. `DefineRoleCommand` restricted to a site administrator, `AssignRoleCommand`/`RemoveRoleCommand` restricted to a site administrator and/or a tenant's own manager-equivalent role) so roles can be defined and assigned without direct database access
 - [ ] 7.2 Adopt `IAdministratorRequest`/`ITenantRoleRequest` on real Pizzeria sample commands/queries to demonstrate end-to-end authorization behavior
