@@ -7,6 +7,7 @@ A `User` is not necessarily attached to any `Tenant`: a newly-created `User` sta
 `Lewee.Application` already has `ITenantRequest` (a `TenantId` marker interface) and `TenantLoggingBehavior<TRequest, TResponse>`, so tenant-aware logging exists but nothing yet resolves *which* tenant a request belongs to from an authenticated principal, and no `Tenant` concept exists in the domain layer.
 
 Constraints:
+
 - `Lewee.Domain` has no dependencies on other layers; `Tenant`/`User` domain classes must not reference EF Core, Correlate, or ASP.NET Core.
 - `Lewee.Application` depends only on `Lewee.Domain` (+ MediatR/FluentValidation/Correlate abstractions, per existing `Lewee.Application` dependencies).
 - `Lewee.Infrastructure.Data` classes (`ApplicationDbContext<TContext>`, `AggregateRootConfiguration<T>`, `DatabaseConfiguration.MigrateDatabaseAsync<T>`) are reused as-is; a new `AuthDbContext : ApplicationDbContext<AuthDbContext>` follows the same pattern as `StoreDbContext`.
@@ -15,6 +16,7 @@ Constraints:
 ## Goals / Non-Goals
 
 **Goals:**
+
 - Land `Tenant` as a new aggregate root in `Lewee.Auth.Domain`, reusable by any Lewee-based application (not just Pizzeria), with a unique code for stable lookup.
 - Keep `User` as an aggregate root, and model its relationship to `Tenant` as an explicit membership so a `User` can belong to zero, one, or many tenants.
 - Give `Tenant`/`User` their own database context (`AuthDbContext`, schema `auth`) and migration(s), separate from `StoreDbContext` (schema `sto`).
@@ -22,6 +24,7 @@ Constraints:
 - Provide a clear, minimally-invasive path for migrating pre-existing `sto.Users` rows into `auth.Users`.
 
 **Non-Goals:**
+
 - Building tenant management UI/UX (tenant creation/invitation screens) in the Pizzeria sample - only the domain/data/API plumbing needed to support `Tenant` as an aggregate root.
 - Implementing the mechanism by which an existing `User` is assigned to (or removed from) one or more `Tenant`s (e.g. an `AssignUserToTenantCommand`/invitation flow, or any tenant-selection UI) - this change establishes the `TenantMembership` shape needed to support it, but the assignment command/endpoint itself is tracked as separate follow-up work.
 - Implementing full `ITenantRequest`/`TenantLoggingBehavior` wiring for every existing Pizzeria command/query (e.g. scoping `Order`/`Pizza` queries by tenant) - that is tracked as separate follow-up work under the parent issue #541, not this plan.

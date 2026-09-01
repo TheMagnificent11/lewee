@@ -13,6 +13,7 @@ Today's pipeline (`ApplicationConfiguration.AddPipelineBehaviors`) registers, in
 `Lewee.Auth.Application` already references both `Lewee.Application` and `Lewee.Auth.Domain` (per its `.csproj`), and already hosts `AuthApplicationConfiguration` (registering MediatR handlers/validators for `Lewee.Auth.Application`). This plan adds the new marker interfaces and behaviors alongside it, so they can depend on `Lewee.Auth.Domain` concepts (`User.IsSiteAdministrator`, tenant roles) directly, with no new cross-layer abstraction required.
 
 Constraints:
+
 - `Lewee.Domain`/`Lewee.Auth.Domain` have no dependencies on other layers; the domain changes (`User.IsSiteAdministrator`, `TenantMembership` role assignment) must not reference EF Core or ASP.NET Core.
 - `Lewee.Application` itself must remain usable without any dependency on `Lewee.Auth.*`; the new marker interfaces and behaviors therefore live in `Lewee.Auth.Application`, not `Lewee.Application` (Decision 4).
 - Pipeline behaviors are resolved from DI as open generics constrained by marker interfaces (existing pattern); the new behaviors follow the same shape `TenantLoggingBehavior` already uses.
@@ -20,12 +21,14 @@ Constraints:
 ## Goals / Non-Goals
 
 **Goals:**
+
 - Let a site administrator define a global catalog of roles (e.g. Pizzeria's future "Manager"/"Store Worker"/"Delivery Driver"), and let a `User`'s `TenantMembership` be assigned zero, one, or many of them, additive to the existing `auth/tenant-management` model.
 - Provide a single-key, no-join lookup of a caller's roles for a tenant, reusing the existing `IQueryProjection`/`IQueryProjectionService` mechanism rather than inventing a new one.
 - Add two opt-in `MediatR` pipeline behaviors - one for site-administrator-only requests (checked directly against `User.IsSiteAdministrator`), one for tenant-role-restricted requests (checked against the request's own `TenantId` and required roles) - that short-circuit with `Unauthenticated`/`Unauthorized` `ResultStatus`es already wired to 401/403.
 - Keep both behaviors, their marker interfaces, and `TenantLoggingBehavior` in `Lewee.Auth.Application`, opt-in via a new `ApplicationAuthConfiguration` class, so only applications that adopt `Lewee.Auth.*` - and specifically want these authorization behaviors - incur any dependency or registration cost.
 
 **Non-Goals:**
+
 - Building any UI/API for managing `IsSiteAdministrator`, defining roles, or assigning them to a tenant's members (e.g. `DefineRoleCommand`, `AssignRoleCommand`, or endpoints) - this plan only fixes the domain shape (`User.IsSiteAdministrator`, `Role`, `TenantMembership` role assignment) and the pipeline behaviors that consume it; `IsSiteAdministrator` is expected to be set directly against the database given how rarely it changes, while role definition/assignment commands and endpoints - including which caller (a site administrator defining roles, or a tenant's own manager assigning them to that tenant's members) is authorized to call each - are follow-up work.
 - Retrofitting `IAdministratorRequest`/`ITenantRoleRequest` onto any existing Pizzeria command/query - that adoption is separate follow-up work under parent issue #87, not part of this plan.
 - A generic, declarative "roles required" attribute/policy system beyond the two marker interfaces described here (e.g. `[RequireRole("...")]`) - out of scope; can be layered on afterward without changing the specs in this plan.

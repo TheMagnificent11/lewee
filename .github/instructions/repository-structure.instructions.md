@@ -70,7 +70,7 @@ lewee/
 ## Key Architecture Layers
 
 | Layer | Purpose | Example Projects | Dependencies Flow |
-|-------|---------|-----------------|-------------------|
+| ------- | --------- | ----------------- | ------------------- |
 | Common | Shared contracts and utilities | Lewee.Common | No dependencies on other Lewee layers |
 | Domain | Business logic and entities | Lewee.Domain, Pizzeria.Store.Domain | Depends on Common |
 | Application | Use cases and orchestration | Lewee.Application, Pizzeria.Store.Application | Depends on Domain |
@@ -81,7 +81,7 @@ lewee/
 ## Configuration Files
 
 | File | Purpose | When to Edit |
-|------|---------|-------------|
+| ------ | --------- | ------------- |
 | `lewee.slnx` | Solution with all projects | Adding/removing projects |
 | `Directory.Build.props` | Global MSBuild properties (targets .NET 10.0) | Changing global build settings |
 | `src/Directory.Build.props` | Framework package properties | Changing framework-specific settings |
@@ -100,7 +100,7 @@ lewee/
 ## Common Development Tasks
 
 | Task | Command | Use Case |
-|------|---------|----------|
+| ------ | --------- | ---------- |
 | Clean artifacts | `dotnet clean` | Remove build outputs |
 | Full rebuild | `dotnet build --configuration Release --no-incremental` | After major changes |
 | Run specific tests | `dotnet test tests/Lewee.Domain.Tests.Unit/` | Test single project |

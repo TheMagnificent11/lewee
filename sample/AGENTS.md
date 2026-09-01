@@ -13,7 +13,7 @@ For development guidance in this directory, see the following instruction files:
 ## Projects
 
 | Project | Description |
-|---------|-------------|
+| --------- | ------------- |
 | `Pizzeria.AppHost` | .NET Aspire orchestration entry point |
 | `Pizzeria.ServiceDefaults` | Shared Aspire configurations |
 | `Pizzeria.Common` | Shared utilities and constants |
@@ -34,6 +34,7 @@ For development guidance in this directory, see the following instruction files:
 The sample application is split into two main runtime projects:
 
 ### Pizzeria.Store.Api
+
 - **Purpose**: Backend API using FastEndpoints for CQRS commands/queries
 - **Authentication**: Keycloak JWT Bearer tokens
 - **Features**:
@@ -42,6 +43,7 @@ The sample application is split into two main runtime projects:
   - Server-Sent Events (SSE) for real-time notifications
   
 ### Pizzeria.Store.Web
+
 - **Purpose**: Blazor Web App (interactive rendering) that calls the API
 - **Authentication**: Keycloak OpenID Connect
 - **Features**:
@@ -56,6 +58,7 @@ dotnet run --project ./sample/Pizzeria.AppHost/
 ```
 
 This will start:
+
 1. .NET Aspire dashboard (check console output for URL)
 2. PostgreSQL container (managed by Aspire)
 3. Keycloak authentication server

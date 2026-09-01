@@ -19,7 +19,7 @@ This package provides the foundational building blocks for creating domain model
 Base class for records that track audit information:
 
 | Property | Type | Description |
-|----------|------|-------------|
+| ---------- | ------ | ------------- |
 | `Id` | `Guid` | Unique identifier |
 | `CreatedBy` | `string` | User who created the record |
 | `CreatedAtUtc` | `DateTime` | UTC timestamp of creation |
@@ -180,7 +180,7 @@ throw new DomainException("Order cannot be modified after completion");
 ## Integration with Other Lewee Packages
 
 | Package | Integration |
-|---------|-------------|
+| --------- | ------------- |
 | `Lewee.Application` | `DomainExceptionBehavior` handles `DomainException` in MediatR pipeline |
 | `Lewee.Infrastructure.Data` | Implements `IRepository<T>`, dispatches domain events via outbox pattern |
 | `Lewee.Infrastructure.Auth` | Implements `IAuthenticatedUserService` from `Lewee.Common` |

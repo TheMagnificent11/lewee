@@ -14,9 +14,11 @@ Commands, queries, and Fluxor actions currently require a `CorrelationId` to be 
 ## Capabilities
 
 ### New Capabilities
+
 - `correlation-id-propagation`: Defines how correlation IDs are resolved and propagated across HTTP requests, MediatR pipeline behaviors, and Fluxor state-management effects using `ICorrelationContextAccessor`, without requiring commands/queries/actions to declare an explicit `CorrelationId` parameter.
 
 ### Modified Capabilities
+
 - None (no existing `openspec/specs/` capabilities are defined yet).
 
 ## Impact

@@ -12,7 +12,7 @@ For development guidance in this directory, see the following instruction files:
 ## Test Projects
 
 | Project | Tests For |
-|---------|-----------|
+| --------- | ----------- |
 | `Lewee.Domain.Tests.Unit` | Domain layer abstractions and base classes |
 | `Lewee.Application.Tests.Unit` | Application layer and CQRS implementation |
 | `Lewee.Common.Tests.Unit` | Cross-cutting utilities and result types |

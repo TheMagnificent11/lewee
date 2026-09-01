@@ -25,7 +25,7 @@ A composite GitHub Action that checks code coverage for changed source files and
 ## Inputs
 
 | Input | Description | Required | Default |
-|-------|-------------|----------|---------|
+| ------- | ------------- | ---------- | --------- |
 | `coverage-file` | Path to the Cobertura coverage XML file | Yes | `coverage/coverage.cobertura.xml` |
 | `threshold` | Minimum coverage percentage threshold (0-100) | Yes | `90` |
 | `base-sha` | Base commit SHA to compare against | Yes | - |
@@ -41,6 +41,7 @@ A composite GitHub Action that checks code coverage for changed source files and
 ## Output Examples
 
 ### Success
+
 ```
 🔍 Checking diff coverage for 2 changed files...
 ✅ src/Lewee.Domain/AggregateRoot.cs: 100.0% (16/16 lines)
@@ -56,6 +57,7 @@ A composite GitHub Action that checks code coverage for changed source files and
 ```
 
 ### Failure
+
 ```
 🔍 Checking diff coverage for 2 changed files...
 ❌ src/Lewee.Common/EnumExtensions.cs: 70.0% (14/20 lines)

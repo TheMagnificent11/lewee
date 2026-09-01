@@ -39,6 +39,7 @@ builder.Services.AddClientEventBroadcaster();
 ```
 
 This method:
+
 - Registers `ConnectionManager` as a singleton to manage per-connection channels
 - Registers `ClientEventChannelHandler` as a notification handler for `ClientEvent` fan-out
 
@@ -51,6 +52,7 @@ app.MapSseEndpoint();
 ```
 
 The endpoint:
+
 - Requires authorization
 - Filters events by the authenticated user's ID
 - Streams events as Server-Sent Events

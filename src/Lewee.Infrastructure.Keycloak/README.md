@@ -37,6 +37,7 @@ app.MapKeycloakSignOut("/signout");
 ## Configuration
 
 The package automatically configures:
+
 - Cookie authentication as the default scheme
 - OpenID Connect as the challenge scheme
 - Authorization code flow with PKCE

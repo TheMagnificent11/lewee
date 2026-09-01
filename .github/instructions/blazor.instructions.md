@@ -15,6 +15,7 @@ applyTo: "**/*.razor,**/*.razor.cs"
 ## Example Structure
 
 ### Component File (`Home.razor`)
+
 ```razor
 @page "/"
 
@@ -33,6 +34,7 @@ applyTo: "**/*.razor,**/*.razor.cs"
 ```
 
 ### Code-Behind File (`Home.razor.cs`)
+
 ```csharp
 using Pizzeria.Store.States.Orders.Actions;
 
@@ -97,6 +99,7 @@ This project uses [Fluxor](https://github.com/mrpmorris/Fluxor) to implement the
 ### Project Structure
 
 States are organized in the `States/` directory:
+
 ```
 States/
 ├── Orders/

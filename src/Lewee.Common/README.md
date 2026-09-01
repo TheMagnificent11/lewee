@@ -36,7 +36,7 @@ This interface is implemented by `Lewee.Infrastructure.Auth` for server-side ASP
 Base class for all result types with success/failure status and validation errors:
 
 | Property | Type | Description |
-|----------|------|-------------|
+| ---------- | ------ | ------------- |
 | `IsSuccess` | `bool` | Whether the request was successfully processed |
 | `Status` | `ResultStatus` | Enum indicating the type of result |
 | `Errors` | `IList<ValidationFailure>` | Validation errors keyed by property |
@@ -46,7 +46,7 @@ Base class for all result types with success/failure status and validation error
 Enum for categorizing result outcomes:
 
 | Value | Description |
-|-------|-------------|
+| ------- | ------------- |
 | `Success` | Request completed successfully |
 | `ValidationError` | Input validation failed |
 | `NotFound` | Requested resource not found |
@@ -88,7 +88,7 @@ return QueryResult<OrderDto>.Fail(ResultStatus.NotFound, "Order not found");
 Contract for server-to-client event messages:
 
 | Property | Type | Description |
-|----------|------|-------------|
+| ---------- | ------ | ------------- |
 | `CorrelationId` | `Guid` | Request correlation ID for tracing |
 | `ContractAssemblyName` | `string` | Assembly containing the message type |
 | `ContractFullClassName` | `string` | Full class name of the message type |

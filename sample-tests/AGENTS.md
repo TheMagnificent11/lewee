@@ -12,7 +12,7 @@ For development guidance in this directory, see the following instruction files:
 ## Test Projects
 
 | Project | Description |
-|---------|-------------|
+| --------- | ------------- |
 | `Pizzeria.Store.Domain.Tests` | Unit tests for domain models |
 | `Pizzeria.Store.StateManagement.Tests.Unit` | Unit tests for Fluxor state management |
 | `Pizzeria.Store.Components.Tests.Unit` | Unit tests for shared Blazor components |
@@ -32,6 +32,7 @@ dotnet test sample-tests/Pizzeria.Tests.Integration/ --configuration Release --n
 ## Integration Tests
 
 Integration tests require:
+
 - Docker Desktop running
 - .NET Aspire workload installed (`dotnet workload install aspire`)
 

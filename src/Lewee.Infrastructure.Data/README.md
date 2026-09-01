@@ -23,7 +23,7 @@ This package provides the data access layer infrastructure for applications usin
 Abstract base classes for configuring Entity Framework entity mappings:
 
 | Class | Purpose |
-|-------|---------|
+| ------- | --------- |
 | `AuditableRecordConfiguration<T>` | Base configuration for entities extending `AuditableRecord` |
 | `EntityConfiguration<T>` | Configuration for entities with soft-delete support |
 | `AggregateRootConfiguration<T>` | Configuration for aggregate roots with domain events |
@@ -53,7 +53,7 @@ public class MyDbContext : ApplicationDbContext<MyDbContext>
 ### Interceptors
 
 | Interceptor | Purpose |
-|-------------|---------|
+| ------------- | --------- |
 | `AuditDetailsSaveChangesInterceptor` | Populates `CreatedBy`, `CreatedAtUtc`, `ModifiedBy`, `ModifiedAtUtc` fields |
 | `DomainEventSaveChangesInterceptor<TContext>` | Stores domain events to outbox table on save |
 | `DomainEventsTransactionInterceptor` | Dispatches domain events after transaction commit |

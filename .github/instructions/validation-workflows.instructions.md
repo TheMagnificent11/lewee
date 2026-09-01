@@ -7,6 +7,7 @@ applyTo: "**/*.cs,**/*.csproj"
 ## Required Validation After Changes
 
 **Decision Tree:**
+
 ```
 Did you change framework code (Lewee.*)?
 ├─ YES → Run all 4 validation workflows below
@@ -22,11 +23,13 @@ Did you change framework code (Lewee.*)?
 **When:** After any framework (Lewee.*) changes
 
 **Commands:**
+
 ```bash
 dotnet build --configuration Release --nologo
 ```
 
 **Success Criteria:**
+
 - All Lewee.* projects compile successfully
 - Zero compilation warnings
 - Zero style violations
@@ -36,11 +39,13 @@ dotnet build --configuration Release --nologo
 **When:** After code changes (not documentation-only)
 
 **Commands:**
+
 ```bash
 dotnet test --filter "FullyQualifiedName!~Integration" --configuration Release --no-build --nologo
 ```
 
 **Success Criteria:**
+
 - All unit tests pass
 - No test failures or exceptions
 - Test execution time < 30 seconds
@@ -50,15 +55,18 @@ dotnet test --filter "FullyQualifiedName!~Integration" --configuration Release -
 **When:** After infrastructure or data layer changes
 
 **Commands:**
+
 ```bash
 dotnet test --filter "FullyQualifiedName~Integration" --configuration Release --no-build --nologo
 ```
 
 **Prerequisites:**
+
 - Docker Desktop running
 - .NET Aspire workload installed
 
 **Success Criteria:**
+
 - All integration tests pass
 - Database operations work correctly
 - API endpoints respond as expected
@@ -70,11 +78,13 @@ dotnet test --filter "FullyQualifiedName~Integration" --configuration Release --
 **When:** Before releasing framework updates
 
 **Commands:**
+
 ```bash
 dotnet pack --configuration Release --nologo --no-build
 ```
 
 **Success Criteria:**
+
 - NuGet packages created without errors
 - Package versions are correct
 - All dependencies properly referenced

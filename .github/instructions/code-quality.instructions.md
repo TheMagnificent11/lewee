@@ -7,7 +7,7 @@ applyTo: "**/*.cs,**/*.csproj,**/*.props"
 ## Enforcement Rules
 
 | Rule | Status | Impact |
-|------|--------|--------|
+| ------ | -------- | -------- |
 | Warnings as Errors | Enabled | Build fails on any warning |
 | Code Style in Build | Enforced | Style violations break the build |
 | Documentation Generation | Required | All framework projects must generate XML docs |
@@ -18,6 +18,7 @@ applyTo: "**/*.cs,**/*.csproj,**/*.props"
 **Never use `#pragma warning disable`** to suppress compiler warnings or analyzer messages. Instead, use the `SuppressMessageAttribute` with the `Justification` property to document the reasoning for the suppression. This ensures code reviewers understand the decision process.
 
 **Correct:**
+
 ```csharp
 [SuppressMessage(
     "Design",
@@ -29,6 +30,7 @@ public partial class MyComponent : ComponentBase
 ```
 
 **Incorrect:**
+
 ```csharp
 #pragma warning disable CA1515
 public partial class MyComponent : ComponentBase
@@ -46,6 +48,7 @@ public partial class MyComponent : ComponentBase
 - Use the code-behind pattern consistently across all Blazor components
 
 **Example:**
+
 ```
 MyComponent.razor      <- Contains only Razor markup
 MyComponent.razor.cs   <- Contains component logic as partial class
@@ -64,6 +67,7 @@ Therefore, always check for existing references in packages and projects that ar
 **Transitive Dependencies:** Prefer transitive dependencies over explicit dependencies. If a package is already referenced by a project dependency, do not add an explicit reference to it.
 
 **Example:**
+
 - `Lewee.Infrastructure.FastEndpoints` already references `FastEndpoints`, so sample projects using `Lewee.Infrastructure.FastEndpoints` should not add an explicit `FastEndpoints` package reference.
 
 Furthermore, when working on application C# projects like web applications, do not add a reference if it comes in the `Microsoft.NET.Sdk.Web` web SDK.
@@ -75,6 +79,7 @@ Furthermore, when working on application C# projects like web applications, do n
 In `Directory.Packages.props`, only use labeled `ItemGroup` elements (with the `Label` attribute) when there are **multiple packages** that share the same prefix matching the label. Single packages should be placed in the first unlabeled `ItemGroup` to avoid unnecessary grouping.
 
 **Example:**
+
 - Multiple `Microsoft.Extensions.*` packages → Use `<ItemGroup Label="Microsoft.Extensions">`
 - Multiple `Aspire.*` packages → Use `<ItemGroup Label="Aspire">`
 - Single `Polly.Core` package → Place in the first unlabeled `<ItemGroup>`
@@ -88,11 +93,13 @@ All build configuration is centrally managed through a hierarchy of configuratio
 ### Configuration File Hierarchy
 
 **Root Configuration Files:**
+
 - `Directory.Build.props` - Global MSBuild properties applied to all projects
 - `Tests.props` - Shared test project configuration
 - `.editorconfig` - Global code style rules and analyzer settings
 
 **Directory-Specific Configuration:**
+
 - `src/Directory.Build.props` - Framework package-specific properties (inherits from root)
 - `tests/Directory.Build.props` - Test project properties (inherits from root and Tests.props)
 - `sample/Directory.Build.props` - Sample application properties (inherits from root)
@@ -102,28 +109,33 @@ All build configuration is centrally managed through a hierarchy of configuratio
 - `sample-tests/.editorconfig` - Sample test-specific analyzer rules (inherits from root)
 
 **Root `Directory.Build.props` Contains:**
+
 - Target framework (.NET 10.0) and language version
 - Global build settings (warnings as errors, code style enforcement)
 - Repository metadata (URL, authors, etc.)
 - Analyzer package references (Meziantou, SonarAnalyzer, StyleCop, etc.)
 
 **`Tests.props` Contains:**
+
 - Test framework package references (xUnit, FluentAssertions, etc.)
 - Test-specific property settings
 - Code coverage exclusion attributes
 
 **Directory-Specific `Directory.Build.props` Files:**
+
 - `src/` - Package generation, XML documentation, symbol packages, nullable reference types
 - `tests/` - Imports Tests.props for test-specific configuration
 - `sample/` - Nullable reference types, warning suppressions, code coverage exclusion
 - `sample-tests/` - Imports Tests.props for test-specific configuration
 
 **Directory-Specific `.editorconfig` Files:**
+
 - `tests/` - CA1707 suppression for underscores in test method names
 - `sample/` - SA1313 suppressions for Effects and Reducer parameter naming
 - `sample-tests/` - CA1707 suppression for underscores in sample test method names
 
 **Never add these properties to individual project files:**
+
 - `<GenerateDocumentationFile>`
 - `<NoWarn>`
 - `<TreatWarningsAsErrors>`
@@ -133,11 +145,13 @@ All build configuration is centrally managed through a hierarchy of configuratio
 - Any other build/analyzer configuration
 
 **If you need project-specific settings:**
+
 1. First check if the appropriate directory-level `Directory.Build.props` already provides the correct behavior
 2. If the setting should apply to all projects in a directory, add it to that directory's `Directory.Build.props`
 3. If truly project-specific, discuss with the repository owner before adding
 
 **Why this matters:**
+
 - Ensures consistent build behavior across all projects
 - Makes it easier to update settings globally or by directory
 - Prevents configuration drift between projects
@@ -163,16 +177,19 @@ All build configuration is centrally managed through a hierarchy of configuratio
 - Update the project README whenever its public behavior or setup changes.
 
 **Format Command:**
+
 ```bash
 dotnet format lewee.sln
 ```
 
 **Configuration:**
+
 - Defined in `.editorconfig` (root and directory-specific)
 - Enforced during build
 - Must be applied before committing
 
 **Line Endings:** All files must use **LF** (`\n`) line endings. This is enforced by the `end_of_line = lf` setting in `.editorconfig`. When editing files:
+
 - Configure your editor/IDE to use LF line endings for this repository
 - Avoid mixing CRLF and LF endings within the same PR, as it makes diffs hard to read
 - Run `dotnet format` before committing to normalize line endings
@@ -180,6 +197,7 @@ dotnet format lewee.sln
 **Early Return Pattern:** Use early returns to reduce indentation and improve readability. Check for error/null conditions first and return early.
 
 **Correct:**
+
 ```csharp
 public void DoSomething(string? value)
 {
@@ -193,6 +211,7 @@ public void DoSomething(string? value)
 ```
 
 **Incorrect:**
+
 ```csharp
 public void DoSomething(string? value)
 {
@@ -204,6 +223,7 @@ public void DoSomething(string? value)
 ```
 
 **Quality Checklist:**
+
 - [ ] No compiler warnings
 - [ ] No style violations
 - [ ] No unused usings or variables
@@ -247,3 +267,10 @@ public void DoSomething(string? value)
   - Expose a constant from the component and use that instead e.g. `MainLayout.Selectors.SignOutButton`
   - Selector should use structural and semantic attributes where possible, avoid relying on CSS classes or element hierarchy
     - For example `[role='heading'][aria-level='1']`
+
+## Documentation
+
+- All Markdown files in the repository must be linted with `markdownlint`.
+- Run `npx --yes markdownlint-cli2 "**/*.md" --fix` before committing documentation changes.
+- Resolve Markdown lint issues in edited files rather than disabling rules without a clear reason.
+- Keep Markdown formatting consistent across the repository, including heading structure, lists, tables, and fenced code blocks.

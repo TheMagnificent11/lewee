@@ -27,6 +27,7 @@ services.AddAuthenticatedUserService();
 ```
 
 This registers:
+
 - `IHttpContextAccessor` - ASP.NET Core service for accessing the current HTTP context
 - `IAuthenticatedUserService` - Service for retrieving the authenticated user's ID
 
@@ -82,7 +83,7 @@ This handler is automatically configured by infrastructure packages like [Lewee.
 ## Infrastructure Components
 
 | Component | Description |
-|-----------|-------------|
+| ----------- | ------------- |
 | **[AuthenticatedUserServiceConfiguration.cs](./AuthenticatedUserServiceConfiguration.cs)** | Extension method for registering authenticated user service |
 | **[AuthenticatedUserService.cs](./AuthenticatedUserService.cs)** | Implementation of `IAuthenticatedUserService` that retrieves user ID from HTTP context |
 | **[AuthTokenDelegatingHandler.cs](./AuthTokenDelegatingHandler.cs)** | HTTP message handler for automatic authentication token propagation |
@@ -92,7 +93,7 @@ This handler is automatically configured by infrastructure packages like [Lewee.
 This infrastructure package integrates with other Lewee packages across the DDD layers:
 
 | Package | Layer | Integration |
-|---------|-------|-------------|
+| --------- | ------- | ------------- |
 | **[Lewee.Common](../Lewee.Common/README.md)** | Cross-cutting | Defines `IAuthenticatedUserService` interface |
 | **[Lewee.Infrastructure.Data](../Lewee.Infrastructure.Data/README.md)** | Infrastructure | Uses `IAuthenticatedUserService` for audit tracking |
 | **[Lewee.Infrastructure.Refit](../Lewee.Infrastructure.Refit/README.md)** | Infrastructure | Uses `AuthTokenDelegatingHandler` for API client authentication |
@@ -103,4 +104,3 @@ This infrastructure package integrates with other Lewee packages across the DDD 
 2. **Check for Null**: Always check if `UserId` is null before using it, as unauthenticated requests will return null
 3. **Authentication Required**: Ensure users are properly authenticated before services attempt to access `IAuthenticatedUserService.UserId`
 4. **HTTP Context Required**: Both components require an active `HttpContext`, which is available in web applications but not in background services or console applications
-

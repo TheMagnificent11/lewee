@@ -9,7 +9,7 @@ Lewee is an opinionated set of packages to assist with setting up a domain-drive
 ## Framework Packages
 
 | Package | Description |
-|---------|-------------|
+| --------- | ------------- |
 | `Lewee.Auth.Api` | Anonymous user-provisioning endpoint and contracts |
 | `Lewee.Auth.Application` | Authentication and user-provisioning use cases |
 | `Lewee.Auth.Domain` | Tenant, user, and tenant-membership domain model |
@@ -59,6 +59,7 @@ dotnet run --project ./sample/Pizzeria.AppHost/
 ```
 
 This will start the .NET Aspire dashboard and orchestrate the following services:
+
 - PostgreSQL database
 - Keycloak authentication server
 - Pizzeria Store API (FastEndpoints Web API)

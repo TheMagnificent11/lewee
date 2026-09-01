@@ -21,7 +21,7 @@ This package provides the foundational state management infrastructure for Blazo
 These interfaces define contracts for Fluxor actions used in client-side state management:
 
 | Interface | Description |
-|-----------|-------------|
+| ----------- | ------------- |
 | `IRequestAction` | Base interface for actions that initiate a request, containing a `CorrelationId` |
 | `IRequestSuccessAction` | Interface for actions indicating successful request completion, extends `IRequestAction` |
 | `IQuerySuccessAction<T>` | Generic interface for successful query actions carrying `Data` of type `T`, extends `IRequestSuccessAction` |
@@ -55,7 +55,7 @@ public record OrderUpdatedAction(Guid CorrelationId, OrderDto Data)
 Generic interface defining the base properties for request-based state:
 
 | Property | Type | Description |
-|----------|------|-------------|
+| ---------- | ------ | ------------- |
 | `IsLoading` | `bool` | Indicates whether the state is loading (query in progress) |
 | `IsSaving` | `bool` | Indicates whether the state is saving (command in progress) |
 | `CorrelationId` | `Guid` | Request correlation ID for tracing |
@@ -85,7 +85,7 @@ public record PizzaListState : RequestState<IEnumerable<PizzaDto>>
 Static class providing extension methods for common reducer patterns:
 
 | Method | Description |
-|--------|-------------|
+| -------- | ------------- |
 | `OnCommand<TState, TData, TAction>` | Sets correlation ID, sets `IsSaving` to true, clears error message, optionally clears data |
 | `OnQuery<TState, TData, TAction>` | Sets correlation ID, sets `IsLoading` to true, clears data and error message |
 | `OnCommandSuccess<TState, TData, TAction>` | Sets correlation ID, sets `IsSaving` to false, clears error message |
@@ -266,6 +266,7 @@ using (logger.BeginCorrelationIdScope(correlationContextAccessor, action))
 ```
 
 The method:
+
 - Sets the correlation context on the `ICorrelationContextAccessor` from the action
 - Creates a logging scope that includes the correlation ID
 
@@ -364,7 +365,7 @@ The `SseClientMessageReceiver` class handles the HTTP-based SSE connection:
 ## Integration with Other Lewee Packages
 
 | Package | Integration |
-|---------|-------------|
+| --------- | ------------- |
 | `Lewee.Common` | Uses `LoggingConsts` for consistent logging, `ClientMessage` for SSE message contract, `IAuthenticatedUserService` for user context |
 | `Lewee.Infrastructure.Auth` | Provides `IAuthenticatedUserService` implementation for authenticated user access |
 | `Lewee.Infrastructure.ServerEvents` | Server-side SSE broadcasting (see [Lewee.Infrastructure.ServerEvents](../Lewee.Infrastructure.ServerEvents/README.md)) |
