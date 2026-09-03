@@ -17,6 +17,7 @@ namespace Lewee.Auth.Application;
 /// (including <c>ValidationBehavior</c>), call <see cref="AddLeweeApplicationAuth"/> after
 /// <see cref="Lewee.Application.ApplicationConfiguration.AddPipelineBehaviors"/> (or <c>AddApplication</c>).
 /// These behaviors are registered directly via DI, so their ordering follows the host's registration order.
+/// </remarks>
 public static class ApplicationAuthConfiguration
 {
     /// <summary>
