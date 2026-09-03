@@ -33,6 +33,9 @@ Obj/
 /coverage-report
 /coverage-analysis
 
+# Test Results
+/TestResults
+
 # Docker Volumes
 /data
 /seq

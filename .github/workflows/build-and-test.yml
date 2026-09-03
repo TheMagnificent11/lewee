@@ -14,6 +14,7 @@ permissions:
 jobs:
   buildAndTest:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4.2.2
         with:
@@ -24,24 +25,22 @@ jobs:
         with:
           dotnet-version: 10.0.*
 
-      # Commented-out steps are because the tests from Pizzeria.Tests.Integration.csproj are filtered-out due to the workflow getting stuck on these tests
-      # Fix as part [#505](https://github.com/TheMagnificent11/lewee/issues/505)
+      # The Pizzeria.Tests.Integration tests use Aspire's DistributedApplicationTestingBuilder, which
+      # requires Docker (for Postgres/Keycloak containers), a trusted HTTPS dev certificate and Playwright
+      # browsers. These tests were previously filtered out (see #505) because they could hang the workflow;
+      # they are re-enabled below with bounded timeouts (--blame-hang-timeout) so a stuck run fails fast
+      # with diagnostics instead of hanging indefinitely.
 
-      # - name: Install Aspire Workload
-      #   run: dotnet workload install aspire
+      - name: Cache Docker images
+        uses: ScribeMD/docker-cache@0.5.0
+        with:
+          key: docker-${{ runner.os }}-${{ hashFiles('sample/Pizzeria.AppHost/Program.cs', 'sample/Pizzeria.AppHost/Pizzeria.AppHost.csproj') }}
+          restore-keys: |
+            docker-${{ runner.os }}-
 
-      # - name: Cache Docker images
-      #   uses: ScribeMD/docker-cache@0.5.0
-      #   with:
-      #     key: docker-${{ runner.os }}-${{ hashFiles('sample/Pizzeria.AppHost/Program.cs', 'sample/Pizzeria.AppHost/Pizzeria.AppHost.csproj') }}
-      #     restore-keys: |
-      #       docker-${{ runner.os }}-
-
-      # - name: Install HTTPS development certificate
-      #   run: dotnet dev-certs https
-
-      # - name: Install Playwright Browsers
-      #   run: pwsh sample-tests/Pizzeria.Tests.Integration/bin/Release/net10.0/playwright.ps1 install --with-deps chromium
+      - name: Trust HTTPS development certificate
+        continue-on-error: true
+        run: dotnet dev-certs https --trust
 
       - name: Install dotnet-coverage tool
         run: dotnet tool install --global dotnet-coverage
@@ -69,8 +68,25 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release --no-restore --nologo
 
+      - name: Install Playwright Browsers
+        run: pwsh sample-tests/Pizzeria.Tests.Integration/bin/Release/net10.0/playwright.ps1 install --with-deps chromium
+
       - name: Test
-        run: dotnet-coverage collect --settings coverage.xml -f cobertura -o ./coverage/coverage.cobertura.xml -- dotnet test --configuration Release --no-build --nologo --filter "Category!=Aspire"
+        run: >
+          dotnet-coverage collect --settings coverage.xml -f cobertura -o ./coverage/coverage.cobertura.xml --
+          dotnet test --configuration Release --no-build --nologo
+          --logger "trx;LogFileName=test-results.trx"
+          --results-directory ./TestResults
+          --blame-hang-timeout 15m
+          --blame-hang-dump-type full
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: test-results
+          path: TestResults/
+          if-no-files-found: warn
 
       - name: Generate Coverage Report
         if: ${{ inputs.is-pr == true }}

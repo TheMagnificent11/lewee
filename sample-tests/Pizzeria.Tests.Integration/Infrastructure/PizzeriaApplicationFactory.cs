@@ -49,10 +49,12 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
         // https://learn.microsoft.com/en-us/dotnet/aspire/testing/manage-app-host?pivots=xunit
         this.builder = await DistributedApplicationTestingBuilder.CreateAsync<Projects.Pizzeria_AppHost>();
-        this.app = await this.builder.BuildAsync();
+        this.app = await this.builder.BuildAsync().WaitAsync(TimeSpan.FromMinutes(5));
         this.resourceNotificationService = this.app.Services.GetRequiredService<ResourceNotificationService>();
 
-        await this.app.StartAsync();
+        // Bound DCP startup so a stuck DCP process fails fast with a clear timeout
+        // instead of hanging the test run indefinitely (see https://github.com/TheMagnificent11/lewee/issues/505)
+        await this.app.StartAsync().WaitAsync(TimeSpan.FromMinutes(10));
 
         // Wait for auth server to be running
         await this.resourceNotificationService
