@@ -17,6 +17,7 @@ For development guidance in this directory, see the following instruction files:
 | `Pizzeria.Store.StateManagement.Tests.Unit` | Unit tests for Fluxor state management |
 | `Pizzeria.Store.Components.Tests.Unit` | Unit tests for shared Blazor components |
 | `Pizzeria.Store.Web.Tests.Unit` | Unit tests for Blazor web application |
+| `Pizzeria.Configuration.Tests.Unit` | Unit tests for sample configuration/seeding |
 | `Pizzeria.Tests.Integration` | End-to-end integration tests |
 
 ## Running Tests
