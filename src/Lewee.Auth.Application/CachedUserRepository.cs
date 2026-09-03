@@ -40,7 +40,11 @@ internal sealed class CachedUserRepository : IRepository<User>
         }
 
         var user = await this.innerRepository.RetrieveByIdAsync(id, cancellationToken);
-        this.cache.Set(cacheKey, user, CacheDuration);
+
+        if (user != null)
+        {
+            this.cache.Set(cacheKey, user, CacheDuration);
+        }
 
         return user;
     }
