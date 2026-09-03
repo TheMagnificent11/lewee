@@ -35,4 +35,9 @@ public sealed class AuthDbContext : ApplicationDbContext<AuthDbContext>
     /// Gets or sets users.
     /// </summary>
     public DbSet<User> Users { get; set; }
+
+    /// <summary>
+    /// Gets or sets roles.
+    /// </summary>
+    public DbSet<Role> Roles { get; set; }
 }

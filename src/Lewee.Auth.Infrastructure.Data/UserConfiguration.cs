@@ -16,6 +16,10 @@ internal sealed class UserConfiguration : AggregateRootConfiguration<User>
             .HasMaxLength(User.FieldLengths.ExternalId);
         builder.HasIndex(user => user.ExternalId).IsUnique();
 
+        builder.Property(user => user.IsSiteAdministrator)
+            .IsRequired()
+            .HasDefaultValue(false);
+
         builder.OwnsMany(
             user => user.TenantMemberships,
             memberships =>
@@ -28,6 +32,9 @@ internal sealed class UserConfiguration : AggregateRootConfiguration<User>
                     .WithMany()
                     .HasForeignKey(membership => membership.TenantId)
                     .OnDelete(DeleteBehavior.Cascade);
+
+                memberships.PrimitiveCollection(membership => membership.RoleIds)
+                    .HasColumnName("RoleIds");
             });
     }
 }
