@@ -47,6 +47,15 @@ internal class TenantRoleAuthorizationBehavior<TRequest, TResponse> : IPipelineB
             new UserByExternalIdSpecification(externalId),
             cancellationToken);
 
+        if (user == null)
+        {
+            this.logger.LogTenantRoleUnauthorized(externalId, request.TenantId, typeof(TRequest).Name);
+
+            return AuthorizationResultFactory.CreateFailure<TResponse>(
+                ResultStatus.Unauthorized,
+                "Caller is not authorized for this tenant.");
+        }
+
         if (user is { IsSiteAdministrator: true })
         {
             this.logger.LogTenantRoleSiteAdministratorOverride(externalId, request.TenantId, typeof(TRequest).Name);
