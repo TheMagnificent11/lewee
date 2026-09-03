@@ -11,7 +11,9 @@ namespace Lewee.Auth.Application;
 /// </summary>
 internal sealed class CachedUserRepository : IRepository<User>
 {
-    private static readonly TimeSpan CacheDuration = TimeSpan.FromMinutes(5);
+    // Set(key, value, TimeSpan) is an absolute expiration relative to now, not a sliding window - an entry
+    // is evicted 1 hour after being cached, regardless of how frequently it is accessed in the meantime.
+    private static readonly TimeSpan CacheDuration = TimeSpan.FromHours(1);
 
     private readonly IRepository<User> innerRepository;
     private readonly IMemoryCache cache;
