@@ -13,10 +13,10 @@ namespace Lewee.Auth.Application;
 /// </summary>
 /// <remarks>
 /// Not every consumer of Lewee requires authorization, so this is a separate, opt-in configuration from
-/// <see cref="AuthApplicationConfiguration"/>. Because these pipeline behaviors are registered after the
-/// baseline behaviors added by <see cref="Lewee.Application.ApplicationConfiguration.AddPipelineBehaviors"/>,
-/// they run after <c>ValidationBehavior</c>.
-/// </remarks>
+/// <see cref="AuthApplicationConfiguration"/>. To ensure these behaviors run after the baseline pipeline
+/// (including <c>ValidationBehavior</c>), call <see cref="AddLeweeApplicationAuth"/> after
+/// <see cref="Lewee.Application.ApplicationConfiguration.AddPipelineBehaviors"/> (or <c>AddApplication</c>).
+/// These behaviors are registered directly via DI, so their ordering follows the host's registration order.
 public static class ApplicationAuthConfiguration
 {
     /// <summary>
