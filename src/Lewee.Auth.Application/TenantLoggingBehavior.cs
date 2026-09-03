@@ -1,9 +1,9 @@
-﻿using Lewee.Application.Mediation.Requests;
+using Lewee.Application.Mediation.Requests;
 using Lewee.Common;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Lewee.Application.Mediation.Behaviors;
+namespace Lewee.Auth.Application;
 
 internal class TenantLoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>, ITenantRequest

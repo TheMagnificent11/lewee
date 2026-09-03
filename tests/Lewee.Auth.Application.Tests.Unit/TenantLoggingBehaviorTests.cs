@@ -1,5 +1,6 @@
+using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
-using Lewee.Application.Mediation.Behaviors;
+using Lewee.Application.Mediation.Requests;
 using Lewee.Common;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Testing;
 using Xunit;
 
-namespace Lewee.Application.Tests.Unit;
+namespace Lewee.Auth.Application.Tests.Unit;
 
 /// <summary>
 /// Tests for TenantLoggingBehavior using direct behavior testing
@@ -153,5 +154,28 @@ public class TenantLoggingBehaviorTests
         var tenantIdScope = scopeDict.FirstOrDefault(kvp => kvp.Key == LoggingConsts.TenantId);
         tenantIdScope.Should().NotBeNull();
         tenantIdScope.Value.ToString().Should().Be(tenantId.ToString());
+    }
+}
+
+[SuppressMessage(
+    "StyleCop.CSharp.MaintainabilityRules",
+    "SA1402:File may only contain a single type",
+    Justification = "Test model class grouped with test class for convenience")]
+[SuppressMessage(
+    "Performance",
+    "CA1812: Avoid uninstantiated internal classes",
+    Justification = "Used via mediation")]
+internal sealed record TestTenantCommand(Guid TenantId, string Name) : ICommand, ITenantRequest
+{
+    [SuppressMessage(
+        "Performance",
+        "CA1812: Avoid uninstantiated internal classes",
+        Justification = "Used via mediation")]
+    internal sealed class Handler : IRequestHandler<TestTenantCommand, CommandResult>
+    {
+        public Task<CommandResult> Handle(TestTenantCommand request, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(CommandResult.Success());
+        }
     }
 }
