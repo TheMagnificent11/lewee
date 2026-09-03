@@ -33,8 +33,8 @@ Tenant codes are unique secondary identifiers with a maximum length of 10 charac
 length of 200 characters, and external user IDs have a maximum length of 100 characters.
 
 A site administrator is identified directly by `User.IsSiteAdministrator`, independent of any tenant or role. There
-is no domain method to set this flag - given how rarely it changes, it is expected to be set directly against the
-database (e.g. a SQL `UPDATE`).
+is no public domain method to set this flag - given how rarely it changes, the setter is `internal` and exposed via
+`InternalsVisibleTo` to trusted callers (e.g. a seeder) that set it directly, rather than via a command.
 
 Roles are defined once, globally, by a site administrator, and can be assigned to any tenant's memberships:
 
@@ -62,8 +62,8 @@ a tenant), with a maximum length matching `Role.FieldLengths.Code`; role names h
 | `TenantMembershipCreatedEvent` | Records assignment of a user to a tenant |
 | `TenantMembershipRemovedEvent` | Records removal of a user from a tenant |
 | `RoleDefinedEvent` | Records definition of a new role |
-| `TenantMembershipRoleAssignedEvent` | Records assignment of a role to a tenant membership |
-| `TenantMembershipRoleRemovedEvent` | Records removal of a role from a tenant membership |
+| `TenantRoleAssignedEvent` | Records assignment of a role to a tenant membership |
+| `TenantRoleRemovedEvent` | Records removal of a role from a tenant membership |
 
 Persistence and application orchestration are provided by
 [Lewee.Auth.Infrastructure.Data](../Lewee.Auth.Infrastructure.Data/README.md) and

@@ -35,14 +35,13 @@ public sealed class User : AggregateRoot
     /// Gets a value indicating whether the user is a site administrator, irrespective of tenant or role.
     /// </summary>
     /// <remarks>
-    /// There is no domain method to set this flag - given how rarely it changes, it is expected to be set
-    /// directly against the database (e.g. a SQL <c>UPDATE</c>).
+    /// There is no public domain method to set this flag - given how rarely it changes, it is expected to be
+    /// set directly, e.g. by <c>sample/Pizzeria.Configuration/AuthSeeder.cs</c>, rather than via a command.
+    /// The setter is <see langword="internal"/> (not <see langword="private"/>) and exposed via
+    /// <see cref="System.Runtime.CompilerServices.InternalsVisibleToAttribute"/> to the handful of trusted
+    /// callers (e.g. a seeder) and unit test projects that need to set it directly.
     /// </remarks>
-    [SuppressMessage(
-        "Major Code Smell",
-        "S1144:Unused private types or members should be removed",
-        Justification = "Set directly against the database (e.g. a SQL UPDATE), not by domain code")]
-    public bool IsSiteAdministrator { get; private set; }
+    public bool IsSiteAdministrator { get; internal set; }
 
     /// <summary>
     /// Creates a user.
@@ -101,7 +100,7 @@ public sealed class User : AggregateRoot
 
         if (membership.AssignRole(roleId))
         {
-            this.DomainEvents.Raise(new TenantMembershipRoleAssignedEvent(this.Id, tenantId, roleId, correlationId));
+            this.DomainEvents.Raise(new TenantRoleAssignedEvent(this.Id, tenantId, roleId, correlationId));
         }
     }
 
@@ -121,7 +120,7 @@ public sealed class User : AggregateRoot
 
         if (membership.RemoveRole(roleId))
         {
-            this.DomainEvents.Raise(new TenantMembershipRoleRemovedEvent(this.Id, tenantId, roleId, correlationId));
+            this.DomainEvents.Raise(new TenantRoleRemovedEvent(this.Id, tenantId, roleId, correlationId));
         }
     }
 

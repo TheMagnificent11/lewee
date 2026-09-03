@@ -36,9 +36,8 @@ internal sealed class AuthSeeder : IDatabaseSeeder<AuthDbContext>
             this.dbContext.Users.Add(user);
         }
 
-        // IsSiteAdministrator is set directly against the database rather than via a domain method,
-        // given how rarely it changes.
-        this.dbContext.Entry(user).Property(item => item.IsSiteAdministrator).CurrentValue = true;
+        // IsSiteAdministrator is set directly rather than via a domain method, given how rarely it changes.
+        user.IsSiteAdministrator = true;
 
         await this.dbContext.SaveChangesAsync(cancellationToken);
     }

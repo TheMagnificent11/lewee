@@ -83,7 +83,7 @@ public sealed class TenantAuthorizationQueryProjectionHandlerTests
         var handler = CreateHandler(userRepository.Object, roleRepository.Object, queryProjectionService.Object);
 
         await handler.Handle(
-            new TenantMembershipRoleAssignedEvent(user.Id, tenantId, role.Id, CorrelationId),
+            new TenantRoleAssignedEvent(user.Id, tenantId, role.Id, CorrelationId),
             CancellationToken.None);
 
         var expectedKey = TenantMembershipRolesQueryProjection.BuildKey(tenantId, externalUserId);
@@ -110,7 +110,7 @@ public sealed class TenantAuthorizationQueryProjectionHandlerTests
         var handler = CreateHandler(userRepository.Object, roleRepository.Object, queryProjectionService.Object);
 
         await handler.Handle(
-            new TenantMembershipRoleRemovedEvent(user.Id, tenantId, Guid.NewGuid(), CorrelationId),
+            new TenantRoleRemovedEvent(user.Id, tenantId, Guid.NewGuid(), CorrelationId),
             CancellationToken.None);
 
         var expectedKey = TenantMembershipRolesQueryProjection.BuildKey(tenantId, externalUserId);

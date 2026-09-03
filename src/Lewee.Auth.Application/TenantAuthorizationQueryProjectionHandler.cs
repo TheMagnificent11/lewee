@@ -17,8 +17,8 @@ namespace Lewee.Auth.Application;
 internal sealed class TenantAuthorizationQueryProjectionHandler :
     INotificationHandler<TenantMembershipCreatedEvent>,
     INotificationHandler<TenantMembershipRemovedEvent>,
-    INotificationHandler<TenantMembershipRoleAssignedEvent>,
-    INotificationHandler<TenantMembershipRoleRemovedEvent>
+    INotificationHandler<TenantRoleAssignedEvent>,
+    INotificationHandler<TenantRoleRemovedEvent>
 {
     private readonly IRepository<User> userRepository;
     private readonly IRepository<Role> roleRepository;
@@ -71,12 +71,12 @@ internal sealed class TenantAuthorizationQueryProjectionHandler :
     }
 
     /// <inheritdoc />
-    public Task Handle(TenantMembershipRoleAssignedEvent notification, CancellationToken cancellationToken)
+    public Task Handle(TenantRoleAssignedEvent notification, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(notification);
 
         return this.UpdateProjectionAsync(
-            nameof(TenantMembershipRoleAssignedEvent),
+            nameof(TenantRoleAssignedEvent),
             notification.UserEntityId,
             notification.TenantEntityId,
             notification.CorrelationId,
@@ -84,12 +84,12 @@ internal sealed class TenantAuthorizationQueryProjectionHandler :
     }
 
     /// <inheritdoc />
-    public Task Handle(TenantMembershipRoleRemovedEvent notification, CancellationToken cancellationToken)
+    public Task Handle(TenantRoleRemovedEvent notification, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(notification);
 
         return this.UpdateProjectionAsync(
-            nameof(TenantMembershipRoleRemovedEvent),
+            nameof(TenantRoleRemovedEvent),
             notification.UserEntityId,
             notification.TenantEntityId,
             notification.CorrelationId,

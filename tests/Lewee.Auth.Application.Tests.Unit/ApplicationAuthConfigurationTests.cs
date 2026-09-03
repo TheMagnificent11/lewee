@@ -30,11 +30,23 @@ public class ApplicationAuthConfigurationTests
             .ToList();
         tenantRoleBehaviors.Should().Contain(b => b.GetType().Name.Contains("TenantLoggingBehavior"));
         tenantRoleBehaviors.Should().Contain(b => b.GetType().Name.Contains("TenantRoleAuthorizationBehavior"));
+    }
 
-        var administratorBehaviors = serviceProvider
-            .GetServices<IPipelineBehavior<TestAdministratorAuthConfigCommand, CommandResult>>()
-            .ToList();
-        administratorBehaviors.Should().Contain(b => b.GetType().Name.Contains("AdministratorAuthorizationBehavior"));
+    [Fact]
+    public void AddLeweeApplicationAuth_ShouldDecorateUserRepositoryWithCache()
+    {
+        var services = new ServiceCollection();
+        services.AddLogging();
+        services.AddSingleton(Mock.Of<IAuthenticatedUserService>());
+        services.AddSingleton(Mock.Of<IRepository<User>>());
+        services.AddSingleton(Mock.Of<IQueryProjectionService>());
+
+        services.AddLeweeApplicationAuth();
+        var serviceProvider = services.BuildServiceProvider();
+
+        var userRepository = serviceProvider.GetRequiredService<IRepository<User>>();
+
+        userRepository.Should().BeOfType<CachedUserRepository>();
     }
 
     [Fact]
@@ -56,15 +68,5 @@ public class ApplicationAuthConfigurationTests
     "Performance",
     "CA1812: Avoid uninstantiated internal classes",
     Justification = "Used via mediation")]
-internal sealed record TestTenantRoleAuthConfigCommand(Guid TenantId, IReadOnlyCollection<string> SatisfyingRoles)
+internal sealed record TestTenantRoleAuthConfigCommand(Guid TenantId, IReadOnlyCollection<string> Roles)
     : ICommand, ITenantRoleRequest;
-
-[SuppressMessage(
-    "StyleCop.CSharp.MaintainabilityRules",
-    "SA1402:File may only contain a single type",
-    Justification = "Test model classes are grouped together for easier test maintenance")]
-[SuppressMessage(
-    "Performance",
-    "CA1812: Avoid uninstantiated internal classes",
-    Justification = "Used via mediation")]
-internal sealed record TestAdministratorAuthConfigCommand : ICommand, IAdministratorRequest;

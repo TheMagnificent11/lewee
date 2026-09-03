@@ -11,5 +11,5 @@ public interface ITenantRoleRequest : ITenantRequest
     /// <summary>
     /// Gets the set of role codes that satisfy this request - the caller need only hold one of them.
     /// </summary>
-    IReadOnlyCollection<string> SatisfyingRoles { get; }
+    IReadOnlyCollection<string> Roles { get; }
 }

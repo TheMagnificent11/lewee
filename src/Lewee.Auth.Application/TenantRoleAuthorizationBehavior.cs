@@ -1,3 +1,4 @@
+using Lewee.Auth.Domain;
 using Lewee.Common;
 using Lewee.Domain;
 using MediatR;
@@ -10,15 +11,18 @@ internal class TenantRoleAuthorizationBehavior<TRequest, TResponse> : IPipelineB
     where TResponse : Result
 {
     private readonly IAuthenticatedUserService authenticatedUserService;
+    private readonly IRepository<User> userRepository;
     private readonly IQueryProjectionService queryProjectionService;
     private readonly ILogger<TenantRoleAuthorizationBehavior<TRequest, TResponse>> logger;
 
     public TenantRoleAuthorizationBehavior(
         IAuthenticatedUserService authenticatedUserService,
+        IRepository<User> userRepository,
         IQueryProjectionService queryProjectionService,
         ILogger<TenantRoleAuthorizationBehavior<TRequest, TResponse>> logger)
     {
         this.authenticatedUserService = authenticatedUserService;
+        this.userRepository = userRepository;
         this.queryProjectionService = queryProjectionService;
         this.logger = logger;
     }
@@ -39,6 +43,17 @@ internal class TenantRoleAuthorizationBehavior<TRequest, TResponse> : IPipelineB
                 "No authenticated caller.");
         }
 
+        var user = await this.userRepository.QueryOneAsync(
+            new UserByExternalIdSpecification(externalId),
+            cancellationToken);
+
+        if (user is { IsSiteAdministrator: true })
+        {
+            this.logger.LogTenantRoleSiteAdministratorOverride(externalId, request.TenantId, typeof(TRequest).Name);
+
+            return await next(cancellationToken);
+        }
+
         var key = TenantMembershipRolesQueryProjection.BuildKey(request.TenantId, externalId);
 
         var projection = await this.queryProjectionService.RetrieveByKeyAsync<TenantMembershipRolesQueryProjection>(
@@ -46,7 +61,7 @@ internal class TenantRoleAuthorizationBehavior<TRequest, TResponse> : IPipelineB
             cancellationToken);
 
         var isAuthorized = projection is { IsMember: true } &&
-            projection.RoleCodes.Intersect(request.SatisfyingRoles, StringComparer.Ordinal).Any();
+            projection.RoleCodes.Intersect(request.Roles, StringComparer.Ordinal).Any();
 
         if (!isAuthorized)
         {

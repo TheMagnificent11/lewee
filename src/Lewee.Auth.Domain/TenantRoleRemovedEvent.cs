@@ -3,18 +3,18 @@ using Lewee.Domain;
 namespace Lewee.Auth.Domain;
 
 /// <summary>
-/// Raised when a role is assigned to a user's membership of a tenant.
+/// Raised when a role is removed from a user's membership of a tenant.
 /// </summary>
-public sealed class TenantMembershipRoleAssignedEvent : DomainEvent
+public sealed class TenantRoleRemovedEvent : DomainEvent
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="TenantMembershipRoleAssignedEvent"/> class.
+    /// Initializes a new instance of the <see cref="TenantRoleRemovedEvent"/> class.
     /// </summary>
     /// <param name="userEntityId">User entity ID.</param>
     /// <param name="tenantEntityId">Tenant entity ID.</param>
     /// <param name="roleId">Role ID.</param>
     /// <param name="correlationId">Correlation ID.</param>
-    public TenantMembershipRoleAssignedEvent(Guid userEntityId, Guid tenantEntityId, Guid roleId, Guid correlationId)
+    public TenantRoleRemovedEvent(Guid userEntityId, Guid tenantEntityId, Guid roleId, Guid correlationId)
         : base(correlationId)
     {
         this.UserEntityId = userEntityId;

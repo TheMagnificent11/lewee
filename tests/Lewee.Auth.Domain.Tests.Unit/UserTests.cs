@@ -82,7 +82,7 @@ public sealed class UserTests
         user.TenantMemberships.Single(membership => membership.TenantId == tenantId)
             .RoleIds.Should().ContainSingle().Which.Should().Be(roleId);
         user.DomainEvents.GetAndClear().Should().ContainSingle()
-            .Which.Should().BeOfType<TenantMembershipRoleAssignedEvent>();
+            .Which.Should().BeOfType<TenantRoleAssignedEvent>();
     }
 
     [Fact]
@@ -133,7 +133,7 @@ public sealed class UserTests
         user.TenantMemberships.Single(membership => membership.TenantId == tenantId)
             .RoleIds.Should().BeEmpty();
         user.DomainEvents.GetAndClear().Should().ContainSingle()
-            .Which.Should().BeOfType<TenantMembershipRoleRemovedEvent>();
+            .Which.Should().BeOfType<TenantRoleRemovedEvent>();
     }
 
     [Fact]

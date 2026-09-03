@@ -2,4 +2,15 @@
   <ItemGroup>
     <ProjectReference Include="..\Lewee.Domain\Lewee.Domain.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Lewee.Auth.Domain.Tests.Unit</_Parameter1>
+    </AssemblyAttribute>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Lewee.Auth.Application.Tests.Unit</_Parameter1>
+    </AssemblyAttribute>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Pizzeria.Configuration</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
 </Project>
