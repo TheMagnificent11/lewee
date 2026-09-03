@@ -17,11 +17,13 @@ The sample application currently treats every Keycloak-authenticated principal a
 ## Capabilities
 
 ### New Capabilities
+
 - `auth/tenant-management`: Defines the `Tenant` aggregate root and the invariants around a `User`'s membership (zero, one, or many `Tenant`s) via `TenantMembership`.
 - `auth/user-provisioning`: Defines how a `User` is created from an external (Keycloak) identity with no tenant membership, replacing the sample's `CreateCustomerCommand`/`CreateCustomerEndpoint` flow with `CreateUserCommand`/`CreateUserEndpoint` in the new `Lewee.Auth.Application`/`Lewee.Auth.Api` packages.
 - `auth/data-persistence`: Defines the `auth` schema, `AuthDbContext`, and the migration path for moving `User` data out of `sto.Users` into `auth.Users`.
 
 ### Modified Capabilities
+
 - None (no existing `openspec/specs/` capabilities are defined yet for this repository).
 
 ## Impact

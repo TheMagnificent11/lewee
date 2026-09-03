@@ -38,7 +38,7 @@ public class CreateOrderEndpoint : CommandEndpoint<CreateOrderRequest>
 **Abstract Properties:**
 
 | Property | Type | Description |
-|----------|------|-------------|
+| ---------- | ------ | ------------- |
 | `Route` | `string` | The endpoint route |
 | `Name` | `string` | The endpoint name for OpenAPI |
 | `CommandType` | `CommandType` | HTTP method (Post, Put, Patch, Delete) |
@@ -74,7 +74,7 @@ public class GetOrdersEndpoint : QueryEndpoint<OrderDto[]>
 **Abstract Properties:**
 
 | Property | Type | Description |
-|----------|------|-------------|
+| ---------- | ------ | ------------- |
 | `Route` | `string` | The endpoint route |
 | `Name` | `string` | The endpoint name for OpenAPI |
 | `IsAnonymousAllowed` | `bool` | Whether anonymous access is allowed |
@@ -84,7 +84,7 @@ public class GetOrdersEndpoint : QueryEndpoint<OrderDto[]>
 Enum for specifying the HTTP method of command endpoints:
 
 | Value | HTTP Method |
-|-------|-------------|
+| ------- | ------------- |
 | `Post` | POST |
 | `Put` | PUT |
 | `Patch` | PATCH |
@@ -95,7 +95,7 @@ Enum for specifying the HTTP method of command endpoints:
 Both endpoint base classes provide `ToResponseAsync` methods that map `Lewee.Application` result types to HTTP responses:
 
 | Result Status | HTTP Response |
-|---------------|---------------|
+| --------------- | --------------- |
 | `Success` | 200 OK |
 | `NotFound` | 404 Not Found |
 | `ValidationError` | 400 Bad Request |

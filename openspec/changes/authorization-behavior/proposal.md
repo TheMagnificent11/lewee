@@ -16,12 +16,14 @@ Issue #87 identifies two authorization gaps in the `MediatR` pipeline that `Lewe
 ## Capabilities
 
 ### New Capabilities
+
 - `auth/role-management`: Defines how a site administrator defines a global catalog of `Role`s, and how they are assigned to/removed from a `User`'s `TenantMembership`, with a membership able to hold multiple roles concurrently.
 - `auth/authorization-lookup`: Defines the fast, tenant+user-keyed read model that resolves a caller's roles for a tenant, and how it stays in sync with `auth/role-management` and `auth/tenant-management` domain events.
 - `application/administrator-authorization`: Defines `IAdministratorRequest` and `AdministratorAuthorizationBehavior`, authorizing site-administrator-only commands/queries by checking `User.IsSiteAdministrator` directly.
 - `application/tenant-role-authorization`: Defines `ITenantRoleRequest` and `TenantRoleAuthorizationBehavior`, authorizing commands/queries that require tenant membership plus at least one of a set of roles within `request.TenantId`.
 
 ### Modified Capabilities
+
 - None. `auth/tenant-management`, `auth/user-provisioning`, and `auth/data-persistence` (proposed by `openspec/changes/multi-tenancy-support`, not yet archived into `openspec/specs/`) are extended by, but not changed in their existing requirements by, this plan - `TenantMembership`'s existing creation/removal/idempotency behavior is unaffected; `User.IsSiteAdministrator` and `Role` are additive.
 
 ## Impact

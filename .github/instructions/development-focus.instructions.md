@@ -7,18 +7,21 @@ applyTo: "**/*.cs"
 ## Framework Packages (src/Lewee.*)
 
 **Domain Layer (Lewee.Domain)**
+
 - Core business logic abstractions
 - Base classes for entities, value objects, aggregates
 - Domain events and specifications
 - **Key Pattern:** Rich domain models with encapsulated business rules
 
 **Application Layer (Lewee.Application)**
+
 - CQRS implementation with MediatR
 - FluentValidation integration
 - Pipeline behaviors (logging, validation, correlation)
 - **Key Pattern:** Thin application services orchestrating domain logic
 
 **Infrastructure Layer (Lewee.Infrastructure.*)**
+
 - Entity Framework Core integration
 - PostgreSQL-specific optimizations
 - Authentication and authorization (Keycloak)
@@ -30,6 +33,7 @@ applyTo: "**/*.cs"
 - **Key Pattern:** Adapters implementing domain interfaces
 
 **Shared Utilities (Lewee.Common)**
+
 - Cross-cutting concerns
 - Result types (CommandResult, QueryResult)
 - Client messaging contracts
@@ -43,6 +47,7 @@ applyTo: "**/*.cs"
 **Purpose:** Demonstrates framework usage patterns and best practices
 
 **Key Demonstrations:**
+
 - Domain-driven design architecture
 - CQRS with MediatR
 - Entity Framework with PostgreSQL
@@ -50,6 +55,7 @@ applyTo: "**/*.cs"
 - .NET Aspire orchestration
 
 **Learning Resources:**
+
 - Domain models: `sample/Pizzeria.Store.Domain/`
 - CQRS handlers: `sample/Pizzeria.Store.Application/`
 - API endpoints: `sample/Pizzeria.Store.Api/`
@@ -76,6 +82,7 @@ A comprehensive pull request template is available at `.github/PULL_REQUEST_TEMP
 Use this template to ensure all required validations and documentation are completed before requesting review.
 
 **When working on framework (Lewee.*):**
+
 1. Maintain backward compatibility
 2. Add XML documentation for public and protected APIs
 3. Follow existing architectural patterns
@@ -84,6 +91,7 @@ Use this template to ensure all required validations and documentation are compl
 6. Update relevant README.md files
 
 **When working on sample app (Pizzeria.*):**
+
 1. Demonstrate best practices
 2. Keep examples clear and focused
 3. Update comments to explain patterns (use inline comments, not XML documentation)
@@ -91,6 +99,7 @@ Use this template to ensure all required validations and documentation are compl
 5. Ensure integration tests pass
 
 **Code Review Checklist:**
+
 - [ ] Follows domain-driven design principles
 - [ ] Maintains clean architecture boundaries
 - [ ] Includes appropriate tests

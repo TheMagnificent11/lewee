@@ -7,6 +7,7 @@ applyTo: "**/*"
 ## Choosing the Right Approach
 
 **Question: Should I add a new NuGet package?**
+
 ```
 Is the functionality critical?
 ├─ YES → Does it already exist in current packages?
@@ -18,6 +19,7 @@ Is the functionality critical?
 ```
 
 **Question: Where should I put this code?**
+
 ```
 What does the code do?
 ├─ Business logic → Lewee.Domain or [Project].Domain
@@ -28,6 +30,7 @@ What does the code do?
 ```
 
 **Question: What type of test should I write?**
+
 ```
 What are you testing?
 ├─ Business rules → Unit test in Domain.Tests
@@ -40,6 +43,7 @@ What are you testing?
 ## Architectural Constraints
 
 **Must Follow:**
+
 - Domain layer has no dependencies on other layers
 - Application layer depends only on Domain
 - Infrastructure implements interfaces from Domain/Application
@@ -47,6 +51,7 @@ What are you testing?
 - Maintain clean architecture boundaries
 
 **Must Not:**
+
 - Reference infrastructure from domain layer
 - Add business logic to controllers/endpoints
 - Use concrete classes where interfaces exist
@@ -56,10 +61,12 @@ What are you testing?
 ## Performance Considerations
 
 **Optimize for:**
+
 - Fast build times (12-20 seconds target)
 - Quick unit tests (< 30 seconds total)
 - Efficient database queries (use EF properly)
 
 **Don't Optimize Prematurely:**
+
 - Integration test speed (containers need time)
 - First-time package restore (unavoidable)

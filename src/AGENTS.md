@@ -13,7 +13,7 @@ For development guidance in this directory, see the following instruction files:
 ## Packages
 
 | Package | Description |
-|---------|-------------|
+| --------- | ------------- |
 | `Lewee.Auth.Api` | Anonymous user-provisioning endpoint and contracts |
 | `Lewee.Auth.Application` | Authentication and user-provisioning use cases |
 | `Lewee.Auth.Domain` | Tenant, user, and tenant-membership domain model |

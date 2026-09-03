@@ -46,7 +46,7 @@ operation.
 ## Main Types
 
 | Type | Purpose |
-|------|---------|
+| ------ | --------- |
 | `AuthApplicationConfiguration` | Registers auth application services |
 | `CreateUserCommand` | Idempotently provisions a user from an external identity |
 | `UserCreatedEventHandler` | Handles user-created domain notifications |

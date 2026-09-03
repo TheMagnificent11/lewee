@@ -8,6 +8,7 @@ Correlation IDs in Lewee are used to tie together logs across a single logical o
 This duplication means the correlation ID is read from the accessor, copied onto a command/query/action, and then (in `CorrelationIdLoggingBehavior`) read back off the request instead of from the accessor directly. It also means every new command/query author must remember to add and thread the `CorrelationId` parameter, and framework consumers must pass it explicitly at every call site.
 
 Constraints:
+
 - `Lewee.Domain` must not take a dependency on `Correlate` or any infrastructure package (clean architecture boundary — Domain has no dependencies on other layers).
 - `Lewee.Application` already depends on MediatR and can take a dependency on `Correlate`'s abstractions (`ICorrelationContextAccessor`) since `Lewee.Infrastructure.Correlate` currently sits at the infrastructure layer; `ICorrelationContextAccessor` itself is a lightweight interface from the `Correlate` package with no ASP.NET Core dependencies, so it is safe to consume from `Lewee.Application`.
 - Fluxor effects run client-side (Blazor WebAssembly/Server) and do not have an HTTP request scope; the accessor there is populated manually, not by middleware.
@@ -15,6 +16,7 @@ Constraints:
 ## Goals / Non-Goals
 
 **Goals:**
+
 - Remove `CorrelationId` from `IApplicationRequest`/`ICommand`/`IQuery<T>` so commands and queries no longer need to declare or accept it.
 - Resolve the correlation ID for MediatR pipeline logging via `ICorrelationContextAccessor` injected into `CorrelationIdLoggingBehavior`.
 - Ensure FastEndpoints command/query endpoints continue to work without passing `CorrelationId` into constructors (the accessor is already populated by the `Correlate` middleware before the endpoint handler runs).
@@ -22,6 +24,7 @@ Constraints:
 - Update all sample commands/queries/endpoints and existing unit tests to match the new contract.
 
 **Non-Goals:**
+
 - Changing how `Correlate` middleware extracts/generates correlation IDs from HTTP headers.
 - Changing `DomainEvent`'s constructor contract (`DomainEvent` remains in `Lewee.Domain` and continues to accept an explicit `Guid correlationId` — it must not depend on `Correlate`). Application-layer code that constructs domain events will source that value from `ICorrelationContextAccessor` instead of from the command, but the domain event's own signature is unchanged.
 - Introducing a new correlation ID abstraction to replace `Correlate` — `ICorrelationContextAccessor` remains the single source of truth.

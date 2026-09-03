@@ -25,9 +25,11 @@ Revise a change's existing planning artifacts and keep them coherent. Never edit
    **IMPORTANT**: Do NOT guess or auto-select a change. Always let the user choose.
 
 2. **Get the change's artifacts**
+
    ```bash
    openspec status --change "<name>" --json
    ```
+
    Parse the JSON to understand current state. The response includes:
    - `schemaName`: The workflow schema being used (e.g., "spec-driven")
    - `artifacts`: Array of artifacts with their status ("done", "ready", "blocked")
@@ -53,6 +55,7 @@ Revise a change's existing planning artifacts and keep them coherent. Never edit
    - Show each proposed revision and why. Write only after the user confirms.
    - If the user rejects a revision, do not write it - leave that artifact unchanged.
    - When a substantial rewrite is needed, get that artifact's rules and template first:
+
      ```bash
      openspec instructions <artifact-id> --change "<name>" --json
      ```
@@ -65,11 +68,13 @@ Revise a change's existing planning artifacts and keep them coherent. Never edit
 **Output**
 
 After each invocation, show:
+
 - Which artifacts were revised (and which proposed revisions were rejected)
 - Anything deferred to `/opsx:continue` (not-yet-created artifacts or files)
 - Where the change stands and the recommended next command
 
 **Guardrails**
+
 - Planning artifacts only - NEVER edit implementation code. If the revised plan implies code changes, stop and point to `/opsx:apply`.
 - Use the artifact ids and paths reported by `openspec status`; never branch on hardcoded artifact names.
 - Edit only the concrete files in `existingOutputPaths`; never write to a glob `resolvedOutputPath`.

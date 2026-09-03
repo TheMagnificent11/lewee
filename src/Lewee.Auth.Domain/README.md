@@ -32,7 +32,7 @@ length of 200 characters, and external user IDs have a maximum length of 100 cha
 ## Main Types
 
 | Type | Purpose |
-|------|---------|
+| ------ | --------- |
 | `Tenant` | Identifies an organization by ID, unique code, and name |
 | `User` | Represents an external identity independently of tenant membership |
 | `TenantMembership` | Associates a user with a tenant |

@@ -9,6 +9,7 @@ applyTo: "sample/**/*"
 The sample pizzeria application demonstrates Lewee framework usage with a multi-service architecture.
 
 **Current State:**
+
 - Pizzeria BFF (`Pizzeria.Bff` - YARP reverse proxy used by the web frontend)
 - Pizzeria Auth API (`Pizzeria.Auth.Api` - reusable auth endpoints)
 - Pizzeria Store API (`Pizzeria.Store.Api` - FastEndpoints Web API)
@@ -21,12 +22,14 @@ The sample pizzeria application demonstrates Lewee framework usage with a multi-
 ## Running the Sample
 
 **Quick Start:**
+
 ```bash
 dotnet run --project ./sample/Pizzeria.AppHost/
 ```
 
 **What Happens:**
-1. .NET Aspire dashboard starts (typically at https://localhost:17268)
+
+1. .NET Aspire dashboard starts (typically at <https://localhost:17268>)
 2. PostgreSQL container launches automatically
 3. Pizzeria Auth API and Store API become available
 4. Pizzeria BFF becomes available and routes requests to the APIs
@@ -34,7 +37,8 @@ dotnet run --project ./sample/Pizzeria.AppHost/
 6. All services are monitored through the Aspire dashboard
 
 **Access Points:**
-- Aspire Dashboard: Check console output for URL (typically https://localhost:17268)
+
+- Aspire Dashboard: Check console output for URL (typically <https://localhost:17268>)
 - Store API: URL shown in Aspire dashboard
 - Auth API: URL shown in Aspire dashboard
 - BFF: URL shown in Aspire dashboard
@@ -43,6 +47,7 @@ dotnet run --project ./sample/Pizzeria.AppHost/
 ## Development Workflow
 
 **For Framework Changes:**
+
 ```bash
 # Make changes to Lewee.* projects
 dotnet build --configuration Release --nologo
@@ -50,6 +55,7 @@ dotnet test --configuration Release --no-build --nologo
 ```
 
 **For Sample App Changes:**
+
 ```bash
 # Make changes to Pizzeria.* projects
 dotnet run --project ./sample/Pizzeria.AppHost/
@@ -57,6 +63,7 @@ dotnet run --project ./sample/Pizzeria.AppHost/
 ```
 
 **For Testing Integration:**
+
 ```bash
 # Use integration tests (preferred method)
 dotnet test sample-tests/Pizzeria.Tests.Integration/
@@ -75,6 +82,7 @@ No need for XML documentation in sample application code. Follow existing patter
 **Feature Namespaces:** Use feature-based namespaces (organized by aggregate root) instead of type-based namespaces.
 
 **Correct:**
+
 ```
 Pizzeria.Store.Api.Orders
 Pizzeria.Store.Api.Pizzas
@@ -82,6 +90,7 @@ Pizzeria.Store.Api.Customers
 ```
 
 **Incorrect:**
+
 ```
 Pizzeria.Store.Api.Endpoints
 ```

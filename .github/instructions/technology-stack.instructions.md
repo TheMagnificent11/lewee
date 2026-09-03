@@ -7,7 +7,7 @@ applyTo: "**/*"
 ## Core Dependencies
 
 | Technology | Version | Purpose | Documentation |
-|------------|---------|---------|---------------|
+| ------------ | --------- | --------- | --------------- |
 | .NET | 10.0 | Runtime and SDK | [docs.microsoft.com](https://docs.microsoft.com/dotnet) |
 | .NET Aspire | Latest | Service orchestration | [learn.microsoft.com/aspire](https://learn.microsoft.com/dotnet/aspire) |
 | PostgreSQL | Latest | Primary database | [postgresql.org](https://postgresql.org) |
@@ -22,10 +22,12 @@ applyTo: "**/*"
 ## Package Version Strategy
 
 **Pinned Versions:**
+
 - MediatR 12.5.0 (last free version)
 - FluentValidation 12.1.1
 
 **Latest Versions:**
+
 - All Microsoft packages (.NET, EF Core, Aspire)
 - Supporting libraries (Npgsql, FastEndpoints, etc.)
 

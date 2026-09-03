@@ -11,6 +11,7 @@ For development guidance specific to Blazor components in this project, see the 
 ### Code-Behind Pattern
 
 All Razor components in this project use the code-behind pattern:
+
 - Component markup is in `.razor` files
 - Component logic is in corresponding `.razor.cs` files (partial classes)
 

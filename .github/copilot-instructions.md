@@ -9,7 +9,7 @@ This file provides an overview and links to detailed Copilot instructions for di
 The following instruction files are available in the `.github/instructions/` directory. Each file contains detailed guidance for specific areas:
 
 | Instruction File | Description | Applies To |
-|------------------|-------------|------------|
+| ------------------ | ------------- | ------------ |
 | [overview.instructions.md](instructions/overview.instructions.md) | Project overview and introduction | All files |
 | [how-to-use.instructions.md](instructions/how-to-use.instructions.md) | How to use these instructions effectively | All files |
 | [visual-studio-solution.instructions.md](instructions/visual-studio-solution.instructions.md) | Visual Studio solution configuration | Solution and project files |
@@ -28,11 +28,14 @@ The following instruction files are available in the `.github/instructions/` dir
 ## Quick Reference
 
 ### Priority Order
+
 1. First, consult these instructions for repository-specific guidance
 2. Then, use search or bash commands only when you encounter unexpected information
 
 ### Success Criteria
+
 Your changes should:
+
 - Build without errors or warnings
 - Pass all existing tests
 - Follow the established coding patterns
@@ -40,6 +43,7 @@ Your changes should:
 - Be minimal and focused
 
 ### Key Commands
+
 ```bash
 # Build
 dotnet build --configuration Release --nologo
@@ -54,6 +58,7 @@ dotnet format
 ## Directory-Specific AGENTS Files
 
 Each major directory contains an AGENTS.md file that references the relevant Copilot instructions:
+
 - `src/AGENTS.md` - Framework packages development
 - `tests/AGENTS.md` - Framework tests guidance
 - `sample/AGENTS.md` - Sample application development

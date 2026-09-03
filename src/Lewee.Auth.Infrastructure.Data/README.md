@@ -49,7 +49,7 @@ required.
 ## Database Model
 
 | Table | Purpose | Important constraints |
-|-------|---------|-----------------------|
+| ------- | --------- | ----------------------- |
 | `auth.Tenants` | Stores tenant aggregates | Unique `Code` |
 | `auth.Users` | Stores user aggregates | Unique `ExternalId` |
 | `auth.UserTenantMemberships` | Stores user-to-tenant relationships | Unique `(UserId, TenantId)` |
@@ -60,7 +60,7 @@ sample store migration removes the source table.
 ## Main Types
 
 | Type | Purpose |
-|------|---------|
+| ------ | --------- |
 | `AuthDbContext` | EF Core context for auth data |
 | `TenantConfiguration` | Configures tenant properties and unique code |
 | `UserConfiguration` | Configures users and owned tenant memberships |
