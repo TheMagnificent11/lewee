@@ -58,6 +58,16 @@ public class ApplicationAuthConfigurationTests
 
         result.Should().BeSameAs(services);
     }
+
+    [Fact]
+    public void AddLeweeApplicationAuth_ShouldNotDecorate_WhenUserRepositoryIsNotRegistered()
+    {
+        var services = new ServiceCollection();
+
+        services.AddLeweeApplicationAuth();
+
+        services.Should().NotContain(item => item.ServiceType == typeof(IRepository<User>));
+    }
 }
 
 [SuppressMessage(

@@ -13,8 +13,6 @@ internal sealed class CachedUserRepository : IRepository<User>
 {
     // Set(key, value, TimeSpan) is an absolute expiration relative to now, not a sliding window - an entry
     // is evicted 1 hour after being cached, regardless of how frequently it is accessed in the meantime.
-    private static readonly TimeSpan CacheDuration = TimeSpan.FromHours(1);
-
     private readonly IRepository<User> innerRepository;
     private readonly IMemoryCache cache;
 
@@ -28,6 +26,8 @@ internal sealed class CachedUserRepository : IRepository<User>
         this.innerRepository = innerRepository;
         this.cache = cache;
     }
+
+    internal static TimeSpan CacheDuration { get; set; } = TimeSpan.FromHours(1);
 
     /// <inheritdoc />
     public async Task<User?> RetrieveByIdAsync(Guid id, CancellationToken cancellationToken = default)

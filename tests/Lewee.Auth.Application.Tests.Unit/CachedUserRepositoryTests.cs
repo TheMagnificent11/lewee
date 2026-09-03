@@ -76,6 +76,36 @@ public sealed class CachedUserRepositoryTests
             Times.Exactly(2));
     }
 
+    [Fact]
+    public async Task Should_QueryInnerRepositoryAgain_When_CacheEntryExpiresAsync()
+    {
+        var originalDuration = CachedUserRepository.CacheDuration;
+        CachedUserRepository.CacheDuration = TimeSpan.FromMilliseconds(1);
+
+        try
+        {
+            var user = User.Create("external-id", Guid.NewGuid());
+            var innerRepository = new Mock<IRepository<User>>();
+            innerRepository
+                .Setup(item => item.RetrieveByIdAsync(user.Id, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(user);
+
+            var repository = CreateRepository(innerRepository.Object);
+
+            await repository.RetrieveByIdAsync(user.Id);
+            await Task.Delay(20);
+            await repository.RetrieveByIdAsync(user.Id);
+
+            innerRepository.Verify(
+                item => item.RetrieveByIdAsync(user.Id, It.IsAny<CancellationToken>()),
+                Times.Exactly(2));
+        }
+        finally
+        {
+            CachedUserRepository.CacheDuration = originalDuration;
+        }
+    }
+
     private static CachedUserRepository CreateRepository(IRepository<User> innerRepository) =>
         new(innerRepository, new MemoryCache(new MemoryCacheOptions()));
 
