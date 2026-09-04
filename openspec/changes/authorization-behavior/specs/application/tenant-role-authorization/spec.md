@@ -1,26 +1,35 @@
 ## Purpose
 
-Defines how commands and queries restricted to specific tenant roles are authorized in the `MediatR` pipeline for the tenant the request pertains to.
+Defines how commands and queries restricted to specific tenant roles are authorized in the `MediatR` pipeline for the tenant the request pertains to, with a built-in bypass for site administrators.
 
 ## ADDED Requirements
 
 ### Requirement: Commands and queries opt into tenant-role authorization via a marker interface
 
-A command (`ICommand`) or query (`IQuery<T>`) that must only be executed by a caller holding at least one of a set of roles within the tenant it pertains to SHALL implement `ITenantRoleRequest`, which extends the existing `ITenantRequest` and additionally exposes the set of roles that satisfy the request. Requests that do not implement `ITenantRoleRequest` SHALL NOT be subject to this authorization check, even if they implement `ITenantRequest`.
+A command (`ICommand`) or query (`IQuery<T>`) that must only be executed by a caller holding at least one of a set of roles within the tenant it pertains to SHALL implement `ITenantRoleRequest`, which extends the existing `ITenantRequest` and additionally exposes (via `Roles`) the set of roles that satisfy the request. Requests that do not implement `ITenantRoleRequest` SHALL NOT be subject to this authorization check, even if they implement `ITenantRequest`.
 
 #### Scenario: Defining a tenant-role-restricted command
 
 - **WHEN** a developer defines a command or query implementing `ITenantRoleRequest`
-- **THEN** the request SHALL compile by exposing the tenant ID (via `ITenantRequest`) and the set of roles that satisfy the request, and the `MediatR` pipeline SHALL authorize it before it reaches its handler
+- **THEN** the request SHALL compile by exposing the tenant ID (via `ITenantRequest`) and the set of roles that satisfy the request (via `Roles`), and the `MediatR` pipeline SHALL authorize it before it reaches its handler
 
 #### Scenario: A request that implements only ITenantRequest is unaffected
 
 - **WHEN** a command or query implements `ITenantRequest` but not `ITenantRoleRequest`
 - **THEN** tenant-role authorization SHALL NOT be evaluated for that request, and it SHALL proceed to its handler unaffected by this capability
 
+### Requirement: A site administrator bypasses the tenant-role check
+
+For a request implementing `ITenantRoleRequest`, once the pipeline has resolved an authenticated caller, it SHALL look up that caller's `User` record. When `User.IsSiteAdministrator` is `true`, the pipeline SHALL invoke the handler directly, without evaluating tenant membership or role requirements - a site administrator is a super user with access to every tenant-scoped request. Commands and queries do not need any additional marker interface to allow this access; the bypass applies to any `ITenantRoleRequest`.
+
+#### Scenario: Site administrator bypasses the tenant/role check
+
+- **WHEN** a caller whose `User.IsSiteAdministrator` is `true` dispatches an `ITenantRoleRequest` command or query, regardless of whether that caller is a member of `request.TenantId` or holds any of the request's satisfying roles
+- **THEN** the pipeline SHALL invoke the handler and return its result, without evaluating tenant membership or role requirements
+
 ### Requirement: The pipeline authorizes tenant-role requests against the request's own tenant
 
-For a request implementing `ITenantRoleRequest`, the pipeline SHALL resolve the current caller's external identity, determine (via `auth/authorization-lookup`) whether that caller is a member of `request.TenantId` and holds at least one of the request's satisfying roles for that tenant, and SHALL only invoke the handler when that check succeeds. A caller holding any one of the request's satisfying roles is sufficient - the caller need not hold all of them.
+For a request implementing `ITenantRoleRequest` whose caller is not a site administrator, the pipeline SHALL resolve the current caller's external identity, determine (via `auth/authorization-lookup`) whether that caller is a member of `request.TenantId` and holds at least one of the request's satisfying roles for that tenant, and SHALL only invoke the handler when that check succeeds. A caller holding any one of the request's satisfying roles is sufficient - the caller need not hold all of them.
 
 #### Scenario: Authorized tenant member
 

@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="Pizzeria.Configuration.Tests.Unit" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\Lewee.Auth.Infrastructure.Data\Lewee.Auth.Infrastructure.Data.csproj" />
     <ProjectReference Include="..\Pizzeria.Auth\Pizzeria.Auth.csproj" />
     <ProjectReference Include="..\Pizzeria.Common\Pizzeria.Common.csproj" />

@@ -9,8 +9,6 @@ namespace Pizzeria.Configuration;
 
 internal sealed class AuthSeeder : IDatabaseSeeder<AuthDbContext>
 {
-    private const string AdministrativeTenantCode = "ADMIN";
-    private const string AdministrativeTenantName = "Pizzeria Administration";
     private readonly AuthDbContext dbContext;
     private readonly IAuthServerAdminClient authServerAdminClient;
 
@@ -30,16 +28,7 @@ internal sealed class AuthSeeder : IDatabaseSeeder<AuthDbContext>
             Environments.Auth.DefaultAdminCredentialsForTesting.Username,
             cancellationToken);
 
-        var tenant = await this.dbContext.Tenants
-            .SingleOrDefaultAsync(item => item.Code == AdministrativeTenantCode, cancellationToken);
-        if (tenant == null)
-        {
-            tenant = Tenant.Create(AdministrativeTenantCode, AdministrativeTenantName, Guid.NewGuid());
-            this.dbContext.Tenants.Add(tenant);
-        }
-
         var user = await this.dbContext.Users
-            .Include(item => item.TenantMemberships)
             .SingleOrDefaultAsync(item => item.ExternalId == externalId, cancellationToken);
         if (user == null)
         {
@@ -47,7 +36,9 @@ internal sealed class AuthSeeder : IDatabaseSeeder<AuthDbContext>
             this.dbContext.Users.Add(user);
         }
 
-        user.AssignToTenant(tenant.Id, Guid.NewGuid());
+        // IsSiteAdministrator is set directly rather than via a domain method, given how rarely it changes.
+        user.IsSiteAdministrator = true;
+
         await this.dbContext.SaveChangesAsync(cancellationToken);
     }
 }

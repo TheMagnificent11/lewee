@@ -126,29 +126,6 @@ internal sealed record TestData(string Value);
     "Performance",
     "CA1812: Avoid uninstantiated internal classes",
     Justification = "Used via mediation")]
-internal sealed record TestTenantCommand(Guid TenantId, string Name) : ICommand, ITenantRequest
-{
-    [SuppressMessage(
-        "Performance",
-        "CA1812: Avoid uninstantiated internal classes",
-        Justification = "Used via mediation")]
-    internal sealed class Handler : IRequestHandler<TestTenantCommand, CommandResult>
-    {
-        public Task<CommandResult> Handle(TestTenantCommand request, CancellationToken cancellationToken)
-        {
-            return Task.FromResult(CommandResult.Success());
-        }
-    }
-}
-
-[SuppressMessage(
-    "StyleCop.CSharp.MaintainabilityRules",
-    "SA1402:File may only contain a single type",
-    Justification = "Test model classes are grouped together for easier test maintenance")]
-[SuppressMessage(
-    "Performance",
-    "CA1812: Avoid uninstantiated internal classes",
-    Justification = "Used via mediation")]
 internal sealed record TestServerErrorCommand : ICommand
 {
     [SuppressMessage(

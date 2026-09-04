@@ -32,6 +32,18 @@ public sealed class User : AggregateRoot
     public IReadOnlyCollection<TenantMembership> TenantMemberships => this.tenantMemberships.AsReadOnly();
 
     /// <summary>
+    /// Gets a value indicating whether the user is a site administrator, irrespective of tenant or role.
+    /// </summary>
+    /// <remarks>
+    /// There is no public domain method to set this flag - given how rarely it changes, it is expected to be
+    /// set directly, e.g. by <c>sample/Pizzeria.Configuration/AuthSeeder.cs</c>, rather than via a command.
+    /// The setter is <see langword="internal"/> (not <see langword="private"/>) and exposed via
+    /// <see cref="System.Runtime.CompilerServices.InternalsVisibleToAttribute"/> to the handful of trusted
+    /// callers (e.g. a seeder) and unit test projects that need to set it directly.
+    /// </remarks>
+    public bool IsSiteAdministrator { get; internal set; }
+
+    /// <summary>
     /// Creates a user.
     /// </summary>
     /// <param name="externalId">External identity.</param>
@@ -70,6 +82,46 @@ public sealed class User : AggregateRoot
 
         this.tenantMemberships.Remove(membership);
         this.DomainEvents.Raise(new TenantMembershipRemovedEvent(this.Id, tenantId, correlationId));
+    }
+
+    /// <summary>
+    /// Assigns a role to the user's membership of a tenant.
+    /// </summary>
+    /// <param name="tenantId">Tenant ID.</param>
+    /// <param name="roleId">Role ID.</param>
+    /// <param name="correlationId">Correlation ID.</param>
+    public void AssignRole(Guid tenantId, Guid roleId, Guid correlationId)
+    {
+        var membership = this.tenantMemberships.Find(x => x.TenantId == tenantId);
+        if (membership == null)
+        {
+            return;
+        }
+
+        if (membership.AssignRole(roleId))
+        {
+            this.DomainEvents.Raise(new TenantRoleAssignedEvent(this.Id, tenantId, roleId, correlationId));
+        }
+    }
+
+    /// <summary>
+    /// Removes a role from the user's membership of a tenant.
+    /// </summary>
+    /// <param name="tenantId">Tenant ID.</param>
+    /// <param name="roleId">Role ID.</param>
+    /// <param name="correlationId">Correlation ID.</param>
+    public void RemoveRole(Guid tenantId, Guid roleId, Guid correlationId)
+    {
+        var membership = this.tenantMemberships.Find(x => x.TenantId == tenantId);
+        if (membership == null)
+        {
+            return;
+        }
+
+        if (membership.RemoveRole(roleId))
+        {
+            this.DomainEvents.Raise(new TenantRoleRemovedEvent(this.Id, tenantId, roleId, correlationId));
+        }
     }
 
     /// <summary>

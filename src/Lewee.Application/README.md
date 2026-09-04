@@ -58,7 +58,9 @@ Both `QueryResult` and `CommandResult` inherit from [Result](./Mediation/Request
 
 `ITenantedRequest` has a `TenantId` `Guid` property used to specify the tenant ID for multi-tenanted applications.
 
-As mentioned in the [Pipeline Behaviors](#pipeline-behaviors) section, the `TenantId` property is used in the `TenantLoggingBehavior` to decorate the logs with tenant ID for every `MediatR` request that implements `ITenantedRequest`.
+`ITenantRequest` implementations are used by `Lewee.Auth.Application`'s `TenantLoggingBehavior` (which decorates
+logs with the tenant ID) and `TenantRoleAuthorizationBehavior` (which authorizes tenant-role-restricted requests);
+see [Lewee.Auth.Application](../Lewee.Auth.Application/README.md) for details.
 
 ### Pipeline Behaviors
 
@@ -70,12 +72,13 @@ As mentioned in the [Pipeline Behaviors](#pipeline-behaviors) section, the `Tena
   - Checks the `Status` of requests that have `Result` return types and logs an error if there was an unexpected failure, or an information log if there was domain/validation failure.
 - [PerformanceLoggingBehavior](./Mediation/Behaviors/PerformanceBehavior.cs)
   - Logs the time taken to execute the request using high-performance logging.
-- [TenantLoggingBehavior](./Mediation/Behaviors/TenantLoggingBehavior.cs)
-  - Adds a `TenantId` structured logging property for every request that implements `ITenantedRequest`.
 - [UnhandledExceptionBehavior](./Mediation//Behaviors/CorrelationIdLoggingBehavior.cs)
   - Catches unhandled exceptions and logs them as errors
 - [ValidationBehavior](./Mediation/Behaviors/ValidationBehavior.cs)
   - Executes `FluentValidation` validators for the request and returns a `CommandResult` with the errors dictionary populated if there are validation errors found, otherwise the rest of the pipeline is executed.
+
+Additional, opt-in behaviors for tenant logging and authorization are provided by
+[Lewee.Auth.Application](../Lewee.Auth.Application/README.md).
 
 ### ClientEvent Notification
 
