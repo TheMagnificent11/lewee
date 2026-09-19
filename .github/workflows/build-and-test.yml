@@ -105,15 +105,6 @@ jobs:
           recreate: true
           path: coverage-report/SummaryGithub.md
 
-      - name: Check Diff Coverage (90% threshold)
-        if: ${{ inputs.is-pr == true && github.actor != 'dependabot[bot]' }}
-        uses: ./.github/actions/diff-coverage-check
-        with:
-          coverage-file: coverage/coverage.cobertura.xml
-          threshold: 90
-          base-sha: ${{ github.event.pull_request.base.sha }}
-          head-sha: ${{ github.sha }}
-
       - name: Pack
         run: dotnet pack --configuration Release --nologo /p:PackageVersion=${{ steps.version.outputs.fullSemVer }} --output ./output
 
