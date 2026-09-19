@@ -29,8 +29,9 @@
 
 ## 5. Application Layer - Order Status Tracking (`ordering/order-status-tracking`)
 
-- [ ] 5.1 Add a derived `OrderStatus` value (Order received/Making/Ready for pick-up/Ready for delivery/Delivering/Completed) computed from `Order` timestamps and `IsDeliveryOrder`, exposed on `OrderDto`, and verify unit tests cover every status transition described in `specs/ordering/order-status-tracking/spec.md`
-- [ ] 5.2 Enforce that `GetOrderQuery`/status retrieval fails with an unauthorized result when the caller does not own the order, and verify a unit test covers this scenario
+- [ ] 5.1 Add a persisted `OrderStatus` enum column to `Order` (Received/Making/ReadyForPickup/ReadyForDelivery/Delivering/Completed), set only via domain methods (e.g. `StartMaking()`, updates to `PizzasPrepared()`/`PickedUp()`/`PizzasDelivered()`) that validate legal transitions and raise a domain event per transition, exposed on `OrderDto`, and verify unit tests cover every valid transition and rejection of invalid transitions described in `specs/ordering/order-status-tracking/spec.md`
+- [ ] 5.2 Add and run the EF Core migration for the new `OrderStatus` column, and verify the migration applies cleanly to a newly provisioned database
+- [ ] 5.3 Enforce that `GetOrderQuery`/status retrieval fails with an unauthorized result when the caller does not own the order, and verify a unit test covers this scenario
 
 ## 6. Application Layer - Store Order Fulfillment (`pizza-store/order-fulfillment`)
 
@@ -52,12 +53,20 @@
 
 - [ ] 9.1 Add a pizza-selection/order page showing the menu with "+"/"-" controls that dispatch add/remove actions, and verify a component/unit test in `Pizzeria.Ordering.Components.Tests.Unit` covers add and remove interactions
 - [ ] 9.2 Add a checkout page allowing pickup/delivery selection and delivery-address entry, wired to the new submit commands via Fluxor actions/effects/reducers, and verify unit tests cover both pickup and delivery submission flows
-- [ ] 9.3 Add an order-status page displaying the derived status from `specs/ordering/order-status-tracking/spec.md`, and verify a unit test covers each displayed status value
+- [ ] 9.3 Add an order-status page displaying the persisted `OrderStatus` from `specs/ordering/order-status-tracking/spec.md`, and verify a unit test covers each displayed status value
 - [ ] 9.4 Verify `dotnet test --filter "FullyQualifiedName!~Integration" --configuration Release --nologo` passes for all renamed/updated Ordering projects
 
-## 10. Final Verification
+## 10. End-to-End Test Coverage (`Pizzeria.Tests.Integration`)
 
-- [ ] 10.1 Run `dotnet build --configuration Release --nologo` for the full solution and verify no errors or warnings
-- [ ] 10.2 Run `dotnet test --filter "FullyQualifiedName!~Integration" --configuration Release --no-build --nologo` and verify all unit tests pass
-- [ ] 10.3 Run `dotnet format` and verify there are no outstanding formatting changes
-- [ ] 10.4 Manually run `sample/Pizzeria.AppHost` and walk through: start an order, add/remove pizzas, checkout (pickup and delivery), and verify the order status page and store-staff/manager screens reflect the expected behavior
+- [ ] 10.1 Following the test pyramid (favour the unit tests added in sections 3-9; add E2E tests only for the primary happy-path and one representative failure path per capability), add a Playwright E2E test covering a customer adding/removing pizzas and completing pickup checkout, and verify it passes against `Pizzeria.Tests.Integration`
+- [ ] 10.2 Add a Playwright E2E test covering delivery checkout (including the delivery-address validation failure) and viewing the resulting order status, and verify it passes
+- [ ] 10.3 Add a Playwright E2E test covering a Store Staff/Manager user listing current orders and marking an order picked-up/delivered, and verify it passes
+- [ ] 10.4 Add a Playwright E2E test covering a Store Manager managing the menu and a Store Staff user being denied that same action, and verify it passes
+
+## 11. Final Verification
+
+- [ ] 11.1 Run `dotnet build --configuration Release --nologo` for the full solution and verify no errors or warnings
+- [ ] 11.2 Run `dotnet test --filter "FullyQualifiedName!~Integration" --configuration Release --no-build --nologo` and verify all unit tests pass
+- [ ] 11.3 Run `dotnet test --configuration Release --nologo` (including `Pizzeria.Tests.Integration`) and verify the new E2E tests pass
+- [ ] 11.4 Run `dotnet format` and verify there are no outstanding formatting changes
+- [ ] 11.5 Manually run `sample/Pizzeria.AppHost` and walk through: start an order, add/remove pizzas, checkout (pickup and delivery), and verify the order status page and store-staff/manager screens reflect the expected behavior
