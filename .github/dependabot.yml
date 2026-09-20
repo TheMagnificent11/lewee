@@ -13,6 +13,7 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
+      - dependency-name: "Aspire.*"
       - dependency-name: "FluentAssertions"
         update-types: ["version-update:semver-minor", "version-update:semver-major"]
       - dependency-name: "MediatR"
