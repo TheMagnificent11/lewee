@@ -1,4 +1,7 @@
-﻿using Lewee.Auth.Infrastructure.Data;
+using Lewee.Auth.Application;
+using Lewee.Auth.Domain;
+using Lewee.Auth.Infrastructure.Data;
+using Lewee.Infrastructure.Auth;
 using Lewee.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -21,6 +24,9 @@ builder.AddServiceDefaults();
 // Get the database connection string via service discovery
 var databaseName = ServiceNames.PizzaStoreDatabaseName;
 
+// The authenticated user service is required by the audit and domain-event interceptors.
+builder.Services.AddAuthenticatedUserService();
+
 // Register database context - connection string will be resolved at runtime via service discovery
 builder.Services.AddDbContext<StoreDbContext>((serviceProvider, options) =>
 {
@@ -42,7 +48,19 @@ builder.Services.AddDbContext<AuthDbContext>((serviceProvider, options) =>
     {
         options.UseNpgsql(connectionString);
     }
+
+    // Dispatch auth domain events during seeding so the tenant membership role projection
+    // (read by the Pizza Store API authorization pipeline) is built for seeded memberships.
+    options
+        .AddAuditInterceptor(serviceProvider)
+        .AddDomainEventInterceptors<AuthDbContext>(serviceProvider);
 });
+
+// Register the auth application (MediatR handlers, including the tenant authorization projection
+// handler) and database services (repositories, query projection service, domain event dispatcher).
+builder.Services
+    .AddLeweeAuthApplication()
+    .AddLeweeDatabaseServices<AuthDbContext>(typeof(User).Assembly);
 
 builder.Services.AddKeycloakAdminClient(
     CommonEnvironments.Auth.RealmName,
