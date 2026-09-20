@@ -45,9 +45,9 @@
 
 ## 8. Pizza Store API (`Pizzeria.Store.Api`)
 
-- [ ] 8.1 Add endpoints for removing a pizza from an order and submitting pickup/delivery checkout, and verify endpoint-level tests/manual `dotnet run` verification against `Pizzeria.Store.Api`
-- [ ] 8.2 Add endpoints for listing orders (current/past) and marking pizzas picked-up/delivered, and verify they return `401`/`403`-equivalent failures for callers without the Store Staff/Store Manager role
-- [ ] 8.3 Add endpoints for adding, editing, and removing menu pizzas, and verify they return an unauthorized failure for Store Staff-only callers
+- [x] 8.1 Add endpoints for removing a pizza from an order and submitting pickup/delivery checkout, and verify endpoint-level tests/manual `dotnet run` verification against `Pizzeria.Store.Api`
+- [x] 8.2 Add endpoints for listing orders (current/past) and marking pizzas picked-up/delivered, and verify they return `401`/`403`-equivalent failures for callers without the Store Staff/Store Manager role
+- [x] 8.3 Add endpoints for adding, editing, and removing menu pizzas, and verify they return an unauthorized failure for Store Staff-only callers
 
 ## 9. Ordering Blazor App (`Pizzeria.Ordering.Web`/`StateManagement`/`Components`)
 
