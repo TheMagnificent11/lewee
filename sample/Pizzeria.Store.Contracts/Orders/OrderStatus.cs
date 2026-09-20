@@ -1,4 +1,4 @@
-namespace Pizzeria.Store.Domain;
+namespace Pizzeria.Store.Contracts.Orders;
 
 public enum OrderStatus
 {

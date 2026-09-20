@@ -11,6 +11,7 @@ public class Pizza : AggregateRoot
         this.Name = name;
         this.Description = description;
         this.Price = price;
+        this.IsAvailable = true;
     }
 
     [ExcludeFromCodeCoverage(Justification = "Only used by EF")]
@@ -22,6 +23,7 @@ public class Pizza : AggregateRoot
     public string Name { get; protected set; }
     public string Description { get; protected set; }
     public decimal Price { get; protected set; }
+    public bool IsAvailable { get; protected set; }
     public IReadOnlyCollection<OrderPizza> OrderPizzas { get; protected set; }
 
     public static Pizza Create(string name, string description, decimal price)
@@ -40,6 +42,11 @@ public class Pizza : AggregateRoot
         this.Name = name;
         this.Description = description ?? string.Empty;
         this.Price = price;
+    }
+
+    public void RemoveFromMenu()
+    {
+        this.IsAvailable = false;
     }
 
     private static void ValidateName(string name)
