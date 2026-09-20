@@ -11,9 +11,9 @@
 
 ## 2. Auth Seeding for Pizza Store Roles
 
-- [ ] 2.1 Add a single well-known `Tenant` representing the pizzeria to the existing seeding in `Pizzeria.Configuration` and verify a unit/integration test confirms the tenant exists after seeding
-- [ ] 2.2 Add `Store Manager` and `Store Staff` `Role` records (via `Role.Create`) to seeding and verify a test confirms both roles exist with distinct, globally-unique codes
-- [ ] 2.3 Extend seeding to create at least one seeded `TenantMembership` for each role for local/dev/test use and verify via a seeding test
+- [x] 2.1 Add a single well-known `Tenant` representing the pizzeria to the existing seeding in `Pizzeria.Configuration` and verify a unit/integration test confirms the tenant exists after seeding
+- [x] 2.2 Add `Store Manager` and `Store Staff` `Role` records (via `Role.Create`) to seeding and verify a test confirms both roles exist with distinct, globally-unique codes
+- [x] 2.3 Extend seeding to create at least one seeded `TenantMembership` for each role for local/dev/test use and verify via a seeding test
 
 ## 3. Domain Changes (`Pizzeria.Store.Domain`)
 
@@ -23,25 +23,25 @@
 
 ## 4. Application Layer - Checkout (`ordering/checkout`)
 
-- [ ] 4.1 Add `RemovePizzaFromOrderCommand` (with validator and handler enforcing the order belongs to the authenticated user) and verify unit tests cover success, not-found pizza, and wrong-owner scenarios from `specs/ordering/checkout/spec.md`
-- [ ] 4.2 Add `SubmitPickupOrderCommand` and `SubmitDeliveryOrderCommand` (with validators and handlers enforcing ownership and non-empty order/address) and verify unit tests cover all scenarios in `specs/ordering/checkout/spec.md`
-- [ ] 4.3 Add/extend `GetOrderQuery` to return `OrderDto` reflecting current pizzas, quantities, and total cost, and verify unit tests cover populated and empty orders
+- [x] 4.1 Add `RemovePizzaFromOrderCommand` (with validator and handler enforcing the order belongs to the authenticated user) and verify unit tests cover success, not-found pizza, and wrong-owner scenarios from `specs/ordering/checkout/spec.md`
+- [x] 4.2 Add `SubmitPickupOrderCommand` and `SubmitDeliveryOrderCommand` (with validators and handlers enforcing ownership and non-empty order/address) and verify unit tests cover all scenarios in `specs/ordering/checkout/spec.md`
+- [x] 4.3 Add/extend `GetOrderQuery` to return `OrderDto` reflecting current pizzas, quantities, and total cost, and verify unit tests cover populated and empty orders
 
 ## 5. Application Layer - Order Status Tracking (`ordering/order-status-tracking`)
 
-- [ ] 5.1 Add a persisted `OrderStatus` enum column to `Order` (Received/Making/ReadyForPickup/ReadyForDelivery/Delivering/Completed), set only via domain methods (e.g. `StartMaking()`, updates to `Prepared()`/`PickedUp()`/`Delivered()`) that validate legal transitions and raise a domain event per transition, exposed on `OrderDto`, and verify unit tests cover every valid transition and rejection of invalid transitions described in `specs/ordering/order-status-tracking/spec.md`
-- [ ] 5.2 Add and run the EF Core migration for the new `OrderStatus` column, and verify the migration applies cleanly to a newly provisioned database
-- [ ] 5.3 Enforce that `GetOrderQuery`/status retrieval fails with an unauthorized result when the caller does not own the order, and verify a unit test covers this scenario
+- [x] 5.1 Add a persisted `OrderStatus` enum column to `Order` (Received/Making/ReadyForPickup/ReadyForDelivery/Delivering/Completed), set only via domain methods (e.g. `StartMaking()`, updates to `Prepared()`/`PickedUp()`/`Delivered()`) that validate legal transitions and raise a domain event per transition, exposed on `OrderDto`, and verify unit tests cover every valid transition and rejection of invalid transitions described in `specs/ordering/order-status-tracking/spec.md`
+- [x] 5.2 Add and run the EF Core migration for the new `OrderStatus` column, and verify the migration applies cleanly to a newly provisioned database
+- [x] 5.3 Enforce that `GetOrderQuery`/status retrieval fails with an unauthorized result when the caller does not own the order, and verify a unit test covers this scenario
 
 ## 6. Application Layer - Store Order Fulfillment (`pizza-store/order-fulfillment`)
 
-- [ ] 6.1 Add `GetOrdersQuery` supporting a current/past filter (defaulting to current) implementing `ITenantRoleRequest` with Store Staff and Store Manager as satisfying roles, and verify unit tests cover both filter states and unauthorized access per `specs/pizza-store/order-fulfillment/spec.md`
-- [ ] 6.2 Add `MarkOrderPizzasPickedUpCommand` and `MarkOrderPizzasDeliveredCommand` (wrapping `Order.PickedUp()`/`Order.Delivered()`) implementing `ITenantRoleRequest`, and verify unit tests cover success, not-yet-prepared failure, and unauthorized-role scenarios
+- [x] 6.1 Add `GetOrdersQuery` supporting a current/past filter (defaulting to current) implementing `ITenantRoleRequest` with Store Staff and Store Manager as satisfying roles, and verify unit tests cover both filter states and unauthorized access per `specs/pizza-store/order-fulfillment/spec.md`
+- [x] 6.2 Add `MarkOrderPizzasPickedUpCommand` and `MarkOrderPizzasDeliveredCommand` (wrapping `Order.PickedUp()`/`Order.Delivered()`) implementing `ITenantRoleRequest`, and verify unit tests cover success, not-yet-prepared failure, and unauthorized-role scenarios
 
 ## 7. Application Layer - Menu Management (`pizza-store/menu-management`)
 
-- [ ] 7.1 Add `AddPizzaCommand`, `EditPizzaCommand`, and `RemovePizzaCommand` implementing `ITenantRoleRequest` with only Store Manager as the satisfying role, and verify unit tests cover valid input, not-found, and unauthorized (Store Staff-only) scenarios per `specs/pizza-store/menu-management/spec.md`
-- [ ] 7.2 Verify a unit test confirms a caller holding Store Manager can also successfully perform an order-fulfillment operation (roles are additive, not exclusive)
+- [x] 7.1 Add `AddPizzaCommand`, `EditPizzaCommand`, and `RemovePizzaCommand` implementing `ITenantRoleRequest` with only Store Manager as the satisfying role, and verify unit tests cover valid input, not-found, and unauthorized (Store Staff-only) scenarios per `specs/pizza-store/menu-management/spec.md`
+- [x] 7.2 Verify a unit test confirms a caller holding Store Manager can also successfully perform an order-fulfillment operation (roles are additive, not exclusive)
 
 ## 8. Pizza Store API (`Pizzeria.Store.Api`)
 

@@ -56,6 +56,7 @@
   </Folder>
   <Project Path="sample-tests/Pizzeria.Ordering.Components.Tests.Unit/Pizzeria.Ordering.Components.Tests.Unit.csproj" />
   <Project Path="sample-tests/Pizzeria.Store.Domain.Tests/Pizzeria.Store.Domain.Tests.csproj" />
+  <Project Path="sample-tests/Pizzeria.Store.Application.Tests.Unit/Pizzeria.Store.Application.Tests.Unit.csproj" />
   <Project Path="sample-tests/Pizzeria.Ordering.StateManagement.Tests.Unit/Pizzeria.Ordering.StateManagement.Tests.Unit.csproj" />
   <Project Path="sample-tests/Pizzeria.Ordering.Web.Tests.Unit/Pizzeria.Ordering.Web.Tests.Unit.csproj" />
   <Project Path="sample-tests/Pizzeria.Configuration.Tests.Unit/Pizzeria.Configuration.Tests.Unit.csproj" />
