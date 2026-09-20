@@ -54,10 +54,10 @@
     <File Path="sample-tests/Directory.Build.props" />
     <File Path="sample-tests/README.md" />
   </Folder>
-  <Project Path="sample-tests/Pizzeria.Store.Components.Tests.Unit/Pizzeria.Store.Components.Tests.Unit.csproj" />
+  <Project Path="sample-tests/Pizzeria.Ordering.Components.Tests.Unit/Pizzeria.Ordering.Components.Tests.Unit.csproj" />
   <Project Path="sample-tests/Pizzeria.Store.Domain.Tests/Pizzeria.Store.Domain.Tests.csproj" />
-  <Project Path="sample-tests/Pizzeria.Store.StateManagement.Tests.Unit/Pizzeria.Store.StateManagement.Tests.Unit.csproj" />
-  <Project Path="sample-tests/Pizzeria.Store.Web.Tests.Unit/Pizzeria.Store.Web.Tests.Unit.csproj" />
+  <Project Path="sample-tests/Pizzeria.Ordering.StateManagement.Tests.Unit/Pizzeria.Ordering.StateManagement.Tests.Unit.csproj" />
+  <Project Path="sample-tests/Pizzeria.Ordering.Web.Tests.Unit/Pizzeria.Ordering.Web.Tests.Unit.csproj" />
   <Project Path="sample-tests/Pizzeria.Configuration.Tests.Unit/Pizzeria.Configuration.Tests.Unit.csproj" />
   <Project Path="sample-tests/Pizzeria.Tests.Integration/Pizzeria.Tests.Integration.csproj" />
   <Project Path="sample/Pizzeria.AppHost/Pizzeria.AppHost.csproj" />
@@ -69,12 +69,12 @@
   <Project Path="sample/Pizzeria.ServiceDefaults/Pizzeria.ServiceDefaults.csproj" />
   <Project Path="sample/Pizzeria.Store.Api/Pizzeria.Store.Api.csproj" />
   <Project Path="sample/Pizzeria.Store.Application/Pizzeria.Store.Application.csproj" />
-  <Project Path="sample/Pizzeria.Store.Components/Pizzeria.Store.Components.csproj" />
+  <Project Path="sample/Pizzeria.Ordering.Components/Pizzeria.Ordering.Components.csproj" />
   <Project Path="sample/Pizzeria.Store.Contracts/Pizzeria.Store.Contracts.csproj" />
   <Project Path="sample/Pizzeria.Store.Data/Pizzeria.Store.Data.csproj" />
   <Project Path="sample/Pizzeria.Store.Domain/Pizzeria.Store.Domain.csproj" />
-  <Project Path="sample/Pizzeria.Store.StateManagement/Pizzeria.Store.StateManagement.csproj" />
-  <Project Path="sample/Pizzeria.Store.Web/Pizzeria.Store.Web.csproj" />
+  <Project Path="sample/Pizzeria.Ordering.StateManagement/Pizzeria.Ordering.StateManagement.csproj" />
+  <Project Path="sample/Pizzeria.Ordering.Web/Pizzeria.Ordering.Web.csproj" />
   <Project Path="src/Lewee.Application/Lewee.Application.csproj" />
   <Project Path="src/Lewee.Auth.Api/Lewee.Auth.Api.csproj" />
   <Project Path="src/Lewee.Auth.Application/Lewee.Auth.Application.csproj" />
