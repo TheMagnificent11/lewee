@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Lewee.Common;
+using Pizzeria.Store.Contracts.Orders;
 using Xunit;
 
 namespace Pizzeria.Store.Domain.Tests;

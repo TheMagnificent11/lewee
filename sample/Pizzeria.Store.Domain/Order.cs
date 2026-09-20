@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Lewee.Common;
 using Lewee.Domain;
+using Pizzeria.Store.Contracts.Orders;
 
 namespace Pizzeria.Store.Domain;
 
