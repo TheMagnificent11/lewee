@@ -29,4 +29,9 @@ public class OrderPizza : Relationship
     {
         this.Quantity++;
     }
+
+    internal void DecreaseQuantity()
+    {
+        this.Quantity--;
+    }
 }
