@@ -29,14 +29,14 @@
 
 ## 5. Application Layer - Order Status Tracking (`ordering/order-status-tracking`)
 
-- [ ] 5.1 Add a persisted `OrderStatus` enum column to `Order` (Received/Making/ReadyForPickup/ReadyForDelivery/Delivering/Completed), set only via domain methods (e.g. `StartMaking()`, updates to `PizzasPrepared()`/`PickedUp()`/`PizzasDelivered()`) that validate legal transitions and raise a domain event per transition, exposed on `OrderDto`, and verify unit tests cover every valid transition and rejection of invalid transitions described in `specs/ordering/order-status-tracking/spec.md`
+- [ ] 5.1 Add a persisted `OrderStatus` enum column to `Order` (Received/Making/ReadyForPickup/ReadyForDelivery/Delivering/Completed), set only via domain methods (e.g. `StartMaking()`, updates to `Prepared()`/`PickedUp()`/`Delivered()`) that validate legal transitions and raise a domain event per transition, exposed on `OrderDto`, and verify unit tests cover every valid transition and rejection of invalid transitions described in `specs/ordering/order-status-tracking/spec.md`
 - [ ] 5.2 Add and run the EF Core migration for the new `OrderStatus` column, and verify the migration applies cleanly to a newly provisioned database
 - [ ] 5.3 Enforce that `GetOrderQuery`/status retrieval fails with an unauthorized result when the caller does not own the order, and verify a unit test covers this scenario
 
 ## 6. Application Layer - Store Order Fulfillment (`pizza-store/order-fulfillment`)
 
 - [ ] 6.1 Add `GetOrdersQuery` supporting a current/past filter (defaulting to current) implementing `ITenantRoleRequest` with Store Staff and Store Manager as satisfying roles, and verify unit tests cover both filter states and unauthorized access per `specs/pizza-store/order-fulfillment/spec.md`
-- [ ] 6.2 Add `MarkOrderPizzasPickedUpCommand` and `MarkOrderPizzasDeliveredCommand` (wrapping `Order.PickedUp()`/`Order.PizzasDelivered()`) implementing `ITenantRoleRequest`, and verify unit tests cover success, not-yet-prepared failure, and unauthorized-role scenarios
+- [ ] 6.2 Add `MarkOrderPizzasPickedUpCommand` and `MarkOrderPizzasDeliveredCommand` (wrapping `Order.PickedUp()`/`Order.Delivered()`) implementing `ITenantRoleRequest`, and verify unit tests cover success, not-yet-prepared failure, and unauthorized-role scenarios
 
 ## 7. Application Layer - Menu Management (`pizza-store/menu-management`)
 
