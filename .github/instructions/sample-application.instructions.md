@@ -13,7 +13,7 @@ The sample pizzeria application demonstrates Lewee framework usage with a multi-
 - Pizzeria BFF (`Pizzeria.Bff` - YARP reverse proxy used by the web frontend)
 - Pizzeria Auth API (`Pizzeria.Auth.Api` - reusable auth endpoints)
 - Pizzeria Store API (`Pizzeria.Store.Api` - FastEndpoints Web API)
-- Pizzeria Store Web (`Pizzeria.Store.Web` - Blazor Web App with Interactive Server)
+- Pizzeria Store Web (`Pizzeria.Ordering.Web` - Blazor Web App with Interactive Server)
 - PostgreSQL database (managed by Aspire)
 - Keycloak authentication server (managed by Aspire)
 - Authentication services (`Pizzeria.Auth`)

@@ -7,7 +7,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\sample\Pizzeria.Store.StateManagement\Pizzeria.Store.StateManagement.csproj" />
+    <ProjectReference Include="..\..\sample\Pizzeria.Ordering.StateManagement\Pizzeria.Ordering.StateManagement.csproj" />
     <ProjectReference Include="..\..\src\Lewee.Infrastructure.Fluxor\Lewee.Infrastructure.Fluxor.csproj" />
   </ItemGroup>
 

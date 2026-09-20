@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Lewee.Playwright;
 using Microsoft.Playwright;
-using Pizzeria.Store.Components;
+using Pizzeria.Ordering.Components;
 using Pizzeria.Store.Domain;
 using Pizzeria.Tests.Integration.Infrastructure;
 using Xunit;
@@ -48,7 +48,7 @@ public sealed class PizzaOrderingTests : PizzeriaTests
 
             // Verify the page shows order-related content
             await playwrightPage.Page.WaitForSelectorAsync(
-                Pizzeria.Store.Components.Order.Selectors.PizzaMenuHeading,
+                Pizzeria.Ordering.Components.Order.Selectors.PizzaMenuHeading,
                 new PageWaitForSelectorOptions { Timeout = 30000 });
             var orderPageContent = await playwrightPage.Page.ContentAsync();
             orderPageContent.Should().Contain("Pizza Menu", "the order page should show the pizza menu");

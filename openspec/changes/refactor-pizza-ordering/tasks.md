@@ -2,12 +2,12 @@
 
 ## 1. Project Renames
 
-- [ ] 1.1 Rename directory/project/namespace `sample/Pizzeria.Store.Web` to `sample/Pizzeria.Ordering.Web` (including `.csproj` file name and root namespace) and verify `dotnet build --configuration Release --nologo` succeeds
-- [ ] 1.2 Rename directory/project/namespace `sample/Pizzeria.Store.StateManagement` to `sample/Pizzeria.Ordering.StateManagement` and verify `dotnet build --configuration Release --nologo` succeeds
-- [ ] 1.3 Rename directory/project/namespace `sample/Pizzeria.Store.Components` to `sample/Pizzeria.Ordering.Components` and verify `dotnet build --configuration Release --nologo` succeeds
-- [ ] 1.4 Rename the corresponding test projects `sample-tests/Pizzeria.Store.Web.Tests.Unit`, `sample-tests/Pizzeria.Store.StateManagement.Tests.Unit`, and `sample-tests/Pizzeria.Store.Components.Tests.Unit` to their `Pizzeria.Ordering.*.Tests.Unit` equivalents and verify `dotnet test --filter "FullyQualifiedName!~Integration" --configuration Release --nologo` passes
-- [ ] 1.5 Update `lewee.slnx`, `sample/Pizzeria.AppHost/Program.cs`, `sample/Pizzeria.Bff`, and any other `ProjectReference`/solution references to the renamed projects and verify `dotnet build --configuration Release --nologo` succeeds with no dangling references
-- [ ] 1.6 Run `dotnet format` and verify no outstanding formatting diffs remain after the renames
+- [x] 1.1 Rename directory/project/namespace `sample/Pizzeria.Store.Web` to `sample/Pizzeria.Ordering.Web` (including `.csproj` file name and root namespace) and verify `dotnet build --configuration Release --nologo` succeeds
+- [x] 1.2 Rename directory/project/namespace `sample/Pizzeria.Store.StateManagement` to `sample/Pizzeria.Ordering.StateManagement` and verify `dotnet build --configuration Release --nologo` succeeds
+- [x] 1.3 Rename directory/project/namespace `sample/Pizzeria.Store.Components` to `sample/Pizzeria.Ordering.Components` and verify `dotnet build --configuration Release --nologo` succeeds
+- [x] 1.4 Rename the corresponding test projects `sample-tests/Pizzeria.Store.Web.Tests.Unit`, `sample-tests/Pizzeria.Store.StateManagement.Tests.Unit`, and `sample-tests/Pizzeria.Store.Components.Tests.Unit` to their `Pizzeria.Ordering.*.Tests.Unit` equivalents and verify `dotnet test --filter "FullyQualifiedName!~Integration" --configuration Release --nologo` passes
+- [x] 1.5 Update `lewee.slnx`, `sample/Pizzeria.AppHost/Program.cs`, `sample/Pizzeria.Bff`, and any other `ProjectReference`/solution references to the renamed projects and verify `dotnet build --configuration Release --nologo` succeeds with no dangling references
+- [x] 1.6 Run `dotnet format` and verify no outstanding formatting diffs remain after the renames
 
 ## 2. Auth Seeding for Pizza Store Roles
 

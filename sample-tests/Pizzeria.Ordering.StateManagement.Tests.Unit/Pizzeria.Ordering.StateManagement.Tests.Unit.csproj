@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="bunit.web" />
+    <PackageReference Include="Moq" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\sample\Pizzeria.Ordering.StateManagement\Pizzeria.Ordering.StateManagement.csproj" />
+  </ItemGroup>
+
+</Project>
