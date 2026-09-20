@@ -17,9 +17,9 @@
 
 ## 3. Domain Changes (`Pizzeria.Store.Domain`)
 
-- [ ] 3.1 Add `Order.RemovePizza(Pizza pizza)` (decrementing `OrderPizza.Quantity`, removing the `OrderPizza` at zero) and verify new domain unit tests cover decrement, removal at zero, and removing a pizza not on the order
-- [ ] 3.2 Add ownership/state guards to `AddPizza`/`RemovePizza` so they fail once an order `IsSubmitted`, and verify domain unit tests cover both cases
-- [ ] 3.3 Add `Menu` add/edit/remove operations for `Pizza` entities (name/price validation) if not already present, and verify domain unit tests cover valid and invalid inputs
+- [x] 3.1 Add `Order.RemovePizza(Pizza pizza)` (decrementing `OrderPizza.Quantity`, removing the `OrderPizza` at zero) and verify new domain unit tests cover decrement, removal at zero, and removing a pizza not on the order
+- [x] 3.2 Add ownership/state guards to `AddPizza`/`RemovePizza` so they fail once an order `IsSubmitted`, and verify domain unit tests cover both cases
+- [x] 3.3 Add `Menu` add/edit/remove operations for `Pizza` entities (name/price validation) if not already present, and verify domain unit tests cover valid and invalid inputs
 
 ## 4. Application Layer - Checkout (`ordering/checkout`)
 

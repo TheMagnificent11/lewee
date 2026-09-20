@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using FluentValidation;
 using Lewee.Application.Mediation.Requests;
 using Lewee.Common;
@@ -35,15 +35,18 @@ public record AddPizzaToOrderCommand(Guid OrderId, Guid PizzaId) : ICommand
     {
         private readonly IRepository<Order> orderRepository;
         private readonly IRepository<Pizza> pizzaRepository;
+        private readonly IAuthenticatedUserService authenticatedUserService;
         private readonly ILogger<Handler> logger;
 
         public Handler(
             IRepository<Order> orderRepository,
             IRepository<Pizza> pizzaRepository,
+            IAuthenticatedUserService authenticatedUserService,
             ILogger<Handler> logger)
         {
             this.orderRepository = orderRepository;
             this.pizzaRepository = pizzaRepository;
+            this.authenticatedUserService = authenticatedUserService;
             this.logger = logger;
         }
 
@@ -63,7 +66,16 @@ public record AddPizzaToOrderCommand(Guid OrderId, Guid PizzaId) : ICommand
                 return CommandResult.Fail(ResultStatus.NotFound, $"Order {request.OrderId} not found");
             }
 
-            order.AddPizza(pizza);
+            if (!OrderOwnership.IsOwnedByCaller(order, this.authenticatedUserService))
+            {
+                return CommandResult.Fail(ResultStatus.Unauthorized, "Order does not belong to the caller.");
+            }
+
+            var result = order.AddPizza(pizza);
+            if (!result.IsSuccess)
+            {
+                return (CommandResult)result;
+            }
 
             await this.orderRepository.SaveChangesAsync(cancellationToken);
 
