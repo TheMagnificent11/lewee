@@ -105,6 +105,52 @@ public sealed class OrderFulfillmentTests
             [PizzaStore.Roles.StoreStaffCode, PizzaStore.Roles.StoreManagerCode]);
         new MarkOrderPizzasDeliveredCommand(Guid.NewGuid()).Roles.Should().BeEquivalentTo(
             [PizzaStore.Roles.StoreStaffCode, PizzaStore.Roles.StoreManagerCode]);
+        new StartMakingOrderCommand(Guid.NewGuid()).Roles.Should().BeEquivalentTo(
+            [PizzaStore.Roles.StoreStaffCode, PizzaStore.Roles.StoreManagerCode]);
+        new MarkOrderPreparedCommand(Guid.NewGuid()).Roles.Should().BeEquivalentTo(
+            [PizzaStore.Roles.StoreStaffCode, PizzaStore.Roles.StoreManagerCode]);
+    }
+
+    [Fact]
+    public async Task Should_TransitionThroughMakingAndPrepared_When_StaffProcessesPickupOrderAsync()
+    {
+        var order = TestHelpers.CreateOrderWithPizza(out _);
+        order.SubmitPickupOrder(Guid.NewGuid());
+        order.DomainEvents.GetAndClear();
+
+        var startMaking = new StartMakingOrderCommand.Handler(
+            OrderRepository(order).Object,
+            TestHelpers.CorrelationAccessor().Object,
+            TestHelpers.Logger<StartMakingOrderCommand.Handler>());
+        var making = await startMaking.Handle(new StartMakingOrderCommand(order.Id), CancellationToken.None);
+
+        making.IsSuccess.Should().BeTrue();
+        order.Status.Should().Be(OrderStatus.Making);
+
+        var prepare = new MarkOrderPreparedCommand.Handler(
+            OrderRepository(order).Object,
+            TestHelpers.CorrelationAccessor().Object,
+            TestHelpers.Logger<MarkOrderPreparedCommand.Handler>());
+        var prepared = await prepare.Handle(new MarkOrderPreparedCommand(order.Id), CancellationToken.None);
+
+        prepared.IsSuccess.Should().BeTrue();
+        order.Status.Should().Be(OrderStatus.ReadyForPickup);
+    }
+
+    [Fact]
+    public async Task Should_FailStartMaking_When_OrderNotReceivedAsync()
+    {
+        var order = TestHelpers.CreateOrderWithPizza(out _);
+
+        var handler = new StartMakingOrderCommand.Handler(
+            OrderRepository(order).Object,
+            TestHelpers.CorrelationAccessor().Object,
+            TestHelpers.Logger<StartMakingOrderCommand.Handler>());
+
+        var result = await handler.Handle(new StartMakingOrderCommand(order.Id), CancellationToken.None);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Status.Should().Be(ResultStatus.BadRequest);
     }
 
     private static Order CreatePreparedPickupOrder()
