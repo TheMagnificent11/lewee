@@ -21,6 +21,12 @@ internal sealed class OrderConfiguration : AggregateRootConfiguration<Order>
             .HasMaxLength(Order.FieldLengths.UserId);
 
         builder
+            .Property(x => x.Status)
+            .IsRequired()
+            .HasConversion<string>()
+            .HasMaxLength(30);
+
+        builder
             .Property(x => x.DeliveryAddress)
             .HasMaxLength(Order.FieldLengths.DeliveryAddress);
 

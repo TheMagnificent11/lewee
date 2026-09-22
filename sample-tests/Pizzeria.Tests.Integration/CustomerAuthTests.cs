@@ -1,7 +1,7 @@
 using FluentAssertions;
 using Lewee.Playwright;
 using Microsoft.Playwright;
-using Pizzeria.Store.Web;
+using Pizzeria.Ordering.Web;
 using Pizzeria.Tests.Integration.Infrastructure;
 using Xunit;
 

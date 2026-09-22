@@ -7,7 +7,7 @@ This directory contains the sample Pizzeria application that demonstrates Lewee 
 For development guidance in this directory, see the following instruction files:
 
 - [Sample Application Instructions](../.github/instructions/sample-application.instructions.md) - Running and developing the sample
-- [Blazor Instructions](../.github/instructions/blazor.instructions.md) - Blazor component development (for `Pizzeria.Store.Web`)
+- [Blazor Instructions](../.github/instructions/blazor.instructions.md) - Blazor component development (for `Pizzeria.Ordering.Web`)
 - [Code Quality Instructions](../.github/instructions/code-quality.instructions.md) - Coding standards
 
 ## Projects
@@ -24,10 +24,10 @@ For development guidance in this directory, see the following instruction files:
 | `Pizzeria.Store.Application` | CQRS commands/queries |
 | `Pizzeria.Store.Data` | EF Core DbContext and migrations |
 | `Pizzeria.Store.Contracts` | API DTOs and contracts |
-| `Pizzeria.Store.StateManagement` | Fluxor state management features |
-| `Pizzeria.Store.Components` | Shared Blazor components |
+| `Pizzeria.Ordering.StateManagement` | Fluxor state management features |
+| `Pizzeria.Ordering.Components` | Shared Blazor components |
 | `Pizzeria.Store.Api` | Web API with FastEndpoints for CQRS commands/queries |
-| `Pizzeria.Store.Web` | Blazor Web App with Interactive Server using Refit to call the API |
+| `Pizzeria.Ordering.Web` | Blazor Web App with Interactive Server using Refit to call the API |
 
 ## Architecture
 
@@ -42,7 +42,7 @@ The sample application is split into two main runtime projects:
   - Domain event handling
   - Server-Sent Events (SSE) for real-time notifications
   
-### Pizzeria.Store.Web
+### Pizzeria.Ordering.Web
 
 - **Purpose**: Blazor Web App (interactive rendering) that calls the API
 - **Authentication**: Keycloak OpenID Connect

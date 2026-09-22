@@ -26,5 +26,8 @@ internal sealed class PizzaConfiguration : AggregateRootConfiguration<Pizza>
         builder.Property(x => x.Price)
             .IsRequired()
             .HasPrecision(5, 2);
+
+        builder.Property(x => x.IsAvailable)
+            .IsRequired();
     }
 }

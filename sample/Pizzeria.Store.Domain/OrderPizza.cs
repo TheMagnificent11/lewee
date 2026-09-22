@@ -21,6 +21,7 @@ public class OrderPizza : Relationship
             Id = Guid.NewGuid(),
             OrderId = order.Id,
             PizzaId = pizza.Id,
+            Pizza = pizza,
             Quantity = 1,
         };
     }
@@ -28,5 +29,10 @@ public class OrderPizza : Relationship
     internal void IncreaseQuantity()
     {
         this.Quantity++;
+    }
+
+    internal void DecreaseQuantity()
+    {
+        this.Quantity--;
     }
 }

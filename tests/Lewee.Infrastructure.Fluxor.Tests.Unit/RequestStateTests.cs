@@ -1,6 +1,6 @@
 using FluentAssertions;
+using Pizzeria.Ordering.StateManagement.Orders;
 using Pizzeria.Store.Contracts.Orders;
-using Pizzeria.Store.StateManagement.Orders;
 using Xunit;
 
 namespace Lewee.Infrastructure.Fluxor.Tests.Unit;

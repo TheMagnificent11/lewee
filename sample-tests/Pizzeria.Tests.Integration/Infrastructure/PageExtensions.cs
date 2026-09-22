@@ -1,6 +1,6 @@
 using Lewee.Playwright;
 using Microsoft.Playwright;
-using Pizzeria.Store.Web;
+using Pizzeria.Ordering.Web;
 
 namespace Pizzeria.Tests.Integration.Infrastructure;
 
