@@ -12,10 +12,10 @@ namespace Pizzeria.Store.Application.Tests.Unit;
 public sealed class SubmitOrderCommandTests
 {
     [Fact]
-    public async Task Should_SubmitPickupOrder_When_OrderOwnedAndNonEmptyAsync()
+    public async Task Should_SubmitPickupOrder_When_NonEmptyAsync()
     {
         var order = TestHelpers.CreateOrderWithPizza(out _);
-        var handler = CreatePickupHandler(order, TestHelpers.OwnerUserId);
+        var handler = CreatePickupHandler(order);
 
         var result = await handler.Handle(new SubmitPickupOrderCommand(order.Id), CancellationToken.None);
 
@@ -26,24 +26,11 @@ public sealed class SubmitOrderCommandTests
     }
 
     [Fact]
-    public async Task Should_FailPickup_When_OrderOwnedByDifferentCallerAsync()
-    {
-        var order = TestHelpers.CreateOrderWithPizza(out _);
-        var handler = CreatePickupHandler(order, TestHelpers.OtherUserId);
-
-        var result = await handler.Handle(new SubmitPickupOrderCommand(order.Id), CancellationToken.None);
-
-        result.IsSuccess.Should().BeFalse();
-        result.Status.Should().Be(ResultStatus.Unauthorized);
-        order.IsSubmitted.Should().BeFalse();
-    }
-
-    [Fact]
     public async Task Should_FailPickup_When_OrderHasNoPizzasAsync()
     {
         var order = Order.StartNewOrder(TestHelpers.OwnerUserId, Guid.NewGuid());
         order.DomainEvents.GetAndClear();
-        var handler = CreatePickupHandler(order, TestHelpers.OwnerUserId);
+        var handler = CreatePickupHandler(order);
 
         var result = await handler.Handle(new SubmitPickupOrderCommand(order.Id), CancellationToken.None);
 
@@ -55,7 +42,7 @@ public sealed class SubmitOrderCommandTests
     public async Task Should_SubmitDeliveryOrder_When_AddressSuppliedAsync()
     {
         var order = TestHelpers.CreateOrderWithPizza(out _);
-        var handler = CreateDeliveryHandler(order, TestHelpers.OwnerUserId);
+        var handler = CreateDeliveryHandler(order);
 
         var result = await handler.Handle(
             new SubmitDeliveryOrderCommand(order.Id, "1 Pizza Street"),
@@ -68,27 +55,13 @@ public sealed class SubmitOrderCommandTests
     }
 
     [Fact]
-    public async Task Should_FailDelivery_When_OrderOwnedByDifferentCallerAsync()
-    {
-        var order = TestHelpers.CreateOrderWithPizza(out _);
-        var handler = CreateDeliveryHandler(order, TestHelpers.OtherUserId);
-
-        var result = await handler.Handle(
-            new SubmitDeliveryOrderCommand(order.Id, "1 Pizza Street"),
-            CancellationToken.None);
-
-        result.IsSuccess.Should().BeFalse();
-        result.Status.Should().Be(ResultStatus.Unauthorized);
-    }
-
-    [Fact]
     public async Task Should_FailSubmit_When_OrderAlreadySubmittedAsync()
     {
         var order = TestHelpers.CreateOrderWithPizza(out _);
         order.SubmitPickupOrder(Guid.NewGuid());
         order.DomainEvents.GetAndClear();
 
-        var handler = CreatePickupHandler(order, TestHelpers.OwnerUserId);
+        var handler = CreatePickupHandler(order);
 
         var result = await handler.Handle(new SubmitPickupOrderCommand(order.Id), CancellationToken.None);
 
@@ -96,20 +69,18 @@ public sealed class SubmitOrderCommandTests
         result.Status.Should().Be(ResultStatus.BadRequest);
     }
 
-    private static SubmitPickupOrderCommand.Handler CreatePickupHandler(Order order, string callerUserId)
+    private static SubmitPickupOrderCommand.Handler CreatePickupHandler(Order order)
     {
         return new SubmitPickupOrderCommand.Handler(
             OrderRepository(order).Object,
-            TestHelpers.AuthenticatedUser(callerUserId).Object,
             TestHelpers.CorrelationAccessor().Object,
             TestHelpers.Logger<SubmitPickupOrderCommand.Handler>());
     }
 
-    private static SubmitDeliveryOrderCommand.Handler CreateDeliveryHandler(Order order, string callerUserId)
+    private static SubmitDeliveryOrderCommand.Handler CreateDeliveryHandler(Order order)
     {
         return new SubmitDeliveryOrderCommand.Handler(
             OrderRepository(order).Object,
-            TestHelpers.AuthenticatedUser(callerUserId).Object,
             TestHelpers.CorrelationAccessor().Object,
             TestHelpers.Logger<SubmitDeliveryOrderCommand.Handler>());
     }

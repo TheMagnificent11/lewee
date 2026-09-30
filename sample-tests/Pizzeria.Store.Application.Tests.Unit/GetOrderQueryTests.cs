@@ -12,12 +12,12 @@ namespace Pizzeria.Store.Application.Tests.Unit;
 public sealed class GetOrderQueryTests
 {
     [Fact]
-    public async Task Should_ReturnOrderWithPizzasAndTotal_When_OwnedByCallerAsync()
+    public async Task Should_ReturnOrderWithPizzasAndTotalAsync()
     {
         var order = TestHelpers.CreateOrderWithPizza(out var pizza);
         order.AddPizza(pizza);
 
-        var handler = CreateHandler(order, TestHelpers.OwnerUserId);
+        var handler = CreateHandler(order);
 
         var result = await handler.Handle(new GetOrderQuery(order.Id), CancellationToken.None);
 
@@ -34,26 +34,13 @@ public sealed class GetOrderQueryTests
         var order = Order.StartNewOrder(TestHelpers.OwnerUserId, Guid.NewGuid());
         order.DomainEvents.GetAndClear();
 
-        var handler = CreateHandler(order, TestHelpers.OwnerUserId);
+        var handler = CreateHandler(order);
 
         var result = await handler.Handle(new GetOrderQuery(order.Id), CancellationToken.None);
 
         result.IsSuccess.Should().BeTrue();
         result.Data!.Pizzas.Should().BeEmpty();
         result.Data.TotalCost.Should().Be(0);
-    }
-
-    [Fact]
-    public async Task Should_FailUnauthorized_When_OrderOwnedByDifferentCallerAsync()
-    {
-        var order = TestHelpers.CreateOrderWithPizza(out _);
-
-        var handler = CreateHandler(order, TestHelpers.OtherUserId);
-
-        var result = await handler.Handle(new GetOrderQuery(order.Id), CancellationToken.None);
-
-        result.IsSuccess.Should().BeFalse();
-        result.Status.Should().Be(ResultStatus.Unauthorized);
     }
 
     [Fact]
@@ -64,9 +51,7 @@ public sealed class GetOrderQueryTests
             .Setup(x => x.QueryOneAsync(It.IsAny<QuerySpecification<Order>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((Order?)null);
 
-        var handler = new GetOrderQuery.Handler(
-            orderRepository.Object,
-            TestHelpers.AuthenticatedUser(TestHelpers.OwnerUserId).Object);
+        var handler = new GetOrderQuery.Handler(orderRepository.Object);
 
         var result = await handler.Handle(new GetOrderQuery(Guid.NewGuid()), CancellationToken.None);
 
@@ -74,15 +59,13 @@ public sealed class GetOrderQueryTests
         result.Status.Should().Be(ResultStatus.NotFound);
     }
 
-    private static GetOrderQuery.Handler CreateHandler(Order order, string callerUserId)
+    private static GetOrderQuery.Handler CreateHandler(Order order)
     {
         var orderRepository = TestHelpers.Repository<Order>();
         orderRepository
             .Setup(x => x.QueryOneAsync(It.IsAny<QuerySpecification<Order>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(order);
 
-        return new GetOrderQuery.Handler(
-            orderRepository.Object,
-            TestHelpers.AuthenticatedUser(callerUserId).Object);
+        return new GetOrderQuery.Handler(orderRepository.Object);
     }
 }

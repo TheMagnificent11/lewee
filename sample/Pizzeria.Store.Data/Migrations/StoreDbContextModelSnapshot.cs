@@ -131,8 +131,8 @@ namespace Pizzeria.Store.Data.Migrations
                         .HasColumnType("character varying(255)");
 
                     b.Property<string>("DeliveryAddress")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");

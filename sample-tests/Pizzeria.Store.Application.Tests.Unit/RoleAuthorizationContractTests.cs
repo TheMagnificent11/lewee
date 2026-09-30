@@ -15,10 +15,6 @@ public sealed class RoleAuthorizationContractTests
     public void Should_AllowStoreManager_ForFulfillmentAndMenu()
     {
         IsAuthorized(StoreManagerRoles, new GetOrdersQuery().Roles).Should().BeTrue();
-        IsAuthorized(StoreManagerRoles, new MarkOrderPizzasPickedUpCommand(Guid.NewGuid()).Roles)
-            .Should().BeTrue();
-        IsAuthorized(StoreManagerRoles, new MarkOrderPizzasDeliveredCommand(Guid.NewGuid()).Roles)
-            .Should().BeTrue();
         IsAuthorized(StoreManagerRoles, new AddPizzaCommand("A", null, 1m).Roles).Should().BeTrue();
     }
 
@@ -26,10 +22,6 @@ public sealed class RoleAuthorizationContractTests
     public void Should_AllowStoreStaff_ForFulfillment()
     {
         IsAuthorized(StoreStaffRoles, new GetOrdersQuery().Roles).Should().BeTrue();
-        IsAuthorized(StoreStaffRoles, new MarkOrderPizzasPickedUpCommand(Guid.NewGuid()).Roles)
-            .Should().BeTrue();
-        IsAuthorized(StoreStaffRoles, new MarkOrderPizzasDeliveredCommand(Guid.NewGuid()).Roles)
-            .Should().BeTrue();
     }
 
     [Fact]

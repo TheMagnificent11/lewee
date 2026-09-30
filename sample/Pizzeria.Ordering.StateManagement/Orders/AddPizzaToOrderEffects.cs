@@ -28,7 +28,9 @@ public sealed class AddPizzaToOrderEffects :
         [NotNull] AddPizzaToOrderAction action,
         [NotNull] IDispatcher dispatcher)
     {
-        await this.bffApiClient.AddPizzaToOrderAsync(action.OrderId, action.PizzaId);
+        await this.bffApiClient.UpdateOrderAsync(
+            action.OrderId,
+            new UpdateOrderRequest { AddPizzaId = action.PizzaId });
 
         return CommandResult.Success();
     }
