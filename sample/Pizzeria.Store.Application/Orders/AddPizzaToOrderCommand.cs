@@ -9,7 +9,7 @@ using Pizzeria.Store.Domain;
 
 namespace Pizzeria.Store.Application.Orders;
 
-public record AddPizzaToOrderCommand(Guid OrderId, Guid PizzaId) : ICommand
+public record AddPizzaToOrderCommand(Guid OrderId, Guid PizzaId) : ICommand, IOrderOwnerRequest
 {
     [SuppressMessage(
         "Performance",
@@ -35,18 +35,15 @@ public record AddPizzaToOrderCommand(Guid OrderId, Guid PizzaId) : ICommand
     {
         private readonly IRepository<Order> orderRepository;
         private readonly IRepository<Pizza> pizzaRepository;
-        private readonly IAuthenticatedUserService authenticatedUserService;
         private readonly ILogger<Handler> logger;
 
         public Handler(
             IRepository<Order> orderRepository,
             IRepository<Pizza> pizzaRepository,
-            IAuthenticatedUserService authenticatedUserService,
             ILogger<Handler> logger)
         {
             this.orderRepository = orderRepository;
             this.pizzaRepository = pizzaRepository;
-            this.authenticatedUserService = authenticatedUserService;
             this.logger = logger;
         }
 
@@ -64,11 +61,6 @@ public record AddPizzaToOrderCommand(Guid OrderId, Guid PizzaId) : ICommand
             if (order is null)
             {
                 return CommandResult.Fail(ResultStatus.NotFound, $"Order {request.OrderId} not found");
-            }
-
-            if (!OrderOwnership.IsOwnedByCaller(order, this.authenticatedUserService))
-            {
-                return CommandResult.Fail(ResultStatus.Unauthorized, "Order does not belong to the caller.");
             }
 
             var result = order.AddPizza(pizza);

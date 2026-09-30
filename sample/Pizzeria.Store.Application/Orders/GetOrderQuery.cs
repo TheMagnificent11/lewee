@@ -8,7 +8,7 @@ using Pizzeria.Store.Domain;
 
 namespace Pizzeria.Store.Application.Orders;
 
-public sealed record GetOrderQuery(Guid OrderId) : IQuery<OrderDto>
+public sealed record GetOrderQuery(Guid OrderId) : IQuery<OrderDto>, IOrderOwnerRequest
 {
     [SuppressMessage(
         "Performance",
@@ -17,14 +17,10 @@ public sealed record GetOrderQuery(Guid OrderId) : IQuery<OrderDto>
     internal sealed class Handler : IRequestHandler<GetOrderQuery, QueryResult<OrderDto>>
     {
         private readonly IRepository<Order> orderRepository;
-        private readonly IAuthenticatedUserService authenticatedUserService;
 
-        public Handler(
-            IRepository<Order> orderRepository,
-            IAuthenticatedUserService authenticatedUserService)
+        public Handler(IRepository<Order> orderRepository)
         {
             this.orderRepository = orderRepository;
-            this.authenticatedUserService = authenticatedUserService;
         }
 
         public async Task<QueryResult<OrderDto>> Handle(GetOrderQuery request, CancellationToken cancellationToken)
@@ -35,11 +31,6 @@ public sealed record GetOrderQuery(Guid OrderId) : IQuery<OrderDto>
             if (order is null)
             {
                 return QueryResult<OrderDto>.Fail(ResultStatus.NotFound, $"Order {request.OrderId} not found");
-            }
-
-            if (!OrderOwnership.IsOwnedByCaller(order, this.authenticatedUserService))
-            {
-                return QueryResult<OrderDto>.Fail(ResultStatus.Unauthorized, "Order does not belong to the caller.");
             }
 
             return QueryResult<OrderDto>.Success(OrderDtoFactory.Create(order));

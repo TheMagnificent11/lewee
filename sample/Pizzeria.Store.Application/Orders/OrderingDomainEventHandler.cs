@@ -11,7 +11,7 @@ public class OrderingDomainEventHandler :
     INotificationHandler<OrderStartedEvent>,
     INotificationHandler<PickupOrderSubmittedEvent>,
     INotificationHandler<DeliveryOrderSubmittedEvent>,
-    INotificationHandler<OrderMakingStartedEvent>,
+    INotificationHandler<StartedMakingOrderEvent>,
     INotificationHandler<OrderPreparedEvent>,
     INotificationHandler<OrderOutForDeliveryEvent>,
     INotificationHandler<OrderCompletedEvent>
@@ -66,11 +66,11 @@ public class OrderingDomainEventHandler :
             cancellationToken);
     }
 
-    public Task Handle(OrderMakingStartedEvent notification, CancellationToken cancellationToken)
+    public Task Handle(StartedMakingOrderEvent notification, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(notification);
         return this.ProjectAndPublishAsync(
-            nameof(OrderMakingStartedEvent),
+            nameof(StartedMakingOrderEvent),
             notification.OrderId,
             notification.CorrelationId,
             notification.UserId,

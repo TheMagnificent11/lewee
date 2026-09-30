@@ -10,7 +10,7 @@ namespace Pizzeria.Store.Api.Orders;
 
 internal sealed class GetOrderEndpoint : QueryEndpoint<OrderDto>
 {
-    protected override string Route => CommonEndpoints.StoreApi.GetOrder;
+    protected override string Route => CommonEndpoints.StoreApi.Order;
 
     protected override string Name => "GetOrder";
 

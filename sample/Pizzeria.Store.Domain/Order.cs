@@ -167,7 +167,7 @@ public class Order : AggregateRoot
 
         this.Status = OrderStatus.Making;
 
-        this.DomainEvents.Raise(new OrderMakingStartedEvent(
+        this.DomainEvents.Raise(new StartedMakingOrderEvent(
             this.Id,
             this.UserId,
             DateTime.UtcNow,
@@ -291,6 +291,6 @@ public class Order : AggregateRoot
     public static class FieldLengths
     {
         public const int UserId = 100;
-        public const int DeliveryAddress = 200;
+        public const int DeliveryAddress = 250;
     }
 }

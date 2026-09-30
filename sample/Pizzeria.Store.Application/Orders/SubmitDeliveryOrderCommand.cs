@@ -11,7 +11,7 @@ using Pizzeria.Store.Domain;
 
 namespace Pizzeria.Store.Application.Orders;
 
-public record SubmitDeliveryOrderCommand(Guid OrderId, string DeliveryAddress) : ICommand
+public record SubmitDeliveryOrderCommand(Guid OrderId, string DeliveryAddress) : ICommand, IOrderOwnerRequest
 {
     [SuppressMessage(
         "Performance",
@@ -37,18 +37,15 @@ public record SubmitDeliveryOrderCommand(Guid OrderId, string DeliveryAddress) :
     internal sealed class Handler : IRequestHandler<SubmitDeliveryOrderCommand, CommandResult>
     {
         private readonly IRepository<Order> orderRepository;
-        private readonly IAuthenticatedUserService authenticatedUserService;
         private readonly ICorrelationContextAccessor correlationContextAccessor;
         private readonly ILogger<Handler> logger;
 
         public Handler(
             IRepository<Order> orderRepository,
-            IAuthenticatedUserService authenticatedUserService,
             ICorrelationContextAccessor correlationContextAccessor,
             ILogger<Handler> logger)
         {
             this.orderRepository = orderRepository;
-            this.authenticatedUserService = authenticatedUserService;
             this.correlationContextAccessor = correlationContextAccessor;
             this.logger = logger;
         }
@@ -63,11 +60,6 @@ public record SubmitDeliveryOrderCommand(Guid OrderId, string DeliveryAddress) :
             if (order is null)
             {
                 return CommandResult.Fail(ResultStatus.NotFound, $"Order {request.OrderId} not found");
-            }
-
-            if (!OrderOwnership.IsOwnedByCaller(order, this.authenticatedUserService))
-            {
-                return CommandResult.Fail(ResultStatus.Unauthorized, "Order does not belong to the caller.");
             }
 
             var correlationId = this.correlationContextAccessor.GetCorrelationId();

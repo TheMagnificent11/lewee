@@ -11,12 +11,12 @@ namespace Pizzeria.Store.Application.Tests.Unit;
 public sealed class RemovePizzaFromOrderCommandTests
 {
     [Fact]
-    public async Task Should_RemovePizza_When_OrderOwnedByCallerAsync()
+    public async Task Should_RemovePizzaAsync()
     {
         var order = TestHelpers.CreateOrderWithPizza(out var pizza);
         order.AddPizza(pizza);
 
-        var handler = CreateHandler(order, pizza, TestHelpers.OwnerUserId);
+        var handler = CreateHandler(order, pizza);
 
         var result = await handler.Handle(
             new RemovePizzaFromOrderCommand(order.Id, pizza.Id),
@@ -40,7 +40,6 @@ public sealed class RemovePizzaFromOrderCommandTests
         var handler = new RemovePizzaFromOrderCommand.Handler(
             orderRepository.Object,
             pizzaRepository.Object,
-            TestHelpers.AuthenticatedUser(TestHelpers.OwnerUserId).Object,
             TestHelpers.Logger<RemovePizzaFromOrderCommand.Handler>());
 
         var result = await handler.Handle(
@@ -51,22 +50,7 @@ public sealed class RemovePizzaFromOrderCommandTests
         result.Status.Should().Be(ResultStatus.NotFound);
     }
 
-    [Fact]
-    public async Task Should_Fail_When_OrderOwnedByDifferentCallerAsync()
-    {
-        var order = TestHelpers.CreateOrderWithPizza(out var pizza);
-
-        var handler = CreateHandler(order, pizza, TestHelpers.OtherUserId);
-
-        var result = await handler.Handle(
-            new RemovePizzaFromOrderCommand(order.Id, pizza.Id),
-            CancellationToken.None);
-
-        result.IsSuccess.Should().BeFalse();
-        result.Status.Should().Be(ResultStatus.Unauthorized);
-    }
-
-    private static RemovePizzaFromOrderCommand.Handler CreateHandler(Order order, Pizza pizza, string callerUserId)
+    private static RemovePizzaFromOrderCommand.Handler CreateHandler(Order order, Pizza pizza)
     {
         var orderRepository = TestHelpers.Repository<Order>();
         orderRepository
@@ -81,7 +65,6 @@ public sealed class RemovePizzaFromOrderCommandTests
         return new RemovePizzaFromOrderCommand.Handler(
             orderRepository.Object,
             pizzaRepository.Object,
-            TestHelpers.AuthenticatedUser(callerUserId).Object,
             TestHelpers.Logger<RemovePizzaFromOrderCommand.Handler>());
     }
 }

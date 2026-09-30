@@ -2,9 +2,9 @@ using Lewee.Domain;
 
 namespace Pizzeria.Store.Domain;
 
-public sealed class OrderMakingStartedEvent : DomainEvent
+public sealed class StartedMakingOrderEvent : DomainEvent
 {
-    public OrderMakingStartedEvent(
+    public StartedMakingOrderEvent(
         Guid orderId,
         string userId,
         DateTime eventDateTime,

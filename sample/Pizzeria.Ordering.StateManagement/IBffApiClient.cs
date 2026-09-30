@@ -1,4 +1,5 @@
 using Lewee.Auth.Api;
+using Pizzeria.Store.Contracts.Orders;
 using Pizzeria.Store.Contracts.Pizzas;
 using Refit;
 
@@ -12,10 +13,10 @@ public interface IBffApiClient
     [Post("/orders")]
     Task StartOrderAsync(CancellationToken cancellationToken = default);
 
-    [Put("/orders/{orderId}/pizzas/{pizzaId}")]
-    Task AddPizzaToOrderAsync(
+    [Put("/orders/{orderId}")]
+    Task UpdateOrderAsync(
         Guid orderId,
-        Guid pizzaId,
+        [Body] UpdateOrderRequest request,
         CancellationToken cancellationToken = default);
 
     [Post("/users")]
