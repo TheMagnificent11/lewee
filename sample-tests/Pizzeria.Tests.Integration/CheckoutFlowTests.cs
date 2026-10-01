@@ -58,14 +58,11 @@ public sealed class CheckoutFlowTests : PizzeriaTests
         await playwrightPage.Page.ClickAsync(removeMargheritaSelector);
         await this.WaitForDomainEventsToBeDispatchedAsync();
 
-        // Proceed to checkout
+        // Proceed to checkout (in-place on the same order page)
         await playwrightPage.Page.ClickAsync(OrderPage.Selectors.CheckoutButton);
-        await playwrightPage.Page.WaitForURLAsync(
-            url => url.Contains("/checkout", StringComparison.OrdinalIgnoreCase),
-            new PageWaitForURLOptions { Timeout = 30000 });
 
         // Submit as pickup (default selection)
-        await playwrightPage.Page.ClickAsync(Checkout.Selectors.SubmitOrderButton);
+        await playwrightPage.Page.ClickAsync(OrderPage.Selectors.SubmitOrderButton);
         await this.WaitForDomainEventsToBeDispatchedAsync();
 
         // Assert - back on order page showing order status
@@ -107,29 +104,23 @@ public sealed class CheckoutFlowTests : PizzeriaTests
         await this.WaitForDomainEventsToBeDispatchedAsync();
 
         await playwrightPage.Page.ClickAsync(OrderPage.Selectors.CheckoutButton);
-        await playwrightPage.Page.WaitForURLAsync(
-            url => url.Contains("/checkout", StringComparison.OrdinalIgnoreCase),
-            new PageWaitForURLOptions { Timeout = 30000 });
 
         // Act - select delivery without an address and submit, expecting a validation failure
         await playwrightPage.Page.ClickAsync("text=Delivery");
-        await playwrightPage.Page.ClickAsync(Checkout.Selectors.SubmitOrderButton);
+        await playwrightPage.Page.ClickAsync(OrderPage.Selectors.SubmitOrderButton);
 
-        // Assert - validation error is shown and we remain on the checkout page
+        // Assert - validation error is shown and we remain on the checkout form
         await playwrightPage.Page.WaitForSelectorAsync(
             "text=Delivery address is required.",
             new PageWaitForSelectorOptions { Timeout = 10000 });
-        playwrightPage.Page.Url.Should().Contain("/checkout");
+        playwrightPage.Page.Url.Should().Contain($"/orders/{orderId}");
 
         // Act - fill in a valid address and resubmit
-        await playwrightPage.Page.FillAsync(Checkout.Selectors.DeliveryAddressInput, "123 Pizza Street, Pizzatown");
-        await playwrightPage.Page.ClickAsync(Checkout.Selectors.SubmitOrderButton);
+        await playwrightPage.Page.FillAsync(OrderPage.Selectors.DeliveryAddressInput, "123 Pizza Street, Pizzatown");
+        await playwrightPage.Page.ClickAsync(OrderPage.Selectors.SubmitOrderButton);
         await this.WaitForDomainEventsToBeDispatchedAsync();
 
-        // Assert - redirected to order page showing delivery status
-        await playwrightPage.Page.WaitForURLAsync(
-            url => url.Contains("/orders/", StringComparison.OrdinalIgnoreCase) && !url.Contains("/checkout", StringComparison.OrdinalIgnoreCase),
-            new PageWaitForURLOptions { Timeout = 30000 });
+        // Assert - order page now shows delivery status
         await playwrightPage.Page.WaitForSelectorAsync(
             OrderPage.Selectors.OrderStatus,
             new PageWaitForSelectorOptions { Timeout = 30000 });

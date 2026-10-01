@@ -6,11 +6,23 @@ using Pizzeria.Ordering.StateManagement.Orders.Actions;
 using Pizzeria.Ordering.StateManagement.Pizzas;
 using Pizzeria.Ordering.StateManagement.Pizzas.Actions;
 using Pizzeria.Store.Contracts;
+using Pizzeria.Store.Contracts.Orders;
 
 namespace Pizzeria.Ordering.Components;
 
 public partial class Order : FluxorComponent
 {
+    private bool isCheckingOut;
+    private FulfillmentMethod fulfillmentMethod = FulfillmentMethod.Pickup;
+    private string deliveryAddress = string.Empty;
+    private string? validationErrorMessage;
+
+    public enum FulfillmentMethod
+    {
+        Pickup,
+        Delivery,
+    }
+
     [Parameter]
     public Guid OrderId { get; set; }
 
@@ -66,12 +78,63 @@ public partial class Order : FluxorComponent
         }
     }
 
-    private void GoToCheckout()
+    private void StartCheckout()
     {
-        if (this.OrdersState.Value.Data != null)
+        this.isCheckingOut = true;
+    }
+
+    private void CancelCheckout()
+    {
+        this.isCheckingOut = false;
+        this.validationErrorMessage = null;
+    }
+
+    private void OnFulfillmentMethodChanged(FulfillmentMethod value)
+    {
+        this.fulfillmentMethod = value;
+        this.validationErrorMessage = null;
+    }
+
+    private void SubmitOrder()
+    {
+        var order = this.OrdersState.Value.Data;
+        if (order == null)
         {
-            this.Navigation.NavigateTo(PageRoutes.GetCheckoutRoute(this.OrdersState.Value.Data.Id));
+            return;
         }
+
+        if (this.fulfillmentMethod == FulfillmentMethod.Delivery)
+        {
+            if (string.IsNullOrWhiteSpace(this.deliveryAddress))
+            {
+                this.validationErrorMessage = "Delivery address is required.";
+                return;
+            }
+
+            if (this.deliveryAddress.Length > UpdateOrderRequest.DeliveryAddressMaxLength)
+            {
+                this.validationErrorMessage =
+                    $"Delivery address must be no more than {UpdateOrderRequest.DeliveryAddressMaxLength} characters.";
+                return;
+            }
+
+            this.validationErrorMessage = null;
+
+            this.Dispatcher.Dispatch(new SubmitDeliveryOrderAction
+            {
+                OrderId = order.Id,
+                DeliveryAddress = this.deliveryAddress,
+            });
+
+            return;
+        }
+
+        this.validationErrorMessage = null;
+
+        this.Dispatcher.Dispatch(new SubmitPickupOrderAction
+        {
+            OrderId = order.Id,
+        });
     }
 
     private void ClearError()
@@ -83,11 +146,15 @@ public partial class Order : FluxorComponent
     {
         public const string PizzaMenuHeading = "[role='heading'][aria-level='4']";
         public const string CheckoutButton = $"[role='button'][aria-label='{AriaLabels.Checkout}']";
+        public const string SubmitOrderButton = $"[role='button'][aria-label='{AriaLabels.SubmitOrder}']";
+        public const string DeliveryAddressInput = $"[aria-label='{AriaLabels.DeliveryAddress}']";
         public const string OrderStatus = "[role='status']";
     }
 
     private static class AriaLabels
     {
         public const string Checkout = "checkout";
+        public const string SubmitOrder = "submit order";
+        public const string DeliveryAddress = "delivery address";
     }
 }

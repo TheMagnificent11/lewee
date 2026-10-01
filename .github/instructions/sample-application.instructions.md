@@ -97,6 +97,16 @@ Pizzeria.Store.Api.Endpoints
 
 See `Pizzeria.Store.Application` project for guidance on feature namespace organization.
 
+## API Endpoint Conventions
+
+Follow [RESTful resource naming conventions](https://restfulapi.net/resource-naming/) for `Pizzeria.Store.Api` (and any other API project):
+
+- Routes identify **resources** (nouns), not actions/verbs; the HTTP verb (`GET`/`POST`/`PUT`/`DELETE`) conveys the action.
+- Prefer folding related mutations (e.g. add/remove a related item, submit/checkout) into a single `PUT` on the parent resource, driven by which field is populated on the request body, rather than adding a verb-suffixed route (e.g. `/orders/{orderId}/checkout`) or a dedicated endpoint per action.
+- Resource identifiers (e.g. `orderId`, `pizzaId`) are bound from the route, never duplicated in the request body.
+
+See `Pizzeria.Common.Endpoints` and `UpdateOrderEndpoint`/`UpdateOrderRequest` for an example of consolidating multiple order mutations behind a single `PUT /orders/{orderId}`.
+
 ## Architecture Notes
 
 - **Orchestration**: .NET Aspire manages all services and containers
