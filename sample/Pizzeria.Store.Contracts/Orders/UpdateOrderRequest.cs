@@ -9,6 +9,12 @@ namespace Pizzeria.Store.Contracts.Orders;
 public sealed record UpdateOrderRequest
 {
     /// <summary>
+    /// Maximum allowed length for <see cref="DeliveryAddress"/>.
+    /// Must match <c>Pizzeria.Store.Domain.Order.FieldLengths.DeliveryAddress</c>.
+    /// </summary>
+    public const int DeliveryAddressMaxLength = 250;
+
+    /// <summary>
     /// Gets the ID of a pizza to add to the order.
     /// </summary>
     public Guid? AddPizzaId { get; init; }

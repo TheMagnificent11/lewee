@@ -6,6 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using MudBlazor.Services;
 using Pizzeria.Ordering.StateManagement;
+using Pizzeria.Ordering.StateManagement.Orders.Actions;
+using Pizzeria.Store.Contracts.Orders;
 using Pizzeria.Store.Contracts.Pizzas;
 using Xunit;
 
@@ -22,6 +24,8 @@ public class OrderPageTests : TestContext
         this.Services.AddLogging();
         this.Services.AddMudServices();
         this.Services.AddFluxor(x => x.ScanAssemblies(typeof(StoreStateManagementConfiguration).Assembly));
+
+        this.JSInterop.Mode = JSRuntimeMode.Loose;
     }
 
     [Fact]
@@ -34,9 +38,12 @@ public class OrderPageTests : TestContext
     }
 
     [Fact]
-    public void Order_WhenPizzasLoading_ShowsSkeletonLoader()
+    public async Task Order_WhenPizzasLoading_ShowsSkeletonLoader()
     {
         // Arrange
+        await this.SeedActiveOrderAsync(CreateInProgressOrder());
+
+        // Act
         var component = this.RenderComponent<Order>();
 
         // Assert
@@ -44,7 +51,7 @@ public class OrderPageTests : TestContext
     }
 
     [Fact]
-    public void Order_WhenPizzasAvailable_ShowsPizzaCards()
+    public async Task Order_WhenPizzasAvailable_ShowsPizzaCards()
     {
         // Arrange
         var testPizzas = new[]
@@ -57,11 +64,58 @@ public class OrderPageTests : TestContext
             .Setup(x => x.GetPizzasAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(testPizzas);
 
+        await this.SeedActiveOrderAsync(CreateInProgressOrder());
+
         // Act
         var component = this.RenderComponent<Order>();
 
         // Assert
         component.Markup.Should().Contain("Pizza Menu");
+        component.Markup.Should().Contain("Margherita");
+    }
+
+    [Fact]
+    public async Task Order_WhenPizzaAddedToOrder_CheckoutButtonIsEnabled()
+    {
+        // Arrange
+        var pizzaId = Guid.NewGuid();
+        var testPizzas = new[] { new PizzaDto(pizzaId, "Margherita", "Classic tomato and mozzarella", 12.99m) };
+
+        this.bffApiClientMock
+            .Setup(x => x.GetPizzasAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(testPizzas);
+
+        var order = CreateInProgressOrder() with
+        {
+            Pizzas = [new OrderPizzaDto { PizzaId = pizzaId, PizzaName = "Margherita", Quantity = 1, LineTotal = 12.99m }],
+        };
+        await this.SeedActiveOrderAsync(order);
+
+        // Act
+        var component = this.RenderComponent<Order>();
+
+        // Assert
+        var checkoutButton = component.Find(Order.Selectors.CheckoutButton);
+        checkoutButton.HasAttribute("disabled").Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Order_WhenOrderSubmitted_ShowsOrderStatus()
+    {
+        // Arrange
+        var order = CreateInProgressOrder() with
+        {
+            Status = OrderStatus.Received,
+            Pizzas = [new OrderPizzaDto { PizzaId = Guid.NewGuid(), PizzaName = "Margherita", Quantity = 1, LineTotal = 12.99m }],
+        };
+        await this.SeedActiveOrderAsync(order);
+
+        // Act
+        var component = this.RenderComponent<Order>();
+
+        // Assert
+        component.Markup.Should().Contain("Order Status");
+        component.Markup.Should().Contain("Received");
     }
 
     [Fact]
@@ -73,5 +127,27 @@ public class OrderPageTests : TestContext
         // Act & Assert - component should render without throwing an exception
         var component = this.RenderComponent<Order>(parameters => parameters.Add(p => p.OrderId, orderId));
         component.Should().NotBeNull();
+    }
+
+    private static OrderDto CreateInProgressOrder()
+    {
+        return new OrderDto
+        {
+            Id = Guid.NewGuid(),
+            UserId = "test-user",
+            Status = OrderStatus.InProgress,
+            StartedDateTime = DateTime.UtcNow,
+            Pizzas = [],
+            TotalCost = 0,
+        };
+    }
+
+    private async Task SeedActiveOrderAsync(OrderDto order)
+    {
+        var store = this.Services.GetRequiredService<IStore>();
+        await store.InitializeAsync();
+
+        var dispatcher = this.Services.GetRequiredService<IDispatcher>();
+        dispatcher.Dispatch(new StartOrderCompletedAction { Data = order, CorrelationId = Guid.NewGuid() });
     }
 }

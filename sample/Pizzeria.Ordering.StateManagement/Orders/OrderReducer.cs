@@ -65,6 +65,78 @@ public static class OrderReducer
     }
 
     [ReducerMethod]
+    public static OrderState OnRemovePizzaFromOrder(
+        [NotNull] OrderState state,
+        [NotNull] RemovePizzaFromOrderAction action)
+    {
+        return state.OnCommand<OrderState, OrderDto, RemovePizzaFromOrderAction>(action, clearData: false);
+    }
+
+    [ReducerMethod]
+    public static OrderState OnRemovePizzaFromOrderSuccess(
+        [NotNull] OrderState state,
+        [NotNull] RemovePizzaFromOrderSuccessAction action)
+    {
+        return state.OnCommandSuccess<OrderState, OrderDto, RemovePizzaFromOrderSuccessAction>(action);
+    }
+
+    [ReducerMethod]
+    public static OrderState OnRemovePizzaFromOrderFailure(
+        [NotNull] OrderState state,
+        [NotNull] RemovePizzaFromOrderFailureAction action)
+    {
+        return state.OnCommandError<OrderState, OrderDto, RemovePizzaFromOrderFailureAction>(action);
+    }
+
+    [ReducerMethod]
+    public static OrderState OnSubmitPickupOrder(
+        [NotNull] OrderState state,
+        [NotNull] SubmitPickupOrderAction action)
+    {
+        return state.OnCommand<OrderState, OrderDto, SubmitPickupOrderAction>(action, clearData: false);
+    }
+
+    [ReducerMethod]
+    public static OrderState OnSubmitPickupOrderSuccess(
+        [NotNull] OrderState state,
+        [NotNull] SubmitPickupOrderSuccessAction action)
+    {
+        return state.OnCommandSuccess<OrderState, OrderDto, SubmitPickupOrderSuccessAction>(action);
+    }
+
+    [ReducerMethod]
+    public static OrderState OnSubmitPickupOrderFailure(
+        [NotNull] OrderState state,
+        [NotNull] SubmitPickupOrderFailureAction action)
+    {
+        return state.OnCommandError<OrderState, OrderDto, SubmitPickupOrderFailureAction>(action);
+    }
+
+    [ReducerMethod]
+    public static OrderState OnSubmitDeliveryOrder(
+        [NotNull] OrderState state,
+        [NotNull] SubmitDeliveryOrderAction action)
+    {
+        return state.OnCommand<OrderState, OrderDto, SubmitDeliveryOrderAction>(action, clearData: false);
+    }
+
+    [ReducerMethod]
+    public static OrderState OnSubmitDeliveryOrderSuccess(
+        [NotNull] OrderState state,
+        [NotNull] SubmitDeliveryOrderSuccessAction action)
+    {
+        return state.OnCommandSuccess<OrderState, OrderDto, SubmitDeliveryOrderSuccessAction>(action);
+    }
+
+    [ReducerMethod]
+    public static OrderState OnSubmitDeliveryOrderFailure(
+        [NotNull] OrderState state,
+        [NotNull] SubmitDeliveryOrderFailureAction action)
+    {
+        return state.OnCommandError<OrderState, OrderDto, SubmitDeliveryOrderFailureAction>(action);
+    }
+
+    [ReducerMethod]
     public static OrderState OnClearOrderError(
         [NotNull] OrderState state,
         ClearOrderErrorAction _)
