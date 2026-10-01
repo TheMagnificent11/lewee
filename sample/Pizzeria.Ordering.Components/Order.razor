@@ -66,12 +66,14 @@ else if (OrdersState.Value.Data.Status == OrderStatus.InProgress)
                             <MudButtonGroup Variant="Variant.Outlined" Size="Size.Large" Class="flex-grow-1">
                                 <MudButton OnClick="() => RemovePizza(pizza.Id)"
                                            Disabled="quantity == 0"
+                                           aria-label="@($"remove {pizza.Name}")"
                                            StartIcon="Icons.Material.Filled.Remove">
                                 </MudButton>
                                 <MudButton Style="min-width: 80px;" Disabled="true">
                                     @quantity
                                 </MudButton>
                                 <MudButton OnClick="() => AddPizza(pizza.Id)"
+                                           aria-label="@($"add {pizza.Name}")"
                                            StartIcon="Icons.Material.Filled.Add">
                                 </MudButton>
                             </MudButtonGroup>
