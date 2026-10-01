@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using Fluxor;
 using Fluxor.Blazor.Web.Components;
 using Microsoft.AspNetCore.Components;
@@ -55,18 +54,24 @@ public partial class Order : FluxorComponent
         }
     }
 
-    [SuppressMessage(
-        "StyleCop.CSharp.OrderingRules",
-        "SA1204:Static members should appear before non-static members",
-        Justification = "Helper method is more readable when placed near its usage context")]
-    [SuppressMessage(
-        "StyleCop.CSharp.NamingRules",
-        "SA1313:Parameter '_' should begin with lower-case letter",
-        Justification = "Underscore is the standard discard pattern for unused parameters")]
-    private static void RemovePizza(Guid _)
+    private void RemovePizza(Guid pizzaId)
     {
-        // For this demo, we'll implement decreasing quantity as a future enhancement
-        // The API only supports adding pizzas, not removing them
+        if (this.OrdersState.Value.Data != null)
+        {
+            this.Dispatcher.Dispatch(new RemovePizzaFromOrderAction
+            {
+                OrderId = this.OrdersState.Value.Data.Id,
+                PizzaId = pizzaId,
+            });
+        }
+    }
+
+    private void GoToCheckout()
+    {
+        if (this.OrdersState.Value.Data != null)
+        {
+            this.Navigation.NavigateTo(PageRoutes.GetCheckoutRoute(this.OrdersState.Value.Data.Id));
+        }
     }
 
     private void ClearError()
@@ -77,5 +82,12 @@ public partial class Order : FluxorComponent
     public static class Selectors
     {
         public const string PizzaMenuHeading = "[role='heading'][aria-level='4']";
+        public const string CheckoutButton = $"[role='button'][aria-label='{AriaLabels.Checkout}']";
+        public const string OrderStatus = "[role='status']";
+    }
+
+    private static class AriaLabels
+    {
+        public const string Checkout = "checkout";
     }
 }

@@ -152,4 +152,147 @@ public class OrdersReducerTests
         // Assert
         result.ErrorMessage.Should().BeNull();
     }
+
+    [Fact]
+    public void OnRemovePizzaFromOrder_SetsIsSavingToTrueAndKeepsData()
+    {
+        // Arrange
+        var order = new OrderDto { Id = Guid.NewGuid() };
+        var state = new OrderState { Data = order };
+        var action = new RemovePizzaFromOrderAction { CorrelationId = Guid.NewGuid() };
+
+        // Act
+        var result = OrderReducer.OnRemovePizzaFromOrder(state, action);
+
+        // Assert
+        result.IsSaving.Should().BeTrue();
+        result.Data.Should().Be(order);
+    }
+
+    [Fact]
+    public void OnRemovePizzaFromOrderSuccess_SetsIsSavingToFalse()
+    {
+        // Arrange
+        var state = new OrderState { IsSaving = true };
+        var action = new RemovePizzaFromOrderSuccessAction { CorrelationId = Guid.NewGuid() };
+
+        // Act
+        var result = OrderReducer.OnRemovePizzaFromOrderSuccess(state, action);
+
+        // Assert
+        result.IsSaving.Should().BeFalse();
+    }
+
+    [Fact]
+    public void OnRemovePizzaFromOrderFailure_SetsErrorMessage()
+    {
+        // Arrange
+        var state = new OrderState();
+        var errorMessage = "Failed to remove pizza";
+        var action = new RemovePizzaFromOrderFailureAction
+        {
+            CorrelationId = Guid.NewGuid(),
+            ErrorMessage = errorMessage,
+        };
+
+        // Act
+        var result = OrderReducer.OnRemovePizzaFromOrderFailure(state, action);
+
+        // Assert
+        result.ErrorMessage.Should().Be(errorMessage);
+    }
+
+    [Fact]
+    public void OnSubmitPickupOrder_SetsIsSavingToTrue()
+    {
+        // Arrange
+        var state = new OrderState();
+        var action = new SubmitPickupOrderAction { CorrelationId = Guid.NewGuid() };
+
+        // Act
+        var result = OrderReducer.OnSubmitPickupOrder(state, action);
+
+        // Assert
+        result.IsSaving.Should().BeTrue();
+    }
+
+    [Fact]
+    public void OnSubmitPickupOrderSuccess_SetsIsSavingToFalse()
+    {
+        // Arrange
+        var state = new OrderState { IsSaving = true };
+        var action = new SubmitPickupOrderSuccessAction { CorrelationId = Guid.NewGuid() };
+
+        // Act
+        var result = OrderReducer.OnSubmitPickupOrderSuccess(state, action);
+
+        // Assert
+        result.IsSaving.Should().BeFalse();
+    }
+
+    [Fact]
+    public void OnSubmitPickupOrderFailure_SetsErrorMessage()
+    {
+        // Arrange
+        var state = new OrderState();
+        var errorMessage = "Failed to submit pickup order";
+        var action = new SubmitPickupOrderFailureAction
+        {
+            CorrelationId = Guid.NewGuid(),
+            ErrorMessage = errorMessage,
+        };
+
+        // Act
+        var result = OrderReducer.OnSubmitPickupOrderFailure(state, action);
+
+        // Assert
+        result.ErrorMessage.Should().Be(errorMessage);
+    }
+
+    [Fact]
+    public void OnSubmitDeliveryOrder_SetsIsSavingToTrue()
+    {
+        // Arrange
+        var state = new OrderState();
+        var action = new SubmitDeliveryOrderAction { CorrelationId = Guid.NewGuid() };
+
+        // Act
+        var result = OrderReducer.OnSubmitDeliveryOrder(state, action);
+
+        // Assert
+        result.IsSaving.Should().BeTrue();
+    }
+
+    [Fact]
+    public void OnSubmitDeliveryOrderSuccess_SetsIsSavingToFalse()
+    {
+        // Arrange
+        var state = new OrderState { IsSaving = true };
+        var action = new SubmitDeliveryOrderSuccessAction { CorrelationId = Guid.NewGuid() };
+
+        // Act
+        var result = OrderReducer.OnSubmitDeliveryOrderSuccess(state, action);
+
+        // Assert
+        result.IsSaving.Should().BeFalse();
+    }
+
+    [Fact]
+    public void OnSubmitDeliveryOrderFailure_SetsErrorMessage()
+    {
+        // Arrange
+        var state = new OrderState();
+        var errorMessage = "Failed to submit delivery order";
+        var action = new SubmitDeliveryOrderFailureAction
+        {
+            CorrelationId = Guid.NewGuid(),
+            ErrorMessage = errorMessage,
+        };
+
+        // Act
+        var result = OrderReducer.OnSubmitDeliveryOrderFailure(state, action);
+
+        // Assert
+        result.ErrorMessage.Should().Be(errorMessage);
+    }
 }
