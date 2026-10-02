@@ -26,6 +26,14 @@ internal sealed class DomainEventDispatcher<TContext>
 
     public async Task DispatchEventsAsync(CancellationToken cancellationToken)
     {
+        if (await this.MigrationsArePendingAsync(cancellationToken))
+        {
+            // The commit that triggered this dispatch may be part of applying
+            // migrations (e.g. EF Core creating the migrations history table),
+            // in which case the domain event tables may not exist yet.
+            return;
+        }
+
         var eventsToDispatch = await this.ThereAreEventsToDispatchAsync(cancellationToken);
 
         while (eventsToDispatch && !cancellationToken.IsCancellationRequested)
@@ -33,6 +41,16 @@ internal sealed class DomainEventDispatcher<TContext>
             await this.DispatchBatchAsync(cancellationToken);
 
             eventsToDispatch = await this.ThereAreEventsToDispatchAsync(cancellationToken);
+        }
+    }
+
+    private async Task<bool> MigrationsArePendingAsync(CancellationToken token)
+    {
+        using (var dbContext = await this.dbContextFactory.CreateDbContextAsync(token))
+        {
+            var pendingMigrations = await dbContext.Database.GetPendingMigrationsAsync(token);
+
+            return pendingMigrations.Any();
         }
     }
 
