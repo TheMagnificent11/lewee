@@ -13,13 +13,7 @@ public static class Endpoints
         public const string Pizzas = "/pizzas";
         public const string Orders = "/orders";
         public const string Users = "/users";
-        public const string AddPizzaToOrder = $"/orders/{{{RouteTokens.OrderId}}}/pizzas/{{{RouteTokens.PizzaId}}}";
-
-        public static string GetAddPizzaToOrderEndpoint(Guid orderId, Guid pizzaId)
-        {
-            return AddPizzaToOrder
-                .Replace($"{{{RouteTokens.OrderId}}}", orderId.ToString(), StringComparison.OrdinalIgnoreCase)
-                .Replace($"{{{RouteTokens.PizzaId}}}", pizzaId.ToString(), StringComparison.OrdinalIgnoreCase);
-        }
+        public const string Order = $"/orders/{{{RouteTokens.OrderId}}}";
+        public const string Pizza = $"/pizzas/{{{RouteTokens.PizzaId}}}";
     }
 }

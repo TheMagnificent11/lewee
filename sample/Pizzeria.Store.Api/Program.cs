@@ -1,4 +1,7 @@
 using FastEndpoints;
+using Lewee.Auth.Application;
+using Lewee.Auth.Domain;
+using Lewee.Auth.Infrastructure.Data;
 using Lewee.Infrastructure.Auth;
 using Lewee.Infrastructure.Correlate;
 using Lewee.Infrastructure.Data;
@@ -17,14 +20,26 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
+var pizzaStoreConnectionString =
+    builder.Configuration.GetConnectionString(ServiceNames.PizzaStoreDatabaseName)!;
+
 builder.Services
     .AddAuthenticatedUserService()
     .AddLeweePostgreSQL<StoreDbContext>(
-        builder.Configuration.GetConnectionString(ServiceNames.PizzaStoreDatabaseName)!,
+        pizzaStoreConnectionString,
         typeof(Pizza).Assembly,
         StoreDbContext.SchemaName)
     .AddLeweeDatabaseServices<StoreDbContext>(typeof(Pizza).Assembly)
     .AddPizzaStoreApplication()
+
+    // Register the auth database services last so that the tenant-role authorization pipeline
+    // resolves the IQueryProjectionService bound to the auth schema, where the tenant membership
+    // role projection is maintained.
+    .AddLeweePostgreSQL<AuthDbContext>(
+        pizzaStoreConnectionString,
+        typeof(User).Assembly,
+        AuthDbContext.SchemaName)
+    .AddLeweeApplicationAuth()
     .AddCorrelationIdServices()
     .AddKeycloakAuthenticationForWebApi(
         keycloakServiceName: ServiceNames.AuthServer,

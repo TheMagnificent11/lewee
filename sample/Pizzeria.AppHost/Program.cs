@@ -61,7 +61,7 @@ var bff = builder.AddProject<Projects.Pizzeria_Bff>(ServiceNames.Bff)
     .WaitFor(pizzaStoreApi)
     .WithHttpHealthCheck("/health");
 
-builder.AddProject<Projects.Pizzeria_Store_Web>(ServiceNames.PizzaStoreWeb)
+builder.AddProject<Projects.Pizzeria_Ordering_Web>(ServiceNames.PizzaStoreWeb)
     .WithReference(bff)
     .WithReference(authServer)
     .WaitFor(bff)

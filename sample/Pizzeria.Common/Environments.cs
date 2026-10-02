@@ -32,5 +32,17 @@ public static class Environments
             public const string Username = "admin";
             public const string Password = "!MySuperStrongPassword123!";
         }
+
+        public static class DefaultStoreManagerCredentialsForTesting
+        {
+            public const string Username = "store-manager";
+            public const string Password = "!MySuperStrongPassword123!";
+        }
+
+        public static class DefaultStoreStaffCredentialsForTesting
+        {
+            public const string Username = "store-staff";
+            public const string Password = "!MySuperStrongPassword123!";
+        }
     }
 }

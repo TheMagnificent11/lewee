@@ -13,7 +13,7 @@ The sample pizzeria application demonstrates Lewee framework usage with a multi-
 - Pizzeria BFF (`Pizzeria.Bff` - YARP reverse proxy used by the web frontend)
 - Pizzeria Auth API (`Pizzeria.Auth.Api` - reusable auth endpoints)
 - Pizzeria Store API (`Pizzeria.Store.Api` - FastEndpoints Web API)
-- Pizzeria Store Web (`Pizzeria.Store.Web` - Blazor Web App with Interactive Server)
+- Pizzeria Store Web (`Pizzeria.Ordering.Web` - Blazor Web App with Interactive Server)
 - PostgreSQL database (managed by Aspire)
 - Keycloak authentication server (managed by Aspire)
 - Authentication services (`Pizzeria.Auth`)
@@ -96,6 +96,16 @@ Pizzeria.Store.Api.Endpoints
 ```
 
 See `Pizzeria.Store.Application` project for guidance on feature namespace organization.
+
+## API Endpoint Conventions
+
+Follow [RESTful resource naming conventions](https://restfulapi.net/resource-naming/) for `Pizzeria.Store.Api` (and any other API project):
+
+- Routes identify **resources** (nouns), not actions/verbs; the HTTP verb (`GET`/`POST`/`PUT`/`DELETE`) conveys the action.
+- Prefer folding related mutations (e.g. add/remove a related item, submit/checkout) into a single `PUT` on the parent resource, driven by which field is populated on the request body, rather than adding a verb-suffixed route (e.g. `/orders/{orderId}/checkout`) or a dedicated endpoint per action.
+- Resource identifiers (e.g. `orderId`, `pizzaId`) are bound from the route, never duplicated in the request body.
+
+See `Pizzeria.Common.Endpoints` and `UpdateOrderEndpoint`/`UpdateOrderRequest` for an example of consolidating multiple order mutations behind a single `PUT /orders/{orderId}`.
 
 ## Architecture Notes
 

@@ -7,9 +7,16 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Lewee.Application\Lewee.Application.csproj" />
+    <ProjectReference Include="..\..\src\Lewee.Auth.Application\Lewee.Auth.Application.csproj" />
     <ProjectReference Include="..\Pizzeria.Common\Pizzeria.Common.csproj" />
     <ProjectReference Include="..\Pizzeria.Store.Contracts\Pizzeria.Store.Contracts.csproj" />
     <ProjectReference Include="..\Pizzeria.Store.Domain\Pizzeria.Store.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Pizzeria.Store.Application.Tests.Unit</_Parameter1>
+    </AssemblyAttribute>
   </ItemGroup>
 
 </Project>

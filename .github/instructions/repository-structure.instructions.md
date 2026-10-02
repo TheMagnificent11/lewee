@@ -41,10 +41,10 @@ lewee/
 │   ├── Pizzeria.Store.Application/  # CQRS commands/queries
 │   ├── Pizzeria.Store.Data/      # EF Core DbContext and migrations
 │   ├── Pizzeria.Store.Contracts/ # API DTOs and contracts
-│   ├── Pizzeria.Store.StateManagement/ # Fluxor state management
-│   ├── Pizzeria.Store.Components/ # Shared Blazor components
+│   ├── Pizzeria.Ordering.StateManagement/ # Fluxor state management
+│   ├── Pizzeria.Ordering.Components/ # Shared Blazor components
 │   ├── Pizzeria.Store.Api/       # FastEndpoints Web API
-│   ├── Pizzeria.Store.Web/       # Blazor Web App with Interactive Server
+│   ├── Pizzeria.Ordering.Web/       # Blazor Web App with Interactive Server
 │   ├── Pizzeria.Store/           # Pizzeria Store shared utilities
 │   ├── Pizzeria.Auth/            # Authentication services
 │   ├── Pizzeria.Configuration/   # Shared configuration
@@ -76,7 +76,7 @@ lewee/
 | Application | Use cases and orchestration | Lewee.Application, Pizzeria.Store.Application | Depends on Domain |
 | Infrastructure (Server) | Server-side concerns (DB, API, Auth) | Lewee.Infrastructure.Data, Lewee.Infrastructure.ServerEvents | Depends on Application and Domain |
 | Infrastructure (Client) | Client-side concerns (State, SSE) | Lewee.Infrastructure.Fluxor | Depends on Common |
-| Presentation | User interface | Pizzeria.Store.Api, Pizzeria.Store.Web | Depends on all layers |
+| Presentation | User interface | Pizzeria.Store.Api, Pizzeria.Ordering.Web | Depends on all layers |
 
 ## Configuration Files
 

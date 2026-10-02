@@ -30,6 +30,7 @@ public sealed class GetPizzasQuery : IQuery<IEnumerable<PizzaDto>>
             var pizzas = await this.repository.AllAsync(cancellationToken);
 
             var result = pizzas
+                .Where(x => x.IsAvailable)
                 .Select(x => new PizzaDto(
                     x.Id,
                     x.Name,
