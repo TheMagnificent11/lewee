@@ -28,7 +28,9 @@ var databaseName = ServiceNames.PizzaStoreDatabaseName;
 builder.Services.AddAuthenticatedUserService();
 
 // Register database context - connection string will be resolved at runtime via service discovery
-builder.Services.AddDbContext<StoreDbContext>((serviceProvider, options) =>
+// Use AddDbContextFactory so IDbContextFactory<T> is available (required by DomainEventDispatcher<T>),
+// which also registers the context type itself for direct scoped injection (required by the seeders).
+builder.Services.AddDbContextFactory<StoreDbContext>((serviceProvider, options) =>
 {
     var configuration = serviceProvider.GetRequiredService<IConfiguration>();
     var connectionString = configuration.GetConnectionString(databaseName);
@@ -39,7 +41,7 @@ builder.Services.AddDbContext<StoreDbContext>((serviceProvider, options) =>
     }
 });
 
-builder.Services.AddDbContext<AuthDbContext>((serviceProvider, options) =>
+builder.Services.AddDbContextFactory<AuthDbContext>((serviceProvider, options) =>
 {
     var configuration = serviceProvider.GetRequiredService<IConfiguration>();
     var connectionString = configuration.GetConnectionString(databaseName);
