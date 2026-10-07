@@ -15,6 +15,14 @@ public sealed class Tenant : AggregateRoot
         this.DomainEvents.Raise(new TenantCreatedEvent(this.Id, code, name, correlationId));
     }
 
+    private Tenant(Guid id, string code, string name, Guid correlationId)
+        : base(id)
+    {
+        this.Code = code;
+        this.Name = name;
+        this.DomainEvents.Raise(new TenantCreatedEvent(this.Id, code, name, correlationId));
+    }
+
     [ExcludeFromCodeCoverage(Justification = "Only used by EF")]
     private Tenant()
     {
@@ -38,6 +46,22 @@ public sealed class Tenant : AggregateRoot
     /// <param name="correlationId">Correlation ID.</param>
     /// <returns>The tenant.</returns>
     public static Tenant Create(string code, string name, Guid correlationId) => new(code, name, correlationId);
+
+    /// <summary>
+    /// Creates a tenant with a well-known identity.
+    /// </summary>
+    /// <param name="id">The well-known tenant ID.</param>
+    /// <param name="code">Tenant code.</param>
+    /// <param name="name">Tenant name.</param>
+    /// <param name="correlationId">Correlation ID.</param>
+    /// <returns>The tenant.</returns>
+    /// <remarks>
+    /// Use this overload when a fixed, deterministic tenant identity is required - for example, a single
+    /// well-known tenant seeded by an application so that its commands and queries can reference the tenant ID
+    /// as a compile-time constant.
+    /// </remarks>
+    public static Tenant Create(Guid id, string code, string name, Guid correlationId) =>
+        new(id, code, name, correlationId);
 
     /// <summary>
     /// Tenant field lengths.

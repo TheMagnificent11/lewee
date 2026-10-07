@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using FluentValidation;
 using Lewee.Application.Mediation.Requests;
 using Lewee.Common;
@@ -9,7 +9,7 @@ using Pizzeria.Store.Domain;
 
 namespace Pizzeria.Store.Application.Orders;
 
-public record AddPizzaToOrderCommand(Guid OrderId, Guid PizzaId) : ICommand
+public record AddPizzaToOrderCommand(Guid OrderId, Guid PizzaId) : ICommand, IOrderOwnerRequest
 {
     [SuppressMessage(
         "Performance",
@@ -63,7 +63,11 @@ public record AddPizzaToOrderCommand(Guid OrderId, Guid PizzaId) : ICommand
                 return CommandResult.Fail(ResultStatus.NotFound, $"Order {request.OrderId} not found");
             }
 
-            order.AddPizza(pizza);
+            var result = order.AddPizza(pizza);
+            if (!result.IsSuccess)
+            {
+                return (CommandResult)result;
+            }
 
             await this.orderRepository.SaveChangesAsync(cancellationToken);
 

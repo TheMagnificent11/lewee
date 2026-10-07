@@ -9,7 +9,11 @@ namespace Lewee.Auth.Application;
 /// <see cref="CommandResult"/> or a <c>QueryResult&lt;T&gt;</c>, since both expose a compatible
 /// <c>static Fail(ResultStatus, string)</c> factory method but share no common interface exposing it.
 /// </summary>
-internal static class AuthorizationResultFactory
+/// <remarks>
+/// Public so that other MediatR pipeline behaviors outside this assembly (e.g. application-specific
+/// ownership-authorization behaviors) can build failure responses without duplicating this reflection logic.
+/// </remarks>
+public static class AuthorizationResultFactory
 {
     private static readonly ConcurrentDictionary<Type, Func<ResultStatus, string, object>> FailFactories = new();
 
