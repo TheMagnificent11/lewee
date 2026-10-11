@@ -44,7 +44,7 @@
   </ItemGroup>
   <ItemGroup Label="FluentValidation">
     <PackageVersion Include="FluentValidation" Version="12.2.0" />
-    <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
+    <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.2.0" />
   </ItemGroup>
   <ItemGroup Label="Fluxor">
     <PackageVersion Include="Fluxor.Blazor.Web" Version="6.11.0" />
