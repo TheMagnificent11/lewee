@@ -32,6 +32,9 @@ updates:
       fluxor:
         patterns:
           - "Fluxor.*"
+      fluentvalidation:
+        patterns:
+          - "FluentValidation*"
       microsoft-aspnetcore:
         patterns:
           - "Microsoft.AspNetCore.*"
