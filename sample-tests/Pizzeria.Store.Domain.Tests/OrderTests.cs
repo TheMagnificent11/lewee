@@ -18,9 +18,9 @@ public sealed class OrderTests
         // Act
         var order = Order.StartNewOrder(userId, correlationId);
 
-        order.AddPizza(margherita);
-        order.AddPizza(fourCheeses);
-        order.AddPizza(fourCheeses);
+        order.AddPizza(margherita, correlationId);
+        order.AddPizza(fourCheeses, correlationId);
+        order.AddPizza(fourCheeses, correlationId);
 
         order.SubmitPickupOrder(correlationId);
 
@@ -67,7 +67,7 @@ public sealed class OrderTests
         var order = Order.StartNewOrder(userId, correlationId);
 
         // Act
-        order.AddPizza(margherita);
+        order.AddPizza(margherita, correlationId);
 
         // Assert
         var orderPizza = order.Pizzas.Single();

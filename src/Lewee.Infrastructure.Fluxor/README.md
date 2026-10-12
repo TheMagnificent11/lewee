@@ -372,4 +372,4 @@ The `SseClientMessageReceiver` class handles the HTTP-based SSE connection:
 
 ## Sample Application
 
-See the [Pizzeria Store Web](../../sample/Pizzeria.Store.Web/) project for a complete implementation example using Fluxor state management and client event receiving.
+See the [Pizzeria Store Web](../../sample/Pizzeria.Ordering.Web/) project for a complete implementation example using Fluxor state management and client event receiving.

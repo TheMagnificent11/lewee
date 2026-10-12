@@ -18,7 +18,7 @@ namespace Pizzeria.Store.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("sto")
-                .HasAnnotation("ProductVersion", "10.0.11")
+                .HasAnnotation("ProductVersion", "10.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -131,8 +131,8 @@ namespace Pizzeria.Store.Data.Migrations
                         .HasColumnType("character varying(255)");
 
                     b.Property<string>("DeliveryAddress")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
@@ -150,6 +150,11 @@ namespace Pizzeria.Store.Data.Migrations
 
                     b.Property<DateTime>("StartedDateTime")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
 
                     b.Property<DateTime?>("SubmittedDateTime")
                         .HasColumnType("timestamp with time zone");
@@ -227,6 +232,9 @@ namespace Pizzeria.Store.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
+
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");

@@ -1,10 +1,10 @@
 using FluentAssertions;
+using Pizzeria.Ordering.StateManagement.Orders;
+using Pizzeria.Ordering.StateManagement.Orders.Actions;
+using Pizzeria.Ordering.StateManagement.Pizzas;
+using Pizzeria.Ordering.StateManagement.Pizzas.Actions;
 using Pizzeria.Store.Contracts.Orders;
 using Pizzeria.Store.Contracts.Pizzas;
-using Pizzeria.Store.StateManagement.Orders;
-using Pizzeria.Store.StateManagement.Orders.Actions;
-using Pizzeria.Store.StateManagement.Pizzas;
-using Pizzeria.Store.StateManagement.Pizzas.Actions;
 using Xunit;
 
 namespace Lewee.Infrastructure.Fluxor.Tests.Unit;

@@ -62,5 +62,5 @@ Each major directory contains an AGENTS.md file that references the relevant Cop
 - `src/AGENTS.md` - Framework packages development
 - `tests/AGENTS.md` - Framework tests guidance
 - `sample/AGENTS.md` - Sample application development
-- `sample/Pizzeria.Store.Web/AGENTS.md` - Blazor component development
+- `sample/Pizzeria.Ordering.Web/AGENTS.md` - Blazor component development
 - `sample-tests/AGENTS.md` - Sample tests guidance

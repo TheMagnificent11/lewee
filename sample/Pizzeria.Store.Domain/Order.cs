@@ -1,6 +1,7 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using Lewee.Common;
 using Lewee.Domain;
+using Pizzeria.Store.Contracts.Orders;
 
 namespace Pizzeria.Store.Domain;
 
@@ -14,6 +15,7 @@ public class Order : AggregateRoot
         this.pizzas = [];
         this.UserId = userId;
         this.StartedDateTime = DateTime.UtcNow;
+        this.Status = OrderStatus.InProgress;
 
         this.DomainEvents.Raise(new OrderStartedEvent(
             this.Id,
@@ -37,6 +39,8 @@ public class Order : AggregateRoot
 
     public bool IsDeliveryOrder => !string.IsNullOrWhiteSpace(this.DeliveryAddress);
 
+    public OrderStatus Status { get; protected set; }
+
     public DateTime StartedDateTime { get; protected set; }
 
     public DateTime? SubmittedDateTime { get; protected set; }
@@ -56,30 +60,88 @@ public class Order : AggregateRoot
         return new Order(userId, correlationId);
     }
 
-    public void AddPizza(Pizza pizza)
+    public Result AddPizza(Pizza pizza, Guid correlationId)
     {
         ArgumentNullException.ThrowIfNull(pizza);
+
+        if (this.IsSubmitted)
+        {
+            return CommandResult.Fail(
+                ResultStatus.BadRequest,
+                "Cannot add pizzas to an order that has already been submitted.");
+        }
 
         var existingOrderPizza = this.pizzas.FirstOrDefault(x => x.PizzaId == pizza.Id);
         if (existingOrderPizza is null)
         {
             this.pizzas.Add(OrderPizza.CreateForOrder(this, pizza));
-            return;
+        }
+        else
+        {
+            existingOrderPizza.IncreaseQuantity();
         }
 
-        existingOrderPizza.IncreaseQuantity();
+        this.DomainEvents.Raise(new PizzaAddedToOrderEvent(
+            this.Id,
+            this.UserId,
+            DateTime.UtcNow,
+            correlationId));
+
+        return CommandResult.Success();
     }
 
-    public void SubmitPickupOrder(Guid correlationId)
+    public Result RemovePizza(Pizza pizza, Guid correlationId)
     {
+        ArgumentNullException.ThrowIfNull(pizza);
+
+        if (this.IsSubmitted)
+        {
+            return CommandResult.Fail(
+                ResultStatus.BadRequest,
+                "Cannot remove pizzas from an order that has already been submitted.");
+        }
+
+        var existingOrderPizza = this.pizzas.FirstOrDefault(x => x.PizzaId == pizza.Id);
+        if (existingOrderPizza is null)
+        {
+            return CommandResult.Fail(ResultStatus.NotFound, $"Pizza {pizza.Id} is not part of this order.");
+        }
+
+        existingOrderPizza.DecreaseQuantity();
+
+        if (existingOrderPizza.Quantity <= 0)
+        {
+            this.pizzas.Remove(existingOrderPizza);
+        }
+
+        this.DomainEvents.Raise(new PizzaRemovedFromOrderEvent(
+            this.Id,
+            this.UserId,
+            DateTime.UtcNow,
+            correlationId));
+
+        return CommandResult.Success();
+    }
+
+    public Result SubmitPickupOrder(Guid correlationId)
+    {
+        var canSubmit = this.EnsureCanSubmit();
+        if (!canSubmit.IsSuccess)
+        {
+            return canSubmit;
+        }
+
         this.DeliveryAddress = null;
         this.SubmittedDateTime = DateTime.UtcNow;
+        this.Status = OrderStatus.Received;
 
         this.DomainEvents.Raise(new PickupOrderSubmittedEvent(
             this.Id,
             this.UserId,
             this.SubmittedDateTime.Value,
             correlationId));
+
+        return CommandResult.Success();
     }
 
     public Result SubmitDeliveryOrder(string deliveryAddress, Guid correlationId)
@@ -89,8 +151,15 @@ public class Order : AggregateRoot
             return CommandResult.Fail(ResultStatus.BadRequest, "Delivery address is required.");
         }
 
+        var canSubmit = this.EnsureCanSubmit();
+        if (!canSubmit.IsSuccess)
+        {
+            return canSubmit;
+        }
+
         this.DeliveryAddress = deliveryAddress;
         this.SubmittedDateTime = DateTime.UtcNow;
+        this.Status = OrderStatus.Received;
 
         this.DomainEvents.Raise(new DeliveryOrderSubmittedEvent(
             this.Id,
@@ -102,11 +171,34 @@ public class Order : AggregateRoot
         return CommandResult.Success();
     }
 
-    public Result PizzasPrepared(Guid correlationId)
+    public Result StartMaking(Guid correlationId)
+    {
+        if (this.Status != OrderStatus.Received)
+        {
+            return CommandResult.Fail(ResultStatus.BadRequest, "Only a received order can start being made.");
+        }
+
+        this.Status = OrderStatus.Making;
+
+        this.DomainEvents.Raise(new StartedMakingOrderEvent(
+            this.Id,
+            this.UserId,
+            DateTime.UtcNow,
+            correlationId));
+
+        return CommandResult.Success();
+    }
+
+    public Result Prepared(Guid correlationId)
     {
         if (!this.IsSubmitted)
         {
             return CommandResult.Fail(ResultStatus.BadRequest, "Cannot prepare an order that is not submitted.");
+        }
+
+        if (this.IsCompleted)
+        {
+            return CommandResult.Fail(ResultStatus.BadRequest, "Cannot prepare an order that is completed.");
         }
 
         if (this.IsPrepared)
@@ -115,6 +207,7 @@ public class Order : AggregateRoot
         }
 
         this.PreparedDateTime = DateTime.UtcNow;
+        this.Status = this.IsDeliveryOrder ? OrderStatus.ReadyForDelivery : OrderStatus.ReadyForPickup;
 
         this.DomainEvents.Raise(new OrderPreparedEvent(
             this.Id,
@@ -125,7 +218,27 @@ public class Order : AggregateRoot
         return CommandResult.Success();
     }
 
-    public Result PickedUp()
+    public Result OutForDelivery(Guid correlationId)
+    {
+        if (this.Status != OrderStatus.ReadyForDelivery)
+        {
+            return CommandResult.Fail(
+                ResultStatus.BadRequest,
+                "Only a prepared delivery order can be sent out for delivery.");
+        }
+
+        this.Status = OrderStatus.Delivering;
+
+        this.DomainEvents.Raise(new OrderOutForDeliveryEvent(
+            this.Id,
+            this.UserId,
+            DateTime.UtcNow,
+            correlationId));
+
+        return CommandResult.Success();
+    }
+
+    public Result PickedUp(Guid correlationId)
     {
         if (!this.IsPrepared)
         {
@@ -138,11 +251,18 @@ public class Order : AggregateRoot
         }
 
         this.CompletedDateTime = DateTime.UtcNow;
+        this.Status = OrderStatus.Completed;
+
+        this.DomainEvents.Raise(new OrderCompletedEvent(
+            this.Id,
+            this.UserId,
+            this.CompletedDateTime.Value,
+            correlationId));
 
         return CommandResult.Success();
     }
 
-    public Result PizzasDelivered()
+    public Result Delivered(Guid correlationId)
     {
         if (!this.IsPrepared)
         {
@@ -155,6 +275,28 @@ public class Order : AggregateRoot
         }
 
         this.CompletedDateTime = DateTime.UtcNow;
+        this.Status = OrderStatus.Completed;
+
+        this.DomainEvents.Raise(new OrderCompletedEvent(
+            this.Id,
+            this.UserId,
+            this.CompletedDateTime.Value,
+            correlationId));
+
+        return CommandResult.Success();
+    }
+
+    private CommandResult EnsureCanSubmit()
+    {
+        if (this.IsSubmitted)
+        {
+            return CommandResult.Fail(ResultStatus.BadRequest, "Order has already been submitted.");
+        }
+
+        if (this.pizzas.Count == 0)
+        {
+            return CommandResult.Fail(ResultStatus.BadRequest, "Cannot submit an order with no pizzas.");
+        }
 
         return CommandResult.Success();
     }
@@ -162,6 +304,6 @@ public class Order : AggregateRoot
     public static class FieldLengths
     {
         public const int UserId = 100;
-        public const int DeliveryAddress = 200;
+        public const int DeliveryAddress = 250;
     }
 }
