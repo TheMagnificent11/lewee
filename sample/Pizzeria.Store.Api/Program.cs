@@ -21,7 +21,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
 
 var pizzaStoreConnectionString =
-    builder.Configuration.GetConnectionString(ServiceNames.PizzaStoreDatabaseName)!;
+    builder.Configuration.GetConnectionString(ServiceNames.PizzeriaDatabase)!;
 
 builder.Services
     .AddAuthenticatedUserService()

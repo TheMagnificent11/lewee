@@ -33,23 +33,22 @@ var databaseServer = Environments.IsIntegrationTesting
         .WithDataVolume(isReadOnly: false)
         .WithPgWeb();
 
-var pizzaStoreDatabaseName = ServiceNames.PizzaStoreDatabaseName;
-var pizzaStoreDatabase = databaseServer.AddDatabase(pizzaStoreDatabaseName);
+var pizzeriaDatabase = databaseServer.AddDatabase(ServiceNames.PizzeriaDatabase);
 
 var configuration = builder.AddCSharpApp(ServiceNames.ConfigurationService, "../Pizzeria.Configuration/Pizzeria.Configuration.csproj")
     .WithReference(authServer)
-    .WithReference(pizzaStoreDatabase)
+    .WithReference(pizzeriaDatabase)
     .WaitFor(authServer)
-    .WaitFor(pizzaStoreDatabase);
+    .WaitFor(pizzeriaDatabase);
 
 var authApi = builder.AddProject<Projects.Pizzeria_Auth_Api>(ServiceNames.AuthApi)
-    .WithReference(pizzaStoreDatabase)
+    .WithReference(pizzeriaDatabase)
     .WithReference(authServer)
     .WaitForCompletion(configuration)
     .WithHttpHealthCheck("/health");
 
 var pizzaStoreApi = builder.AddProject<Projects.Pizzeria_Store_Api>(ServiceNames.PizzaStoreApi)
-    .WithReference(pizzaStoreDatabase)
+    .WithReference(pizzeriaDatabase)
     .WithReference(authServer)
     .WaitForCompletion(configuration)
     .WithHttpHealthCheck("/health");

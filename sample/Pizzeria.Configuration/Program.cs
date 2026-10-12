@@ -22,7 +22,7 @@ var builder = Host.CreateApplicationBuilder(args);
 builder.AddServiceDefaults();
 
 // Get the database connection string via service discovery
-var databaseName = ServiceNames.PizzaStoreDatabaseName;
+var databaseName = ServiceNames.PizzeriaDatabase;
 
 // The authenticated user service is required by the audit and domain-event interceptors.
 builder.Services.AddAuthenticatedUserService();
