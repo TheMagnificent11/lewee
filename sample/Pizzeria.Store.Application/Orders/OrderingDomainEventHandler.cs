@@ -9,6 +9,8 @@ namespace Pizzeria.Store.Application.Orders;
 
 public class OrderingDomainEventHandler :
     INotificationHandler<OrderStartedEvent>,
+    INotificationHandler<PizzaAddedToOrderEvent>,
+    INotificationHandler<PizzaRemovedFromOrderEvent>,
     INotificationHandler<PickupOrderSubmittedEvent>,
     INotificationHandler<DeliveryOrderSubmittedEvent>,
     INotificationHandler<StartedMakingOrderEvent>,
@@ -38,6 +40,28 @@ public class OrderingDomainEventHandler :
         ArgumentNullException.ThrowIfNull(notification);
         return this.ProjectAndPublishAsync(
             nameof(OrderStartedEvent),
+            notification.OrderId,
+            notification.CorrelationId,
+            notification.UserId,
+            cancellationToken);
+    }
+
+    public Task Handle(PizzaAddedToOrderEvent notification, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(notification);
+        return this.ProjectAndPublishAsync(
+            nameof(PizzaAddedToOrderEvent),
+            notification.OrderId,
+            notification.CorrelationId,
+            notification.UserId,
+            cancellationToken);
+    }
+
+    public Task Handle(PizzaRemovedFromOrderEvent notification, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(notification);
+        return this.ProjectAndPublishAsync(
+            nameof(PizzaRemovedFromOrderEvent),
             notification.OrderId,
             notification.CorrelationId,
             notification.UserId,

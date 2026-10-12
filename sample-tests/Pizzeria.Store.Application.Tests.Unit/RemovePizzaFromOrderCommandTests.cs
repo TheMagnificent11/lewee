@@ -14,7 +14,7 @@ public sealed class RemovePizzaFromOrderCommandTests
     public async Task Should_RemovePizzaAsync()
     {
         var order = TestHelpers.CreateOrderWithPizza(out var pizza);
-        order.AddPizza(pizza);
+        order.AddPizza(pizza, Guid.NewGuid());
 
         var handler = CreateHandler(order, pizza);
 
@@ -40,6 +40,7 @@ public sealed class RemovePizzaFromOrderCommandTests
         var handler = new RemovePizzaFromOrderCommand.Handler(
             orderRepository.Object,
             pizzaRepository.Object,
+            TestHelpers.CorrelationAccessor().Object,
             TestHelpers.Logger<RemovePizzaFromOrderCommand.Handler>());
 
         var result = await handler.Handle(
@@ -65,6 +66,7 @@ public sealed class RemovePizzaFromOrderCommandTests
         return new RemovePizzaFromOrderCommand.Handler(
             orderRepository.Object,
             pizzaRepository.Object,
+            TestHelpers.CorrelationAccessor().Object,
             TestHelpers.Logger<RemovePizzaFromOrderCommand.Handler>());
     }
 }

@@ -1,5 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
+using Correlate;
 using FluentValidation;
+using Lewee.Application.Mediation.Behaviors;
 using Lewee.Application.Mediation.Requests;
 using Lewee.Common;
 using Lewee.Domain;
@@ -35,15 +37,18 @@ public record AddPizzaToOrderCommand(Guid OrderId, Guid PizzaId) : ICommand, IOr
     {
         private readonly IRepository<Order> orderRepository;
         private readonly IRepository<Pizza> pizzaRepository;
+        private readonly ICorrelationContextAccessor correlationContextAccessor;
         private readonly ILogger<Handler> logger;
 
         public Handler(
             IRepository<Order> orderRepository,
             IRepository<Pizza> pizzaRepository,
+            ICorrelationContextAccessor correlationContextAccessor,
             ILogger<Handler> logger)
         {
             this.orderRepository = orderRepository;
             this.pizzaRepository = pizzaRepository;
+            this.correlationContextAccessor = correlationContextAccessor;
             this.logger = logger;
         }
 
@@ -63,7 +68,9 @@ public record AddPizzaToOrderCommand(Guid OrderId, Guid PizzaId) : ICommand, IOr
                 return CommandResult.Fail(ResultStatus.NotFound, $"Order {request.OrderId} not found");
             }
 
-            var result = order.AddPizza(pizza);
+            var correlationId = this.correlationContextAccessor.GetCorrelationId();
+
+            var result = order.AddPizza(pizza, correlationId);
             if (!result.IsSuccess)
             {
                 return (CommandResult)result;

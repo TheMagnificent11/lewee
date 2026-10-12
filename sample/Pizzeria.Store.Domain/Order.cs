@@ -60,7 +60,7 @@ public class Order : AggregateRoot
         return new Order(userId, correlationId);
     }
 
-    public Result AddPizza(Pizza pizza)
+    public Result AddPizza(Pizza pizza, Guid correlationId)
     {
         ArgumentNullException.ThrowIfNull(pizza);
 
@@ -75,15 +75,22 @@ public class Order : AggregateRoot
         if (existingOrderPizza is null)
         {
             this.pizzas.Add(OrderPizza.CreateForOrder(this, pizza));
-            return CommandResult.Success();
+        }
+        else
+        {
+            existingOrderPizza.IncreaseQuantity();
         }
 
-        existingOrderPizza.IncreaseQuantity();
+        this.DomainEvents.Raise(new PizzaAddedToOrderEvent(
+            this.Id,
+            this.UserId,
+            DateTime.UtcNow,
+            correlationId));
 
         return CommandResult.Success();
     }
 
-    public Result RemovePizza(Pizza pizza)
+    public Result RemovePizza(Pizza pizza, Guid correlationId)
     {
         ArgumentNullException.ThrowIfNull(pizza);
 
@@ -106,6 +113,12 @@ public class Order : AggregateRoot
         {
             this.pizzas.Remove(existingOrderPizza);
         }
+
+        this.DomainEvents.Raise(new PizzaRemovedFromOrderEvent(
+            this.Id,
+            this.UserId,
+            DateTime.UtcNow,
+            correlationId));
 
         return CommandResult.Success();
     }

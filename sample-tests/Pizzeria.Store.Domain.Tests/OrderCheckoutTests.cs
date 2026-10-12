@@ -107,7 +107,7 @@ public sealed class OrderCheckoutTests
     private static Order StartOrderWithPizza()
     {
         var order = Order.StartNewOrder(Guid.NewGuid().ToString(), Guid.NewGuid());
-        order.AddPizza(Menu.GetPizzaByName(Menu.PizzaNames.Margherita));
+        order.AddPizza(Menu.GetPizzaByName(Menu.PizzaNames.Margherita), Guid.NewGuid());
         return order;
     }
 }

@@ -170,7 +170,7 @@ public sealed class OrderStatusTests
     private static Order SubmittedPickupOrder()
     {
         var order = Order.StartNewOrder(Guid.NewGuid().ToString(), Guid.NewGuid());
-        order.AddPizza(Menu.GetPizzaByName(Menu.PizzaNames.Margherita));
+        order.AddPizza(Menu.GetPizzaByName(Menu.PizzaNames.Margherita), Guid.NewGuid());
         order.SubmitPickupOrder(Guid.NewGuid());
         return order;
     }
@@ -178,7 +178,7 @@ public sealed class OrderStatusTests
     private static Order SubmittedDeliveryOrder()
     {
         var order = Order.StartNewOrder(Guid.NewGuid().ToString(), Guid.NewGuid());
-        order.AddPizza(Menu.GetPizzaByName(Menu.PizzaNames.Margherita));
+        order.AddPizza(Menu.GetPizzaByName(Menu.PizzaNames.Margherita), Guid.NewGuid());
         order.SubmitDeliveryOrder("1 Test Street", Guid.NewGuid());
         return order;
     }

@@ -15,7 +15,7 @@ public sealed class GetOrderQueryTests
     public async Task Should_ReturnOrderWithPizzasAndTotalAsync()
     {
         var order = TestHelpers.CreateOrderWithPizza(out var pizza);
-        order.AddPizza(pizza);
+        order.AddPizza(pizza, Guid.NewGuid());
 
         var handler = CreateHandler(order);
 

@@ -21,7 +21,7 @@ internal static class TestHelpers
     {
         pizza = CreatePizza();
         var order = Order.StartNewOrder(userId, Guid.NewGuid());
-        order.AddPizza(pizza);
+        order.AddPizza(pizza, Guid.NewGuid());
         order.DomainEvents.GetAndClear();
         return order;
     }
