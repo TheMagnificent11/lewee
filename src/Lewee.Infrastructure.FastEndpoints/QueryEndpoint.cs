@@ -87,19 +87,19 @@ public abstract class QueryEndpoint<T> : EndpointWithoutRequest<T>
         switch (result.Status)
         {
             case ResultStatus.Success:
-                await this.SendOkAsync(result.Data!, cancellationToken);
+                await this.HttpContext.Response.SendOkAsync(result.Data!, cancellation: cancellationToken);
                 return;
 
             case ResultStatus.NotFound:
-                await this.SendNotFoundAsync(cancellationToken);
+                await this.HttpContext.Response.SendNotFoundAsync(cancellationToken);
                 return;
 
             case ResultStatus.Unauthenticated:
-                await this.SendUnauthorizedAsync(cancellationToken);
+                await this.HttpContext.Response.SendUnauthorizedAsync(cancellationToken);
                 return;
 
             case ResultStatus.Unauthorized:
-                await this.SendForbiddenAsync(cancellationToken);
+                await this.HttpContext.Response.SendForbiddenAsync(cancellationToken);
                 return;
 
             default:
