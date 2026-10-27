@@ -13,6 +13,8 @@ applyTo: "**/*"
 | Aspire CLI | 13.6.4 | `dotnet tool install --global Aspire.Cli --version 13.6.4` | `aspire --version` |
 | Docker Desktop | Latest | Platform-specific | `docker --version` |
 
+Trust the Aspire development certificate with `aspire certs trust`.
+
 **PATH Configuration:**
 
 ```bash
