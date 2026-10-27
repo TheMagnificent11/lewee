@@ -25,6 +25,12 @@ jobs:
         with:
           dotnet-version: 10.0.*
 
+      - name: Install Aspire CLI
+        run: dotnet tool install --global Aspire.Cli --version 13.6.4
+
+      - name: Trust Aspire development certificate
+        run: aspire certs trust
+
       # The Pizzeria.Tests.Integration tests use Aspire's DistributedApplicationTestingBuilder, which
       # requires Docker (for Postgres/Keycloak containers), a trusted HTTPS dev certificate and Playwright
       # browsers. These tests were previously filtered out (see #505) because they could hang the workflow;
