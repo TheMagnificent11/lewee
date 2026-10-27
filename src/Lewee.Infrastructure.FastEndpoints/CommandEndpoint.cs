@@ -109,7 +109,7 @@ public abstract class CommandEndpoint<TRequest> : Endpoint<TRequest, EmptyRespon
         switch (result.Status)
         {
             case ResultStatus.Success:
-                await this.SendOkAsync(cancellationToken);
+                await this.HttpContext.Response.SendOkAsync(cancellationToken);
                 return;
 
             case ResultStatus.BadRequest:
@@ -118,15 +118,15 @@ public abstract class CommandEndpoint<TRequest> : Endpoint<TRequest, EmptyRespon
                 break;
 
             case ResultStatus.NotFound:
-                await this.SendNotFoundAsync(cancellationToken);
+                await this.HttpContext.Response.SendNotFoundAsync(cancellationToken);
                 return;
 
             case ResultStatus.Unauthenticated:
-                await this.SendUnauthorizedAsync(cancellationToken);
+                await this.HttpContext.Response.SendUnauthorizedAsync(cancellationToken);
                 return;
 
             case ResultStatus.Unauthorized:
-                await this.SendForbiddenAsync(cancellationToken);
+                await this.HttpContext.Response.SendForbiddenAsync(cancellationToken);
                 return;
 
             default:
