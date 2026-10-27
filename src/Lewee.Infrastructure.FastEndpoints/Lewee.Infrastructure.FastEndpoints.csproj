@@ -3,6 +3,7 @@
   <ItemGroup>
     <PackageReference Include="FastEndpoints" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" />
+    <PackageReference Include="Microsoft.Extensions.Http" />
   </ItemGroup>
   
   <ItemGroup>
