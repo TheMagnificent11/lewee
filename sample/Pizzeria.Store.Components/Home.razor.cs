@@ -16,7 +16,7 @@ public partial class Home
 
     public static class Selectors
     {
-        public const string StartOrderButton = $"[role='button'][aria-label='{AriaLabels.StartOrder}']";
+        public const string StartOrderButton = $"button[aria-label='{AriaLabels.StartOrder}']";
     }
 
     private static class AriaLabels

@@ -22,6 +22,9 @@ public static class ApiCientConfiguration
     public static IServiceCollection AddWebApiHttpClient<T>(this IServiceCollection services, string aspireApiServiceName)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentException.ThrowIfNullOrEmpty(aspireApiServiceName);
+
         services
             .AddHttpContextAccessor()
             .AddCorrelate(options => options.RequestHeaders = [RequestHeaders.CorrelationId])
