@@ -149,6 +149,12 @@ public partial class Order : FluxorComponent
         public const string SubmitOrderButton = $"[role='button'][aria-label='{AriaLabels.SubmitOrder}']";
         public const string DeliveryAddressInput = $"[aria-label='{AriaLabels.DeliveryAddress}']";
         public const string OrderStatus = "[role='status']";
+
+        public static string AddPizzaButton(string pizzaName) => $"[aria-label='add {pizzaName}']";
+
+        public static string RemovePizzaButton(string pizzaName) => $"[aria-label='remove {pizzaName}']";
+
+        public static string PizzaQuantity(string pizzaName) => $"[aria-label='quantity {pizzaName}']";
     }
 
     private static class AriaLabels

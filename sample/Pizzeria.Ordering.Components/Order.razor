@@ -71,7 +71,9 @@ else if (OrdersState.Value.Data.Status == OrderStatus.InProgress)
                                                aria-label="@($"remove {pizza.Name}")"
                                                StartIcon="Icons.Material.Filled.Remove">
                                     </MudButton>
-                                    <MudButton Style="min-width: 80px;" Disabled="true">
+                                    <MudButton Style="min-width: 80px;"
+                                               Disabled="true"
+                                               aria-label="@($"quantity {pizza.Name}")">
                                         @quantity
                                     </MudButton>
                                     <MudButton OnClick="() => AddPizza(pizza.Id)"
