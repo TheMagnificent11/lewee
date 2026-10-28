@@ -12,8 +12,6 @@ public static class StoreStateManagementConfiguration
             isDevelopment,
             typeof(StoreStateManagementConfiguration).Assembly);
 
-        services.AddScoped<IOrderCommandCorrelationTracker, OrderCommandCorrelationTracker>();
-
         return services;
     }
 }

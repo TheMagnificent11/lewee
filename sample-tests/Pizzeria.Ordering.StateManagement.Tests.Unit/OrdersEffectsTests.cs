@@ -32,7 +32,6 @@ public class OrdersEffectsTests : TestContext
             this.stateMock.Object,
             this.bffApiClientMock.Object,
             this.Services.GetRequiredService<NavigationManager>(),
-            Mock.Of<IOrderCommandCorrelationTracker>(),
             Mock.Of<ICorrelationContextAccessor>(),
             Mock.Of<ILogger<StartOrderEffects>>());
     }

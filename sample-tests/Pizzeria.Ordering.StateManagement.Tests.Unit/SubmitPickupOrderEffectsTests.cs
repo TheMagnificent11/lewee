@@ -24,7 +24,6 @@ public class SubmitPickupOrderEffectsTests
         this.effects = new SubmitPickupOrderEffects(
             this.stateMock.Object,
             this.bffApiClientMock.Object,
-            Mock.Of<IOrderCommandCorrelationTracker>(),
             Mock.Of<Correlate.ICorrelationContextAccessor>(),
             Mock.Of<ILogger<SubmitPickupOrderEffects>>());
     }

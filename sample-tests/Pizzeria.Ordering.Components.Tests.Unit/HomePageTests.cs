@@ -6,7 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using MudBlazor.Services;
 using Pizzeria.Ordering.StateManagement;
-using Pizzeria.Ordering.StateManagement.Orders;
 using Xunit;
 
 namespace Pizzeria.Ordering.Components.Tests.Unit;
@@ -17,7 +16,6 @@ public class HomePageTests : TestContext
     {
         this.Services.AddSingleton(Mock.Of<IBffApiClient>());
         this.Services.AddSingleton(Mock.Of<ICorrelationContextAccessor>());
-        this.Services.AddSingleton(Mock.Of<IOrderCommandCorrelationTracker>());
         this.Services.AddLogging();
         this.Services.AddMudServices();
         this.Services.AddFluxor(o => o.ScanAssemblies(typeof(StoreStateManagementConfiguration).Assembly));

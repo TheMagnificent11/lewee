@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using Fluxor;
 using Lewee.Common;
 using Lewee.Infrastructure.Fluxor;
 using Pizzeria.Ordering.StateManagement.Orders;
@@ -9,14 +10,14 @@ namespace Pizzeria.Ordering.Web.Infrastructure;
 
 internal sealed class MessageToActionMapper : IMessageToActionMapper
 {
-    private readonly IOrderCommandCorrelationTracker correlationTracker;
+    private readonly IState<OrderState> orderState;
     private readonly ILogger<MessageToActionMapper> logger;
 
     public MessageToActionMapper(
-        IOrderCommandCorrelationTracker correlationTracker,
+        IState<OrderState> orderState,
         ILogger<MessageToActionMapper> logger)
     {
-        this.correlationTracker = correlationTracker;
+        this.orderState = orderState;
         this.logger = logger;
     }
 
@@ -55,7 +56,9 @@ internal sealed class MessageToActionMapper : IMessageToActionMapper
 
     private IMessageReceivedAction? MapOrderMessage(OrderDto order, Guid correlationId)
     {
-        if (!this.correlationTracker.TryGetAndRemove(correlationId, out var commandType))
+        var state = this.orderState.Value;
+
+        if (state.CorrelationId != correlationId || state.PendingCommandType is null)
         {
             this.logger.LogWarning(
                 "No pending order command found for correlation ID {CorrelationId}",
@@ -64,7 +67,7 @@ internal sealed class MessageToActionMapper : IMessageToActionMapper
             return null;
         }
 
-        return commandType switch
+        return state.PendingCommandType switch
         {
             OrderCommandType.StartOrder => new StartOrderCompletedAction
             {

@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Fluxor;
 using Lewee.Infrastructure.Fluxor;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
@@ -12,13 +13,13 @@ namespace Pizzeria.Ordering.Web.Tests.Unit;
 
 public class MessageToActionMapperTests
 {
-    private readonly Mock<IOrderCommandCorrelationTracker> correlationTrackerMock = new();
+    private readonly Mock<IState<OrderState>> orderStateMock = new();
     private readonly MessageToActionMapper mapper;
 
     public MessageToActionMapperTests()
     {
         this.mapper = new MessageToActionMapper(
-            this.correlationTrackerMock.Object,
+            this.orderStateMock.Object,
             NullLogger<MessageToActionMapper>.Instance);
     }
 
@@ -38,14 +39,30 @@ public class MessageToActionMapperTests
         // Arrange
         var correlationId = Guid.NewGuid();
         var order = new OrderDto();
-        var outCommandType = default(OrderCommandType);
 
-        this.correlationTrackerMock
-            .Setup(t => t.TryGetAndRemove(correlationId, out outCommandType))
-            .Returns(false);
+        this.orderStateMock
+            .Setup(s => s.Value)
+            .Returns(new OrderState { CorrelationId = correlationId, PendingCommandType = null });
 
         // Act
         var result = this.mapper.Map(order, correlationId);
+
+        // Assert
+        result.Should().BeNull();
+    }
+
+    [Fact]
+    public void Map_WithOrderDtoAndMismatchedCorrelationId_ReturnsNull()
+    {
+        // Arrange
+        var order = new OrderDto();
+
+        this.orderStateMock
+            .Setup(s => s.Value)
+            .Returns(new OrderState { CorrelationId = Guid.NewGuid(), PendingCommandType = OrderCommandType.AddPizzaToOrder });
+
+        // Act
+        var result = this.mapper.Map(order, Guid.NewGuid());
 
         // Assert
         result.Should().BeNull();
@@ -65,9 +82,9 @@ public class MessageToActionMapperTests
         var correlationId = Guid.NewGuid();
         var order = new OrderDto { Id = Guid.NewGuid() };
 
-        this.correlationTrackerMock
-            .Setup(t => t.TryGetAndRemove(correlationId, out commandType))
-            .Returns(true);
+        this.orderStateMock
+            .Setup(s => s.Value)
+            .Returns(new OrderState { CorrelationId = correlationId, PendingCommandType = commandType });
 
         // Act
         var result = this.mapper.Map(order, correlationId);

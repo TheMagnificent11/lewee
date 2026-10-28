@@ -13,26 +13,21 @@ public sealed class SubmitDeliveryOrderEffects :
     CommandEffects<OrderState, OrderDto, SubmitDeliveryOrderAction, SubmitDeliveryOrderSuccessAction, SubmitDeliveryOrderFailureAction, SubmitDeliveryOrderCompletedAction>
 {
     private readonly IBffApiClient bffApiClient;
-    private readonly IOrderCommandCorrelationTracker correlationTracker;
 
     public SubmitDeliveryOrderEffects(
         IState<OrderState> state,
         IBffApiClient bffApiClient,
-        IOrderCommandCorrelationTracker correlationTracker,
         ICorrelationContextAccessor correlationContextAccessor,
         ILogger<SubmitDeliveryOrderEffects> logger)
         : base(state, correlationContextAccessor, logger)
     {
         this.bffApiClient = bffApiClient;
-        this.correlationTracker = correlationTracker;
     }
 
     protected override async Task<CommandResult> ExecuteCommandAsync(
         [NotNull] SubmitDeliveryOrderAction action,
         [NotNull] IDispatcher dispatcher)
     {
-        this.correlationTracker.Register(action.CorrelationId, OrderCommandType.SubmitDeliveryOrder);
-
         await this.bffApiClient.UpdateOrderAsync(
             action.OrderId,
             new UpdateOrderRequest { SubmitAsDelivery = true, DeliveryAddress = action.DeliveryAddress });

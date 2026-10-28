@@ -13,7 +13,10 @@ public static class OrderReducer
         [NotNull] OrderState state,
         [NotNull] StartOrderAction action)
     {
-        return state.OnCommand<OrderState, OrderDto, StartOrderAction>(action, clearData: true);
+        return state.OnCommand<OrderState, OrderDto, StartOrderAction>(action, clearData: true) with
+        {
+            PendingCommandType = OrderCommandType.StartOrder,
+        };
     }
 
     [ReducerMethod]
@@ -45,7 +48,10 @@ public static class OrderReducer
         [NotNull] OrderState state,
         [NotNull] AddPizzaToOrderAction action)
     {
-        return state.OnCommand<OrderState, OrderDto, AddPizzaToOrderAction>(action, clearData: false);
+        return state.OnCommand<OrderState, OrderDto, AddPizzaToOrderAction>(action, clearData: false) with
+        {
+            PendingCommandType = OrderCommandType.AddPizzaToOrder,
+        };
     }
 
     [ReducerMethod]
@@ -77,7 +83,10 @@ public static class OrderReducer
         [NotNull] OrderState state,
         [NotNull] RemovePizzaFromOrderAction action)
     {
-        return state.OnCommand<OrderState, OrderDto, RemovePizzaFromOrderAction>(action, clearData: false);
+        return state.OnCommand<OrderState, OrderDto, RemovePizzaFromOrderAction>(action, clearData: false) with
+        {
+            PendingCommandType = OrderCommandType.RemovePizzaFromOrder,
+        };
     }
 
     [ReducerMethod]
@@ -109,7 +118,10 @@ public static class OrderReducer
         [NotNull] OrderState state,
         [NotNull] SubmitPickupOrderAction action)
     {
-        return state.OnCommand<OrderState, OrderDto, SubmitPickupOrderAction>(action, clearData: false);
+        return state.OnCommand<OrderState, OrderDto, SubmitPickupOrderAction>(action, clearData: false) with
+        {
+            PendingCommandType = OrderCommandType.SubmitPickupOrder,
+        };
     }
 
     [ReducerMethod]
@@ -141,7 +153,10 @@ public static class OrderReducer
         [NotNull] OrderState state,
         [NotNull] SubmitDeliveryOrderAction action)
     {
-        return state.OnCommand<OrderState, OrderDto, SubmitDeliveryOrderAction>(action, clearData: false);
+        return state.OnCommand<OrderState, OrderDto, SubmitDeliveryOrderAction>(action, clearData: false) with
+        {
+            PendingCommandType = OrderCommandType.SubmitDeliveryOrder,
+        };
     }
 
     [ReducerMethod]

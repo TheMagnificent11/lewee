@@ -13,26 +13,21 @@ public sealed class RemovePizzaFromOrderEffects :
     CommandEffects<OrderState, OrderDto, RemovePizzaFromOrderAction, RemovePizzaFromOrderSuccessAction, RemovePizzaFromOrderFailureAction, RemovePizzaFromOrderCompletedAction>
 {
     private readonly IBffApiClient bffApiClient;
-    private readonly IOrderCommandCorrelationTracker correlationTracker;
 
     public RemovePizzaFromOrderEffects(
         IState<OrderState> state,
         IBffApiClient bffApiClient,
-        IOrderCommandCorrelationTracker correlationTracker,
         ICorrelationContextAccessor correlationContextAccessor,
         ILogger<RemovePizzaFromOrderEffects> logger)
         : base(state, correlationContextAccessor, logger)
     {
         this.bffApiClient = bffApiClient;
-        this.correlationTracker = correlationTracker;
     }
 
     protected override async Task<CommandResult> ExecuteCommandAsync(
         [NotNull] RemovePizzaFromOrderAction action,
         [NotNull] IDispatcher dispatcher)
     {
-        this.correlationTracker.Register(action.CorrelationId, OrderCommandType.RemovePizzaFromOrder);
-
         await this.bffApiClient.UpdateOrderAsync(
             action.OrderId,
             new UpdateOrderRequest { RemovePizzaId = action.PizzaId });

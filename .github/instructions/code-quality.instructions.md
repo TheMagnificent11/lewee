@@ -167,8 +167,11 @@ All build configuration is centrally managed through a hierarchy of configuratio
 
 ### Test Method Names
 
-- Name test methods using `Should_<ExpectedResultInPascalCase>_When_<ConditionInPascalCase>`.
-- Add `_And_<ExtraConditionInPascalCase>` when another condition is required.
+- **Unit tests**: Name test methods using `Should_<ExpectedResultInPascalCase>_When_<ConditionInPascalCase>`.
+  Add `_And_<ExtraConditionInPascalCase>` when another condition is required.
+- **E2E/integration tests** (e.g. `sample-tests/Pizzeria.Tests.Integration`): Name the scenario being exercised instead
+  (e.g. `CreateOrderByAddingAndRemovingPizzasAndCompletingCheckoutForPickup`), since these tests typically cover a
+  multi-step user journey rather than a single outcome/action pair.
 
 ### NuGet Package README Files
 

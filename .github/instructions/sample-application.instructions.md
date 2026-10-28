@@ -107,11 +107,6 @@ Follow [RESTful resource naming conventions](https://restfulapi.net/resource-nam
 
 See `Pizzeria.Common.Endpoints` and `UpdateOrderEndpoint`/`UpdateOrderRequest` for an example of consolidating multiple order mutations behind a single `PUT /orders/{orderId}`.
 
-## Test Naming Conventions
-
-- **Unit tests**: Use the `Should_Outcome_When_Action` naming scheme.
-- **E2E/integration tests** (`sample-tests/Pizzeria.Tests.Integration`): Name the scenario being exercised instead (e.g. `CreateOrderByAddingAndRemovingPizzasAndCompletingCheckoutForPickup`), since these tests typically cover a multi-step user journey rather than a single outcome/action pair.
-
 ## Architecture Notes
 
 - **Orchestration**: .NET Aspire manages all services and containers

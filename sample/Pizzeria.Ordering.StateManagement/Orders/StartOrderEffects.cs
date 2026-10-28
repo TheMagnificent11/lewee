@@ -16,28 +16,23 @@ public sealed class StartOrderEffects :
 {
     private readonly IBffApiClient bffApiClient;
     private readonly NavigationManager navigationManager;
-    private readonly IOrderCommandCorrelationTracker correlationTracker;
 
     public StartOrderEffects(
         IState<OrderState> state,
         IBffApiClient bffApiClient,
         NavigationManager navigationManager,
-        IOrderCommandCorrelationTracker correlationTracker,
         ICorrelationContextAccessor correlationContextAccessor,
         ILogger<StartOrderEffects> logger)
         : base(state, correlationContextAccessor, logger)
     {
         this.bffApiClient = bffApiClient;
         this.navigationManager = navigationManager;
-        this.correlationTracker = correlationTracker;
     }
 
     protected override async Task<CommandResult> ExecuteCommandAsync(
         [NotNull] StartOrderAction action,
         [NotNull] IDispatcher dispatcher)
     {
-        this.correlationTracker.Register(action.CorrelationId, OrderCommandType.StartOrder);
-
         await this.bffApiClient.StartOrderAsync();
 
         return CommandResult.Success();
