@@ -13,21 +13,26 @@ public sealed class SubmitPickupOrderEffects :
     CommandEffects<OrderState, OrderDto, SubmitPickupOrderAction, SubmitPickupOrderSuccessAction, SubmitPickupOrderFailureAction, SubmitPickupOrderCompletedAction>
 {
     private readonly IBffApiClient bffApiClient;
+    private readonly IOrderCommandCorrelationTracker correlationTracker;
 
     public SubmitPickupOrderEffects(
         IState<OrderState> state,
         IBffApiClient bffApiClient,
+        IOrderCommandCorrelationTracker correlationTracker,
         ICorrelationContextAccessor correlationContextAccessor,
         ILogger<SubmitPickupOrderEffects> logger)
         : base(state, correlationContextAccessor, logger)
     {
         this.bffApiClient = bffApiClient;
+        this.correlationTracker = correlationTracker;
     }
 
     protected override async Task<CommandResult> ExecuteCommandAsync(
         [NotNull] SubmitPickupOrderAction action,
         [NotNull] IDispatcher dispatcher)
     {
+        this.correlationTracker.Register(action.CorrelationId, OrderCommandType.SubmitPickupOrder);
+
         await this.bffApiClient.UpdateOrderAsync(
             action.OrderId,
             new UpdateOrderRequest { SubmitAsPickup = true });

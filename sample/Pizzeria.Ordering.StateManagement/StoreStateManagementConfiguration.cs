@@ -1,5 +1,6 @@
 ﻿using Lewee.Infrastructure.Fluxor;
 using Microsoft.Extensions.DependencyInjection;
+using Pizzeria.Ordering.StateManagement.Orders;
 
 namespace Pizzeria.Ordering.StateManagement;
 
@@ -10,6 +11,8 @@ public static class StoreStateManagementConfiguration
         services.AddLeweeFluxor(
             isDevelopment,
             typeof(StoreStateManagementConfiguration).Assembly);
+
+        services.AddScoped<IOrderCommandCorrelationTracker, OrderCommandCorrelationTracker>();
 
         return services;
     }

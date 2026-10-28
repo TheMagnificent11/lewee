@@ -2,6 +2,7 @@ using Lewee.Auth.Domain;
 using Lewee.Common;
 using Lewee.Domain;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Lewee.Auth.Application;
@@ -18,7 +19,7 @@ internal class TenantRoleAuthorizationBehavior<TRequest, TResponse> : IPipelineB
     public TenantRoleAuthorizationBehavior(
         IAuthenticatedUserService authenticatedUserService,
         IRepository<User> userRepository,
-        IQueryProjectionService queryProjectionService,
+        [FromKeyedServices(typeof(User))] IQueryProjectionService queryProjectionService,
         ILogger<TenantRoleAuthorizationBehavior<TRequest, TResponse>> logger)
     {
         this.authenticatedUserService = authenticatedUserService;

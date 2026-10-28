@@ -13,21 +13,26 @@ public sealed class AddPizzaToOrderEffects :
     CommandEffects<OrderState, OrderDto, AddPizzaToOrderAction, AddPizzaToOrderSuccessAction, AddPizzaToOrderFailureAction, AddPizzaToOrderCompletedAction>
 {
     private readonly IBffApiClient bffApiClient;
+    private readonly IOrderCommandCorrelationTracker correlationTracker;
 
     public AddPizzaToOrderEffects(
         IState<OrderState> state,
         IBffApiClient bffApiClient,
+        IOrderCommandCorrelationTracker correlationTracker,
         ICorrelationContextAccessor correlationContextAccessor,
         ILogger<AddPizzaToOrderEffects> logger)
         : base(state, correlationContextAccessor, logger)
     {
         this.bffApiClient = bffApiClient;
+        this.correlationTracker = correlationTracker;
     }
 
     protected override async Task<CommandResult> ExecuteCommandAsync(
         [NotNull] AddPizzaToOrderAction action,
         [NotNull] IDispatcher dispatcher)
     {
+        this.correlationTracker.Register(action.CorrelationId, OrderCommandType.AddPizzaToOrder);
+
         await this.bffApiClient.UpdateOrderAsync(
             action.OrderId,
             new UpdateOrderRequest { AddPizzaId = action.PizzaId });

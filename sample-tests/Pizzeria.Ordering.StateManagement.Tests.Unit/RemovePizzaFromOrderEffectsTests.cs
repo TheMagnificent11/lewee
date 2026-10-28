@@ -24,6 +24,7 @@ public class RemovePizzaFromOrderEffectsTests
         this.effects = new RemovePizzaFromOrderEffects(
             this.stateMock.Object,
             this.bffApiClientMock.Object,
+            Mock.Of<IOrderCommandCorrelationTracker>(),
             Mock.Of<Correlate.ICorrelationContextAccessor>(),
             Mock.Of<ILogger<RemovePizzaFromOrderEffects>>());
     }

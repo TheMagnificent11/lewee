@@ -65,6 +65,14 @@ public static class OrderReducer
     }
 
     [ReducerMethod]
+    public static OrderState OnAddPizzaToOrderCompleted(
+        [NotNull] OrderState state,
+        [NotNull] AddPizzaToOrderCompletedAction action)
+    {
+        return state.OnCommandCompleted<OrderState, OrderDto, AddPizzaToOrderCompletedAction>(action);
+    }
+
+    [ReducerMethod]
     public static OrderState OnRemovePizzaFromOrder(
         [NotNull] OrderState state,
         [NotNull] RemovePizzaFromOrderAction action)
@@ -86,6 +94,14 @@ public static class OrderReducer
         [NotNull] RemovePizzaFromOrderFailureAction action)
     {
         return state.OnCommandError<OrderState, OrderDto, RemovePizzaFromOrderFailureAction>(action);
+    }
+
+    [ReducerMethod]
+    public static OrderState OnRemovePizzaFromOrderCompleted(
+        [NotNull] OrderState state,
+        [NotNull] RemovePizzaFromOrderCompletedAction action)
+    {
+        return state.OnCommandCompleted<OrderState, OrderDto, RemovePizzaFromOrderCompletedAction>(action);
     }
 
     [ReducerMethod]
@@ -113,6 +129,14 @@ public static class OrderReducer
     }
 
     [ReducerMethod]
+    public static OrderState OnSubmitPickupOrderCompleted(
+        [NotNull] OrderState state,
+        [NotNull] SubmitPickupOrderCompletedAction action)
+    {
+        return state.OnCommandCompleted<OrderState, OrderDto, SubmitPickupOrderCompletedAction>(action);
+    }
+
+    [ReducerMethod]
     public static OrderState OnSubmitDeliveryOrder(
         [NotNull] OrderState state,
         [NotNull] SubmitDeliveryOrderAction action)
@@ -134,6 +158,14 @@ public static class OrderReducer
         [NotNull] SubmitDeliveryOrderFailureAction action)
     {
         return state.OnCommandError<OrderState, OrderDto, SubmitDeliveryOrderFailureAction>(action);
+    }
+
+    [ReducerMethod]
+    public static OrderState OnSubmitDeliveryOrderCompleted(
+        [NotNull] OrderState state,
+        [NotNull] SubmitDeliveryOrderCompletedAction action)
+    {
+        return state.OnCommandCompleted<OrderState, OrderDto, SubmitDeliveryOrderCompletedAction>(action);
     }
 
     [ReducerMethod]

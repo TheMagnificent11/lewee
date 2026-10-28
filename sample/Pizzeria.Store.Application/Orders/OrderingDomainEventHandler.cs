@@ -2,6 +2,7 @@ using Lewee.Application.Mediation.Notifications;
 using Lewee.Common;
 using Lewee.Domain;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Pizzeria.Store.Domain;
 
@@ -25,7 +26,7 @@ public class OrderingDomainEventHandler :
 
     public OrderingDomainEventHandler(
         IRepository<Order> orderRepository,
-        IQueryProjectionService queryProjectionService,
+        [FromKeyedServices(typeof(Order))] IQueryProjectionService queryProjectionService,
         IMediator mediator,
         ILogger<OrderingDomainEventHandler> logger)
     {

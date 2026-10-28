@@ -44,6 +44,12 @@ public static class DatabaseConfiguration
             var repositoryInterfaceType = typeof(IRepository<>).MakeGenericType(ag);
             var repositoryType = typeof(Repository<,>).MakeGenericType(ag, typeof(T));
             services.AddTransient(repositoryInterfaceType, repositoryType);
+
+            // Keyed by aggregate root type so that hosts registering multiple DB contexts
+            // (e.g. a context per bounded context) can unambiguously resolve the
+            // IQueryProjectionService bound to the correct context, without the last
+            // AddLeweeDatabaseServices<T> call silently overriding earlier ones.
+            services.AddKeyedTransient<IQueryProjectionService, QueryProjectionService<T>>(ag);
         }
 
         services.AddScoped<DomainEventDispatcher<T>>();

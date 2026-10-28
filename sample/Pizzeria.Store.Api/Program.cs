@@ -31,10 +31,6 @@ builder.Services
         StoreDbContext.SchemaName)
     .AddLeweeDatabaseServices<StoreDbContext>(typeof(Pizza).Assembly)
     .AddPizzaStoreApplication()
-
-    // Register the auth database services last so that the tenant-role authorization pipeline
-    // resolves the IQueryProjectionService bound to the auth schema, where the tenant membership
-    // role projection is maintained.
     .AddLeweePostgreSQL<AuthDbContext>(
         pizzaStoreConnectionString,
         typeof(User).Assembly,

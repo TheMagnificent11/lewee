@@ -2,6 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using Lewee.Auth.Domain;
 using Lewee.Domain;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Lewee.Auth.Application;
@@ -35,7 +36,7 @@ internal sealed class TenantAuthorizationQueryProjectionHandler :
     public TenantAuthorizationQueryProjectionHandler(
         IRepository<User> userRepository,
         IRepository<Role> roleRepository,
-        IQueryProjectionService queryProjectionService,
+        [FromKeyedServices(typeof(User))] IQueryProjectionService queryProjectionService,
         ILogger<TenantAuthorizationQueryProjectionHandler> logger)
     {
         this.userRepository = userRepository;
