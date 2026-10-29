@@ -70,6 +70,11 @@ public record AddPizzaToOrderCommand(Guid OrderId, Guid PizzaId) : ICommand, IOr
 
             var correlationId = this.correlationContextAccessor.GetCorrelationId();
 
+            if (!pizza.IsAvailable)
+            {
+                return CommandResult.Fail(ResultStatus.BadRequest, "Pizza is no longer available.");
+            }
+
             var result = order.AddPizza(pizza, correlationId);
             if (!result.IsSuccess)
             {
