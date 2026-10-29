@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using Fluxor;
 using Lewee.Infrastructure.Fluxor;
@@ -13,10 +14,7 @@ public static class OrderReducer
         [NotNull] OrderState state,
         [NotNull] StartOrderAction action)
     {
-        return state.OnCommand<OrderState, OrderDto, StartOrderAction>(action, clearData: true) with
-        {
-            PendingCommandType = OrderCommandType.StartOrder,
-        };
+        return OnCommandStarted(state, action, OrderCommandType.StartOrder, clearData: true);
     }
 
     [ReducerMethod]
@@ -24,7 +22,7 @@ public static class OrderReducer
         [NotNull] OrderState state,
         [NotNull] StartOrderSuccessAction action)
     {
-        return state.OnCommandSuccess<OrderState, OrderDto, StartOrderSuccessAction>(action);
+        return OnCommandSucceeded(state, action);
     }
 
     [ReducerMethod]
@@ -32,7 +30,7 @@ public static class OrderReducer
         [NotNull] OrderState state,
         [NotNull] StartOrderFailureAction action)
     {
-        return state.OnCommandError<OrderState, OrderDto, StartOrderFailureAction>(action);
+        return OnCommandFailed(state, action);
     }
 
     [ReducerMethod]
@@ -40,7 +38,7 @@ public static class OrderReducer
         [NotNull] OrderState state,
         [NotNull] StartOrderCompletedAction action)
     {
-        return state.OnCommandCompleted<OrderState, OrderDto, StartOrderCompletedAction>(action);
+        return OnCommandCompleted(state, action);
     }
 
     [ReducerMethod]
@@ -48,10 +46,7 @@ public static class OrderReducer
         [NotNull] OrderState state,
         [NotNull] AddPizzaToOrderAction action)
     {
-        return state.OnCommand<OrderState, OrderDto, AddPizzaToOrderAction>(action, clearData: false) with
-        {
-            PendingCommandType = OrderCommandType.AddPizzaToOrder,
-        };
+        return OnCommandStarted(state, action, OrderCommandType.AddPizzaToOrder, clearData: false);
     }
 
     [ReducerMethod]
@@ -59,7 +54,7 @@ public static class OrderReducer
         [NotNull] OrderState state,
         [NotNull] AddPizzaToOrderSuccessAction action)
     {
-        return state.OnCommandSuccess<OrderState, OrderDto, AddPizzaToOrderSuccessAction>(action);
+        return OnCommandSucceeded(state, action);
     }
 
     [ReducerMethod]
@@ -67,7 +62,7 @@ public static class OrderReducer
         [NotNull] OrderState state,
         [NotNull] AddPizzaToOrderFailureAction action)
     {
-        return state.OnCommandError<OrderState, OrderDto, AddPizzaToOrderFailureAction>(action);
+        return OnCommandFailed(state, action);
     }
 
     [ReducerMethod]
@@ -75,7 +70,7 @@ public static class OrderReducer
         [NotNull] OrderState state,
         [NotNull] AddPizzaToOrderCompletedAction action)
     {
-        return state.OnCommandCompleted<OrderState, OrderDto, AddPizzaToOrderCompletedAction>(action);
+        return OnCommandCompleted(state, action);
     }
 
     [ReducerMethod]
@@ -83,10 +78,7 @@ public static class OrderReducer
         [NotNull] OrderState state,
         [NotNull] RemovePizzaFromOrderAction action)
     {
-        return state.OnCommand<OrderState, OrderDto, RemovePizzaFromOrderAction>(action, clearData: false) with
-        {
-            PendingCommandType = OrderCommandType.RemovePizzaFromOrder,
-        };
+        return OnCommandStarted(state, action, OrderCommandType.RemovePizzaFromOrder, clearData: false);
     }
 
     [ReducerMethod]
@@ -94,7 +86,7 @@ public static class OrderReducer
         [NotNull] OrderState state,
         [NotNull] RemovePizzaFromOrderSuccessAction action)
     {
-        return state.OnCommandSuccess<OrderState, OrderDto, RemovePizzaFromOrderSuccessAction>(action);
+        return OnCommandSucceeded(state, action);
     }
 
     [ReducerMethod]
@@ -102,7 +94,7 @@ public static class OrderReducer
         [NotNull] OrderState state,
         [NotNull] RemovePizzaFromOrderFailureAction action)
     {
-        return state.OnCommandError<OrderState, OrderDto, RemovePizzaFromOrderFailureAction>(action);
+        return OnCommandFailed(state, action);
     }
 
     [ReducerMethod]
@@ -110,7 +102,7 @@ public static class OrderReducer
         [NotNull] OrderState state,
         [NotNull] RemovePizzaFromOrderCompletedAction action)
     {
-        return state.OnCommandCompleted<OrderState, OrderDto, RemovePizzaFromOrderCompletedAction>(action);
+        return OnCommandCompleted(state, action);
     }
 
     [ReducerMethod]
@@ -118,10 +110,7 @@ public static class OrderReducer
         [NotNull] OrderState state,
         [NotNull] SubmitPickupOrderAction action)
     {
-        return state.OnCommand<OrderState, OrderDto, SubmitPickupOrderAction>(action, clearData: false) with
-        {
-            PendingCommandType = OrderCommandType.SubmitPickupOrder,
-        };
+        return OnCommandStarted(state, action, OrderCommandType.SubmitPickupOrder, clearData: false);
     }
 
     [ReducerMethod]
@@ -129,7 +118,7 @@ public static class OrderReducer
         [NotNull] OrderState state,
         [NotNull] SubmitPickupOrderSuccessAction action)
     {
-        return state.OnCommandSuccess<OrderState, OrderDto, SubmitPickupOrderSuccessAction>(action);
+        return OnCommandSucceeded(state, action);
     }
 
     [ReducerMethod]
@@ -137,7 +126,7 @@ public static class OrderReducer
         [NotNull] OrderState state,
         [NotNull] SubmitPickupOrderFailureAction action)
     {
-        return state.OnCommandError<OrderState, OrderDto, SubmitPickupOrderFailureAction>(action);
+        return OnCommandFailed(state, action);
     }
 
     [ReducerMethod]
@@ -145,7 +134,7 @@ public static class OrderReducer
         [NotNull] OrderState state,
         [NotNull] SubmitPickupOrderCompletedAction action)
     {
-        return state.OnCommandCompleted<OrderState, OrderDto, SubmitPickupOrderCompletedAction>(action);
+        return OnCommandCompleted(state, action);
     }
 
     [ReducerMethod]
@@ -153,10 +142,7 @@ public static class OrderReducer
         [NotNull] OrderState state,
         [NotNull] SubmitDeliveryOrderAction action)
     {
-        return state.OnCommand<OrderState, OrderDto, SubmitDeliveryOrderAction>(action, clearData: false) with
-        {
-            PendingCommandType = OrderCommandType.SubmitDeliveryOrder,
-        };
+        return OnCommandStarted(state, action, OrderCommandType.SubmitDeliveryOrder, clearData: false);
     }
 
     [ReducerMethod]
@@ -164,7 +150,7 @@ public static class OrderReducer
         [NotNull] OrderState state,
         [NotNull] SubmitDeliveryOrderSuccessAction action)
     {
-        return state.OnCommandSuccess<OrderState, OrderDto, SubmitDeliveryOrderSuccessAction>(action);
+        return OnCommandSucceeded(state, action);
     }
 
     [ReducerMethod]
@@ -172,7 +158,7 @@ public static class OrderReducer
         [NotNull] OrderState state,
         [NotNull] SubmitDeliveryOrderFailureAction action)
     {
-        return state.OnCommandError<OrderState, OrderDto, SubmitDeliveryOrderFailureAction>(action);
+        return OnCommandFailed(state, action);
     }
 
     [ReducerMethod]
@@ -180,7 +166,7 @@ public static class OrderReducer
         [NotNull] OrderState state,
         [NotNull] SubmitDeliveryOrderCompletedAction action)
     {
-        return state.OnCommandCompleted<OrderState, OrderDto, SubmitDeliveryOrderCompletedAction>(action);
+        return OnCommandCompleted(state, action);
     }
 
     [ReducerMethod]
@@ -191,6 +177,75 @@ public static class OrderReducer
         return state with
         {
             ErrorMessage = null,
+        };
+    }
+
+    [ReducerMethod]
+    public static OrderState OnOrderUpdated(
+        [NotNull] OrderState state,
+        [NotNull] OrderUpdatedAction action)
+    {
+        return state.Data?.Id == action.Data.Id
+            ? state with { Data = action.Data }
+            : state;
+    }
+
+    private static OrderState OnCommandStarted<TAction>(
+        OrderState state,
+        TAction action,
+        OrderCommandType commandType,
+        bool clearData)
+        where TAction : IRequestAction
+    {
+        var stateWithCommand = state.OnCommand<OrderState, OrderDto, TAction>(action, clearData);
+        var pendingCommands = clearData
+            ? ImmutableDictionary<Guid, OrderCommandType>.Empty
+            : state.PendingCommands;
+        var inFlightCommands = clearData
+            ? ImmutableHashSet<Guid>.Empty
+            : state.InFlightCommands;
+
+        return stateWithCommand with
+        {
+            PendingCommands = pendingCommands.SetItem(action.CorrelationId, commandType),
+            InFlightCommands = inFlightCommands.Add(action.CorrelationId),
+        };
+    }
+
+    private static OrderState OnCommandSucceeded<TAction>(OrderState state, TAction action)
+        where TAction : IRequestSuccessAction
+    {
+        var inFlightCommands = state.InFlightCommands.Remove(action.CorrelationId);
+        return state.OnCommandSuccess<OrderState, OrderDto, TAction>(action) with
+        {
+            CorrelationId = state.CorrelationId,
+            ErrorMessage = state.CorrelationId == action.CorrelationId ? null : state.ErrorMessage,
+            InFlightCommands = inFlightCommands,
+            IsSaving = inFlightCommands.Count > 0,
+        };
+    }
+
+    private static OrderState OnCommandFailed<TAction>(OrderState state, TAction action)
+        where TAction : IRequestErrorAction
+    {
+        var inFlightCommands = state.InFlightCommands.Remove(action.CorrelationId);
+        return state.OnCommandError<OrderState, OrderDto, TAction>(action) with
+        {
+            CorrelationId = state.CorrelationId,
+            ErrorMessage = state.CorrelationId == action.CorrelationId ? action.ErrorMessage : state.ErrorMessage,
+            PendingCommands = state.PendingCommands.Remove(action.CorrelationId),
+            InFlightCommands = inFlightCommands,
+            IsSaving = inFlightCommands.Count > 0,
+        };
+    }
+
+    private static OrderState OnCommandCompleted<TAction>(OrderState state, TAction action)
+        where TAction : IMessageReceivedAction<OrderDto>
+    {
+        return state.OnCommandCompleted<OrderState, OrderDto, TAction>(action) with
+        {
+            CorrelationId = state.CorrelationId,
+            PendingCommands = state.PendingCommands.Remove(action.CorrelationId),
         };
     }
 }

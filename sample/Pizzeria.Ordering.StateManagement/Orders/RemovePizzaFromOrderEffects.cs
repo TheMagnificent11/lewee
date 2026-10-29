@@ -28,9 +28,17 @@ public sealed class RemovePizzaFromOrderEffects :
         [NotNull] RemovePizzaFromOrderAction action,
         [NotNull] IDispatcher dispatcher)
     {
-        await this.bffApiClient.UpdateOrderAsync(
-            action.OrderId,
-            new UpdateOrderRequest { RemovePizzaId = action.PizzaId });
+        if (action.Quantity == 0)
+        {
+            await this.bffApiClient.RemovePizzaFromOrderAsync(action.OrderId, action.PizzaId);
+        }
+        else
+        {
+            await this.bffApiClient.SetOrderPizzaQuantityAsync(
+                action.OrderId,
+                action.PizzaId,
+                new SetPizzaQuantityRequest { Quantity = action.Quantity });
+        }
 
         return CommandResult.Success();
     }

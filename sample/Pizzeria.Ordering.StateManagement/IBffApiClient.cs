@@ -19,6 +19,19 @@ public interface IBffApiClient
         [Body] UpdateOrderRequest request,
         CancellationToken cancellationToken = default);
 
+    [Put("/orders/{orderId}/pizzas/{pizzaId}")]
+    Task SetOrderPizzaQuantityAsync(
+        Guid orderId,
+        Guid pizzaId,
+        [Body] SetPizzaQuantityRequest request,
+        CancellationToken cancellationToken = default);
+
+    [Delete("/orders/{orderId}/pizzas/{pizzaId}")]
+    Task RemovePizzaFromOrderAsync(
+        Guid orderId,
+        Guid pizzaId,
+        CancellationToken cancellationToken = default);
+
     [Post("/users")]
     Task CreateUserAsync(
         [Body] CreateUserRequest request,

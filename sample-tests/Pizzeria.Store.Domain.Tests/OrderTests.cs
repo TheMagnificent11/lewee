@@ -77,4 +77,18 @@ public sealed class OrderTests
         orderPizza.PizzaId.Should().Be(margherita.Id);
         orderPizza.Quantity.Should().Be(1);
     }
+
+    [Fact]
+    public void OrderPizza_Should_SnapshotPizzaDetails_When_AddedToOrder()
+    {
+        var pizza = Pizza.Create("Margherita", "Classic", 12.50m);
+        var order = Order.StartNewOrder(Guid.NewGuid().ToString(), Guid.NewGuid());
+
+        order.AddPizza(pizza, Guid.NewGuid());
+        pizza.UpdateDetails("Updated Margherita", "Updated description", 15m);
+
+        var orderPizza = order.Pizzas.Single();
+        orderPizza.PizzaName.Should().Be("Margherita");
+        orderPizza.PizzaPrice.Should().Be(12.50m);
+    }
 }

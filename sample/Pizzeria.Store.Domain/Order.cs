@@ -81,6 +81,8 @@ public class Order : AggregateRoot
             existingOrderPizza.IncreaseQuantity();
         }
 
+        this.Touch();
+
         this.DomainEvents.Raise(new PizzaAddedToOrderEvent(
             this.Id,
             this.UserId,
@@ -114,11 +116,83 @@ public class Order : AggregateRoot
             this.pizzas.Remove(existingOrderPizza);
         }
 
+        this.Touch();
+
         this.DomainEvents.Raise(new PizzaRemovedFromOrderEvent(
             this.Id,
             this.UserId,
             DateTime.UtcNow,
             correlationId));
+
+        return CommandResult.Success();
+    }
+
+    public Result SetPizzaQuantity(Pizza pizza, int quantity, Guid correlationId)
+    {
+        ArgumentNullException.ThrowIfNull(pizza);
+
+        if (quantity < 0)
+        {
+            return CommandResult.Fail(ResultStatus.BadRequest, "Pizza quantity cannot be negative.");
+        }
+
+        if (this.IsSubmitted)
+        {
+            return CommandResult.Fail(
+                ResultStatus.BadRequest,
+                "Cannot change pizzas on an order that has already been submitted.");
+        }
+
+        if (quantity > 0 && !pizza.IsAvailable)
+        {
+            return CommandResult.Fail(ResultStatus.BadRequest, "Pizza is no longer available.");
+        }
+
+        var existingOrderPizza = this.pizzas.FirstOrDefault(x => x.PizzaId == pizza.Id);
+        var currentQuantity = existingOrderPizza?.Quantity ?? 0;
+
+        if (quantity == 0)
+        {
+            if (existingOrderPizza is not null)
+            {
+                this.pizzas.Remove(existingOrderPizza);
+            }
+        }
+        else if (existingOrderPizza is null)
+        {
+            this.pizzas.Add(OrderPizza.CreateForOrder(this, pizza, quantity));
+        }
+        else
+        {
+            existingOrderPizza.SetQuantity(quantity);
+        }
+
+        this.Touch();
+
+        if (quantity == currentQuantity)
+        {
+            this.DomainEvents.Raise(new OrderPizzaQuantitySetEvent(
+                this.Id,
+                this.UserId,
+                DateTime.UtcNow,
+                correlationId));
+        }
+        else if (quantity > currentQuantity)
+        {
+            this.DomainEvents.Raise(new PizzaAddedToOrderEvent(
+                this.Id,
+                this.UserId,
+                DateTime.UtcNow,
+                correlationId));
+        }
+        else
+        {
+            this.DomainEvents.Raise(new PizzaRemovedFromOrderEvent(
+                this.Id,
+                this.UserId,
+                DateTime.UtcNow,
+                correlationId));
+        }
 
         return CommandResult.Success();
     }
@@ -299,6 +373,11 @@ public class Order : AggregateRoot
         }
 
         return CommandResult.Success();
+    }
+
+    private void Touch()
+    {
+        this.ApplyModificationTrackingData(this.ModifiedBy);
     }
 
     public static class FieldLengths

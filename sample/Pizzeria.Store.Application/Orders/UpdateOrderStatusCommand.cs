@@ -3,29 +3,38 @@ using Correlate;
 using FluentValidation;
 using Lewee.Application.Mediation.Behaviors;
 using Lewee.Application.Mediation.Requests;
+using Lewee.Auth.Application;
 using Lewee.Common;
 using Lewee.Domain;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Pizzeria.Common;
+using Pizzeria.Store.Contracts.Orders;
 using Pizzeria.Store.Domain;
 
 namespace Pizzeria.Store.Application.Orders;
 
-public record AddPizzaToOrderCommand(Guid OrderId, Guid PizzaId) : ICommand, IOrderOwnerRequest
+public sealed record UpdateOrderStatusCommand(Guid OrderId, OrderFulfillmentAction Action)
+    : ICommand, ITenantRoleRequest
 {
+    public Guid TenantId => PizzaStore.Tenant.Id;
+
+    public IReadOnlyCollection<string> Roles { get; } =
+        [PizzaStore.Roles.StoreStaffCode, PizzaStore.Roles.StoreManagerCode];
+
     [SuppressMessage(
         "Performance",
         "CA1812: Avoid uninstantiated internal classes",
         Justification = "Used via mediation")]
-    internal sealed class Validator : AbstractValidator<AddPizzaToOrderCommand>
+    internal sealed class Validator : AbstractValidator<UpdateOrderStatusCommand>
     {
         public Validator()
         {
             this.RuleFor(x => x.OrderId)
                 .NotEmpty();
 
-            this.RuleFor(x => x.PizzaId)
-                .NotEmpty();
+            this.RuleFor(x => x.Action)
+                .IsInEnum();
         }
     }
 
@@ -33,33 +42,26 @@ public record AddPizzaToOrderCommand(Guid OrderId, Guid PizzaId) : ICommand, IOr
         "Performance",
         "CA1812: Avoid uninstantiated internal classes",
         Justification = "Used via mediation")]
-    internal sealed class Handler : IRequestHandler<AddPizzaToOrderCommand, CommandResult>
+    internal sealed class Handler : IRequestHandler<UpdateOrderStatusCommand, CommandResult>
     {
         private readonly IRepository<Order> orderRepository;
-        private readonly IRepository<Pizza> pizzaRepository;
         private readonly ICorrelationContextAccessor correlationContextAccessor;
         private readonly ILogger<Handler> logger;
 
         public Handler(
             IRepository<Order> orderRepository,
-            IRepository<Pizza> pizzaRepository,
             ICorrelationContextAccessor correlationContextAccessor,
             ILogger<Handler> logger)
         {
             this.orderRepository = orderRepository;
-            this.pizzaRepository = pizzaRepository;
             this.correlationContextAccessor = correlationContextAccessor;
             this.logger = logger;
         }
 
-        public async Task<CommandResult> Handle(AddPizzaToOrderCommand request, CancellationToken cancellationToken)
+        public async Task<CommandResult> Handle(
+            UpdateOrderStatusCommand request,
+            CancellationToken cancellationToken)
         {
-            var pizza = await this.pizzaRepository.RetrieveByIdAsync(request.PizzaId, cancellationToken);
-            if (pizza is null)
-            {
-                return CommandResult.Fail(ResultStatus.NotFound, $"Pizza {request.PizzaId} not found");
-            }
-
             var order = await this.orderRepository.QueryOneAsync(
                 new GetOrderQuerySpec(request.OrderId),
                 cancellationToken);
@@ -69,13 +71,16 @@ public record AddPizzaToOrderCommand(Guid OrderId, Guid PizzaId) : ICommand, IOr
             }
 
             var correlationId = this.correlationContextAccessor.GetCorrelationId();
-
-            if (!pizza.IsAvailable)
+            var result = request.Action switch
             {
-                return CommandResult.Fail(ResultStatus.BadRequest, "Pizza is no longer available.");
-            }
+                OrderFulfillmentAction.StartMaking => order.StartMaking(correlationId),
+                OrderFulfillmentAction.Prepared => order.Prepared(correlationId),
+                OrderFulfillmentAction.PickedUp => order.PickedUp(correlationId),
+                OrderFulfillmentAction.OutForDelivery => order.OutForDelivery(correlationId),
+                OrderFulfillmentAction.Delivered => order.Delivered(correlationId),
+                _ => CommandResult.Fail(ResultStatus.BadRequest, "Unknown order fulfillment action."),
+            };
 
-            var result = order.AddPizza(pizza, correlationId);
             if (!result.IsSuccess)
             {
                 return (CommandResult)result;
@@ -83,7 +88,10 @@ public record AddPizzaToOrderCommand(Guid OrderId, Guid PizzaId) : ICommand, IOr
 
             await this.orderRepository.SaveChangesAsync(cancellationToken);
 
-            this.logger.LogInformation("Pizza {PizzaId} added to order", request.PizzaId);
+            this.logger.LogInformation(
+                "Order {OrderId} fulfillment action {Action} completed",
+                request.OrderId,
+                request.Action);
 
             return CommandResult.Success();
         }

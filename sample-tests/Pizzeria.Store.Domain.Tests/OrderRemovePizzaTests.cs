@@ -22,6 +22,32 @@ public sealed class OrderRemovePizzaTests
     }
 
     [Fact]
+    public void SetPizzaQuantity_WhenSameValueIsRetried_DoesNotChangeQuantityAgain()
+    {
+        var order = StartOrderWithPizza(out var pizza, quantity: 2);
+
+        var firstResult = order.SetPizzaQuantity(pizza, 1, Guid.NewGuid());
+        var retryResult = order.SetPizzaQuantity(pizza, 1, Guid.NewGuid());
+
+        firstResult.IsSuccess.Should().BeTrue();
+        retryResult.IsSuccess.Should().BeTrue();
+        order.Pizzas.Should().ContainSingle();
+        order.Pizzas.Single().Quantity.Should().Be(1);
+    }
+
+    [Fact]
+    public void SetPizzaQuantity_WhenQuantityIsNegative_ReturnsBadRequest()
+    {
+        var order = StartOrderWithPizza(out var pizza);
+
+        var result = order.SetPizzaQuantity(pizza, -1, Guid.NewGuid());
+
+        result.IsSuccess.Should().BeFalse();
+        result.Status.Should().Be(ResultStatus.BadRequest);
+        order.Pizzas.Should().ContainSingle().Which.Quantity.Should().Be(1);
+    }
+
+    [Fact]
     public void RemovePizza_WhenQuantityIsOne_RemovesPizzaFromOrder()
     {
         // Arrange

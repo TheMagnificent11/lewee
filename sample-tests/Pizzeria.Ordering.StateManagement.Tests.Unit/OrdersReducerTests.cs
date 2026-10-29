@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using FluentAssertions;
 using Pizzeria.Ordering.StateManagement.Orders;
 using Pizzeria.Ordering.StateManagement.Orders.Actions;
@@ -43,8 +44,8 @@ public class OrdersReducerTests
     public void OnStartOrderSuccess_SetsIsSavingToFalse()
     {
         // Arrange
-        var state = new OrderState { IsSaving = true };
         var correlationId = Guid.NewGuid();
+        var state = new OrderState { IsSaving = true, CorrelationId = correlationId };
         var action = new StartOrderSuccessAction { CorrelationId = correlationId };
 
         // Act
@@ -60,8 +61,8 @@ public class OrdersReducerTests
     public void OnStartOrderFailure_SetsErrorMessage()
     {
         // Arrange
-        var state = new OrderState { IsSaving = true };
         var correlationId = Guid.NewGuid();
+        var state = new OrderState { IsSaving = true, CorrelationId = correlationId };
         var errorMessage = "Failed to start order";
         var action = new StartOrderFailureAction
         {
@@ -82,8 +83,8 @@ public class OrdersReducerTests
     public void OnStartOrderCompleted_SetsCurrentOrder()
     {
         // Arrange
-        var state = new OrderState();
         var correlationId = Guid.NewGuid();
+        var state = new OrderState { CorrelationId = correlationId };
         var order = new OrderDto
         {
             Id = Guid.NewGuid(),
@@ -110,8 +111,9 @@ public class OrdersReducerTests
     public void OnAddPizzaToOrderSuccess_ClearsErrorMessage()
     {
         // Arrange
-        var state = new OrderState { ErrorMessage = "Previous error" };
-        var action = new AddPizzaToOrderSuccessAction { CorrelationId = Guid.NewGuid() };
+        var correlationId = Guid.NewGuid();
+        var state = new OrderState { ErrorMessage = "Previous error", CorrelationId = correlationId };
+        var action = new AddPizzaToOrderSuccessAction { CorrelationId = correlationId };
 
         // Act
         var result = OrderReducer.OnAddPizzaToOrderSuccess(state, action);
@@ -124,11 +126,12 @@ public class OrdersReducerTests
     public void OnAddPizzaToOrderFailure_SetsErrorMessage()
     {
         // Arrange
-        var state = new OrderState();
         var errorMessage = "Failed to add pizza";
+        var correlationId = Guid.NewGuid();
+        var state = new OrderState { CorrelationId = correlationId };
         var action = new AddPizzaToOrderFailureAction
         {
-            CorrelationId = Guid.NewGuid(),
+            CorrelationId = correlationId,
             ErrorMessage = errorMessage,
         };
 
@@ -170,11 +173,61 @@ public class OrdersReducerTests
     }
 
     [Fact]
+    public void OnOrderCommandSuccess_DoesNotOverwriteNewerCommandCorrelation()
+    {
+        var firstCorrelationId = Guid.NewGuid();
+        var secondCorrelationId = Guid.NewGuid();
+        var state = OrderReducer.OnAddPizzaToOrder(new OrderState(), new AddPizzaToOrderAction
+        {
+            CorrelationId = firstCorrelationId,
+        });
+        state = OrderReducer.OnRemovePizzaFromOrder(state, new RemovePizzaFromOrderAction
+        {
+            CorrelationId = secondCorrelationId,
+        });
+
+        var result = OrderReducer.OnAddPizzaToOrderSuccess(state, new AddPizzaToOrderSuccessAction
+        {
+            CorrelationId = firstCorrelationId,
+        });
+
+        result.CorrelationId.Should().Be(secondCorrelationId);
+        result.PendingCommands.Should().ContainKey(firstCorrelationId);
+        result.PendingCommands.Should().ContainKey(secondCorrelationId);
+        result.IsSaving.Should().BeTrue();
+    }
+
+    [Fact]
+    public void OnOrderUpdated_ReplacesCurrentOrderWithoutChangingPendingCommands()
+    {
+        var orderId = Guid.NewGuid();
+        var correlationId = Guid.NewGuid();
+        var pendingCorrelationId = Guid.NewGuid();
+        var state = new OrderState
+        {
+            Data = new OrderDto { Id = orderId },
+            CorrelationId = pendingCorrelationId,
+            PendingCommands = ImmutableDictionary<Guid, OrderCommandType>.Empty
+                .Add(pendingCorrelationId, OrderCommandType.SubmitPickupOrder),
+        };
+        var updatedOrder = new OrderDto { Id = orderId, Status = OrderStatus.Making };
+
+        var result = OrderReducer.OnOrderUpdated(
+            state,
+            new OrderUpdatedAction { Data = updatedOrder, CorrelationId = correlationId });
+
+        result.Data.Should().Be(updatedOrder);
+        result.CorrelationId.Should().Be(pendingCorrelationId);
+        result.PendingCommands.Should().ContainKey(pendingCorrelationId);
+    }
+
+    [Fact]
     public void OnRemovePizzaFromOrderSuccess_SetsIsSavingToFalse()
     {
         // Arrange
-        var state = new OrderState { IsSaving = true };
-        var action = new RemovePizzaFromOrderSuccessAction { CorrelationId = Guid.NewGuid() };
+        var correlationId = Guid.NewGuid();
+        var state = new OrderState { IsSaving = true, CorrelationId = correlationId };
+        var action = new RemovePizzaFromOrderSuccessAction { CorrelationId = correlationId };
 
         // Act
         var result = OrderReducer.OnRemovePizzaFromOrderSuccess(state, action);
@@ -187,11 +240,12 @@ public class OrdersReducerTests
     public void OnRemovePizzaFromOrderFailure_SetsErrorMessage()
     {
         // Arrange
-        var state = new OrderState();
         var errorMessage = "Failed to remove pizza";
+        var correlationId = Guid.NewGuid();
+        var state = new OrderState { CorrelationId = correlationId };
         var action = new RemovePizzaFromOrderFailureAction
         {
-            CorrelationId = Guid.NewGuid(),
+            CorrelationId = correlationId,
             ErrorMessage = errorMessage,
         };
 
@@ -220,8 +274,9 @@ public class OrdersReducerTests
     public void OnSubmitPickupOrderSuccess_SetsIsSavingToFalse()
     {
         // Arrange
-        var state = new OrderState { IsSaving = true };
-        var action = new SubmitPickupOrderSuccessAction { CorrelationId = Guid.NewGuid() };
+        var correlationId = Guid.NewGuid();
+        var state = new OrderState { IsSaving = true, CorrelationId = correlationId };
+        var action = new SubmitPickupOrderSuccessAction { CorrelationId = correlationId };
 
         // Act
         var result = OrderReducer.OnSubmitPickupOrderSuccess(state, action);
@@ -234,11 +289,12 @@ public class OrdersReducerTests
     public void OnSubmitPickupOrderFailure_SetsErrorMessage()
     {
         // Arrange
-        var state = new OrderState();
         var errorMessage = "Failed to submit pickup order";
+        var correlationId = Guid.NewGuid();
+        var state = new OrderState { CorrelationId = correlationId };
         var action = new SubmitPickupOrderFailureAction
         {
-            CorrelationId = Guid.NewGuid(),
+            CorrelationId = correlationId,
             ErrorMessage = errorMessage,
         };
 
@@ -267,8 +323,9 @@ public class OrdersReducerTests
     public void OnSubmitDeliveryOrderSuccess_SetsIsSavingToFalse()
     {
         // Arrange
-        var state = new OrderState { IsSaving = true };
-        var action = new SubmitDeliveryOrderSuccessAction { CorrelationId = Guid.NewGuid() };
+        var correlationId = Guid.NewGuid();
+        var state = new OrderState { IsSaving = true, CorrelationId = correlationId };
+        var action = new SubmitDeliveryOrderSuccessAction { CorrelationId = correlationId };
 
         // Act
         var result = OrderReducer.OnSubmitDeliveryOrderSuccess(state, action);
@@ -281,11 +338,12 @@ public class OrdersReducerTests
     public void OnSubmitDeliveryOrderFailure_SetsErrorMessage()
     {
         // Arrange
-        var state = new OrderState();
         var errorMessage = "Failed to submit delivery order";
+        var correlationId = Guid.NewGuid();
+        var state = new OrderState { CorrelationId = correlationId };
         var action = new SubmitDeliveryOrderFailureAction
         {
-            CorrelationId = Guid.NewGuid(),
+            CorrelationId = correlationId,
             ErrorMessage = errorMessage,
         };
 

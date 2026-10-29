@@ -2,6 +2,7 @@ using FluentAssertions;
 using Pizzeria.Common;
 using Pizzeria.Store.Application.Orders;
 using Pizzeria.Store.Application.Pizzas;
+using Pizzeria.Store.Contracts.Orders;
 using Xunit;
 
 namespace Pizzeria.Store.Application.Tests.Unit;
@@ -15,6 +16,9 @@ public sealed class RoleAuthorizationContractTests
     public void Should_AllowStoreManager_ForFulfillmentAndMenu()
     {
         IsAuthorized(StoreManagerRoles, new GetOrdersQuery().Roles).Should().BeTrue();
+        IsAuthorized(
+            StoreManagerRoles,
+            new UpdateOrderStatusCommand(Guid.NewGuid(), OrderFulfillmentAction.PickedUp).Roles).Should().BeTrue();
         IsAuthorized(StoreManagerRoles, new AddPizzaCommand("A", null, 1m).Roles).Should().BeTrue();
     }
 
@@ -22,6 +26,9 @@ public sealed class RoleAuthorizationContractTests
     public void Should_AllowStoreStaff_ForFulfillment()
     {
         IsAuthorized(StoreStaffRoles, new GetOrdersQuery().Roles).Should().BeTrue();
+        IsAuthorized(
+            StoreStaffRoles,
+            new UpdateOrderStatusCommand(Guid.NewGuid(), OrderFulfillmentAction.PickedUp).Roles).Should().BeTrue();
     }
 
     [Fact]

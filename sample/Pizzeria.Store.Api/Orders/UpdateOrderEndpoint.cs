@@ -27,44 +27,36 @@ internal sealed class UpdateOrderEndpoint : CommandEndpoint<UpdateOrderRequest>
     {
         var orderId = this.Route<Guid>(Endpoints.RouteTokens.OrderId);
 
-        var result = await this.SendCommandAsync(orderId, request, ct);
-
-        await this.ToResponseAsync(result, ct);
-    }
-
-    private async Task<CommandResult> SendCommandAsync(Guid orderId, UpdateOrderRequest request, CancellationToken ct)
-    {
-        var actionCount = (request.AddPizzaId.HasValue ? 1 : 0)
-            + (request.RemovePizzaId.HasValue ? 1 : 0)
-            + (request.SubmitAsDelivery ? 1 : 0)
-            + (request.SubmitAsPickup ? 1 : 0);
+        var actionCount = (request.SubmitAsDelivery ? 1 : 0)
+            + (request.SubmitAsPickup ? 1 : 0)
+            + (request.FulfillmentAction.HasValue ? 1 : 0);
         if (actionCount != 1)
         {
-            return CommandResult.Fail(ResultStatus.BadRequest, "Exactly one update action must be specified.");
-        }
-
-        if (request.AddPizzaId.HasValue)
-        {
-            return await this.Mediator.Send(new AddPizzaToOrderCommand(orderId, request.AddPizzaId.Value), ct);
-        }
-
-        if (request.RemovePizzaId.HasValue)
-        {
-            return await this.Mediator.Send(new RemovePizzaFromOrderCommand(orderId, request.RemovePizzaId.Value), ct);
+            await this.ToResponseAsync(
+                CommandResult.Fail(ResultStatus.BadRequest, "Exactly one update action must be specified."),
+                ct);
+            return;
         }
 
         if (request.SubmitAsDelivery)
         {
-            return await this.Mediator.Send(
+            var result = await this.Mediator.Send(
                 new SubmitDeliveryOrderCommand(orderId, request.DeliveryAddress ?? string.Empty),
                 ct);
+            await this.ToResponseAsync(result, ct);
+            return;
         }
 
-        if (request.SubmitAsPickup)
+        if (request.FulfillmentAction.HasValue)
         {
-            return await this.Mediator.Send(new SubmitPickupOrderCommand(orderId), ct);
+            var result = await this.Mediator.Send(
+                new UpdateOrderStatusCommand(orderId, request.FulfillmentAction.Value),
+                ct);
+            await this.ToResponseAsync(result, ct);
+            return;
         }
 
-        return CommandResult.Fail(ResultStatus.BadRequest, "No update action specified.");
+        var pickupResult = await this.Mediator.Send(new SubmitPickupOrderCommand(orderId), ct);
+        await this.ToResponseAsync(pickupResult, ct);
     }
 }

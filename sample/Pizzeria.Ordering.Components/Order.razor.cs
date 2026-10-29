@@ -56,24 +56,35 @@ public partial class Order : FluxorComponent
 
     private void AddPizza(Guid pizzaId)
     {
-        if (this.OrdersState.Value.Data != null)
+        var order = this.OrdersState.Value.Data;
+        if (order != null && !this.OrdersState.Value.HasPendingCommands)
         {
+            var quantity = order.Pizzas.FirstOrDefault(pizza => pizza.PizzaId == pizzaId)?.Quantity ?? 0;
             this.Dispatcher.Dispatch(new AddPizzaToOrderAction
             {
-                OrderId = this.OrdersState.Value.Data.Id,
+                OrderId = order.Id,
                 PizzaId = pizzaId,
+                Quantity = quantity + 1,
             });
         }
     }
 
     private void RemovePizza(Guid pizzaId)
     {
-        if (this.OrdersState.Value.Data != null)
+        var order = this.OrdersState.Value.Data;
+        if (order != null && !this.OrdersState.Value.HasPendingCommands)
         {
+            var quantity = order.Pizzas.FirstOrDefault(pizza => pizza.PizzaId == pizzaId)?.Quantity ?? 0;
+            if (quantity == 0)
+            {
+                return;
+            }
+
             this.Dispatcher.Dispatch(new RemovePizzaFromOrderAction
             {
-                OrderId = this.OrdersState.Value.Data.Id,
+                OrderId = order.Id,
                 PizzaId = pizzaId,
+                Quantity = quantity - 1,
             });
         }
     }
@@ -98,7 +109,7 @@ public partial class Order : FluxorComponent
     private void SubmitOrder()
     {
         var order = this.OrdersState.Value.Data;
-        if (order == null)
+        if (order == null || this.OrdersState.Value.HasPendingCommands)
         {
             return;
         }

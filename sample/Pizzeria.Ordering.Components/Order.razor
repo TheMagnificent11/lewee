@@ -67,7 +67,7 @@ else if (OrdersState.Value.Data.Status == OrderStatus.InProgress)
                             <MudCardActions>
                                 <MudButtonGroup Variant="Variant.Outlined" Size="Size.Large" Class="flex-grow-1">
                                     <MudButton OnClick="() => RemovePizza(pizza.Id)"
-                                               Disabled="quantity == 0"
+                                               Disabled="quantity == 0 || OrdersState.Value.HasPendingCommands"
                                                aria-label="@($"remove {pizza.Name}")"
                                                StartIcon="Icons.Material.Filled.Remove">
                                     </MudButton>
@@ -77,6 +77,7 @@ else if (OrdersState.Value.Data.Status == OrderStatus.InProgress)
                                         @quantity
                                     </MudButton>
                                     <MudButton OnClick="() => AddPizza(pizza.Id)"
+                                               Disabled="OrdersState.Value.HasPendingCommands"
                                                aria-label="@($"add {pizza.Name}")"
                                                StartIcon="Icons.Material.Filled.Add">
                                     </MudButton>
@@ -93,7 +94,7 @@ else if (OrdersState.Value.Data.Status == OrderStatus.InProgress)
                        Class="mt-4"
                        role="button"
                        aria-label="@AriaLabels.Checkout"
-                       Disabled="!OrdersState.Value.Data.Pizzas.Any()"
+                       Disabled="!OrdersState.Value.Data.Pizzas.Any() || OrdersState.Value.HasPendingCommands"
                        OnClick="StartCheckout">
                 Checkout
             </MudButton>
@@ -141,7 +142,7 @@ else if (OrdersState.Value.Data.Status == OrderStatus.InProgress)
                    Class="mt-4"
                    role="button"
                    aria-label="@AriaLabels.SubmitOrder"
-                   Disabled="OrdersState.Value.IsSaving"
+                   Disabled="OrdersState.Value.IsSaving || OrdersState.Value.HasPendingCommands"
                    OnClick="SubmitOrder">
             @if (OrdersState.Value.IsSaving)
             {

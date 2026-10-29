@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using FluentAssertions;
 using Fluxor;
 using Lewee.Infrastructure.Fluxor;
@@ -42,7 +43,7 @@ public class MessageToActionMapperTests
 
         this.orderStateMock
             .Setup(s => s.Value)
-            .Returns(new OrderState { CorrelationId = correlationId, PendingCommandType = null });
+            .Returns(new OrderState { CorrelationId = correlationId });
 
         // Act
         var result = this.mapper.Map(order, correlationId);
@@ -59,7 +60,12 @@ public class MessageToActionMapperTests
 
         this.orderStateMock
             .Setup(s => s.Value)
-            .Returns(new OrderState { CorrelationId = Guid.NewGuid(), PendingCommandType = OrderCommandType.AddPizzaToOrder });
+            .Returns(new OrderState
+            {
+                CorrelationId = Guid.NewGuid(),
+                PendingCommands = ImmutableDictionary<Guid, OrderCommandType>.Empty
+                    .Add(Guid.NewGuid(), OrderCommandType.AddPizzaToOrder),
+            });
 
         // Act
         var result = this.mapper.Map(order, Guid.NewGuid());
@@ -84,7 +90,11 @@ public class MessageToActionMapperTests
 
         this.orderStateMock
             .Setup(s => s.Value)
-            .Returns(new OrderState { CorrelationId = correlationId, PendingCommandType = commandType });
+            .Returns(new OrderState
+            {
+                CorrelationId = Guid.NewGuid(),
+                PendingCommands = ImmutableDictionary<Guid, OrderCommandType>.Empty.Add(correlationId, commandType),
+            });
 
         // Act
         var result = this.mapper.Map(order, correlationId);
@@ -94,5 +104,39 @@ public class MessageToActionMapperTests
         result.Should().BeOfType(expectedActionType);
         result.CorrelationId.Should().Be(correlationId);
         ((IMessageReceivedAction<OrderDto>)result).Data.Should().Be(order);
+    }
+
+    [Fact]
+    public void Map_WithOrderDtoAndAnotherPendingCommand_MapsToMatchingCommand()
+    {
+        var correlationId = Guid.NewGuid();
+        var order = new OrderDto { Id = Guid.NewGuid() };
+        this.orderStateMock
+            .Setup(state => state.Value)
+            .Returns(new OrderState
+            {
+                PendingCommands = ImmutableDictionary<Guid, OrderCommandType>.Empty
+                    .Add(Guid.NewGuid(), OrderCommandType.RemovePizzaFromOrder)
+                    .Add(correlationId, OrderCommandType.AddPizzaToOrder),
+            });
+
+        var result = this.mapper.Map(order, correlationId);
+
+        result.Should().BeOfType<AddPizzaToOrderCompletedAction>();
+    }
+
+    [Fact]
+    public void Map_WithOrderDtoForCurrentOrderAndNoPendingCommand_ReturnsOrderUpdateAction()
+    {
+        var correlationId = Guid.NewGuid();
+        var order = new OrderDto { Id = Guid.NewGuid() };
+        this.orderStateMock
+            .Setup(state => state.Value)
+            .Returns(new OrderState { Data = order });
+
+        var result = this.mapper.Map(order, correlationId);
+
+        result.Should().BeOfType<OrderUpdatedAction>();
+        result.CorrelationId.Should().Be(correlationId);
     }
 }

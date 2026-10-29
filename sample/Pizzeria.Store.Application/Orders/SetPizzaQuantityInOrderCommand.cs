@@ -11,13 +11,14 @@ using Pizzeria.Store.Domain;
 
 namespace Pizzeria.Store.Application.Orders;
 
-public record RemovePizzaFromOrderCommand(Guid OrderId, Guid PizzaId) : ICommand, IOrderOwnerRequest
+public sealed record SetPizzaQuantityInOrderCommand(Guid OrderId, Guid PizzaId, int Quantity)
+    : ICommand, IOrderOwnerRequest
 {
     [SuppressMessage(
         "Performance",
         "CA1812: Avoid uninstantiated internal classes",
         Justification = "Used via mediation")]
-    internal sealed class Validator : AbstractValidator<RemovePizzaFromOrderCommand>
+    internal sealed class Validator : AbstractValidator<SetPizzaQuantityInOrderCommand>
     {
         public Validator()
         {
@@ -26,6 +27,9 @@ public record RemovePizzaFromOrderCommand(Guid OrderId, Guid PizzaId) : ICommand
 
             this.RuleFor(x => x.PizzaId)
                 .NotEmpty();
+
+            this.RuleFor(x => x.Quantity)
+                .GreaterThanOrEqualTo(0);
         }
     }
 
@@ -33,7 +37,7 @@ public record RemovePizzaFromOrderCommand(Guid OrderId, Guid PizzaId) : ICommand
         "Performance",
         "CA1812: Avoid uninstantiated internal classes",
         Justification = "Used via mediation")]
-    internal sealed class Handler : IRequestHandler<RemovePizzaFromOrderCommand, CommandResult>
+    internal sealed class Handler : IRequestHandler<SetPizzaQuantityInOrderCommand, CommandResult>
     {
         private readonly IRepository<Order> orderRepository;
         private readonly IRepository<Pizza> pizzaRepository;
@@ -53,7 +57,7 @@ public record RemovePizzaFromOrderCommand(Guid OrderId, Guid PizzaId) : ICommand
         }
 
         public async Task<CommandResult> Handle(
-            RemovePizzaFromOrderCommand request,
+            SetPizzaQuantityInOrderCommand request,
             CancellationToken cancellationToken)
         {
             var pizza = await this.pizzaRepository.RetrieveByIdAsync(request.PizzaId, cancellationToken);
@@ -70,9 +74,10 @@ public record RemovePizzaFromOrderCommand(Guid OrderId, Guid PizzaId) : ICommand
                 return CommandResult.Fail(ResultStatus.NotFound, $"Order {request.OrderId} not found");
             }
 
-            var correlationId = this.correlationContextAccessor.GetCorrelationId();
-
-            var result = order.RemovePizza(pizza, correlationId);
+            var result = order.SetPizzaQuantity(
+                pizza,
+                request.Quantity,
+                this.correlationContextAccessor.GetCorrelationId());
             if (!result.IsSuccess)
             {
                 return (CommandResult)result;
@@ -80,7 +85,11 @@ public record RemovePizzaFromOrderCommand(Guid OrderId, Guid PizzaId) : ICommand
 
             await this.orderRepository.SaveChangesAsync(cancellationToken);
 
-            this.logger.LogInformation("Pizza {PizzaId} removed from order", request.PizzaId);
+            this.logger.LogInformation(
+                "Pizza {PizzaId} quantity set to {Quantity} in order {OrderId}",
+                request.PizzaId,
+                request.Quantity,
+                request.OrderId);
 
             return CommandResult.Success();
         }

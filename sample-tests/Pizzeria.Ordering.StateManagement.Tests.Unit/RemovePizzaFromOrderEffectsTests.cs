@@ -37,9 +37,10 @@ public class RemovePizzaFromOrderEffectsTests
         var correlationId = Guid.NewGuid();
 
         this.bffApiClientMock
-            .Setup(x => x.UpdateOrderAsync(
+            .Setup(x => x.SetOrderPizzaQuantityAsync(
                 orderId,
-                It.Is<UpdateOrderRequest>(r => r.RemovePizzaId == pizzaId),
+                pizzaId,
+                It.Is<SetPizzaQuantityRequest>(r => r.Quantity == 2),
                 It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
@@ -47,6 +48,7 @@ public class RemovePizzaFromOrderEffectsTests
         {
             OrderId = orderId,
             PizzaId = pizzaId,
+            Quantity = 2,
             CorrelationId = correlationId,
         };
 
@@ -60,14 +62,34 @@ public class RemovePizzaFromOrderEffectsTests
     }
 
     [Fact]
+    public async Task ExecuteRequestAsync_QuantityBecomesZero_DeletesOrderPizzaAsync()
+    {
+        var orderId = Guid.NewGuid();
+        var pizzaId = Guid.NewGuid();
+        var action = new RemovePizzaFromOrderAction
+        {
+            OrderId = orderId,
+            PizzaId = pizzaId,
+            Quantity = 0,
+        };
+
+        await this.effects.OnCommandAsync(action, this.dispatcherMock.Object);
+
+        this.bffApiClientMock.Verify(
+            client => client.RemovePizzaFromOrderAsync(orderId, pizzaId, It.IsAny<CancellationToken>()),
+            Times.Once);
+    }
+
+    [Fact]
     public async Task ExecuteRequestAsync_Exception_DispatchesFailureActionAsync()
     {
         // Arrange
         var exceptionMessage = "Unexpected error";
         this.bffApiClientMock
-            .Setup(x => x.UpdateOrderAsync(
+            .Setup(x => x.SetOrderPizzaQuantityAsync(
                 It.IsAny<Guid>(),
-                It.IsAny<UpdateOrderRequest>(),
+                It.IsAny<Guid>(),
+                It.IsAny<SetPizzaQuantityRequest>(),
                 It.IsAny<CancellationToken>()))
             .ThrowsAsync(new InvalidOperationException(exceptionMessage));
 
@@ -76,6 +98,7 @@ public class RemovePizzaFromOrderEffectsTests
         {
             OrderId = Guid.NewGuid(),
             PizzaId = Guid.NewGuid(),
+            Quantity = 1,
             CorrelationId = correlationId,
         };
 

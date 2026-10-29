@@ -8,5 +8,7 @@ public record RemovePizzaFromOrderAction : IRequestAction
 
     public Guid PizzaId { get; init; }
 
+    public int Quantity { get; init; }
+
     public Guid CorrelationId { get; init; } = Guid.NewGuid();
 }

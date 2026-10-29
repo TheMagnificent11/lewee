@@ -14,10 +14,10 @@ internal static class OrderDtoFactory
             {
                 Id = op.Id,
                 PizzaId = op.PizzaId,
-                PizzaName = op.Pizza.Name,
-                PizzaPrice = op.Pizza.Price,
+                PizzaName = op.PizzaName,
+                PizzaPrice = op.PizzaPrice,
                 Quantity = op.Quantity,
-                LineTotal = op.Pizza.Price * op.Quantity,
+                LineTotal = op.PizzaPrice * op.Quantity,
             })
             .ToArray();
 

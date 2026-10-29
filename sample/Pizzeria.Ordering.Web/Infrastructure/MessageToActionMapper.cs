@@ -54,20 +54,11 @@ internal sealed class MessageToActionMapper : IMessageToActionMapper
         }
     }
 
-    private IMessageReceivedAction? MapOrderMessage(OrderDto order, Guid correlationId)
-    {
-        var state = this.orderState.Value;
-
-        if (state.CorrelationId != correlationId || state.PendingCommandType is null)
-        {
-            this.logger.LogWarning(
-                "No pending order command found for correlation ID {CorrelationId}",
-                correlationId);
-
-            return null;
-        }
-
-        return state.PendingCommandType switch
+    private static IMessageReceivedAction<OrderDto>? MapPendingOrderCommand(
+        OrderDto order,
+        Guid correlationId,
+        OrderCommandType commandType) =>
+        commandType switch
         {
             OrderCommandType.StartOrder => new StartOrderCompletedAction
             {
@@ -96,5 +87,25 @@ internal sealed class MessageToActionMapper : IMessageToActionMapper
             },
             _ => null,
         };
+
+    private IMessageReceivedAction? MapOrderMessage(OrderDto order, Guid correlationId)
+    {
+        var state = this.orderState.Value;
+
+        if (state.PendingCommands.TryGetValue(correlationId, out var commandType))
+        {
+            return MapPendingOrderCommand(order, correlationId, commandType);
+        }
+
+        if (state.Data?.Id == order.Id)
+        {
+            return new OrderUpdatedAction { Data = order, CorrelationId = correlationId };
+        }
+
+        this.logger.LogWarning(
+            "No pending order command or current order found for correlation ID {CorrelationId}",
+            correlationId);
+
+        return null;
     }
 }

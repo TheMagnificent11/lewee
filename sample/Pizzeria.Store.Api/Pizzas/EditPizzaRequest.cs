@@ -5,8 +5,6 @@ namespace Pizzeria.Store.Api.Pizzas;
 /// </summary>
 internal sealed record EditPizzaRequest
 {
-    public Guid PizzaId { get; init; }
-
     public string Name { get; init; } = string.Empty;
 
     public string? Description { get; init; }

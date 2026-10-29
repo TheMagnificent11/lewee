@@ -12,6 +12,7 @@ public class OrderingDomainEventHandler :
     INotificationHandler<OrderStartedEvent>,
     INotificationHandler<PizzaAddedToOrderEvent>,
     INotificationHandler<PizzaRemovedFromOrderEvent>,
+    INotificationHandler<OrderPizzaQuantitySetEvent>,
     INotificationHandler<PickupOrderSubmittedEvent>,
     INotificationHandler<DeliveryOrderSubmittedEvent>,
     INotificationHandler<StartedMakingOrderEvent>,
@@ -61,6 +62,16 @@ public class OrderingDomainEventHandler :
         ArgumentNullException.ThrowIfNull(notification);
         return this.ProjectAndPublishAsync(
             nameof(PizzaRemovedFromOrderEvent),
+            notification.OrderId,
+            notification.CorrelationId,
+            cancellationToken);
+    }
+
+    public Task Handle(OrderPizzaQuantitySetEvent notification, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(notification);
+        return this.ProjectAndPublishAsync(
+            nameof(OrderPizzaQuantitySetEvent),
             notification.OrderId,
             notification.CorrelationId,
             cancellationToken);

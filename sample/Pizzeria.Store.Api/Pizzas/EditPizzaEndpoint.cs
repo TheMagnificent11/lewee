@@ -18,7 +18,11 @@ internal sealed class EditPizzaEndpoint : CommandEndpoint<EditPizzaRequest>
     public override async Task HandleAsync(EditPizzaRequest request, CancellationToken ct)
     {
         var result = await this.Mediator.Send(
-            new EditPizzaCommand(request.PizzaId, request.Name, request.Description, request.Price),
+            new EditPizzaCommand(
+                this.Route<Guid>(CommonEndpoints.RouteTokens.PizzaId),
+                request.Name,
+                request.Description,
+                request.Price),
             ct);
 
         await this.ToResponseAsync(result, ct);
