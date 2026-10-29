@@ -34,6 +34,15 @@ internal sealed class UpdateOrderEndpoint : CommandEndpoint<UpdateOrderRequest>
 
     private async Task<CommandResult> SendCommandAsync(Guid orderId, UpdateOrderRequest request, CancellationToken ct)
     {
+        var actionCount = (request.AddPizzaId.HasValue ? 1 : 0)
+            + (request.RemovePizzaId.HasValue ? 1 : 0)
+            + (request.SubmitAsDelivery ? 1 : 0)
+            + (request.SubmitAsPickup ? 1 : 0);
+        if (actionCount != 1)
+        {
+            return CommandResult.Fail(ResultStatus.BadRequest, "Exactly one update action must be specified.");
+        }
+
         if (request.AddPizzaId.HasValue)
         {
             return await this.Mediator.Send(new AddPizzaToOrderCommand(orderId, request.AddPizzaId.Value), ct);
