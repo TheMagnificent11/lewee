@@ -19,12 +19,15 @@ internal class TenantRoleAuthorizationBehavior<TRequest, TResponse> : IPipelineB
     public TenantRoleAuthorizationBehavior(
         IAuthenticatedUserService authenticatedUserService,
         IRepository<User> userRepository,
-        [FromKeyedServices(typeof(User))] IQueryProjectionService queryProjectionService,
-        ILogger<TenantRoleAuthorizationBehavior<TRequest, TResponse>> logger)
+        ILogger<TenantRoleAuthorizationBehavior<TRequest, TResponse>> logger,
+        IQueryProjectionService? queryProjectionService = null,
+        [FromKeyedServices(typeof(User))] IQueryProjectionService? keyedQueryProjectionService = null)
     {
         this.authenticatedUserService = authenticatedUserService;
         this.userRepository = userRepository;
-        this.queryProjectionService = queryProjectionService;
+        this.queryProjectionService = keyedQueryProjectionService
+            ?? queryProjectionService
+            ?? throw new InvalidOperationException("No query projection service is registered.");
         this.logger = logger;
     }
 

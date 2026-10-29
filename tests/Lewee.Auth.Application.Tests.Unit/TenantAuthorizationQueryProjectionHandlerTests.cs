@@ -39,6 +39,39 @@ public sealed class TenantAuthorizationQueryProjectionHandlerTests
     }
 
     [Fact]
+    public async Task Should_PreferKeyedQueryProjectionService_When_BothServicesAreRegistered()
+    {
+        const string externalUserId = "external-id";
+        var tenantId = Guid.NewGuid();
+        var user = User.Create(externalUserId, CorrelationId);
+        user.AssignToTenant(tenantId, CorrelationId);
+        var unkeyedService = new Mock<IQueryProjectionService>();
+        var keyedService = new Mock<IQueryProjectionService>();
+        var handler = CreateHandler(
+            CreateUserRepository(user).Object,
+            new Mock<IRepository<Role>>().Object,
+            unkeyedService.Object,
+            keyedService.Object);
+
+        await handler.Handle(
+            new TenantMembershipCreatedEvent(user.Id, tenantId, CorrelationId),
+            CancellationToken.None);
+
+        keyedService.Verify(
+            item => item.AddOrUpdateAsync(
+                It.IsAny<TenantMembershipRolesQueryProjection>(),
+                It.IsAny<string>(),
+                It.IsAny<CancellationToken>()),
+            Times.Once);
+        unkeyedService.Verify(
+            item => item.AddOrUpdateAsync(
+                It.IsAny<TenantMembershipRolesQueryProjection>(),
+                It.IsAny<string>(),
+                It.IsAny<CancellationToken>()),
+            Times.Never);
+    }
+
+    [Fact]
     public async Task Should_RecordNonMember_When_MembershipRemoved()
     {
         const string externalUserId = "external-id";
@@ -159,10 +192,12 @@ public sealed class TenantAuthorizationQueryProjectionHandlerTests
     private static TenantAuthorizationQueryProjectionHandler CreateHandler(
         IRepository<User> userRepository,
         IRepository<Role> roleRepository,
-        IQueryProjectionService queryProjectionService) =>
+        IQueryProjectionService queryProjectionService,
+        IQueryProjectionService keyedQueryProjectionService = null) =>
         new(
             userRepository,
             roleRepository,
+            NullLogger<TenantAuthorizationQueryProjectionHandler>.Instance,
             queryProjectionService,
-            NullLogger<TenantAuthorizationQueryProjectionHandler>.Instance);
+            keyedQueryProjectionService);
 }
