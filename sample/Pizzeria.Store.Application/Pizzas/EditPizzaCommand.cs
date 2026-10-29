@@ -37,7 +37,8 @@ public sealed record EditPizzaCommand(Guid PizzaId, string Name, string? Descrip
                 .MaximumLength(Pizza.FieldLengths.Description);
 
             this.RuleFor(x => x.Price)
-                .GreaterThan(0);
+                .GreaterThan(0)
+                .PrecisionScale(5, 2, true);
         }
     }
 
