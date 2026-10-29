@@ -314,6 +314,11 @@ public class Order : AggregateRoot
 
     public Result PickedUp(Guid correlationId)
     {
+        if (this.IsDeliveryOrder)
+        {
+            return CommandResult.Fail(ResultStatus.BadRequest, "A delivery order cannot be picked up.");
+        }
+
         if (!this.IsPrepared)
         {
             return CommandResult.Fail(ResultStatus.BadRequest, "Cannot pick up an order that is not prepared.");
@@ -338,6 +343,11 @@ public class Order : AggregateRoot
 
     public Result Delivered(Guid correlationId)
     {
+        if (!this.IsDeliveryOrder)
+        {
+            return CommandResult.Fail(ResultStatus.BadRequest, "A pickup order cannot be delivered.");
+        }
+
         if (!this.IsPrepared)
         {
             return CommandResult.Fail(ResultStatus.BadRequest, "Cannot deliver an order that is not prepared.");

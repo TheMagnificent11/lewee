@@ -190,6 +190,23 @@ public static class OrderReducer
             : state;
     }
 
+    [ReducerMethod]
+    public static OrderState OnOrderCommandReconciled(
+        [NotNull] OrderState state,
+        [NotNull] OrderCommandReconciledAction action)
+    {
+        if (state.Data?.Id != action.Data.Id)
+        {
+            return state;
+        }
+
+        return state.OnCommandCompleted<OrderState, OrderDto, OrderCommandReconciledAction>(action) with
+        {
+            CorrelationId = state.CorrelationId,
+            PendingCommands = state.PendingCommands.Remove(action.CorrelationId),
+        };
+    }
+
     private static OrderState OnCommandStarted<TAction>(
         OrderState state,
         TAction action,

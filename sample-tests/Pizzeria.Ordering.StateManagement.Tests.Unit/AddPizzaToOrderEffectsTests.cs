@@ -23,6 +23,11 @@ public sealed class AddPizzaToOrderEffectsTests
                 It.Is<SetPizzaQuantityRequest>(request => request.Quantity == 3),
                 It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
+        var order = new OrderDto { Id = orderId };
+        client
+            .Setup(item => item.GetOrderAsync(orderId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(order);
+        var dispatcher = new Mock<IDispatcher>();
         var effect = new AddPizzaToOrderEffects(
             Mock.Of<IState<OrderState>>(),
             client.Object,
@@ -31,7 +36,7 @@ public sealed class AddPizzaToOrderEffectsTests
 
         await effect.OnCommandAsync(
             new AddPizzaToOrderAction { OrderId = orderId, PizzaId = pizzaId, Quantity = 3 },
-            Mock.Of<IDispatcher>());
+            dispatcher.Object);
 
         client.Verify(
             item => item.SetOrderPizzaQuantityAsync(
@@ -39,6 +44,10 @@ public sealed class AddPizzaToOrderEffectsTests
                 pizzaId,
                 It.Is<SetPizzaQuantityRequest>(request => request.Quantity == 3),
                 It.IsAny<CancellationToken>()),
+            Times.Once);
+        dispatcher.Verify(
+            item => item.Dispatch(It.Is<OrderCommandReconciledAction>(action =>
+                action.Data == order && action.CorrelationId != Guid.Empty)),
             Times.Once);
     }
 }

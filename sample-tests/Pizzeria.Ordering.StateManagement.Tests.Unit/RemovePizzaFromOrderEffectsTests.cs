@@ -43,6 +43,10 @@ public class RemovePizzaFromOrderEffectsTests
                 It.Is<SetPizzaQuantityRequest>(r => r.Quantity == 2),
                 It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
+        var order = new OrderDto { Id = orderId };
+        this.bffApiClientMock
+            .Setup(x => x.GetOrderAsync(orderId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(order);
 
         var action = new RemovePizzaFromOrderAction
         {
@@ -59,6 +63,10 @@ public class RemovePizzaFromOrderEffectsTests
         this.dispatcherMock.Verify(
             d => d.Dispatch(It.Is<RemovePizzaFromOrderSuccessAction>(a => a.CorrelationId == correlationId)),
             Times.Once);
+        this.dispatcherMock.Verify(
+            d => d.Dispatch(It.Is<OrderCommandReconciledAction>(a =>
+                a.Data == order && a.CorrelationId == correlationId)),
+            Times.Once);
     }
 
     [Fact]
@@ -72,11 +80,17 @@ public class RemovePizzaFromOrderEffectsTests
             PizzaId = pizzaId,
             Quantity = 0,
         };
+        this.bffApiClientMock
+            .Setup(x => x.GetOrderAsync(orderId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new OrderDto { Id = orderId });
 
         await this.effects.OnCommandAsync(action, this.dispatcherMock.Object);
 
         this.bffApiClientMock.Verify(
             client => client.RemovePizzaFromOrderAsync(orderId, pizzaId, It.IsAny<CancellationToken>()),
+            Times.Once);
+        this.bffApiClientMock.Verify(
+            client => client.GetOrderAsync(orderId, It.IsAny<CancellationToken>()),
             Times.Once);
     }
 

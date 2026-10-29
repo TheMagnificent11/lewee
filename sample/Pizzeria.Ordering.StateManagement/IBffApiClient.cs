@@ -13,6 +13,9 @@ public interface IBffApiClient
     [Post("/orders")]
     Task StartOrderAsync(CancellationToken cancellationToken = default);
 
+    [Get("/orders/{orderId}")]
+    Task<OrderDto> GetOrderAsync(Guid orderId, CancellationToken cancellationToken = default);
+
     [Put("/orders/{orderId}")]
     Task UpdateOrderAsync(
         Guid orderId,

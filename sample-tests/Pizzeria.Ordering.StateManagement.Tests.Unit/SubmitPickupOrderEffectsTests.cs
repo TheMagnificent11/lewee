@@ -41,6 +41,10 @@ public class SubmitPickupOrderEffectsTests
                 It.Is<UpdateOrderRequest>(r => r.SubmitAsPickup),
                 It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
+        var order = new OrderDto { Id = orderId };
+        this.bffApiClientMock
+            .Setup(x => x.GetOrderAsync(orderId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(order);
 
         var action = new SubmitPickupOrderAction
         {
@@ -54,6 +58,10 @@ public class SubmitPickupOrderEffectsTests
         // Assert
         this.dispatcherMock.Verify(
             d => d.Dispatch(It.Is<SubmitPickupOrderSuccessAction>(a => a.CorrelationId == correlationId)),
+            Times.Once);
+        this.dispatcherMock.Verify(
+            d => d.Dispatch(It.Is<OrderCommandReconciledAction>(a =>
+                a.Data == order && a.CorrelationId == correlationId)),
             Times.Once);
     }
 

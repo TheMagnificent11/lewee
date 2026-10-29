@@ -222,6 +222,49 @@ public class OrdersReducerTests
     }
 
     [Fact]
+    public void OnOrderCommandReconciled_UpdatesOrderAndClearsPendingCommand()
+    {
+        var orderId = Guid.NewGuid();
+        var correlationId = Guid.NewGuid();
+        var currentCorrelationId = Guid.NewGuid();
+        var order = new OrderDto { Id = orderId, Status = OrderStatus.Received };
+        var state = new OrderState
+        {
+            Data = new OrderDto { Id = orderId },
+            CorrelationId = currentCorrelationId,
+            PendingCommands = ImmutableDictionary<Guid, OrderCommandType>.Empty
+                .Add(correlationId, OrderCommandType.SubmitPickupOrder),
+        };
+
+        var result = OrderReducer.OnOrderCommandReconciled(
+            state,
+            new OrderCommandReconciledAction { Data = order, CorrelationId = correlationId });
+
+        result.Data.Should().Be(order);
+        result.CorrelationId.Should().Be(currentCorrelationId);
+        result.PendingCommands.Should().NotContainKey(correlationId);
+        result.HasPendingCommands.Should().BeFalse();
+    }
+
+    [Fact]
+    public void OnOrderCommandReconciled_IgnoresDifferentCurrentOrder()
+    {
+        var correlationId = Guid.NewGuid();
+        var state = new OrderState
+        {
+            Data = new OrderDto { Id = Guid.NewGuid() },
+            PendingCommands = ImmutableDictionary<Guid, OrderCommandType>.Empty
+                .Add(correlationId, OrderCommandType.SubmitPickupOrder),
+        };
+
+        var result = OrderReducer.OnOrderCommandReconciled(
+            state,
+            new OrderCommandReconciledAction { Data = new OrderDto { Id = Guid.NewGuid() }, CorrelationId = correlationId });
+
+        result.Should().BeSameAs(state);
+    }
+
+    [Fact]
     public void OnRemovePizzaFromOrderSuccess_SetsIsSavingToFalse()
     {
         // Arrange

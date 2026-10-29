@@ -42,6 +42,10 @@ public class SubmitDeliveryOrderEffectsTests
                 It.Is<UpdateOrderRequest>(r => r.SubmitAsDelivery && r.DeliveryAddress == deliveryAddress),
                 It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
+        var order = new OrderDto { Id = orderId };
+        this.bffApiClientMock
+            .Setup(x => x.GetOrderAsync(orderId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(order);
 
         var action = new SubmitDeliveryOrderAction
         {
@@ -56,6 +60,10 @@ public class SubmitDeliveryOrderEffectsTests
         // Assert
         this.dispatcherMock.Verify(
             d => d.Dispatch(It.Is<SubmitDeliveryOrderSuccessAction>(a => a.CorrelationId == correlationId)),
+            Times.Once);
+        this.dispatcherMock.Verify(
+            d => d.Dispatch(It.Is<OrderCommandReconciledAction>(a =>
+                a.Data == order && a.CorrelationId == correlationId)),
             Times.Once);
     }
 

@@ -31,6 +31,12 @@ public sealed class SubmitDeliveryOrderEffects :
         await this.bffApiClient.UpdateOrderAsync(
             action.OrderId,
             new UpdateOrderRequest { SubmitAsDelivery = true, DeliveryAddress = action.DeliveryAddress });
+        var order = await this.bffApiClient.GetOrderAsync(action.OrderId);
+        dispatcher.Dispatch(new OrderCommandReconciledAction
+        {
+            Data = order,
+            CorrelationId = action.CorrelationId,
+        });
 
         return CommandResult.Success();
     }

@@ -121,6 +121,9 @@ public class OrderPageTests : TestContext
         this.bffApiClientMock
             .Setup(x => x.UpdateOrderAsync(order.Id, It.IsAny<UpdateOrderRequest>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
+        this.bffApiClientMock
+            .Setup(x => x.GetOrderAsync(order.Id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(order);
 
         // Act
         var submitButton = component.Find(Order.Selectors.SubmitOrderButton);
@@ -144,6 +147,9 @@ public class OrderPageTests : TestContext
         this.bffApiClientMock
             .Setup(x => x.UpdateOrderAsync(order.Id, It.IsAny<UpdateOrderRequest>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
+        this.bffApiClientMock
+            .Setup(x => x.GetOrderAsync(order.Id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(order);
 
         var deliveryRadio = component.FindAll("input[type='radio']").Skip(1).First();
         deliveryRadio.Click();

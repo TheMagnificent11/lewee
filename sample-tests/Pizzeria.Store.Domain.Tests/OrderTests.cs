@@ -91,4 +91,32 @@ public sealed class OrderTests
         orderPizza.PizzaName.Should().Be("Margherita");
         orderPizza.PizzaPrice.Should().Be(12.50m);
     }
+
+    [Fact]
+    public void PickedUp_Should_RejectDeliveryOrder()
+    {
+        var correlationId = Guid.NewGuid();
+        var order = Order.StartNewOrder(Guid.NewGuid().ToString(), correlationId);
+        order.AddPizza(Menu.GetPizzaByName(Menu.PizzaNames.Margherita), correlationId);
+        order.SubmitDeliveryOrder("123 Main Street", correlationId);
+        order.Prepared(correlationId);
+
+        var result = order.PickedUp(correlationId);
+
+        result.IsSuccess.Should().BeFalse();
+    }
+
+    [Fact]
+    public void Delivered_Should_RejectPickupOrder()
+    {
+        var correlationId = Guid.NewGuid();
+        var order = Order.StartNewOrder(Guid.NewGuid().ToString(), correlationId);
+        order.AddPizza(Menu.GetPizzaByName(Menu.PizzaNames.Margherita), correlationId);
+        order.SubmitPickupOrder(correlationId);
+        order.Prepared(correlationId);
+
+        var result = order.Delivered(correlationId);
+
+        result.IsSuccess.Should().BeFalse();
+    }
 }
