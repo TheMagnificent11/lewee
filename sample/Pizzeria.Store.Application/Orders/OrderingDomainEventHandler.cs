@@ -43,7 +43,6 @@ public class OrderingDomainEventHandler :
             nameof(OrderStartedEvent),
             notification.OrderId,
             notification.CorrelationId,
-            notification.UserId,
             cancellationToken);
     }
 
@@ -54,7 +53,6 @@ public class OrderingDomainEventHandler :
             nameof(PizzaAddedToOrderEvent),
             notification.OrderId,
             notification.CorrelationId,
-            notification.UserId,
             cancellationToken);
     }
 
@@ -65,7 +63,6 @@ public class OrderingDomainEventHandler :
             nameof(PizzaRemovedFromOrderEvent),
             notification.OrderId,
             notification.CorrelationId,
-            notification.UserId,
             cancellationToken);
     }
 
@@ -76,7 +73,6 @@ public class OrderingDomainEventHandler :
             nameof(PickupOrderSubmittedEvent),
             notification.OrderId,
             notification.CorrelationId,
-            notification.UserId,
             cancellationToken);
     }
 
@@ -87,7 +83,6 @@ public class OrderingDomainEventHandler :
             nameof(DeliveryOrderSubmittedEvent),
             notification.OrderId,
             notification.CorrelationId,
-            notification.UserId,
             cancellationToken);
     }
 
@@ -98,7 +93,6 @@ public class OrderingDomainEventHandler :
             nameof(StartedMakingOrderEvent),
             notification.OrderId,
             notification.CorrelationId,
-            notification.UserId,
             cancellationToken);
     }
 
@@ -109,7 +103,6 @@ public class OrderingDomainEventHandler :
             nameof(OrderPreparedEvent),
             notification.OrderId,
             notification.CorrelationId,
-            notification.UserId,
             cancellationToken);
     }
 
@@ -120,7 +113,6 @@ public class OrderingDomainEventHandler :
             nameof(OrderOutForDeliveryEvent),
             notification.OrderId,
             notification.CorrelationId,
-            notification.UserId,
             cancellationToken);
     }
 
@@ -131,7 +123,6 @@ public class OrderingDomainEventHandler :
             nameof(OrderCompletedEvent),
             notification.OrderId,
             notification.CorrelationId,
-            notification.UserId,
             cancellationToken);
     }
 
@@ -139,7 +130,6 @@ public class OrderingDomainEventHandler :
         string domainEventName,
         Guid orderId,
         Guid correlationId,
-        string? userId,
         CancellationToken cancellationToken)
     {
         using (this.logger.BeginScope(new Dictionary<string, object>(StringComparer.Ordinal)
@@ -173,7 +163,7 @@ public class OrderingDomainEventHandler :
                 order.Id.ToString(),
                 cancellationToken);
 
-            var clientEvent = new ClientEvent(correlationId, userId, dto);
+            var clientEvent = new ClientEvent(correlationId, order.UserId, dto);
 
             await this.mediator.Publish(clientEvent, cancellationToken);
 
