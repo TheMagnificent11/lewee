@@ -138,6 +138,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
         var order = await storeDbContext
             .Orders
+            .AsNoTracking()
             .Include(x => x.Pizzas)
             .FirstOrDefaultAsync(x => x.Id == orderId);
 
