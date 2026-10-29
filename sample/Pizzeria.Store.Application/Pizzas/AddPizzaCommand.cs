@@ -33,7 +33,8 @@ public sealed record AddPizzaCommand(string Name, string? Description, decimal P
                 .MaximumLength(Pizza.FieldLengths.Description);
 
             this.RuleFor(x => x.Price)
-                .GreaterThan(0);
+                .GreaterThan(0)
+                .PrecisionScale(5, 2, true);
         }
     }
 
