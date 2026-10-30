@@ -25,11 +25,13 @@ public sealed class OrderStatusTests
     public void StartMaking_FromReceived_TransitionsToMaking()
     {
         var order = SubmittedPickupOrder();
+        var revision = order.Revision;
 
         var result = order.StartMaking(Guid.NewGuid());
 
         result.IsSuccess.Should().BeTrue();
         order.Status.Should().Be(OrderStatus.Making);
+        order.Revision.Should().Be(revision + 1);
     }
 
     [Fact]

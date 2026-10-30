@@ -55,7 +55,7 @@ public sealed class SubmitOrderCommandTests
     }
 
     [Fact]
-    public async Task Should_FailSubmit_When_OrderAlreadySubmittedAsync()
+    public async Task Should_SucceedSubmit_When_OrderAlreadySubmittedAsPickupAsync()
     {
         var order = TestHelpers.CreateOrderWithPizza(out _);
         order.SubmitPickupOrder(Guid.NewGuid());
@@ -65,8 +65,7 @@ public sealed class SubmitOrderCommandTests
 
         var result = await handler.Handle(new SubmitPickupOrderCommand(order.Id), CancellationToken.None);
 
-        result.IsSuccess.Should().BeFalse();
-        result.Status.Should().Be(ResultStatus.BadRequest);
+        result.IsSuccess.Should().BeTrue();
     }
 
     private static SubmitPickupOrderCommand.Handler CreatePickupHandler(Order order)

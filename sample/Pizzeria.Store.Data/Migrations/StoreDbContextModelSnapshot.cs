@@ -148,6 +148,9 @@ namespace Pizzeria.Store.Data.Migrations
                     b.Property<DateTime?>("PreparedDateTime")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<long>("Revision")
+                        .HasColumnType("bigint");
+
                     b.Property<DateTime>("StartedDateTime")
                         .HasColumnType("timestamp with time zone");
 

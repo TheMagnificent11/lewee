@@ -27,6 +27,7 @@ internal static class OrderDtoFactory
             UserId = order.UserId,
             Status = order.Status,
             StartedDateTime = order.StartedDateTime,
+            Revision = order.Revision,
             SubmittedDateTime = order.SubmittedDateTime,
             PreparedDateTime = order.PreparedDateTime,
             CompletedDateTime = order.CompletedDateTime,

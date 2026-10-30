@@ -104,6 +104,42 @@ public sealed class OrderCheckoutTests
         order.DeliveryAddress.Should().Be("1 Test Street");
     }
 
+    [Fact]
+    public void SubmitPickupOrder_WhenAlreadySubmittedAsPickup_SucceedsWithoutChangingOrder()
+    {
+        var order = StartOrderWithPizza();
+        order.SubmitPickupOrder(Guid.NewGuid());
+        var submittedDateTime = order.SubmittedDateTime;
+        var revision = order.Revision;
+        order.DomainEvents.GetAndClear();
+
+        var result = order.SubmitPickupOrder(Guid.NewGuid());
+
+        result.IsSuccess.Should().BeTrue();
+        order.SubmittedDateTime.Should().Be(submittedDateTime);
+        order.Revision.Should().Be(revision);
+        order.DomainEvents.GetAndClear().Should().BeEmpty();
+    }
+
+    [Fact]
+    public void SubmitDeliveryOrder_WhenRepeatedWithSameAddress_SucceedsWithoutChangingOrder()
+    {
+        const string address = "1 Test Street";
+        var order = StartOrderWithPizza();
+        order.SubmitDeliveryOrder(address, Guid.NewGuid());
+        var submittedDateTime = order.SubmittedDateTime;
+        var revision = order.Revision;
+        order.DomainEvents.GetAndClear();
+
+        var result = order.SubmitDeliveryOrder(address, Guid.NewGuid());
+
+        result.IsSuccess.Should().BeTrue();
+        order.DeliveryAddress.Should().Be(address);
+        order.SubmittedDateTime.Should().Be(submittedDateTime);
+        order.Revision.Should().Be(revision);
+        order.DomainEvents.GetAndClear().Should().BeEmpty();
+    }
+
     private static Order StartOrderWithPizza()
     {
         var order = Order.StartNewOrder(Guid.NewGuid().ToString(), Guid.NewGuid());

@@ -43,6 +43,8 @@ public class Order : AggregateRoot
 
     public DateTime StartedDateTime { get; protected set; }
 
+    public long Revision { get; private set; }
+
     public DateTime? SubmittedDateTime { get; protected set; }
 
     public bool IsSubmitted => this.SubmittedDateTime is not null;
@@ -199,6 +201,11 @@ public class Order : AggregateRoot
 
     public Result SubmitPickupOrder(Guid correlationId)
     {
+        if (this.IsSubmitted && !this.IsDeliveryOrder)
+        {
+            return CommandResult.Success();
+        }
+
         var canSubmit = this.EnsureCanSubmit();
         if (!canSubmit.IsSuccess)
         {
@@ -208,6 +215,7 @@ public class Order : AggregateRoot
         this.DeliveryAddress = null;
         this.SubmittedDateTime = DateTime.UtcNow;
         this.Status = OrderStatus.Received;
+        this.Touch();
 
         this.DomainEvents.Raise(new PickupOrderSubmittedEvent(
             this.Id,
@@ -225,6 +233,14 @@ public class Order : AggregateRoot
             return CommandResult.Fail(ResultStatus.BadRequest, "Delivery address is required.");
         }
 
+        if (this.IsSubmitted)
+        {
+            return this.IsDeliveryOrder &&
+                string.Equals(this.DeliveryAddress, deliveryAddress, StringComparison.Ordinal)
+                ? CommandResult.Success()
+                : CommandResult.Fail(ResultStatus.BadRequest, "Order has already been submitted.");
+        }
+
         var canSubmit = this.EnsureCanSubmit();
         if (!canSubmit.IsSuccess)
         {
@@ -234,6 +250,7 @@ public class Order : AggregateRoot
         this.DeliveryAddress = deliveryAddress;
         this.SubmittedDateTime = DateTime.UtcNow;
         this.Status = OrderStatus.Received;
+        this.Touch();
 
         this.DomainEvents.Raise(new DeliveryOrderSubmittedEvent(
             this.Id,
@@ -253,6 +270,7 @@ public class Order : AggregateRoot
         }
 
         this.Status = OrderStatus.Making;
+        this.Touch();
 
         this.DomainEvents.Raise(new StartedMakingOrderEvent(
             this.Id,
@@ -282,6 +300,7 @@ public class Order : AggregateRoot
 
         this.PreparedDateTime = DateTime.UtcNow;
         this.Status = this.IsDeliveryOrder ? OrderStatus.ReadyForDelivery : OrderStatus.ReadyForPickup;
+        this.Touch();
 
         this.DomainEvents.Raise(new OrderPreparedEvent(
             this.Id,
@@ -302,6 +321,7 @@ public class Order : AggregateRoot
         }
 
         this.Status = OrderStatus.Delivering;
+        this.Touch();
 
         this.DomainEvents.Raise(new OrderOutForDeliveryEvent(
             this.Id,
@@ -331,6 +351,7 @@ public class Order : AggregateRoot
 
         this.CompletedDateTime = DateTime.UtcNow;
         this.Status = OrderStatus.Completed;
+        this.Touch();
 
         this.DomainEvents.Raise(new OrderCompletedEvent(
             this.Id,
@@ -360,6 +381,7 @@ public class Order : AggregateRoot
 
         this.CompletedDateTime = DateTime.UtcNow;
         this.Status = OrderStatus.Completed;
+        this.Touch();
 
         this.DomainEvents.Raise(new OrderCompletedEvent(
             this.Id,
@@ -387,6 +409,7 @@ public class Order : AggregateRoot
 
     private void Touch()
     {
+        this.Revision++;
         this.ApplyModificationTrackingData(this.ModifiedBy);
     }
 

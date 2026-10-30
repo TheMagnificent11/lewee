@@ -40,7 +40,10 @@ public sealed class RemovePizzaFromOrderEffects :
                 new SetPizzaQuantityRequest { Quantity = action.Quantity });
         }
 
-        var order = await this.bffApiClient.GetOrderAsync(action.OrderId);
+        var order = await OrderReconciliation.GetOrderAsync(
+            this.bffApiClient,
+            action.OrderId,
+            this.Logger);
         dispatcher.Dispatch(new OrderCommandReconciledAction
         {
             Data = order,

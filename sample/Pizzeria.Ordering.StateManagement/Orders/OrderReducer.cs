@@ -185,7 +185,9 @@ public static class OrderReducer
         [NotNull] OrderState state,
         [NotNull] OrderUpdatedAction action)
     {
-        return state.Data?.Id == action.Data.Id
+        return state.Data is { } currentOrder
+            && currentOrder.Id == action.Data.Id
+            && action.Data.Revision >= currentOrder.Revision
             ? state with { Data = action.Data }
             : state;
     }
@@ -200,8 +202,15 @@ public static class OrderReducer
             return state;
         }
 
+        var currentOrder = state.Data is { } current
+            && current.Id == action.Data.Id
+            && current.Revision > action.Data.Revision
+                ? current
+                : action.Data;
+
         return state.OnCommandCompleted<OrderState, OrderDto, OrderCommandReconciledAction>(action) with
         {
+            Data = currentOrder,
             CorrelationId = state.CorrelationId,
             PendingCommands = state.PendingCommands.Remove(action.CorrelationId),
         };
@@ -259,8 +268,15 @@ public static class OrderReducer
     private static OrderState OnCommandCompleted<TAction>(OrderState state, TAction action)
         where TAction : IMessageReceivedAction<OrderDto>
     {
+        var currentOrder = state.Data is { } current
+            && current.Id == action.Data.Id
+            && current.Revision > action.Data.Revision
+                ? current
+                : action.Data;
+
         return state.OnCommandCompleted<OrderState, OrderDto, TAction>(action) with
         {
+            Data = currentOrder,
             CorrelationId = state.CorrelationId,
             PendingCommands = state.PendingCommands.Remove(action.CorrelationId),
         };

@@ -31,7 +31,10 @@ public sealed class SubmitPickupOrderEffects :
         await this.bffApiClient.UpdateOrderAsync(
             action.OrderId,
             new UpdateOrderRequest { SubmitAsPickup = true });
-        var order = await this.bffApiClient.GetOrderAsync(action.OrderId);
+        var order = await OrderReconciliation.GetOrderAsync(
+            this.bffApiClient,
+            action.OrderId,
+            this.Logger);
         dispatcher.Dispatch(new OrderCommandReconciledAction
         {
             Data = order,

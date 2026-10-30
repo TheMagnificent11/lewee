@@ -23,5 +23,6 @@ public sealed class OrderDtoFactoryTests
                 item.PizzaPrice == 12.50m &&
                 item.LineTotal == 12.50m);
         orderDto.TotalCost.Should().Be(12.50m);
+        orderDto.Revision.Should().Be(order.Revision);
     }
 }

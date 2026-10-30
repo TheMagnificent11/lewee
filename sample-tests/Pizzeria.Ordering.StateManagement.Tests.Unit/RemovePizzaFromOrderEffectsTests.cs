@@ -1,3 +1,4 @@
+using System.Net.Http;
 using Fluxor;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -45,7 +46,8 @@ public class RemovePizzaFromOrderEffectsTests
             .Returns(Task.CompletedTask);
         var order = new OrderDto { Id = orderId };
         this.bffApiClientMock
-            .Setup(x => x.GetOrderAsync(orderId, It.IsAny<CancellationToken>()))
+            .SetupSequence(x => x.GetOrderAsync(orderId, It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new HttpRequestException("Temporary GET failure"))
             .ReturnsAsync(order);
 
         var action = new RemovePizzaFromOrderAction
@@ -67,6 +69,12 @@ public class RemovePizzaFromOrderEffectsTests
             d => d.Dispatch(It.Is<OrderCommandReconciledAction>(a =>
                 a.Data == order && a.CorrelationId == correlationId)),
             Times.Once);
+        this.dispatcherMock.Verify(
+            d => d.Dispatch(It.Is<RemovePizzaFromOrderSuccessAction>(a => a.CorrelationId == correlationId)),
+            Times.Once);
+        this.bffApiClientMock.Verify(
+            client => client.GetOrderAsync(orderId, It.IsAny<CancellationToken>()),
+            Times.Exactly(2));
     }
 
     [Fact]

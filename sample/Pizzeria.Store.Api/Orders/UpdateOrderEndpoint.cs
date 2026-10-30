@@ -1,6 +1,7 @@
 using FastEndpoints;
 using Lewee.Common;
 using Lewee.Infrastructure.FastEndpoints;
+using Microsoft.EntityFrameworkCore;
 using Pizzeria.Common;
 using Pizzeria.Store.Application.Orders;
 using Pizzeria.Store.Contracts.Orders;
@@ -38,25 +39,32 @@ internal sealed class UpdateOrderEndpoint : CommandEndpoint<UpdateOrderRequest>
             return;
         }
 
-        if (request.SubmitAsDelivery)
+        CommandResult result;
+        try
         {
-            var result = await this.Mediator.Send(
-                new SubmitDeliveryOrderCommand(orderId, request.DeliveryAddress ?? string.Empty),
-                ct);
-            await this.ToResponseAsync(result, ct);
-            return;
-        }
+            if (request.SubmitAsDelivery)
+            {
+                result = await this.Mediator.Send(
+                    new SubmitDeliveryOrderCommand(orderId, request.DeliveryAddress ?? string.Empty),
+                    ct);
+            }
+            else if (request.FulfillmentAction.HasValue)
+            {
+                result = await this.Mediator.Send(
+                    new UpdateOrderStatusCommand(orderId, request.FulfillmentAction.Value),
+                    ct);
+            }
+            else
+            {
+                result = await this.Mediator.Send(new SubmitPickupOrderCommand(orderId), ct);
+            }
 
-        if (request.FulfillmentAction.HasValue)
+            await this.ToResponseAsync(result, ct);
+        }
+        catch (DbUpdateConcurrencyException)
         {
-            var result = await this.Mediator.Send(
-                new UpdateOrderStatusCommand(orderId, request.FulfillmentAction.Value),
-                ct);
-            await this.ToResponseAsync(result, ct);
-            return;
+            this.HttpContext.Response.StatusCode = StatusCodes.Status409Conflict;
+            await this.HttpContext.Response.WriteAsync("The order changed. Refresh and retry.", ct);
         }
-
-        var pickupResult = await this.Mediator.Send(new SubmitPickupOrderCommand(orderId), ct);
-        await this.ToResponseAsync(pickupResult, ct);
     }
 }

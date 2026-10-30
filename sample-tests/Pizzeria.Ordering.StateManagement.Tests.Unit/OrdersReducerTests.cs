@@ -222,6 +222,20 @@ public class OrdersReducerTests
     }
 
     [Fact]
+    public void OnOrderUpdated_IgnoresOlderRevision()
+    {
+        var currentOrder = new OrderDto { Id = Guid.NewGuid(), Revision = 2, Status = OrderStatus.Making };
+        var state = new OrderState { Data = currentOrder };
+        var olderOrder = new OrderDto { Id = currentOrder.Id, Revision = 1, Status = OrderStatus.Received };
+
+        var result = OrderReducer.OnOrderUpdated(
+            state,
+            new OrderUpdatedAction { Data = olderOrder, CorrelationId = Guid.NewGuid() });
+
+        result.Data.Should().Be(currentOrder);
+    }
+
+    [Fact]
     public void OnOrderCommandReconciled_UpdatesOrderAndClearsPendingCommand()
     {
         var orderId = Guid.NewGuid();
@@ -244,6 +258,31 @@ public class OrdersReducerTests
         result.CorrelationId.Should().Be(currentCorrelationId);
         result.PendingCommands.Should().NotContainKey(correlationId);
         result.HasPendingCommands.Should().BeFalse();
+    }
+
+    [Fact]
+    public void OnOrderCommandReconciled_KeepsNewerOrderRevisionAndClearsPendingCommand()
+    {
+        var orderId = Guid.NewGuid();
+        var correlationId = Guid.NewGuid();
+        var currentOrder = new OrderDto { Id = orderId, Revision = 2, Status = OrderStatus.Making };
+        var state = new OrderState
+        {
+            Data = currentOrder,
+            PendingCommands = ImmutableDictionary<Guid, OrderCommandType>.Empty
+                .Add(correlationId, OrderCommandType.SubmitPickupOrder),
+        };
+
+        var result = OrderReducer.OnOrderCommandReconciled(
+            state,
+            new OrderCommandReconciledAction
+            {
+                Data = new OrderDto { Id = orderId, Revision = 1, Status = OrderStatus.Received },
+                CorrelationId = correlationId,
+            });
+
+        result.Data.Should().Be(currentOrder);
+        result.PendingCommands.Should().NotContainKey(correlationId);
     }
 
     [Fact]
