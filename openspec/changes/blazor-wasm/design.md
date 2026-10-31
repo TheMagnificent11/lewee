@@ -19,7 +19,7 @@ See `proposal.md` for motivation and the spec deltas for the required browser be
 
 - Change ordering, authorization, API, database, or BFF business behavior.
 - Add a server-side interactive render mode or retain server circuits as a fallback.
-- Modify Lewee framework packages unless implementation proves a client-side registration cannot be provided in the sample app.
+- Change Lewee framework behavior beyond the dependency separation required to make the state-management and component graph browser-compatible.
 
 ## Decisions
 
@@ -31,9 +31,15 @@ This uses Aspire's dedicated WASM hosting rather than keeping the existing ASP.N
 
 **Alternative considered:** Keep the existing web host and enable Interactive WebAssembly rendering. Rejected because it retains a server host and mixed render-mode concerns when the issue requires the application to be fully WASM.
 
+### Separate browser and server dependencies
+
+The retained components and state-management graph currently reaches `Lewee.Infrastructure.Auth` through `Lewee.Infrastructure.Fluxor`, which brings in `Microsoft.AspNetCore.App`; that framework has no `browser-wasm` runtime pack, so the standalone client cannot build with it. State management also references the server `Lewee.Auth.Api` assembly for `CreateUserRequest`. Split the browser-safe pieces (Fluxor/SSE client abstractions) from the server-only authentication infrastructure so the client graph has no `Microsoft.AspNetCore.App` reference, and move the provisioning request contract into a browser-safe contracts assembly shared by the client and `Lewee.Auth.Api`. This is a required framework and sample change, not a conditional one, and must be done before conversion and build verification.
+
 ### Authenticate in the browser and restrict tokens to the BFF
 
 Configure the WebAssembly client for Keycloak authorization-code authentication with PKCE, reusing the `pizzeria-store-web` public client and its existing API audience mappings. Do not add a client secret. Register browser-side authentication and authorization services, and configure Refit `HttpClient` instances with the gateway's same-origin BFF route and an authorization handler limited to that BFF origin. Do not reuse `AddWebApiHttpClient` or `AuthTokenDelegatingHandler` in the browser: they depend on server service discovery and `IHttpContextAccessor`.
+
+Browser Refit clients must also preserve correlation-header propagation (the role of `CorrelatingHttpMessageHandler` in `AddWebApiHttpClient`), because the Fluxor flow matches SSE events to pending commands by the outgoing correlation ID.
 
 After Keycloak authentication supplies the external user ID, initiate the existing idempotent create-user request from the authenticated client through the BFF. Keep the endpoint's anonymous access and its existing no-tenant behavior; do not call the Auth API directly from the browser.
 
@@ -43,7 +49,7 @@ After Keycloak authentication supplies the external user ID, initiate the existi
 
 Keep the existing Fluxor actions, reducers, message mapping, and order-reconciliation behavior. Register browser-compatible HTTP transports for the Refit API client and `SseClientMessageReceiver`, using the gateway's BFF route and the same origin-restricted bearer-token handler. Replace the server `OrderReconciliationCircuitHandler` registration with a client-lifetime cancellation provider so pending work and the SSE stream stop when the authenticated client session ends.
 
-Validate that the WebAssembly HTTP transport can stream SSE responses through the gateway. If its `HttpClient` transport cannot stream in the target browser, use browser fetch streaming with the authorization header; do not place access tokens in query strings or use an unauthenticated event URL. Keep the existing `ClientEventReceiver` message mapping and stop/dispose behavior.
+Validate that the WebAssembly HTTP transport can stream SSE responses through the gateway. If its `HttpClient` transport cannot stream in the target browser, use browser fetch streaming with the authorization header; do not place access tokens in query strings or use an unauthenticated event URL. Keep the existing `ClientEventReceiver` message mapping and stop/dispose behavior. `AddStoreState` calls `AddLeweeFluxor`, which registers an `IAuthenticatedUserService` backed by `IHttpContextAccessor`; in WebAssembly its `UserId` would be empty and `ClientEventReceiver` would never start SSE after sign-in. Provide a browser-backed `IAuthenticatedUserService` populated from the browser authentication state, and ensure state registration does not overwrite it.
 
 ### Keep browser verification on the public gateway
 

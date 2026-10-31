@@ -25,5 +25,6 @@ The Pizzeria ordering frontend currently uses Blazor Interactive Server, so page
 
 - **Affected projects**: `sample/Pizzeria.Ordering.Web`, `sample/Pizzeria.AppHost`, and `sample-tests/Pizzeria.Tests.Integration`.
 - **Affected behavior**: Browser authentication and authorization, first-login provisioning, authenticated Refit requests, SSE order updates, and application hosting.
-- **Preserved behavior**: Existing ordering and order-status requirements, backend APIs, BFF routing, database, and Lewee framework packages.
+- **Framework/dependency separation**: Browser-safe separation of `Lewee.Infrastructure.Fluxor` from `Lewee.Infrastructure.Auth` (`Microsoft.AspNetCore.App`) and a browser-safe user-provisioning contract replacing the server `Lewee.Auth.Api` reference in state management.
+- **Preserved behavior**: Existing ordering and order-status requirements, backend APIs, BFF routing, database, and Lewee framework behavior (other than the dependency separation above).
 - **Configuration**: Aspire's WebAssembly hosting, Keycloak browser client settings, and browser-reachable BFF URLs must work in development and integration tests without exposing server-only Aspire service names to the browser.

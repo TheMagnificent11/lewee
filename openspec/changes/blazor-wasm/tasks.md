@@ -2,6 +2,7 @@
 
 ## 1. Aspire Hosting and WebAssembly Client
 
+- [ ] 1.0 Separate browser and server dependencies: remove the `Lewee.Infrastructure.Auth`/`Microsoft.AspNetCore.App` dependency from the browser graph of `Lewee.Infrastructure.Fluxor`, and replace state management's `Lewee.Auth.Api` reference with a browser-safe provisioning contract; verify the components and state-management projects build for `browser-wasm`.
 - [ ] 1.1 Add Aspire's Blazor hosting integration and register the standalone WASM client, existing BFF reference, and public gateway in the AppHost; verify the AppHost builds and serves the client through the gateway.
 - [ ] 1.2 Convert `Pizzeria.Ordering.Web` to a standalone WebAssembly project and remove Interactive Server render modes and server-only startup services; verify the sample solution builds and the browser UI works without a server-side circuit.
 - [ ] 1.3 Update `sample/Pizzeria.Ordering.Web/AGENTS.md`, `.github/instructions/sample-application.instructions.md`, and `.github/instructions/repository-structure.instructions.md` to describe the WASM client and gateway; verify the edited Markdown passes `markdownlint`.
@@ -13,7 +14,8 @@
 
 ## 3. Client State and Live Updates
 
-- [ ] 3.1 Replace server `IHttpContextAccessor` token-handler registrations with WebAssembly-compatible authenticated HTTP clients for Refit and SSE; verify API calls and SSE requests carry authorization only to the gateway BFF route.
+- [ ] 3.1 Replace server `IHttpContextAccessor` token-handler registrations with WebAssembly-compatible authenticated HTTP clients for Refit and SSE, explicitly preserving correlation-header propagation (the role of `CorrelatingHttpMessageHandler`); verify API calls and SSE requests carry authorization only to the gateway BFF route, and that the outgoing correlation-ID header is preserved so the command/SSE round trip completes the pending start-order action and navigates to the new order.
+- [ ] 3.1a Provide a browser-backed `IAuthenticatedUserService` populated from browser authentication state and ensure `AddStoreState`/`AddLeweeFluxor` does not overwrite it; verify `ClientEventReceiver` starts SSE after sign-in.
 - [ ] 3.2 Replace circuit-bound order reconciliation cancellation with authenticated client-lifetime cancellation and adapt SSE streaming for browser transport; verify live order updates, reconnect behavior, sign-out cleanup, and the state-management unit tests.
 
 ## 4. Integration Verification
