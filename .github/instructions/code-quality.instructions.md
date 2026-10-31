@@ -182,7 +182,7 @@ All build configuration is centrally managed through a hierarchy of configuratio
 **Format Command:**
 
 ```bash
-dotnet format lewee.sln
+dotnet format lewee.slnx
 ```
 
 **Configuration:**
