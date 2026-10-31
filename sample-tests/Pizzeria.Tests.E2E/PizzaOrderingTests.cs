@@ -3,13 +3,13 @@ using Lewee.Playwright;
 using Microsoft.Playwright;
 using Pizzeria.Ordering.Components;
 using Pizzeria.Store.Domain;
-using Pizzeria.Tests.Integration.Infrastructure;
+using Pizzeria.Tests.E2E.Infrastructure;
 using Xunit;
 
 using static Microsoft.Playwright.Assertions;
 using OrderPage = Pizzeria.Ordering.Components.Order;
 
-namespace Pizzeria.Tests.Integration;
+namespace Pizzeria.Tests.E2E;
 
 [Collection(PizzeriaApplicationFactory.CollectionName)]
 public sealed class PizzaOrderingTests : PizzeriaTests

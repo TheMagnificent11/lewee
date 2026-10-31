@@ -1,11 +1,11 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Npgsql;
 using Pizzeria.Common;
-using Pizzeria.Tests.Integration.Infrastructure;
+using Pizzeria.Tests.E2E.Infrastructure;
 using Respawn;
 using Xunit;
 
-namespace Pizzeria.Tests.Integration;
+namespace Pizzeria.Tests.E2E;
 
 [Trait("Category", "Aspire")]
 [SuppressMessage(

@@ -169,7 +169,7 @@ All build configuration is centrally managed through a hierarchy of configuratio
 
 - **Unit tests**: Name test methods using `Should_<ExpectedResultInPascalCase>_When_<ConditionInPascalCase>`.
   Add `_And_<ExtraConditionInPascalCase>` when another condition is required.
-- **E2E/integration tests** (e.g. `sample-tests/Pizzeria.Tests.Integration`): Name the scenario being exercised instead
+- **E2E/integration tests** (e.g. `sample-tests/Pizzeria.Tests.E2E`): Name the scenario being exercised instead
   (e.g. `CreateOrderByAddingAndRemovingPizzasAndCompletingCheckoutForPickup`), since these tests typically cover a
   multi-step user journey rather than a single outcome/action pair.
 
@@ -182,7 +182,7 @@ All build configuration is centrally managed through a hierarchy of configuratio
 **Format Command:**
 
 ```bash
-dotnet format lewee.sln
+dotnet format lewee.slnx
 ```
 
 **Configuration:**

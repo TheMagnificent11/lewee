@@ -18,26 +18,27 @@ For development guidance in this directory, see the following instruction files:
 | `Pizzeria.Ordering.Components.Tests.Unit` | Unit tests for shared Blazor components |
 | `Pizzeria.Ordering.Web.Tests.Unit` | Unit tests for Blazor web application |
 | `Pizzeria.Configuration.Tests.Unit` | Unit tests for sample configuration/seeding |
-| `Pizzeria.Tests.Integration` | End-to-end integration tests |
+| `Pizzeria.Tests.E2E` | Aspire and Playwright end-to-end tests |
 
 ## Running Tests
 
 ```bash
 # Run sample unit tests
-dotnet test sample-tests/ --filter "FullyQualifiedName!~Integration" --configuration Release --nologo
+dotnet test sample-tests/ --filter "FullyQualifiedName!~E2E" --configuration Release --nologo
 
-# Run integration tests (requires Docker)
-dotnet test sample-tests/Pizzeria.Tests.Integration/ --configuration Release --nologo
+# Run E2E tests (requires Docker and the prerequisites below)
+dotnet test sample-tests/Pizzeria.Tests.E2E/ --configuration Release --nologo
 ```
 
-## Integration Tests
+## E2E Tests
 
-Integration tests require:
+E2E tests require:
 
-- Docker Desktop running
-- .NET Aspire workload installed (`dotnet workload install aspire`)
+- Docker running
+- Aspire CLI 13.6.4 and trusted Aspire/HTTPS development certificates
+- Playwright Chromium installed
 
-The integration tests use Aspire to manage test containers automatically.
+See [Environment Setup](../.github/instructions/environment-setup.instructions.md) for the full root-level setup sequence. The tests use Aspire to manage test containers automatically.
 
 ## Testing Standards
 

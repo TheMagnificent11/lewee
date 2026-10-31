@@ -27,7 +27,7 @@ For development guidance in this directory, see the following instruction files:
 
 ```bash
 # Run all unit tests
-dotnet test lewee.sln --filter "FullyQualifiedName!~Integration" --configuration Release --no-build --nologo
+dotnet test lewee.slnx --filter "FullyQualifiedName!~E2E" --configuration Release --no-build --nologo
 
 # Run specific test project
 dotnet test tests/Lewee.Domain.Tests.Unit/ --configuration Release --nologo

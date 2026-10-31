@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
-namespace Pizzeria.Tests.Integration.Infrastructure;
+namespace Pizzeria.Tests.E2E.Infrastructure;
 
 [SuppressMessage(
     "Maintainability",

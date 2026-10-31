@@ -45,4 +45,4 @@ For development guidance in this directory, see the following instruction files:
 dotnet build --configuration Release --nologo
 
 # Run framework tests
-dotnet test --filter "FullyQualifiedName!~Integration" --configuration Release --no-build --nologo
+dotnet test --filter "FullyQualifiedName!~E2E" --configuration Release --no-build --nologo

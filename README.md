@@ -47,8 +47,10 @@ Below is a summary of the dependencies used by Lewee. Note that this isn't a lis
 ### Prerequisites
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
-- [.NET Aspire workload](https://learn.microsoft.com/en-us/dotnet/aspire/fundamentals/setup-tooling?tabs=linux#install-net-aspire) (`dotnet workload install aspire`)
+- [Aspire CLI 13.6.4](https://aspire.dev/) (`dotnet tool install --global Aspire.Cli --version 13.6.4`)
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/) (for PostgreSQL container)
+
+Trust the Aspire development certificate before starting the application with `aspire certs trust`.
 
 ### CLI
 

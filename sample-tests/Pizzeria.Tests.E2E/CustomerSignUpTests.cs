@@ -1,9 +1,9 @@
 using FluentAssertions;
 using Lewee.Playwright;
-using Pizzeria.Tests.Integration.Infrastructure;
+using Pizzeria.Tests.E2E.Infrastructure;
 using Xunit;
 
-namespace Pizzeria.Tests.Integration;
+namespace Pizzeria.Tests.E2E;
 
 [Collection(PizzeriaApplicationFactory.CollectionName)]
 public sealed class CustomerSignUpTests : PizzeriaTests

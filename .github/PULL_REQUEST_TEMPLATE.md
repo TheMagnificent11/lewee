@@ -48,8 +48,8 @@ Relates to #
 ### Build & Tests
 
 - [ ] Code builds without errors: `dotnet build --configuration Release --nologo`
-- [ ] Unit tests pass: `dotnet test --filter "FullyQualifiedName!~Integration" --configuration Release --no-build --nologo`
-- [ ] Integration tests pass (if applicable): `dotnet test --filter "FullyQualifiedName~Integration" --configuration Release --no-build --nologo`
+- [ ] Unit tests pass: `dotnet test --filter "FullyQualifiedName!~E2E" --configuration Release --no-build --nologo`
+- [ ] E2E tests pass (if applicable; see Environment Setup): `dotnet test --filter "FullyQualifiedName~E2E" --configuration Release --no-build --nologo`
 
 ### Code Quality
 
