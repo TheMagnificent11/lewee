@@ -2,7 +2,7 @@ using Lewee.Playwright;
 using Microsoft.Playwright;
 using Pizzeria.Ordering.Web;
 
-namespace Pizzeria.Tests.Integration.Infrastructure;
+namespace Pizzeria.Tests.E2E.Infrastructure;
 
 internal static class PageExtensions
 {

@@ -8,7 +8,7 @@
   </PropertyGroup>
   
   <Import
-    Condition="$(MSBuildProjectName.Contains('.Tests.Unit')) OR $(MSBuildProjectName.Contains('.Tests.Integration'))"
+    Condition="$(MSBuildProjectName.Contains('.Tests.Unit')) OR $(MSBuildProjectName.Contains('.Tests.E2E'))"
     Project="$([MSBuild]::GetPathOfFileAbove('Tests.props', '$(MSBuildThisFileDirectory)../'))" />
 
   <ItemGroup>

@@ -58,7 +58,7 @@ lewee/
 ├── sample-tests/                 # Sample application tests
 │   ├── Directory.Build.props     # Sample test-specific build properties
 │   ├── .editorconfig             # Sample test-specific analyzer rules
-│   ├── Pizzeria.Tests.Integration/  # End-to-end integration tests
+│   ├── Pizzeria.Tests.E2E/          # Aspire and Playwright end-to-end tests
 │   └── Pizzeria.Store.Domain.Tests/ # Domain unit tests
 │
 ├── Directory.Build.props         # Root build properties (all projects)

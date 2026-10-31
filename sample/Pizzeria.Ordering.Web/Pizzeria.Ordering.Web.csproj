@@ -2,7 +2,7 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="Pizzeria.Ordering.Web.Tests.Unit" />
-    <InternalsVisibleTo Include="Pizzeria.Tests.Integration" />
+    <InternalsVisibleTo Include="Pizzeria.Tests.E2E" />
   </ItemGroup>
 
   <ItemGroup>

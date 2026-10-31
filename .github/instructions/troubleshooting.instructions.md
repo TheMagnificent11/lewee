@@ -9,7 +9,7 @@ applyTo: "**/*"
 | Symptom | Likely Cause | Solution |
 | --------- | ------------- | ---------- |
 | Build fails with "NETSDK1045" | Wrong .NET version | Install .NET 10.0 SDK (see Environment Setup) |
-| Integration tests fail to start | Aspire workload missing | `dotnet workload install aspire` |
+| E2E tests fail to start | Aspire CLI, development certificates, Docker, or Playwright browsers are not set up | Follow the full test setup in Environment Setup |
 | Aspire services won't start | Port conflicts | Check port availability, restart Docker |
 | Unexplained build errors | Stale build artifacts | `dotnet clean lewee.sln` |
 | Slow package restore | First run after clone | Normal - packages downloading from NuGet |
@@ -22,7 +22,7 @@ applyTo: "**/*"
 
 1. [ ] Verified .NET 10.0 SDK is installed (`dotnet --version`)
 2. [ ] Ran `dotnet clean lewee.sln`
-3. [ ] Checked Docker Desktop is running (for integration tests)
+3. [ ] Checked Docker is running and E2E prerequisites are installed
 4. [ ] Reviewed error message carefully
 5. [ ] Tried the solution from the matrix above
 

@@ -41,7 +41,7 @@ dotnet build --configuration Release --nologo
 **Commands:**
 
 ```bash
-dotnet test --filter "FullyQualifiedName!~Integration" --configuration Release --no-build --nologo
+dotnet test --filter "FullyQualifiedName!~E2E" --configuration Release --no-build --nologo
 ```
 
 **Success Criteria:**
@@ -57,13 +57,14 @@ dotnet test --filter "FullyQualifiedName!~Integration" --configuration Release -
 **Commands:**
 
 ```bash
-dotnet test --filter "FullyQualifiedName~Integration" --configuration Release --no-build --nologo
+dotnet test --filter "FullyQualifiedName~E2E" --configuration Release --no-build --nologo
 ```
 
 **Prerequisites:**
 
 - Docker Desktop running
-- .NET Aspire workload installed
+- Aspire CLI installed and development certificates trusted (see Environment Setup)
+- Playwright Chromium installed and Docker running
 
 **Success Criteria:**
 

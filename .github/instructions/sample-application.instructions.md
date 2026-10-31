@@ -62,11 +62,11 @@ dotnet run --project ./sample/Pizzeria.AppHost/
 # Validate in Aspire dashboard
 ```
 
-**For Testing Integration:**
+**For End-to-End Testing:**
 
 ```bash
 # Use integration tests (preferred method)
-dotnet test sample-tests/Pizzeria.Tests.Integration/
+dotnet test sample-tests/Pizzeria.Tests.E2E/
 ```
 
 ## Code Quality
@@ -109,7 +109,7 @@ See `Pizzeria.Common.Endpoints` and `UpdateOrderEndpoint`/`UpdateOrderRequest` f
 
 ## Architecture Notes
 
-- **Orchestration**: .NET Aspire manages all services and containers
+- **Orchestration**: [Aspire](https://aspire.dev/) manages all services and containers
 - **Database**: PostgreSQL with automatic schema management
 - **Database Migration/Seeding**: `Pizzeria.Configuration` is a plain C# console app added to the AppHost via the experimental `AddCSharpApp` API (requires suppressing diagnostic `ASPIRECSHARPAPPS001`). It runs migrations/seeding once and exits; the Pizza Store API uses `WaitForCompletion` to wait for it to finish before starting.
 - **Authentication**: Keycloak for OpenID Connect authentication

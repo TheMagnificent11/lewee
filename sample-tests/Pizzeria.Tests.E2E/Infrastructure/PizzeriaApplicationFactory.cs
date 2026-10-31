@@ -15,7 +15,7 @@ using Pizzeria.Store.Data;
 using Pizzeria.Store.Domain;
 using Xunit;
 
-namespace Pizzeria.Tests.Integration.Infrastructure;
+namespace Pizzeria.Tests.E2E.Infrastructure;
 
 [SuppressMessage(
     "Maintainability",

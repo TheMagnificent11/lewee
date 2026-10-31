@@ -31,7 +31,7 @@ jobs:
       - name: Trust Aspire development certificate
         run: aspire certs trust
 
-      # The Pizzeria.Tests.Integration tests use Aspire's DistributedApplicationTestingBuilder, which
+      # The Pizzeria.Tests.E2E tests use Aspire's DistributedApplicationTestingBuilder, which
       # requires Docker (for Postgres/Keycloak containers), a trusted HTTPS dev certificate and Playwright
       # browsers. These tests were previously filtered out (see #505) because they could hang the workflow;
       # they are re-enabled below with bounded timeouts (--blame-hang-timeout) so a stuck run fails fast
@@ -75,7 +75,7 @@ jobs:
         run: dotnet build --configuration Release --no-restore --nologo
 
       - name: Install Playwright Browsers
-        run: pwsh sample-tests/Pizzeria.Tests.Integration/bin/Release/net10.0/playwright.ps1 install --with-deps chromium
+        run: pwsh sample-tests/Pizzeria.Tests.E2E/bin/Release/net10.0/playwright.ps1 install --with-deps chromium
 
       - name: Test
         run: >

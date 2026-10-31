@@ -27,6 +27,8 @@ The following instruction files are available in the `.github/instructions/` dir
 
 ## Quick Reference
 
+The Pizzeria sample uses [Aspire](https://aspire.dev/) in `Pizzeria.AppHost` to orchestrate its distributed application. Follow the environment setup instructions before building or running the full test suite.
+
 ### Priority Order
 
 1. First, consult these instructions for repository-specific guidance
@@ -48,8 +50,11 @@ Your changes should:
 # Build
 dotnet build --configuration Release --nologo
 
-# Test (unit tests only)
-dotnet test --filter "FullyQualifiedName!~Integration" --configuration Release --no-build --nologo
+# Run unit tests only
+dotnet test --filter "FullyQualifiedName!~E2E" --configuration Release --no-build --nologo
+
+# Run the full suite, including Aspire E2E tests (see Environment Setup)
+dotnet test --configuration Release --nologo
 
 # Format
 dotnet format
