@@ -4,7 +4,7 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="AngleSharp" Version="1.8.5" />
+    <PackageVersion Include="AngleSharp" Version="1.9.0" />
     <PackageVersion Include="bunit.web" Version="1.40.0" />
     <PackageVersion Include="EntityFrameworkCore.Exceptions.PostgreSQL" Version="10.0.1" />
     <PackageVersion Include="FastEndpoints" Version="8.3.0" />
