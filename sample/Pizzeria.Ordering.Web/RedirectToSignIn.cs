@@ -14,8 +14,7 @@ public sealed class RedirectToSignIn : ComponentBase
 
     protected override void OnInitialized()
     {
-        var relativePath = this.Navigation.ToBaseRelativePath(this.Navigation.Uri);
-        var returnUrl = Uri.EscapeDataString($"/{relativePath}");
-        this.Navigation.NavigateTo($"/authentication/sign-in?returnUrl={returnUrl}", forceLoad: true);
+        var returnUrl = Uri.EscapeDataString(this.Navigation.Uri);
+        this.Navigation.NavigateTo($"authentication/login?returnUrl={returnUrl}");
     }
 }

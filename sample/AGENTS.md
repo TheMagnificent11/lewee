@@ -27,7 +27,7 @@ For development guidance in this directory, see the following instruction files:
 | `Pizzeria.Ordering.StateManagement` | Fluxor state management features |
 | `Pizzeria.Ordering.Components` | Shared Blazor components |
 | `Pizzeria.Store.Api` | Web API with FastEndpoints for CQRS commands/queries |
-| `Pizzeria.Ordering.Web` | Blazor Web App with Interactive Server using Refit to call the API |
+| `Pizzeria.Ordering.Web` | Standalone Blazor WebAssembly client served through the Aspire Blazor Gateway |
 
 ## Architecture
 
@@ -44,12 +44,12 @@ The sample application is split into two main runtime projects:
   
 ### Pizzeria.Ordering.Web
 
-- **Purpose**: Blazor Web App (interactive rendering) that calls the API
-- **Authentication**: Keycloak OpenID Connect
+- **Purpose**: Standalone Blazor WebAssembly client served by the Aspire Blazor Gateway
+- **Authentication**: Browser-side Keycloak authorization-code flow with PKCE
 - **Features**:
-  - Refit HTTP client to call the API
+  - Refit HTTP client to call the BFF through the gateway
   - Fluxor state management
-  - SSE client to receive real-time events from the API
+  - Authenticated SSE client to receive real-time events through the BFF
 
 ## Running the Sample
 
@@ -64,7 +64,7 @@ This will start:
 3. Keycloak authentication server
 4. Configuration service
 5. Pizzeria Store API
-6. Pizzeria Store Web application
+6. Aspire Blazor Gateway serving the Pizzeria Store Web client
 
 ## Key Patterns Demonstrated
 
@@ -72,7 +72,7 @@ This will start:
 - CQRS with MediatR (API side)
 - Entity Framework with PostgreSQL
 - FastEndpoints API
-- Blazor Web App with Fluxor state management
+- Standalone Blazor WebAssembly client with Fluxor state management
 - Refit HTTP client for API communication
 - Server-Sent Events for real-time notifications
 - .NET Aspire orchestration

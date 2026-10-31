@@ -1,4 +1,4 @@
-using Lewee.Auth.Api;
+using Lewee.Auth.Contracts;
 using Pizzeria.Store.Contracts.Orders;
 using Pizzeria.Store.Contracts.Pizzas;
 using Refit;
@@ -7,35 +7,35 @@ namespace Pizzeria.Ordering.StateManagement;
 
 public interface IBffApiClient
 {
-    [Get("/pizzas")]
+    [Get("pizzas")]
     Task<IEnumerable<PizzaDto>> GetPizzasAsync(CancellationToken cancellationToken = default);
 
-    [Post("/orders")]
+    [Post("orders")]
     Task StartOrderAsync(CancellationToken cancellationToken = default);
 
-    [Get("/orders/{orderId}")]
+    [Get("orders/{orderId}")]
     Task<OrderDto> GetOrderAsync(Guid orderId, CancellationToken cancellationToken = default);
 
-    [Put("/orders/{orderId}")]
+    [Put("orders/{orderId}")]
     Task UpdateOrderAsync(
         Guid orderId,
         [Body] UpdateOrderRequest request,
         CancellationToken cancellationToken = default);
 
-    [Put("/orders/{orderId}/pizzas/{pizzaId}")]
+    [Put("orders/{orderId}/pizzas/{pizzaId}")]
     Task SetOrderPizzaQuantityAsync(
         Guid orderId,
         Guid pizzaId,
         [Body] SetPizzaQuantityRequest request,
         CancellationToken cancellationToken = default);
 
-    [Delete("/orders/{orderId}/pizzas/{pizzaId}")]
+    [Delete("orders/{orderId}/pizzas/{pizzaId}")]
     Task RemovePizzaFromOrderAsync(
         Guid orderId,
         Guid pizzaId,
         CancellationToken cancellationToken = default);
 
-    [Post("/users")]
+    [Post("users")]
     Task CreateUserAsync(
         [Body] CreateUserRequest request,
         CancellationToken cancellationToken = default);

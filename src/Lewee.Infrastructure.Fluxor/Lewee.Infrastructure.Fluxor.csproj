@@ -4,6 +4,7 @@
     <PackageReference Include="Correlate.DependencyInjection" />
     <PackageReference Include="Fluxor.Blazor.Web" />
     <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" />
     <PackageReference Include="Microsoft.Extensions.Http" />
@@ -11,7 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Lewee.Common\Lewee.Common.csproj" />
-    <ProjectReference Include="..\Lewee.Infrastructure.Auth\Lewee.Infrastructure.Auth.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,6 +1,10 @@
 <Project>
 
-  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
-  <Import Project="$([MSBuild]::GetPathOfFileAbove('Tests.props', '$(MSBuildThisFileDirectory)../'))" />
+  <Import
+    Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))"
+    Condition="'$(FileBasedProgram)' != 'true'" />
+  <Import
+    Project="$([MSBuild]::GetPathOfFileAbove('Tests.props', '$(MSBuildThisFileDirectory)../'))"
+    Condition="'$(FileBasedProgram)' != 'true'" />
 
 </Project>

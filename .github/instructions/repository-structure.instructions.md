@@ -13,6 +13,7 @@ lewee/
 │   ├── Directory.Build.props     # Framework-specific build properties
 │   ├── Lewee.Auth.Api/           # Authentication HTTP endpoints
 │   ├── Lewee.Auth.Application/   # Authentication use cases
+│   ├── Lewee.Auth.Contracts/     # Browser-safe authentication API contracts
 │   ├── Lewee.Auth.Domain/        # Tenant and user domain model
 │   ├── Lewee.Auth.Infrastructure.Data/ # Authentication persistence
 │   ├── Lewee.Domain/             # Domain layer abstractions and base classes
@@ -44,7 +45,7 @@ lewee/
 │   ├── Pizzeria.Ordering.StateManagement/ # Fluxor state management
 │   ├── Pizzeria.Ordering.Components/ # Shared Blazor components
 │   ├── Pizzeria.Store.Api/       # FastEndpoints Web API
-│   ├── Pizzeria.Ordering.Web/       # Blazor Web App with Interactive Server
+│   ├── Pizzeria.Ordering.Web/       # Standalone Blazor WebAssembly client
 │   ├── Pizzeria.Store/           # Pizzeria Store shared utilities
 │   ├── Pizzeria.Auth/            # Authentication services
 │   ├── Pizzeria.Configuration/   # Shared configuration
@@ -76,7 +77,11 @@ lewee/
 | Application | Use cases and orchestration | Lewee.Application, Pizzeria.Store.Application | Depends on Domain |
 | Infrastructure (Server) | Server-side concerns (DB, API, Auth) | Lewee.Infrastructure.Data, Lewee.Infrastructure.ServerEvents | Depends on Application and Domain |
 | Infrastructure (Client) | Client-side concerns (State, SSE) | Lewee.Infrastructure.Fluxor | Depends on Common |
-| Presentation | User interface | Pizzeria.Store.Api, Pizzeria.Ordering.Web | Depends on all layers |
+| Presentation | User interface | Pizzeria.Store.Api, Pizzeria.Ordering.Web | Web client uses the Aspire gateway and BFF |
+
+`Pizzeria.Ordering.Web` is a standalone WebAssembly client. The Aspire Blazor Gateway serves its
+static assets and proxies its browser requests to the BFF; the browser does not connect directly
+to API service-discovery addresses.
 
 ## Configuration Files
 

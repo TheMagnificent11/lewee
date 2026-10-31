@@ -1,6 +1,7 @@
 using FastEndpoints;
 using Lewee.Auth.Api;
 using Lewee.Auth.Application;
+using Lewee.Auth.Contracts;
 using Lewee.Auth.Domain;
 using Lewee.Auth.Infrastructure.Data;
 using Lewee.Infrastructure.Auth;
@@ -32,7 +33,7 @@ builder.Services
         keycloakClientId: CommonEnvironments.Auth.Clients.AuthApi,
         requireHttpsMetadata: false)
     .AddDatabaseHealthCheck<AuthDbContext>()
-    .AddFastEndpoints(options => options.Assemblies = [typeof(CreateUserRequest).Assembly]);
+    .AddFastEndpoints(options => options.Assemblies = [AuthApiAssemblyMarker.Assembly]);
 
 var app = builder.Build();
 

@@ -5,6 +5,8 @@ using FluentAssertions;
 using Fluxor;
 using Lewee.Common;
 using Lewee.Infrastructure.Fluxor;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -61,14 +63,15 @@ public class MainLayoutTests : TestContext
     }
 
     [Fact]
-    public void MainLayout_WhenRendered_ShowsSignOutFormWithCorrectAction()
+    public async Task MainLayout_WhenSignOutClicked_NavigatesToAuthenticationLogout()
     {
-        // Act
         var component = this.RenderComponent<MainLayout>();
+        var navigationManager = this.Services.GetRequiredService<NavigationManager>();
 
-        // Assert
-        component.Markup.Should().Contain($"action=\"{PageRoutes.SignOut}\"");
-        component.Markup.Should().Contain("method=\"post\"");
+        await component.Find(MainLayout.Selectors.SignOutButton).ClickAsync(new MouseEventArgs());
+
+        navigationManager.Uri.Should().Be(
+            new Uri(new Uri(navigationManager.BaseUri), "authentication/logout").ToString());
     }
 
     /// <summary>

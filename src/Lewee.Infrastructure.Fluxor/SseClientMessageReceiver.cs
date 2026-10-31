@@ -116,7 +116,7 @@ public class SseClientMessageReceiver : IAsyncDisposable
         {
             try
             {
-                using var request = new HttpRequestMessage(HttpMethod.Get, "/events");
+                using var request = new HttpRequestMessage(HttpMethod.Get, "events");
                 request.Headers.Accept.Add(new("text/event-stream"));
 
                 using var response = await this.httpClient.SendAsync(

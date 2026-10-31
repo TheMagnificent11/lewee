@@ -11,6 +11,7 @@ FastEndpoints integration and HTTP contracts for Lewee authentication operations
 
 ## Dependencies
 
+- [Lewee.Auth.Contracts](../Lewee.Auth.Contracts/README.md) for browser-safe HTTP contracts
 - [Lewee.Auth.Application](../Lewee.Auth.Application/README.md) for user provisioning
 - [Lewee.Infrastructure.FastEndpoints](../Lewee.Infrastructure.FastEndpoints/README.md) for endpoint base classes
 
@@ -22,12 +23,13 @@ Register the auth application layer and include this assembly when configuring F
 using FastEndpoints;
 using Lewee.Auth.Api;
 using Lewee.Auth.Application;
+using Lewee.Auth.Contracts;
 
 services
     .AddLeweeAuthApplication()
     .AddFastEndpoints(options =>
     {
-        options.Assemblies = [typeof(CreateUserRequest).Assembly];
+        options.Assemblies = [AuthApiAssemblyMarker.Assembly];
     });
 ```
 
@@ -55,3 +57,4 @@ memberships.
 |------|---------|
 | `CreateUserRequest` | HTTP request containing the external user identifier |
 | `CreateUserEndpoint` | Handles anonymous first-login user provisioning |
+| `AuthApiAssemblyMarker` | Identifies the assembly containing the auth endpoints |

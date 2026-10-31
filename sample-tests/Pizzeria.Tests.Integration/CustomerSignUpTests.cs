@@ -26,7 +26,7 @@ public sealed class CustomerSignUpTests : PizzeriaTests
         // Act - Register a new user via Keycloak
         await playwrightPage.Page.RegisterUserAsync(webClientUrl, username, password, email);
 
-        // Wait a bit for the User entity to be created via the OnTokenValidated event
+        // Wait for browser-side user provisioning to reach the auth API through the BFF
         await Task.Delay(TimeSpan.FromSeconds(5));
 
         // Wait for domain events to be dispatched

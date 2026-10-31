@@ -301,6 +301,7 @@ The `AddLeweeFluxor` method:
 - Scans the entry assembly and provided assemblies for Fluxor features
 - Optionally enables Redux DevTools for debugging
 - Configures correlation context support via `AddCorrelate()`
+- Does not register an authenticated-user service; configure one for the host's authentication model
 
 ### Server-Sent Events Configuration
 
@@ -312,6 +313,7 @@ services.AddSseMessageReceiver<MyMessageToActionMapper>();
 ```
 
 The `AddSseMessageReceiver` method registers your custom `IMessageToActionMapper` implementation that maps server events to Fluxor actions.
+Use its HTTP client builder overload to add host-specific message handlers, including browser authentication handlers.
 
 ## Client Event Receiver
 
@@ -367,7 +369,6 @@ The `SseClientMessageReceiver` class handles the HTTP-based SSE connection:
 | Package | Integration |
 | --------- | ------------- |
 | `Lewee.Common` | Uses `LoggingConsts` for consistent logging, `ClientMessage` for SSE message contract, `IAuthenticatedUserService` for user context |
-| `Lewee.Infrastructure.Auth` | Provides `IAuthenticatedUserService` implementation for authenticated user access |
 | `Lewee.Infrastructure.ServerEvents` | Server-side SSE broadcasting (see [Lewee.Infrastructure.ServerEvents](../Lewee.Infrastructure.ServerEvents/README.md)) |
 
 ## Sample Application

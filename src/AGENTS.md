@@ -14,8 +14,9 @@ For development guidance in this directory, see the following instruction files:
 
 | Package | Description |
 | --------- | ------------- |
-| `Lewee.Auth.Api` | Anonymous user-provisioning endpoint and contracts |
+| `Lewee.Auth.Api` | Anonymous user-provisioning endpoint |
 | `Lewee.Auth.Application` | Authentication and user-provisioning use cases |
+| `Lewee.Auth.Contracts` | Browser-safe user-provisioning HTTP contracts |
 | `Lewee.Auth.Domain` | Tenant, user, and tenant-membership domain model |
 | `Lewee.Auth.Infrastructure.Data` | Authentication persistence in the `auth` schema |
 | `Lewee.Domain` | Domain layer abstractions including base classes for entities, aggregate roots, value objects, domain events, specifications, and repository interfaces |

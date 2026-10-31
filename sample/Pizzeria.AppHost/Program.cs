@@ -60,11 +60,13 @@ var bff = builder.AddProject<Projects.Pizzeria_Bff>(ServiceNames.Bff)
     .WaitFor(pizzaStoreApi)
     .WithHttpHealthCheck("/health");
 
-builder.AddProject<Projects.Pizzeria_Ordering_Web>(ServiceNames.PizzaStoreWeb)
+var blazorClient = builder.AddBlazorWasmProject<Projects.Pizzeria_Ordering_Web>(ServiceNames.PizzaStoreWeb)
     .WithReference(bff)
-    .WithReference(authServer)
-    .WaitFor(bff)
-    .WithHttpHealthCheck("/health");
+    .WithReference(authServer);
+
+builder.AddBlazorGateway(ServiceNames.Gateway)
+    .WithExternalHttpEndpoints()
+    .WithBlazorClientApp(blazorClient);
 
 var app = builder.Build();
 

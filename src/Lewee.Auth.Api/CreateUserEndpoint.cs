@@ -1,4 +1,5 @@
 using Lewee.Auth.Application;
+using Lewee.Auth.Contracts;
 using Lewee.Infrastructure.FastEndpoints;
 
 namespace Lewee.Auth.Api;

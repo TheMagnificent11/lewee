@@ -1,6 +1,8 @@
 <Project>
 
-  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+  <Import
+    Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))"
+    Condition="'$(FileBasedProgram)' != 'true'" />
 
   <PropertyGroup>
     <Nullable>enable</Nullable>

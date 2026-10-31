@@ -1,7 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
+using System.Security.Claims;
 using System.Text.Json;
 using Fluxor;
 using Lewee.Common;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Logging;
 
 namespace Lewee.Infrastructure.Fluxor;
@@ -14,6 +17,10 @@ namespace Lewee.Infrastructure.Fluxor;
 /// This component should be placed in the application layout to receive events for the authenticated user.
 /// SSE connection is only established after interactive rendering (not during pre-rendering).
 /// </remarks>
+[SuppressMessage(
+    "Usage",
+    "VSTHRD003:Avoid awaiting foreign Tasks",
+    Justification = "Authentication state tasks are supplied by Blazor's cascading authentication state.")]
 public sealed class ClientEventReceiver : ComponentBase, IAsyncDisposable
 {
     private bool isListening;
@@ -48,30 +55,40 @@ public sealed class ClientEventReceiver : ComponentBase, IAsyncDisposable
     [Inject]
     public ILogger<ClientEventReceiver> Logger { get; set; } = null!;
 
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthenticationStateTask { get; set; }
+
     /// <inheritdoc/>
     public async ValueTask DisposeAsync()
     {
-        if (!this.isListening)
+        if (this.isListening)
         {
-            return;
+            this.MessageReceiver.OnMessageReceived -= this.HandleClientMessage;
+            this.Logger.LogStoppedListening();
         }
 
-        this.MessageReceiver.OnMessageReceived -= this.HandleClientMessage;
         await this.MessageReceiver.DisposeAsync();
-        this.Logger.LogStoppedListening();
     }
 
     /// <inheritdoc/>
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (this.isListening)
+        await this.UpdateAuthenticationStateAsync(
+            this.AuthenticationStateTask,
+            firstRender);
+    }
+
+    private async Task UpdateAuthenticationStateAsync(
+        Task<AuthenticationState>? authenticationStateTask,
+        bool firstRender)
+    {
+        var userId = this.AuthenticatedUserService.UserId;
+        if (authenticationStateTask is not null)
         {
-            return;
+            var authenticationState = await authenticationStateTask;
+            userId = authenticationState.User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? userId;
         }
 
-        var userId = this.AuthenticatedUserService.UserId;
-
-        // Only start listening if the user is authenticated
         if (string.IsNullOrEmpty(userId))
         {
             if (firstRender)
@@ -79,6 +96,18 @@ public sealed class ClientEventReceiver : ComponentBase, IAsyncDisposable
                 this.Logger.LogSkippingUnauthenticated();
             }
 
+            if (this.isListening)
+            {
+                this.MessageReceiver.OnMessageReceived -= this.HandleClientMessage;
+                await this.MessageReceiver.StopAsync();
+                this.isListening = false;
+            }
+
+            return;
+        }
+
+        if (this.isListening)
+        {
             return;
         }
 

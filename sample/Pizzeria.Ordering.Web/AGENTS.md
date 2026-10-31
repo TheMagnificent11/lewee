@@ -1,27 +1,21 @@
-# Pizzeria Store Web Application
+# Pizzeria Ordering Web Client
 
-This is the Blazor Web App (interactive rendering) for the Pizzeria Store application, demonstrating the Lewee framework's Flux, Keycloak and Refit capabilities.
+This project is a standalone Blazor WebAssembly client served through the Aspire Blazor Gateway.
+It uses browser-side Keycloak authentication, Fluxor state management, and the BFF as its only
+backend entry point. Do not add server-side rendering, interactive circuits, or direct API service
+addresses to this project.
 
 ## Copilot Instructions
 
-For development guidance specific to Blazor components in this project, see the [Blazor Instructions](../../.github/instructions/blazor.instructions.md).
+- [Blazor Instructions](../../.github/instructions/blazor.instructions.md)
+- [Sample Application Instructions](../../.github/instructions/sample-application.instructions.md)
+- [Code Quality Instructions](../../.github/instructions/code-quality.instructions.md)
 
 ## Key Patterns
 
-### Code-Behind Pattern
-
-All Razor components in this project use the code-behind pattern:
-
-- Component markup is in `.razor` files
-- Component logic is in corresponding `.razor.cs` files (partial classes)
-
-### State Management
-
-This project uses Fluxor for state management via `Pizzeria.Ordering.StateManagement` and `Pizzeria.Ordering.StateManagement.csproj`.
-
-The state management is implemented using the Flux/Redux pattern, which allows for a unidirectional data flow and predictable state changes.
-
-## Related Instructions
-
-- [Sample Application Instructions](../../.github/instructions/sample-application.instructions.md)
-- [Code Quality Instructions](../../.github/instructions/code-quality.instructions.md)
+- Keep component logic in `.razor.cs` partial classes; avoid `@code` blocks.
+- Configure browser HTTP clients against the gateway's BFF proxy route.
+- Restrict bearer-token handlers to the gateway BFF URL.
+- Preserve `X-Correlation-ID` propagation for order-command and SSE reconciliation.
+- Use browser authentication state for user provisioning and live-update lifecycle.
+- Aspire runs the client and gateway from `sample/Pizzeria.AppHost/`.

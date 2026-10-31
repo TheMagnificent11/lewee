@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Lewee.Common;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -38,5 +39,36 @@ public class StateManagementConfigurationTests
 
         result.Should().BeSameAs(services);
         services.Should().NotBeEmpty();
+    }
+
+    [Fact]
+    public void AddLeweeFluxor_ShouldNotRegisterServerAuthenticatedUserService()
+    {
+        var services = new ServiceCollection();
+
+        services.AddLeweeFluxor();
+
+        services.Should().NotContain(descriptor => descriptor.ServiceType == typeof(IAuthenticatedUserService));
+    }
+
+    [Fact]
+    public void AddSseMessageReceiver_WithHttpClientBuilderConfiguration_ShouldInvokeConfiguration()
+    {
+        var services = new ServiceCollection();
+        var builderWasConfigured = false;
+
+        services.AddSseMessageReceiver<TestMessageToActionMapper>(
+            configureHttpClient: null,
+            _ => builderWasConfigured = true);
+
+        builderWasConfigured.Should().BeTrue();
+    }
+
+    private sealed class TestMessageToActionMapper : IMessageToActionMapper
+    {
+        public IMessageReceivedAction Map(object message, Guid correlationId)
+        {
+            return null;
+        }
     }
 }

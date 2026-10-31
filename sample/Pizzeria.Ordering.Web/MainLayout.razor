@@ -25,18 +25,11 @@
 
         <MudSpacer />
 
-        <form
-            method="post"
-            action="@PageRoutes.SignOut">
-
-            <AntiforgeryToken />
-
-            <MudIconButton
-                Icon="@Icons.Material.Filled.Logout"
-                aria-label="@MainLayout.AriaLabels.SignOut"
-                Color="Color.Inherit"
-                ButtonType="ButtonType.Submit" />
-        </form>
+        <MudIconButton
+            Icon="@Icons.Material.Filled.Logout"
+            aria-label="@MainLayout.AriaLabels.SignOut"
+            Color="Color.Inherit"
+            OnClick="SignOut" />
     </MudAppBar>
     <MudMainContent>
         <MudContainer MaxWidth="MaxWidth.Large" Class="my-16 pt-16">

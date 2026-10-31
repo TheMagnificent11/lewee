@@ -9,6 +9,15 @@ namespace Pizzeria.Ordering.Web;
     Justification = "Blazor components must be public to be rendered")]
 public partial class MainLayout : LayoutComponentBase
 {
+    [Inject]
+    private NavigationManager Navigation { get; set; } = null!;
+
+    private void SignOut()
+    {
+        var signOutUri = new Uri(new Uri(this.Navigation.BaseUri), "authentication/logout");
+        this.Navigation.NavigateTo(signOutUri.ToString());
+    }
+
     [SuppressMessage(
         "SonarAnalyzer.CSharp",
         "S1144:Unused private types or members should be removed",

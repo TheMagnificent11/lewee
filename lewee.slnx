@@ -79,6 +79,7 @@
   <Project Path="src/Lewee.Application/Lewee.Application.csproj" />
   <Project Path="src/Lewee.Auth.Api/Lewee.Auth.Api.csproj" />
   <Project Path="src/Lewee.Auth.Application/Lewee.Auth.Application.csproj" />
+  <Project Path="src/Lewee.Auth.Contracts/Lewee.Auth.Contracts.csproj" />
   <Project Path="src/Lewee.Auth.Domain/Lewee.Auth.Domain.csproj" />
   <Project Path="src/Lewee.Auth.Infrastructure.Data/Lewee.Auth.Infrastructure.Data.csproj" />
   <Project Path="src/Lewee.Common/Lewee.Common.csproj" />

@@ -83,9 +83,9 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
             .WaitForResourceAsync(ServiceNames.PizzaStoreApi, KnownResourceStates.Running)
             .WaitAsync(TimeSpan.FromMinutes(10)); // To allow Aspire to pull Docker images
 
-        // Wait for Pizza Store Web to be running
+        // Wait for the public Blazor gateway to be running
         await this.resourceNotificationService
-            .WaitForResourceAsync(ServiceNames.PizzaStoreWeb, KnownResourceStates.Running)
+            .WaitForResourceAsync(ServiceNames.Gateway, KnownResourceStates.Running)
             .WaitAsync(TimeSpan.FromMinutes(10)); // To allow Aspire to pull Docker images
 
         var databaseName = ServiceNames.PizzeriaDatabase;
@@ -207,7 +207,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
     public async Task<string> GetWebClientBaseUrlAsync()
     {
-        using var httpClient = await this.GetServiceClientAsync(ServiceNames.PizzaStoreWeb);
+        using var httpClient = await this.GetServiceClientAsync(ServiceNames.Gateway);
         var baseAddress = httpClient.BaseAddress.ToString().TrimEnd('/');
 
         // If the scheme is tcp, replace it with http (Aspire might return tcp scheme)
@@ -216,7 +216,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
             baseAddress = $"http://{baseAddress[6..]}";
         }
 
-        return baseAddress;
+        return $"{baseAddress}/{ServiceNames.PizzaStoreWeb}/";
     }
 
     public Task<IPlaywright> GetPlaywrightAsync()

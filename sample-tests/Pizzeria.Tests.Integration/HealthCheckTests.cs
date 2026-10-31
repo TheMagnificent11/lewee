@@ -14,30 +14,27 @@ public sealed class HealthCheckTests : PizzeriaTests
     }
 
     [Fact]
-    public async Task Should_ReturnHealthy_When_CallingLivenessEndpointAsync()
+    public async Task Should_ServeTheWebAssemblyClient_When_LoadingGatewayClientRoot()
     {
-        // Arrange
-        using var httpClient = await this.Factory.GetServiceClientAsync(ServiceNames.PizzaStoreWeb);
+        using var httpClient = await this.Factory.GetServiceClientAsync(ServiceNames.Gateway);
+        using var response = await httpClient.GetAsync($"/{ServiceNames.PizzaStoreWeb}/");
 
-        // Act
-        using var response = await httpClient.GetAsync("/health");
-
-        // Assert
         response.Should().NotBeNull();
-        response.IsSuccessStatusCode.Should().BeTrue("the /health endpoint should return healthy for Aspire orchestration and include database connectivity check");
+        response.IsSuccessStatusCode.Should().BeTrue();
+        var content = await response.Content.ReadAsStringAsync();
+        content.Should().Contain("blazor.webassembly.js");
     }
 
     [Fact]
-    public async Task Should_ReturnAlive_When_CallingAliveEndpointInDevelopmentAsync()
+    public async Task Should_ExposeBlazorConfiguration_When_LoadingGatewayConfiguration()
     {
-        // Arrange
-        using var httpClient = await this.Factory.GetServiceClientAsync(ServiceNames.PizzaStoreWeb);
+        using var httpClient = await this.Factory.GetServiceClientAsync(ServiceNames.Gateway);
+        using var response = await httpClient.GetAsync(
+            $"/{ServiceNames.PizzaStoreWeb}/_blazor/_configuration");
 
-        // Act
-        using var response = await httpClient.GetAsync("/alive");
-
-        // Assert
         response.Should().NotBeNull();
-        response.IsSuccessStatusCode.Should().BeTrue("the /alive endpoint should return healthy in development");
+        response.IsSuccessStatusCode.Should().BeTrue();
+        var content = await response.Content.ReadAsStringAsync();
+        content.Should().Contain(ServiceNames.Bff);
     }
 }

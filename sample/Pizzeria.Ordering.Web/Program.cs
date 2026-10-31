@@ -1,88 +1,70 @@
+using Correlate.Http;
+using Lewee.Common;
 using Lewee.Infrastructure.Fluxor;
-using Lewee.Infrastructure.Keycloak;
-using Lewee.Infrastructure.Refit;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.AspNetCore.Components.Server.Circuits;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
 using Pizzeria.Common;
 using Pizzeria.Ordering.StateManagement;
 using Pizzeria.Ordering.StateManagement.Orders;
 using Pizzeria.Ordering.Web;
 using Pizzeria.Ordering.Web.Infrastructure;
-using Pizzeria.ServiceDefaults;
-using Pizzeria.Store.Contracts;
+using Refit;
 using CommonEnvironments = Pizzeria.Common.Environments;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebAssemblyHostBuilder.CreateDefault(args);
+builder.RootComponents.Add<App>("#app");
+builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.AddServiceDefaults();
-
-builder.Services
-    .AddWebApiHttpClient<IBffApiClient>(ServiceNames.Bff)
-    .AddKeycloakAuthenticationForWebApp(
-        keycloakServiceName: ServiceNames.AuthServer,
-        keycloakRealmName: CommonEnvironments.Auth.RealmName,
-        keycloakClientId: CommonEnvironments.Auth.Clients.StoreWeb,
-        events: new OpenIdConnectEvents
-        {
-            OnTokenValidated = async context => await context.CreateUserOnFirstLoginAsync(),
-        },
-        requireHttpsMetadata: false);
+var keycloakServiceUrl = Environment.GetEnvironmentVariable(
+    $"services__{ServiceNames.AuthServer}__https__0")
+    ?? throw new InvalidOperationException("The Aspire gateway did not provide the Keycloak service URL.");
+var bffBaseAddress = new Uri(
+    new Uri(builder.HostEnvironment.BaseAddress),
+    $"_api/{ServiceNames.Bff}/");
 
 builder.Services
-    .AddScoped<OrderReconciliationCircuitHandler>()
-    .AddScoped<IOrderReconciliationCancellationTokenProvider>(
-        services => services.GetRequiredService<OrderReconciliationCircuitHandler>())
-    .AddScoped<CircuitHandler>(
-        services => services.GetRequiredService<OrderReconciliationCircuitHandler>())
-    .AddStoreState(builder.Environment.IsDevelopment())
-    .AddSseMessageReceiver<MessageToActionMapper>(client =>
-    {
-        client.BaseAddress = new Uri($"https://{ServiceNames.Bff}");
-    })
-    .AddMudServices()
-    .AddRazorComponents()
-    .AddInteractiveServerComponents();
+    .Configure<CorrelateClientOptions>(options => options.RequestHeader = RequestHeaders.CorrelationId);
 
-var app = builder.Build();
-
-app.MapDefaultEndpoints();
-
-app.MapGet("/authentication/sign-in", (string? returnUrl) =>
+builder.Services.AddOidcAuthentication(options =>
 {
-    var redirectUri = "/";
-    if (!string.IsNullOrWhiteSpace(returnUrl)
-        && returnUrl.StartsWith('/')
-        && !returnUrl.StartsWith("//", StringComparison.Ordinal)
-        && Uri.TryCreate(returnUrl, UriKind.Relative, out _))
-    {
-        redirectUri = returnUrl;
-    }
-
-    return Results.Challenge(
-        new Microsoft.AspNetCore.Authentication.AuthenticationProperties { RedirectUri = redirectUri },
-        [OpenIdConnectDefaults.AuthenticationScheme]);
+    options.ProviderOptions.Authority =
+        $"{keycloakServiceUrl.TrimEnd('/')}/realms/{CommonEnvironments.Auth.RealmName}";
+    options.ProviderOptions.ClientId = CommonEnvironments.Auth.Clients.StoreWeb;
+    options.ProviderOptions.ResponseType = "code";
+    options.ProviderOptions.DefaultScopes.Add("profile");
+    options.ProviderOptions.DefaultScopes.Add("email");
 });
 
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler(PageRoutes.Error, createScopeForErrors: true);
-    app.UseHsts();
-}
+builder.Services
+    .AddCascadingAuthenticationState()
+    .AddScoped<BrowserAuthenticatedUserService>()
+    .AddScoped<IAuthenticatedUserService>(
+        services => services.GetRequiredService<BrowserAuthenticatedUserService>())
+    .AddScoped<ClientLifetimeCancellationTokenProvider>()
+    .AddScoped<IOrderReconciliationCancellationTokenProvider>(
+        services => services.GetRequiredService<ClientLifetimeCancellationTokenProvider>())
+    .AddTransient<CorrelatingHttpMessageHandler>()
+    .AddScoped(services =>
+        new AuthorizationMessageHandler(
+                services.GetRequiredService<IAccessTokenProvider>(),
+                services.GetRequiredService<NavigationManager>())
+            .ConfigureHandler([bffBaseAddress.AbsoluteUri]))
+    .AddRefitClient<IBffApiClient>()
+    .ConfigureHttpClient(client => client.BaseAddress = bffBaseAddress)
+    .AddHttpMessageHandler<CorrelatingHttpMessageHandler>()
+    .AddHttpMessageHandler(services => services.GetRequiredService<AuthorizationMessageHandler>());
 
-app
-    .UseAntiforgery()
-    .UseHttpsRedirection()
-    .UseAuthentication()
-    .UseAuthorization();
+builder.Services
+    .AddAuthorizationCore()
+    .AddStoreState(builder.HostEnvironment.IsDevelopment())
+    .AddSseMessageReceiver<MessageToActionMapper>(
+        client => client.BaseAddress = bffBaseAddress,
+        client => client
+            .AddHttpMessageHandler<CorrelatingHttpMessageHandler>()
+            .AddHttpMessageHandler(services => services.GetRequiredService<AuthorizationMessageHandler>()))
+    .AddMudServices();
 
-app.MapStaticAssets();
-
-app.MapKeycloakSignOut(PageRoutes.SignOut);
-
-app
-    .MapRazorComponents<App>()
-    .AddAdditionalAssemblies(typeof(Pizzeria.Ordering.Components._Imports).Assembly)
-    .AddInteractiveServerRenderMode();
-
-await app.RunAsync();
+await builder.Build().RunAsync();

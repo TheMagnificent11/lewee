@@ -2,7 +2,7 @@
 
 Defines how a `User` is provisioned from an external (Keycloak) identity, replacing the sample application's `CreateCustomerCommand`/`CreateCustomerEndpoint` flow with a framework-level `CreateUserCommand`/`CreateUserEndpoint`. Provisioning a `User` is independent of tenant assignment: a `User` is created with no tenant membership, and is assigned to one or more tenants by separate, later functionality.
 
-## ADDED Requirements
+## Requirements
 
 ### Requirement: Creating a user requires only an external identity
 
@@ -29,9 +29,9 @@ If a `User` with the given external ID already exists, `CreateUserCommand` SHALL
 
 ### Requirement: HTTP endpoint provisions a user without requiring authentication
 
-`CreateUserEndpoint` SHALL be hosted by the auth API and accept anonymous requests (mirroring the existing `CreateCustomerEndpoint` behavior), since it is invoked during the authentication handshake (`OnTokenValidated`) before the caller has an established application session. The web application SHALL invoke it through the BFF rather than calling the auth API directly.
+`CreateUserEndpoint` SHALL be hosted by the auth API and accept anonymous requests, allowing a newly authenticated browser client to provision its external identity before application user setup is complete. The Ordering App SHALL invoke the endpoint through the BFF rather than calling the auth API directly.
 
 #### Scenario: First login triggers user provisioning
 
-- **WHEN** a user completes Keycloak authentication for the first time and the web application's `OnTokenValidated` handler calls the create-user endpoint with that user's external ID
+- **WHEN** a user completes Keycloak sign-in for the first time and the Ordering App submits that user's external ID to the create-user endpoint through the BFF
 - **THEN** the endpoint SHALL provision a `User` with no tenant membership and return a success response, without requiring the caller to already hold an application session

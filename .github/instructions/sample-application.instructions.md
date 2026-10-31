@@ -13,7 +13,8 @@ The sample pizzeria application demonstrates Lewee framework usage with a multi-
 - Pizzeria BFF (`Pizzeria.Bff` - YARP reverse proxy used by the web frontend)
 - Pizzeria Auth API (`Pizzeria.Auth.Api` - reusable auth endpoints)
 - Pizzeria Store API (`Pizzeria.Store.Api` - FastEndpoints Web API)
-- Pizzeria Store Web (`Pizzeria.Ordering.Web` - Blazor Web App with Interactive Server)
+- Pizzeria Store Web (`Pizzeria.Ordering.Web` - standalone Blazor WebAssembly client)
+- Aspire Blazor Gateway (public browser entry point that serves the client and proxies BFF requests)
 - PostgreSQL database (managed by Aspire)
 - Keycloak authentication server (managed by Aspire)
 - Authentication services (`Pizzeria.Auth`)
@@ -33,7 +34,7 @@ dotnet run --project ./sample/Pizzeria.AppHost/
 2. PostgreSQL container launches automatically
 3. Pizzeria Auth API and Store API become available
 4. Pizzeria BFF becomes available and routes requests to the APIs
-5. Pizzeria Store Web becomes available
+5. Aspire Blazor Gateway serves Pizzeria Store Web and proxies browser API requests through the BFF
 6. All services are monitored through the Aspire dashboard
 
 **Access Points:**
@@ -42,7 +43,8 @@ dotnet run --project ./sample/Pizzeria.AppHost/
 - Store API: URL shown in Aspire dashboard
 - Auth API: URL shown in Aspire dashboard
 - BFF: URL shown in Aspire dashboard
-- Store Web: URL shown in Aspire dashboard
+- Aspire Blazor Gateway: URL shown in Aspire dashboard
+- Store Web: use the gateway URL with the `/pizza-store-web/` path
 
 ## Development Workflow
 
@@ -116,7 +118,8 @@ See `Pizzeria.Common.Endpoints` and `UpdateOrderEndpoint`/`UpdateOrderRequest` f
 - **No Manual Setup**: Aspire handles container lifecycle
 - **API**: FastEndpoints for CQRS commands/queries
 - **BFF**: YARP reverse proxy; the web frontend accesses backend APIs only through this service
-- **Web**: Blazor Web App with Interactive Server render mode
+- **Web**: Standalone Blazor WebAssembly client hosted by Aspire's Blazor Gateway
+- **Browser API access**: The client calls the BFF through the gateway's same-origin proxy route; it does not use direct API service addresses or server-side circuits
 - **State Management**: Fluxor for client-side state management
 - **Real-time Updates**: Server-Sent Events for real-time notifications
 - **Message Bus**: RabbitMQ planned for future inter-service communication

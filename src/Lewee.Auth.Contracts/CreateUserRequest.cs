@@ -1,4 +1,4 @@
-namespace Lewee.Auth.Api;
+namespace Lewee.Auth.Contracts;
 
 /// <summary>
 /// Request to provision a user.

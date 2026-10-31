@@ -18,7 +18,17 @@ internal static class PageExtensions
         await page.GotoWithRetryAsync(webClientUrl);
 
         // Wait for Keycloak login page to load
-        await page.WaitForSelectorAsync("text=Register", new PageWaitForSelectorOptions { Timeout = 30000 });
+        try
+        {
+            await page.WaitForSelectorAsync("text=Register", new PageWaitForSelectorOptions { Timeout = 30000 });
+        }
+        catch (TimeoutException exception)
+        {
+            var pageContent = await page.Locator("body").InnerTextAsync();
+            throw new InvalidOperationException(
+                $"Keycloak registration link was not found at {page.Url}. Page content: {pageContent}",
+                exception);
+        }
 
         // Click on Register link
         await page.ClickAsync("text=Register");

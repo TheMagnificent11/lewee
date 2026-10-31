@@ -1,8 +1,7 @@
-﻿using System.Reflection;
+using System.Reflection;
 using Correlate.DependencyInjection;
 using Fluxor;
 using Fluxor.Blazor.Web.ReduxDevTools;
-using Lewee.Infrastructure.Auth;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Lewee.Infrastructure.Fluxor;
@@ -33,9 +32,7 @@ public static class StateManagementConfiguration
                 options.UseReduxDevTools();
             }
         });
-
         services.AddCorrelate();
-        services.AddAuthenticatedUserService();
 
         return services;
     }
@@ -52,17 +49,34 @@ public static class StateManagementConfiguration
         Action<HttpClient>? configureHttpClient = null)
         where TMapper : class, IMessageToActionMapper
     {
+        return services.AddSseMessageReceiver<TMapper>(configureHttpClient, static _ => { });
+    }
+
+    /// <summary>
+    /// Adds the SSE message receiver configuration and configures its HTTP message handlers
+    /// </summary>
+    /// <typeparam name="TMapper">Message to action mapper type</typeparam>
+    /// <param name="services">Services collection</param>
+    /// <param name="configureHttpClient">Action to configure the HttpClient for SSE</param>
+    /// <param name="configureHttpClientBuilder">Action to configure the HttpClient builder</param>
+    /// <returns>Updated services collection</returns>
+    public static IServiceCollection AddSseMessageReceiver<TMapper>(
+        this IServiceCollection services,
+        Action<HttpClient>? configureHttpClient,
+        Action<IHttpClientBuilder> configureHttpClientBuilder)
+        where TMapper : class, IMessageToActionMapper
+    {
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(configureHttpClientBuilder);
+
         services.AddScoped<IMessageToActionMapper, TMapper>();
 
-        services.AddHttpContextAccessor();
-        services.AddTransient<AuthTokenDelegatingHandler>();
-
-        services.AddHttpClient<SseClientMessageReceiver>(client =>
+        var httpClientBuilder = services.AddHttpClient<SseClientMessageReceiver>(client =>
         {
             client.Timeout = System.Threading.Timeout.InfiniteTimeSpan;
             configureHttpClient?.Invoke(client);
-        })
-        .AddHttpMessageHandler<AuthTokenDelegatingHandler>();
+        });
+        configureHttpClientBuilder(httpClientBuilder);
 
         return services;
     }
