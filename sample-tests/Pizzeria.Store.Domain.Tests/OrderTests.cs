@@ -18,9 +18,9 @@ public sealed class OrderTests
         // Act
         var order = Order.StartNewOrder(userId, correlationId);
 
-        order.AddPizza(margherita);
-        order.AddPizza(fourCheeses);
-        order.AddPizza(fourCheeses);
+        order.AddPizza(margherita, correlationId);
+        order.AddPizza(fourCheeses, correlationId);
+        order.AddPizza(fourCheeses, correlationId);
 
         order.SubmitPickupOrder(correlationId);
 
@@ -67,7 +67,7 @@ public sealed class OrderTests
         var order = Order.StartNewOrder(userId, correlationId);
 
         // Act
-        order.AddPizza(margherita);
+        order.AddPizza(margherita, correlationId);
 
         // Assert
         var orderPizza = order.Pizzas.Single();
@@ -76,5 +76,47 @@ public sealed class OrderTests
         orderPizza.OrderId.Should().Be(order.Id);
         orderPizza.PizzaId.Should().Be(margherita.Id);
         orderPizza.Quantity.Should().Be(1);
+    }
+
+    [Fact]
+    public void OrderPizza_Should_SnapshotPizzaDetails_When_AddedToOrder()
+    {
+        var pizza = Pizza.Create("Margherita", "Classic", 12.50m);
+        var order = Order.StartNewOrder(Guid.NewGuid().ToString(), Guid.NewGuid());
+
+        order.AddPizza(pizza, Guid.NewGuid());
+        pizza.UpdateDetails("Updated Margherita", "Updated description", 15m);
+
+        var orderPizza = order.Pizzas.Single();
+        orderPizza.PizzaName.Should().Be("Margherita");
+        orderPizza.PizzaPrice.Should().Be(12.50m);
+    }
+
+    [Fact]
+    public void PickedUp_Should_RejectDeliveryOrder()
+    {
+        var correlationId = Guid.NewGuid();
+        var order = Order.StartNewOrder(Guid.NewGuid().ToString(), correlationId);
+        order.AddPizza(Menu.GetPizzaByName(Menu.PizzaNames.Margherita), correlationId);
+        order.SubmitDeliveryOrder("123 Main Street", correlationId);
+        order.Prepared(correlationId);
+
+        var result = order.PickedUp(correlationId);
+
+        result.IsSuccess.Should().BeFalse();
+    }
+
+    [Fact]
+    public void Delivered_Should_RejectPickupOrder()
+    {
+        var correlationId = Guid.NewGuid();
+        var order = Order.StartNewOrder(Guid.NewGuid().ToString(), correlationId);
+        order.AddPizza(Menu.GetPizzaByName(Menu.PizzaNames.Margherita), correlationId);
+        order.SubmitPickupOrder(correlationId);
+        order.Prepared(correlationId);
+
+        var result = order.Delivered(correlationId);
+
+        result.IsSuccess.Should().BeFalse();
     }
 }

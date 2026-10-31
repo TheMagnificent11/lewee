@@ -12,21 +12,38 @@ public class OrderPizza : Relationship
 
     public Pizza Pizza { get; internal set; }
 
+    public string PizzaName { get; internal set; }
+
+    public decimal PizzaPrice { get; internal set; }
+
     public int Quantity { get; internal set; }
 
-    internal static OrderPizza CreateForOrder(Order order, Pizza pizza)
+    internal static OrderPizza CreateForOrder(Order order, Pizza pizza, int quantity = 1)
     {
         return new OrderPizza
         {
             Id = Guid.NewGuid(),
             OrderId = order.Id,
             PizzaId = pizza.Id,
-            Quantity = 1,
+            Pizza = pizza,
+            PizzaName = pizza.Name,
+            PizzaPrice = pizza.Price,
+            Quantity = quantity,
         };
     }
 
     internal void IncreaseQuantity()
     {
         this.Quantity++;
+    }
+
+    internal void DecreaseQuantity()
+    {
+        this.Quantity--;
+    }
+
+    internal void SetQuantity(int quantity)
+    {
+        this.Quantity = quantity;
     }
 }

@@ -38,6 +38,44 @@ public class TenantRoleAuthorizationBehaviorTests
     }
 
     [Fact]
+    public async Task Should_PreferKeyedQueryProjectionService_When_BothServicesAreRegisteredAsync()
+    {
+        var tenantId = Guid.NewGuid();
+        const string externalId = "external-id";
+        var keyedProjection = new TenantMembershipRolesQueryProjection { IsMember = true, RoleCodes = ["Manager"] };
+        var unkeyedService = new Mock<IQueryProjectionService>();
+        var keyedService = new Mock<IQueryProjectionService>();
+        keyedService
+            .Setup(item => item.RetrieveByKeyAsync<TenantMembershipRolesQueryProjection>(
+                TenantMembershipRolesQueryProjection.BuildKey(tenantId, externalId),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(keyedProjection);
+        var behavior = CreateBehavior(
+            externalId,
+            tenantId,
+            projection: null,
+            unkeyedService: unkeyedService,
+            keyedService: keyedService);
+
+        var result = await behavior.Handle(
+            new TestTenantRoleCommand(tenantId, ["Manager"]),
+            _ => Task.FromResult(CommandResult.Success()),
+            CancellationToken.None);
+
+        result.IsSuccess.Should().BeTrue();
+        keyedService.Verify(
+            item => item.RetrieveByKeyAsync<TenantMembershipRolesQueryProjection>(
+                It.IsAny<string>(),
+                It.IsAny<CancellationToken>()),
+            Times.Once);
+        unkeyedService.Verify(
+            item => item.RetrieveByKeyAsync<TenantMembershipRolesQueryProjection>(
+                It.IsAny<string>(),
+                It.IsAny<CancellationToken>()),
+            Times.Never);
+    }
+
+    [Fact]
     public async Task Should_ReturnUnauthorized_When_CallerIsNotAMemberOfTheTenantAsync()
     {
         var tenantId = Guid.NewGuid();
@@ -138,7 +176,9 @@ public class TenantRoleAuthorizationBehaviorTests
         string externalId,
         Guid tenantId,
         TenantMembershipRolesQueryProjection projection,
-        bool isSiteAdministrator = false)
+        bool isSiteAdministrator = false,
+        Mock<IQueryProjectionService> unkeyedService = null,
+        Mock<IQueryProjectionService> keyedService = null)
     {
         var authenticatedUserService = new Mock<IAuthenticatedUserService>();
         authenticatedUserService.SetupGet(item => item.UserId).Returns(externalId);
@@ -157,7 +197,7 @@ public class TenantRoleAuthorizationBehaviorTests
                 .ReturnsAsync(user);
         }
 
-        var queryProjectionService = new Mock<IQueryProjectionService>();
+        var queryProjectionService = unkeyedService ?? new Mock<IQueryProjectionService>();
 
         if (externalId != null && !isSiteAdministrator)
         {
@@ -171,8 +211,9 @@ public class TenantRoleAuthorizationBehaviorTests
         return new TenantRoleAuthorizationBehavior<TestTenantRoleCommand, CommandResult>(
             authenticatedUserService.Object,
             userRepository.Object,
+            NullLogger<TenantRoleAuthorizationBehavior<TestTenantRoleCommand, CommandResult>>.Instance,
             queryProjectionService.Object,
-            NullLogger<TenantRoleAuthorizationBehavior<TestTenantRoleCommand, CommandResult>>.Instance);
+            keyedService?.Object);
     }
 }
 

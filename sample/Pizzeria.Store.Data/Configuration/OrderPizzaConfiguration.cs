@@ -24,5 +24,19 @@ internal sealed class OrderPizzaConfiguration : RelationshipConfiguration<OrderP
             .HasOne(op => op.Pizza)
             .WithMany(p => p.OrderPizzas)
             .HasForeignKey(op => op.PizzaId);
+
+        builder
+            .Property(op => op.PizzaName)
+            .IsRequired()
+            .HasMaxLength(Pizza.FieldLengths.Name);
+
+        builder
+            .Property(op => op.PizzaPrice)
+            .IsRequired()
+            .HasPrecision(5, 2);
+
+        builder
+            .Property(op => op.Quantity)
+            .IsConcurrencyToken();
     }
 }

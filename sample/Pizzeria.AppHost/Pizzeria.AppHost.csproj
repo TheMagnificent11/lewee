@@ -20,7 +20,7 @@
     <ProjectReference Include="..\Pizzeria.Bff\Pizzeria.Bff.csproj" />
     <ProjectReference Include="..\Pizzeria.Common\Pizzeria.Common.csproj" IsAspireProjectResource="false" />
     <ProjectReference Include="..\Pizzeria.Store.Api\Pizzeria.Store.Api.csproj" />
-    <ProjectReference Include="..\Pizzeria.Store.Web\Pizzeria.Store.Web.csproj" />
+    <ProjectReference Include="..\Pizzeria.Ordering.Web\Pizzeria.Ordering.Web.csproj" />
   </ItemGroup>
 
   <ItemGroup>

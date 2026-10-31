@@ -2,6 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using Lewee.Auth.Domain;
 using Lewee.Domain;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Lewee.Auth.Application;
@@ -30,17 +31,21 @@ internal sealed class TenantAuthorizationQueryProjectionHandler :
     /// </summary>
     /// <param name="userRepository">User repository.</param>
     /// <param name="roleRepository">Role repository.</param>
-    /// <param name="queryProjectionService">Query projection service.</param>
     /// <param name="logger">Logger.</param>
+    /// <param name="queryProjectionService">Optional unkeyed query projection service.</param>
+    /// <param name="keyedQueryProjectionService">Optional query projection service keyed to the user aggregate.</param>
     public TenantAuthorizationQueryProjectionHandler(
         IRepository<User> userRepository,
         IRepository<Role> roleRepository,
-        IQueryProjectionService queryProjectionService,
-        ILogger<TenantAuthorizationQueryProjectionHandler> logger)
+        ILogger<TenantAuthorizationQueryProjectionHandler> logger,
+        IQueryProjectionService? queryProjectionService = null,
+        [FromKeyedServices(typeof(User))] IQueryProjectionService? keyedQueryProjectionService = null)
     {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
-        this.queryProjectionService = queryProjectionService;
+        this.queryProjectionService = keyedQueryProjectionService
+            ?? queryProjectionService
+            ?? throw new InvalidOperationException("No query projection service is registered.");
         this.logger = logger;
     }
 

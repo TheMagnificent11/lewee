@@ -20,7 +20,7 @@ builder.AddServiceDefaults();
 builder.Services
     .AddAuthenticatedUserService()
     .AddLeweePostgreSQL<AuthDbContext>(
-        builder.Configuration.GetConnectionString(ServiceNames.PizzaStoreDatabaseName)!,
+        builder.Configuration.GetConnectionString(ServiceNames.PizzeriaDatabase)!,
         typeof(User).Assembly,
         AuthDbContext.SchemaName)
     .AddLeweeDatabaseServices<AuthDbContext>(typeof(User).Assembly)

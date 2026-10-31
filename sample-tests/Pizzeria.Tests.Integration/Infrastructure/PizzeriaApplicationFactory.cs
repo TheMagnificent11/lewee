@@ -88,7 +88,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
             .WaitForResourceAsync(ServiceNames.PizzaStoreWeb, KnownResourceStates.Running)
             .WaitAsync(TimeSpan.FromMinutes(10)); // To allow Aspire to pull Docker images
 
-        var databaseName = ServiceNames.PizzaStoreDatabaseName;
+        var databaseName = ServiceNames.PizzeriaDatabase;
         var databaseConnectionString = await this.app.GetConnectionStringAsync(databaseName);
 
         // Setup service provider
@@ -138,6 +138,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
         var order = await storeDbContext
             .Orders
+            .AsNoTracking()
             .Include(x => x.Pizzas)
             .FirstOrDefaultAsync(x => x.Id == orderId);
 

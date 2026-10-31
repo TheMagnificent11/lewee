@@ -2,13 +2,23 @@ using Lewee.Application.Mediation.Notifications;
 using Lewee.Common;
 using Lewee.Domain;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Pizzeria.Store.Contracts.Orders;
 using Pizzeria.Store.Domain;
 
 namespace Pizzeria.Store.Application.Orders;
 
-public class OrderingDomainEventHandler : INotificationHandler<OrderStartedEvent>
+public class OrderingDomainEventHandler :
+    INotificationHandler<OrderStartedEvent>,
+    INotificationHandler<PizzaAddedToOrderEvent>,
+    INotificationHandler<PizzaRemovedFromOrderEvent>,
+    INotificationHandler<OrderPizzaQuantitySetEvent>,
+    INotificationHandler<PickupOrderSubmittedEvent>,
+    INotificationHandler<DeliveryOrderSubmittedEvent>,
+    INotificationHandler<StartedMakingOrderEvent>,
+    INotificationHandler<OrderPreparedEvent>,
+    INotificationHandler<OrderOutForDeliveryEvent>,
+    INotificationHandler<OrderCompletedEvent>
 {
     private readonly IRepository<Order> orderRepository;
     private readonly IQueryProjectionService queryProjectionService;
@@ -17,7 +27,7 @@ public class OrderingDomainEventHandler : INotificationHandler<OrderStartedEvent
 
     public OrderingDomainEventHandler(
         IRepository<Order> orderRepository,
-        IQueryProjectionService queryProjectionService,
+        [FromKeyedServices(typeof(Order))] IQueryProjectionService queryProjectionService,
         IMediator mediator,
         ILogger<OrderingDomainEventHandler> logger)
     {
@@ -27,21 +37,122 @@ public class OrderingDomainEventHandler : INotificationHandler<OrderStartedEvent
         this.logger = logger;
     }
 
-    public async Task Handle(OrderStartedEvent notification, CancellationToken cancellationToken)
+    public Task Handle(OrderStartedEvent notification, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(notification);
+        return this.ProjectAndPublishAsync(
+            nameof(OrderStartedEvent),
+            notification.OrderId,
+            notification.CorrelationId,
+            cancellationToken);
+    }
 
+    public Task Handle(PizzaAddedToOrderEvent notification, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(notification);
+        return this.ProjectAndPublishAsync(
+            nameof(PizzaAddedToOrderEvent),
+            notification.OrderId,
+            notification.CorrelationId,
+            cancellationToken);
+    }
+
+    public Task Handle(PizzaRemovedFromOrderEvent notification, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(notification);
+        return this.ProjectAndPublishAsync(
+            nameof(PizzaRemovedFromOrderEvent),
+            notification.OrderId,
+            notification.CorrelationId,
+            cancellationToken);
+    }
+
+    public Task Handle(OrderPizzaQuantitySetEvent notification, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(notification);
+        return this.ProjectAndPublishAsync(
+            nameof(OrderPizzaQuantitySetEvent),
+            notification.OrderId,
+            notification.CorrelationId,
+            cancellationToken);
+    }
+
+    public Task Handle(PickupOrderSubmittedEvent notification, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(notification);
+        return this.ProjectAndPublishAsync(
+            nameof(PickupOrderSubmittedEvent),
+            notification.OrderId,
+            notification.CorrelationId,
+            cancellationToken);
+    }
+
+    public Task Handle(DeliveryOrderSubmittedEvent notification, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(notification);
+        return this.ProjectAndPublishAsync(
+            nameof(DeliveryOrderSubmittedEvent),
+            notification.OrderId,
+            notification.CorrelationId,
+            cancellationToken);
+    }
+
+    public Task Handle(StartedMakingOrderEvent notification, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(notification);
+        return this.ProjectAndPublishAsync(
+            nameof(StartedMakingOrderEvent),
+            notification.OrderId,
+            notification.CorrelationId,
+            cancellationToken);
+    }
+
+    public Task Handle(OrderPreparedEvent notification, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(notification);
+        return this.ProjectAndPublishAsync(
+            nameof(OrderPreparedEvent),
+            notification.OrderId,
+            notification.CorrelationId,
+            cancellationToken);
+    }
+
+    public Task Handle(OrderOutForDeliveryEvent notification, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(notification);
+        return this.ProjectAndPublishAsync(
+            nameof(OrderOutForDeliveryEvent),
+            notification.OrderId,
+            notification.CorrelationId,
+            cancellationToken);
+    }
+
+    public Task Handle(OrderCompletedEvent notification, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(notification);
+        return this.ProjectAndPublishAsync(
+            nameof(OrderCompletedEvent),
+            notification.OrderId,
+            notification.CorrelationId,
+            cancellationToken);
+    }
+
+    private async Task ProjectAndPublishAsync(
+        string domainEventName,
+        Guid orderId,
+        Guid correlationId,
+        CancellationToken cancellationToken)
+    {
         using (this.logger.BeginScope(new Dictionary<string, object>(StringComparer.Ordinal)
         {
-            { LoggingConsts.CorrelationId, notification.CorrelationId },
-            { "OrderId", notification.OrderId },
-            { "DomainEventName", nameof(OrderStartedEvent) },
+            { LoggingConsts.CorrelationId, correlationId },
+            { "OrderId", orderId },
+            { "DomainEventName", domainEventName },
         }))
         {
             this.logger.LogInformation("Started handling domain event");
 
-            // Get the order with its pizzas to create the query projection
-            var spec = new GetOrderQuerySpec(notification.OrderId);
+            var spec = new GetOrderQuerySpec(orderId);
             var order = await this.orderRepository.QueryOneAsync(spec, cancellationToken);
 
             if (order is null)
@@ -50,39 +161,11 @@ public class OrderingDomainEventHandler : INotificationHandler<OrderStartedEvent
                 return;
             }
 
-            // Build the pizza DTOs with joined data
-            var orderLines = order.Pizzas
-                .Select(op => new OrderPizzaDto
-                {
-                    Id = op.Id,
-                    PizzaId = op.PizzaId,
-                    PizzaName = op.Pizza.Name,
-                    PizzaPrice = op.Pizza.Price,
-                    Quantity = op.Quantity,
-                    LineTotal = op.Pizza.Price * op.Quantity,
-                })
-                .ToArray();
+            var dto = OrderDtoFactory.Create(order);
 
-            var totalCost = orderLines.Sum(p => p.LineTotal);
-
-            // Create the DTO for the client event
-            var dto = new OrderDto
-            {
-                Id = order.Id,
-                UserId = order.UserId,
-                StartedDateTime = order.StartedDateTime,
-                SubmittedDateTime = order.SubmittedDateTime,
-                PreparedDateTime = order.PreparedDateTime,
-                CompletedDateTime = order.CompletedDateTime,
-                DeliveryAddress = order.DeliveryAddress,
-                Pizzas = orderLines,
-                TotalCost = totalCost,
-            };
-
-            // Create or update the query projection
             var queryProjection = new OrderQueryProjection
             {
-                CorrelationId = notification.CorrelationId,
+                CorrelationId = correlationId,
                 Order = dto,
             };
 
@@ -91,7 +174,7 @@ public class OrderingDomainEventHandler : INotificationHandler<OrderStartedEvent
                 order.Id.ToString(),
                 cancellationToken);
 
-            var clientEvent = new ClientEvent(notification.CorrelationId, notification.UserId, dto);
+            var clientEvent = new ClientEvent(correlationId, order.UserId, dto);
 
             await this.mediator.Publish(clientEvent, cancellationToken);
 

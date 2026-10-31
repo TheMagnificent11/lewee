@@ -20,7 +20,7 @@ public class ApplicationAuthConfigurationTests
         services.AddLogging();
         services.AddSingleton(Mock.Of<IAuthenticatedUserService>());
         services.AddSingleton(Mock.Of<IRepository<User>>());
-        services.AddSingleton(Mock.Of<IQueryProjectionService>());
+        services.AddKeyedSingleton<IQueryProjectionService>(typeof(User), Mock.Of<IQueryProjectionService>());
 
         services.AddLeweeApplicationAuth();
         var serviceProvider = services.BuildServiceProvider();
@@ -39,7 +39,7 @@ public class ApplicationAuthConfigurationTests
         services.AddLogging();
         services.AddSingleton(Mock.Of<IAuthenticatedUserService>());
         services.AddSingleton(Mock.Of<IRepository<User>>());
-        services.AddSingleton(Mock.Of<IQueryProjectionService>());
+        services.AddKeyedSingleton<IQueryProjectionService>(typeof(User), Mock.Of<IQueryProjectionService>());
 
         services.AddLeweeApplicationAuth();
         var serviceProvider = services.BuildServiceProvider();
