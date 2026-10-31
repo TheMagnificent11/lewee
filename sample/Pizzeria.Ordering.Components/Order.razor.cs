@@ -153,6 +153,11 @@ public partial class Order : FluxorComponent
         this.Dispatcher.Dispatch(new ClearOrderErrorAction());
     }
 
+    private void RetryOrderRefresh()
+    {
+        this.Dispatcher.Dispatch(new RefreshOrderAction { OrderId = this.OrderId });
+    }
+
     public static class Selectors
     {
         public const string PizzaMenuHeading = "[role='heading'][aria-level='4']";

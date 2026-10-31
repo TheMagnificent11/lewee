@@ -14,5 +14,8 @@ public record OrderState : RequestState<OrderDto>
 
     public string? ReconciliationErrorMessage { get; init; }
 
-    public bool HasPendingCommands => this.PendingCommands.Count > 0 || this.InFlightCommands.Count > 0;
+    public bool HasPendingCommands =>
+        this.PendingCommands.Count > 0
+        || this.InFlightCommands.Count > 0
+        || this.ReconciliationErrorMessage is not null;
 }

@@ -177,7 +177,6 @@ public static class OrderReducer
         return state with
         {
             ErrorMessage = null,
-            ReconciliationErrorMessage = null,
         };
     }
 

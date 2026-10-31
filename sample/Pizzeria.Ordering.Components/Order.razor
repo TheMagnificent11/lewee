@@ -202,10 +202,11 @@ else
 @if (!string.IsNullOrEmpty(OrdersState.Value.ReconciliationErrorMessage))
 {
     <MudAlert Severity="Severity.Warning"
-              Class="mt-4"
-              ShowCloseIcon="true"
-              CloseIconClicked="ClearError">
+              Class="mt-4">
         @OrdersState.Value.ReconciliationErrorMessage
+        <MudButton Color="Color.Warning" OnClick="RetryOrderRefresh">
+            Refresh order
+        </MudButton>
     </MudAlert>
 }
 

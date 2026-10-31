@@ -158,7 +158,7 @@ public class OrdersReducerTests
 
         // Assert
         result.ErrorMessage.Should().BeNull();
-        result.ReconciliationErrorMessage.Should().BeNull();
+        result.ReconciliationErrorMessage.Should().Be("Some reconciliation error");
     }
 
     [Fact]
@@ -186,11 +186,29 @@ public class OrdersReducerTests
             });
 
         result.Data.Should().BeSameAs(order);
-        result.HasPendingCommands.Should().BeFalse();
+        result.HasPendingCommands.Should().BeTrue();
         result.IsSaving.Should().BeFalse();
         result.PendingCommands.Should().NotContainKey(correlationId);
         result.InFlightCommands.Should().NotContain(correlationId);
         result.ReconciliationErrorMessage.Should().Be(errorMessage);
+    }
+
+    [Fact]
+    public void OnOrderUpdated_ClearsReconciliationErrorAndUnlocksOrder()
+    {
+        var order = new OrderDto { Id = Guid.NewGuid(), Revision = 1 };
+        var state = new OrderState { Data = order, ReconciliationErrorMessage = "Refresh failed" };
+
+        var result = OrderReducer.OnOrderUpdated(
+            state,
+            new OrderUpdatedAction
+            {
+                Data = new OrderDto { Id = order.Id, Revision = 2 },
+                CorrelationId = Guid.NewGuid(),
+            });
+
+        result.ReconciliationErrorMessage.Should().BeNull();
+        result.HasPendingCommands.Should().BeFalse();
     }
 
     [Fact]
