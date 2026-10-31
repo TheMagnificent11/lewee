@@ -8,8 +8,9 @@ on:
         type: boolean
 
 permissions:
-  contents: write
+  contents: read
   pull-requests: write
+  id-token: write
 
 jobs:
   buildAndTest:
@@ -114,6 +115,13 @@ jobs:
       - name: Pack
         run: dotnet pack --configuration Release --nologo /p:PackageVersion=${{ steps.version.outputs.fullSemVer }} --output ./output
 
+      - name: NuGet Login (Trusted Publishing)
+        id: nuget-login
+        uses: NuGet/login@v1
+        with:
+          user: TheMagnificent11
+        if: github.ref == 'refs/heads/main'
+
       - name: Publish to NuGet
-        run: dotnet nuget push ./output/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+        run: dotnet nuget push ./output/*.nupkg --api-key "${{ steps.nuget-login.outputs.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
         if: github.ref == 'refs/heads/main'
