@@ -6,8 +6,9 @@ on:
     branches: [ develop, main ]
 
 permissions:
-  contents: write
+  contents: read
   pull-requests: write
+  id-token: write
 
 jobs:
   buildAndTest:
