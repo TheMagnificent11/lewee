@@ -11,6 +11,7 @@ applyTo: "**/*"
 | .NET SDK | 10.0+ | `curl -sSL https://dotnet.microsoft.com/download/dotnet/scripts/v1/dotnet-install.sh \| bash /dev/stdin --channel 10.0 --install-dir ~/.dotnet` | `dotnet --version` |
 | Aspire CLI | 13.6.4 | `dotnet tool install --global Aspire.Cli --version 13.6.4` | `aspire --version` |
 | Docker Desktop | Latest | Platform-specific | `docker --version` |
+| PowerShell | 7+ | [Install PowerShell for your OS](https://learn.microsoft.com/powershell/scripting/install/installing-powershell) | `pwsh --version` |
 
 The Pizzeria AppHost uses `AspireUseCliBundle`, so install the Aspire CLI version matching its `Aspire.AppHost.Sdk` version. The current version is 13.6.4.
 
