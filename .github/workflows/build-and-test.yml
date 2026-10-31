@@ -7,11 +7,6 @@ on:
         required: false
         type: boolean
 
-permissions:
-  contents: read
-  pull-requests: write
-  id-token: write
-
 jobs:
   buildAndTest:
     runs-on: ubuntu-latest
