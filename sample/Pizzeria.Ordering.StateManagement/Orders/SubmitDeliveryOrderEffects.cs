@@ -13,15 +13,18 @@ public sealed class SubmitDeliveryOrderEffects :
     CommandEffects<OrderState, OrderDto, SubmitDeliveryOrderAction, SubmitDeliveryOrderSuccessAction, SubmitDeliveryOrderFailureAction, SubmitDeliveryOrderCompletedAction>
 {
     private readonly IBffApiClient bffApiClient;
+    private readonly IOrderReconciliationCancellationTokenProvider cancellationTokenProvider;
 
     public SubmitDeliveryOrderEffects(
         IState<OrderState> state,
         IBffApiClient bffApiClient,
+        IOrderReconciliationCancellationTokenProvider cancellationTokenProvider,
         ICorrelationContextAccessor correlationContextAccessor,
         ILogger<SubmitDeliveryOrderEffects> logger)
         : base(state, correlationContextAccessor, logger)
     {
         this.bffApiClient = bffApiClient;
+        this.cancellationTokenProvider = cancellationTokenProvider;
     }
 
     protected override async Task<CommandResult> ExecuteCommandAsync(
@@ -30,16 +33,15 @@ public sealed class SubmitDeliveryOrderEffects :
     {
         await this.bffApiClient.UpdateOrderAsync(
             action.OrderId,
-            new UpdateOrderRequest { SubmitAsDelivery = true, DeliveryAddress = action.DeliveryAddress });
-        var order = await OrderReconciliation.GetOrderAsync(
+            new UpdateOrderRequest { SubmitAsDelivery = true, DeliveryAddress = action.DeliveryAddress },
+            this.cancellationTokenProvider.CancellationToken);
+        await OrderReconciliation.ReconcileOrderAsync(
             this.bffApiClient,
             action.OrderId,
-            this.Logger);
-        dispatcher.Dispatch(new OrderCommandReconciledAction
-        {
-            Data = order,
-            CorrelationId = action.CorrelationId,
-        });
+            action.CorrelationId,
+            dispatcher,
+            this.Logger,
+            this.cancellationTokenProvider.CancellationToken);
 
         return CommandResult.Success();
     }

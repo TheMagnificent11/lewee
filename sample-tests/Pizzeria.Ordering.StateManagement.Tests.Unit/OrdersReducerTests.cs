@@ -146,7 +146,11 @@ public class OrdersReducerTests
     public void OnClearOrderError_ClearsErrorMessage()
     {
         // Arrange
-        var state = new OrderState { ErrorMessage = "Some error" };
+        var state = new OrderState
+        {
+            ErrorMessage = "Some error",
+            ReconciliationErrorMessage = "Some reconciliation error",
+        };
         var action = new ClearOrderErrorAction();
 
         // Act
@@ -154,6 +158,39 @@ public class OrdersReducerTests
 
         // Assert
         result.ErrorMessage.Should().BeNull();
+        result.ReconciliationErrorMessage.Should().BeNull();
+    }
+
+    [Fact]
+    public void OnOrderCommandReconciliationFailed_ClearsPendingStateWithoutDiscardingOrder()
+    {
+        var order = new OrderDto { Id = Guid.NewGuid() };
+        var correlationId = Guid.NewGuid();
+        var errorMessage = "The order was updated but could not be refreshed.";
+        var state = new OrderState
+        {
+            Data = order,
+            CorrelationId = correlationId,
+            IsSaving = true,
+            PendingCommands = ImmutableDictionary<Guid, OrderCommandType>.Empty
+                .Add(correlationId, OrderCommandType.AddPizzaToOrder),
+            InFlightCommands = ImmutableHashSet<Guid>.Empty.Add(correlationId),
+        };
+
+        var result = OrderReducer.OnOrderCommandReconciliationFailed(
+            state,
+            new OrderCommandReconciliationFailedAction
+            {
+                CorrelationId = correlationId,
+                ErrorMessage = errorMessage,
+            });
+
+        result.Data.Should().BeSameAs(order);
+        result.HasPendingCommands.Should().BeFalse();
+        result.IsSaving.Should().BeFalse();
+        result.PendingCommands.Should().NotContainKey(correlationId);
+        result.InFlightCommands.Should().NotContain(correlationId);
+        result.ReconciliationErrorMessage.Should().Be(errorMessage);
     }
 
     [Fact]

@@ -177,6 +177,7 @@ public static class OrderReducer
         return state with
         {
             ErrorMessage = null,
+            ReconciliationErrorMessage = null,
         };
     }
 
@@ -188,8 +189,26 @@ public static class OrderReducer
         return state.Data is { } currentOrder
             && currentOrder.Id == action.Data.Id
             && action.Data.Revision >= currentOrder.Revision
-            ? state with { Data = action.Data }
+            ? state with { Data = action.Data, ReconciliationErrorMessage = null }
             : state;
+    }
+
+    [ReducerMethod]
+    public static OrderState OnOrderCommandReconciliationFailed(
+        [NotNull] OrderState state,
+        [NotNull] OrderCommandReconciliationFailedAction action)
+    {
+        var inFlightCommands = state.InFlightCommands.Remove(action.CorrelationId);
+        return state with
+        {
+            CorrelationId = state.CorrelationId,
+            ReconciliationErrorMessage = state.CorrelationId == action.CorrelationId
+                ? action.ErrorMessage
+                : state.ReconciliationErrorMessage,
+            PendingCommands = state.PendingCommands.Remove(action.CorrelationId),
+            InFlightCommands = inFlightCommands,
+            IsSaving = inFlightCommands.Count > 0,
+        };
     }
 
     [ReducerMethod]
@@ -235,6 +254,7 @@ public static class OrderReducer
         {
             PendingCommands = pendingCommands.SetItem(action.CorrelationId, commandType),
             InFlightCommands = inFlightCommands.Add(action.CorrelationId),
+            ReconciliationErrorMessage = null,
         };
     }
 

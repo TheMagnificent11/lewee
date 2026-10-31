@@ -199,6 +199,16 @@ else
     </MudAlert>
 }
 
+@if (!string.IsNullOrEmpty(OrdersState.Value.ReconciliationErrorMessage))
+{
+    <MudAlert Severity="Severity.Warning"
+              Class="mt-4"
+              ShowCloseIcon="true"
+              CloseIconClicked="ClearError">
+        @OrdersState.Value.ReconciliationErrorMessage
+    </MudAlert>
+}
+
 @if (!string.IsNullOrEmpty(PizzasState.Value.ErrorMessage))
 {
     <MudAlert Severity="Severity.Error" Class="mt-4">

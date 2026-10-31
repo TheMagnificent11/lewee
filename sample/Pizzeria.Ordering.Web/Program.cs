@@ -2,9 +2,11 @@ using Lewee.Infrastructure.Fluxor;
 using Lewee.Infrastructure.Keycloak;
 using Lewee.Infrastructure.Refit;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Components.Server.Circuits;
 using MudBlazor.Services;
 using Pizzeria.Common;
 using Pizzeria.Ordering.StateManagement;
+using Pizzeria.Ordering.StateManagement.Orders;
 using Pizzeria.Ordering.Web;
 using Pizzeria.Ordering.Web.Infrastructure;
 using Pizzeria.ServiceDefaults;
@@ -28,6 +30,11 @@ builder.Services
         requireHttpsMetadata: false);
 
 builder.Services
+    .AddScoped<OrderReconciliationCircuitHandler>()
+    .AddScoped<IOrderReconciliationCancellationTokenProvider>(
+        services => services.GetRequiredService<OrderReconciliationCircuitHandler>())
+    .AddScoped<CircuitHandler>(
+        services => services.GetRequiredService<OrderReconciliationCircuitHandler>())
     .AddStoreState(builder.Environment.IsDevelopment())
     .AddSseMessageReceiver<MessageToActionMapper>(client =>
     {

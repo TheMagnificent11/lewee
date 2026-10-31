@@ -13,15 +13,18 @@ public sealed class AddPizzaToOrderEffects :
     CommandEffects<OrderState, OrderDto, AddPizzaToOrderAction, AddPizzaToOrderSuccessAction, AddPizzaToOrderFailureAction, AddPizzaToOrderCompletedAction>
 {
     private readonly IBffApiClient bffApiClient;
+    private readonly IOrderReconciliationCancellationTokenProvider cancellationTokenProvider;
 
     public AddPizzaToOrderEffects(
         IState<OrderState> state,
         IBffApiClient bffApiClient,
+        IOrderReconciliationCancellationTokenProvider cancellationTokenProvider,
         ICorrelationContextAccessor correlationContextAccessor,
         ILogger<AddPizzaToOrderEffects> logger)
         : base(state, correlationContextAccessor, logger)
     {
         this.bffApiClient = bffApiClient;
+        this.cancellationTokenProvider = cancellationTokenProvider;
     }
 
     protected override async Task<CommandResult> ExecuteCommandAsync(
@@ -31,16 +34,15 @@ public sealed class AddPizzaToOrderEffects :
         await this.bffApiClient.SetOrderPizzaQuantityAsync(
             action.OrderId,
             action.PizzaId,
-            new SetPizzaQuantityRequest { Quantity = action.Quantity });
-        var order = await OrderReconciliation.GetOrderAsync(
+            new SetPizzaQuantityRequest { Quantity = action.Quantity },
+            this.cancellationTokenProvider.CancellationToken);
+        await OrderReconciliation.ReconcileOrderAsync(
             this.bffApiClient,
             action.OrderId,
-            this.Logger);
-        dispatcher.Dispatch(new OrderCommandReconciledAction
-        {
-            Data = order,
-            CorrelationId = action.CorrelationId,
-        });
+            action.CorrelationId,
+            dispatcher,
+            this.Logger,
+            this.cancellationTokenProvider.CancellationToken);
 
         return CommandResult.Success();
     }

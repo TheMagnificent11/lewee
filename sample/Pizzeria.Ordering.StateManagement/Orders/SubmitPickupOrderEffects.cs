@@ -13,15 +13,18 @@ public sealed class SubmitPickupOrderEffects :
     CommandEffects<OrderState, OrderDto, SubmitPickupOrderAction, SubmitPickupOrderSuccessAction, SubmitPickupOrderFailureAction, SubmitPickupOrderCompletedAction>
 {
     private readonly IBffApiClient bffApiClient;
+    private readonly IOrderReconciliationCancellationTokenProvider cancellationTokenProvider;
 
     public SubmitPickupOrderEffects(
         IState<OrderState> state,
         IBffApiClient bffApiClient,
+        IOrderReconciliationCancellationTokenProvider cancellationTokenProvider,
         ICorrelationContextAccessor correlationContextAccessor,
         ILogger<SubmitPickupOrderEffects> logger)
         : base(state, correlationContextAccessor, logger)
     {
         this.bffApiClient = bffApiClient;
+        this.cancellationTokenProvider = cancellationTokenProvider;
     }
 
     protected override async Task<CommandResult> ExecuteCommandAsync(
@@ -30,16 +33,15 @@ public sealed class SubmitPickupOrderEffects :
     {
         await this.bffApiClient.UpdateOrderAsync(
             action.OrderId,
-            new UpdateOrderRequest { SubmitAsPickup = true });
-        var order = await OrderReconciliation.GetOrderAsync(
+            new UpdateOrderRequest { SubmitAsPickup = true },
+            this.cancellationTokenProvider.CancellationToken);
+        await OrderReconciliation.ReconcileOrderAsync(
             this.bffApiClient,
             action.OrderId,
-            this.Logger);
-        dispatcher.Dispatch(new OrderCommandReconciledAction
-        {
-            Data = order,
-            CorrelationId = action.CorrelationId,
-        });
+            action.CorrelationId,
+            dispatcher,
+            this.Logger,
+            this.cancellationTokenProvider.CancellationToken);
 
         return CommandResult.Success();
     }

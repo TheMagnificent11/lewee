@@ -24,6 +24,7 @@ public class SubmitDeliveryOrderEffectsTests
         this.effects = new SubmitDeliveryOrderEffects(
             this.stateMock.Object,
             this.bffApiClientMock.Object,
+            Mock.Of<IOrderReconciliationCancellationTokenProvider>(),
             Mock.Of<Correlate.ICorrelationContextAccessor>(),
             Mock.Of<ILogger<SubmitDeliveryOrderEffects>>());
     }

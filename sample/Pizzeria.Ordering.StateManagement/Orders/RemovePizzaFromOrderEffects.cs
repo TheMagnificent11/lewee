@@ -13,15 +13,18 @@ public sealed class RemovePizzaFromOrderEffects :
     CommandEffects<OrderState, OrderDto, RemovePizzaFromOrderAction, RemovePizzaFromOrderSuccessAction, RemovePizzaFromOrderFailureAction, RemovePizzaFromOrderCompletedAction>
 {
     private readonly IBffApiClient bffApiClient;
+    private readonly IOrderReconciliationCancellationTokenProvider cancellationTokenProvider;
 
     public RemovePizzaFromOrderEffects(
         IState<OrderState> state,
         IBffApiClient bffApiClient,
+        IOrderReconciliationCancellationTokenProvider cancellationTokenProvider,
         ICorrelationContextAccessor correlationContextAccessor,
         ILogger<RemovePizzaFromOrderEffects> logger)
         : base(state, correlationContextAccessor, logger)
     {
         this.bffApiClient = bffApiClient;
+        this.cancellationTokenProvider = cancellationTokenProvider;
     }
 
     protected override async Task<CommandResult> ExecuteCommandAsync(
@@ -30,25 +33,27 @@ public sealed class RemovePizzaFromOrderEffects :
     {
         if (action.Quantity == 0)
         {
-            await this.bffApiClient.RemovePizzaFromOrderAsync(action.OrderId, action.PizzaId);
+            await this.bffApiClient.RemovePizzaFromOrderAsync(
+                action.OrderId,
+                action.PizzaId,
+                this.cancellationTokenProvider.CancellationToken);
         }
         else
         {
             await this.bffApiClient.SetOrderPizzaQuantityAsync(
                 action.OrderId,
                 action.PizzaId,
-                new SetPizzaQuantityRequest { Quantity = action.Quantity });
+                new SetPizzaQuantityRequest { Quantity = action.Quantity },
+                this.cancellationTokenProvider.CancellationToken);
         }
 
-        var order = await OrderReconciliation.GetOrderAsync(
+        await OrderReconciliation.ReconcileOrderAsync(
             this.bffApiClient,
             action.OrderId,
-            this.Logger);
-        dispatcher.Dispatch(new OrderCommandReconciledAction
-        {
-            Data = order,
-            CorrelationId = action.CorrelationId,
-        });
+            action.CorrelationId,
+            dispatcher,
+            this.Logger,
+            this.cancellationTokenProvider.CancellationToken);
 
         return CommandResult.Success();
     }

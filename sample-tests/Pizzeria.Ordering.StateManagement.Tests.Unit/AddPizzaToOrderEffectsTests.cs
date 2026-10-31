@@ -31,6 +31,7 @@ public sealed class AddPizzaToOrderEffectsTests
         var effect = new AddPizzaToOrderEffects(
             Mock.Of<IState<OrderState>>(),
             client.Object,
+            Mock.Of<IOrderReconciliationCancellationTokenProvider>(),
             Mock.Of<Correlate.ICorrelationContextAccessor>(),
             Mock.Of<ILogger<AddPizzaToOrderEffects>>());
 

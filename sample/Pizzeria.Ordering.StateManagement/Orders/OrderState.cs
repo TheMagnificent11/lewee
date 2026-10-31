@@ -12,5 +12,7 @@ public record OrderState : RequestState<OrderDto>
     public ImmutableHashSet<Guid> InFlightCommands { get; init; } =
         ImmutableHashSet<Guid>.Empty;
 
+    public string? ReconciliationErrorMessage { get; init; }
+
     public bool HasPendingCommands => this.PendingCommands.Count > 0 || this.InFlightCommands.Count > 0;
 }
