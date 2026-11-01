@@ -115,11 +115,11 @@ All build configuration is centrally managed through a hierarchy of configuratio
 - Global build settings (warnings as errors, code style enforcement)
 - Repository metadata (URL, authors, etc.)
 - Analyzer package references (Meziantou, SonarAnalyzer, StyleCop, etc.)
+- `<Nullable>enable</Nullable>` for all C# projects
 
 **Root `Directory.Packages.props` Contains:**
 
 - Central package versions
-- `<Nullable>enable</Nullable>` for all C# projects
 
 **`Tests.props` Contains:**
 
