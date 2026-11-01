@@ -61,6 +61,8 @@ lewee/
 │   ├── Pizzeria.Tests.E2E/          # Aspire and Playwright end-to-end tests
 │   └── Pizzeria.Store.Domain.Tests/ # Domain unit tests
 │
+├── docs/                         # Project documentation (e.g. release automation plan)
+│
 ├── Directory.Build.props         # Root build properties (all projects)
 ├── Directory.Packages.props      # Central Package Management
 ├── Tests.props                   # Shared test configuration
