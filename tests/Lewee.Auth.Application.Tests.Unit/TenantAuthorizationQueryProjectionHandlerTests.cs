@@ -162,7 +162,7 @@ public sealed class TenantAuthorizationQueryProjectionHandlerTests
         var userRepository = new Mock<IRepository<User>>();
         userRepository
             .Setup(item => item.RetrieveByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync((User)null);
+            .ReturnsAsync((User?)null);
         var roleRepository = new Mock<IRepository<Role>>();
         var queryProjectionService = new Mock<IQueryProjectionService>();
         var handler = CreateHandler(userRepository.Object, roleRepository.Object, queryProjectionService.Object);
@@ -193,7 +193,7 @@ public sealed class TenantAuthorizationQueryProjectionHandlerTests
         IRepository<User> userRepository,
         IRepository<Role> roleRepository,
         IQueryProjectionService queryProjectionService,
-        IQueryProjectionService keyedQueryProjectionService = null) =>
+        IQueryProjectionService? keyedQueryProjectionService = null) =>
         new(
             userRepository,
             roleRepository,

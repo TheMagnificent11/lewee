@@ -17,7 +17,7 @@ internal sealed class Address : ValueObject<Address>
     public string State { get; }
     public string Postcode { get; }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         return obj is Address address && this.Equals(address);
     }
