@@ -173,12 +173,12 @@ public class TenantRoleAuthorizationBehaviorTests
     }
 
     private static TenantRoleAuthorizationBehavior<TestTenantRoleCommand, CommandResult> CreateBehavior(
-        string externalId,
+        string? externalId,
         Guid tenantId,
-        TenantMembershipRolesQueryProjection projection,
+        TenantMembershipRolesQueryProjection? projection,
         bool isSiteAdministrator = false,
-        Mock<IQueryProjectionService> unkeyedService = null,
-        Mock<IQueryProjectionService> keyedService = null)
+        Mock<IQueryProjectionService>? unkeyedService = null,
+        Mock<IQueryProjectionService>? keyedService = null)
     {
         var authenticatedUserService = new Mock<IAuthenticatedUserService>();
         authenticatedUserService.SetupGet(item => item.UserId).Returns(externalId);

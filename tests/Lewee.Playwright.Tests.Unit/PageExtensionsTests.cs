@@ -49,10 +49,10 @@ public sealed class PageExtensionsTests
     public void Should_ThrowArgumentNullException_When_ExceptionIsNull()
     {
         // Arrange
-        PlaywrightException exception = null;
+        PlaywrightException? exception = null;
 
         // Act
-        var act = () => PageExtensions.IsTransientNetworkError(exception);
+        var act = () => PageExtensions.IsTransientNetworkError(exception!);
 
         // Assert
         act.Should().Throw<ArgumentNullException>()

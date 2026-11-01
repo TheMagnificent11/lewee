@@ -95,6 +95,7 @@ All build configuration is centrally managed through a hierarchy of configuratio
 **Root Configuration Files:**
 
 - `Directory.Build.props` - Global MSBuild properties applied to all projects
+- `Directory.Packages.props` - Central package versions
 - `Tests.props` - Shared test project configuration
 - `.editorconfig` - Global code style rules and analyzer settings
 
@@ -114,6 +115,11 @@ All build configuration is centrally managed through a hierarchy of configuratio
 - Global build settings (warnings as errors, code style enforcement)
 - Repository metadata (URL, authors, etc.)
 - Analyzer package references (Meziantou, SonarAnalyzer, StyleCop, etc.)
+- `<Nullable>enable</Nullable>` for all C# projects
+
+**Root `Directory.Packages.props` Contains:**
+
+- Central package versions
 
 **`Tests.props` Contains:**
 
@@ -123,9 +129,9 @@ All build configuration is centrally managed through a hierarchy of configuratio
 
 **Directory-Specific `Directory.Build.props` Files:**
 
-- `src/` - Package generation, XML documentation, symbol packages, nullable reference types
+- `src/` - Package generation, XML documentation, symbol packages
 - `tests/` - Imports Tests.props for test-specific configuration
-- `sample/` - Nullable reference types, warning suppressions, code coverage exclusion
+- `sample/` - Warning suppressions, code coverage exclusion
 - `sample-tests/` - Imports Tests.props for test-specific configuration
 
 **Directory-Specific `.editorconfig` Files:**

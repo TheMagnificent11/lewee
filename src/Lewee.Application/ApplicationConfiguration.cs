@@ -43,7 +43,7 @@ public static class ApplicationConfiguration
     /// <returns>Service collection (for chaining)</returns>
     public static IServiceCollection AddPipelineBehaviors(
         this IServiceCollection services,
-        params Type[] additionalBehaviors)
+        params Type[]? additionalBehaviors)
     {
         services.AddCorrelate();
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CorrelationIdLoggingBehavior<,>));

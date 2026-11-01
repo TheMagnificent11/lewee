@@ -63,7 +63,10 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
         // Get auth server base URL for token requests using CreateHttpClient
         using var authServerHttpClient = this.app.CreateHttpClient(ServiceNames.AuthServer);
-        var baseAddress = authServerHttpClient.BaseAddress.ToString().TrimEnd('/');
+        var baseAddress = (authServerHttpClient.BaseAddress
+            ?? throw new InvalidOperationException("Auth server base address is not available."))
+            .ToString()
+            .TrimEnd('/');
 
         // If the scheme is tcp, replace it with http (Aspire Keycloak might return tcp scheme)
         if (baseAddress.StartsWith("tcp://", StringComparison.OrdinalIgnoreCase))
@@ -127,7 +130,8 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         var order = await storeDbContext
             .Orders
             .OrderByDescending(x => x.ModifiedAtUtc)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync()
+            ?? throw new InvalidOperationException("No orders were found.");
 
         return order;
     }
@@ -140,7 +144,8 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
             .Orders
             .AsNoTracking()
             .Include(x => x.Pizzas)
-            .FirstOrDefaultAsync(x => x.Id == orderId);
+            .FirstOrDefaultAsync(x => x.Id == orderId)
+            ?? throw new InvalidOperationException($"Order '{orderId}' was not found.");
 
         return order;
     }
@@ -152,7 +157,8 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         var user = await authDbContext
             .Users
             .OrderByDescending(x => x.ModifiedAtUtc)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync()
+            ?? throw new InvalidOperationException("No customers were found.");
 
         return user;
     }
@@ -163,14 +169,16 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
 
         var user = await authDbContext
             .Users
-            .FirstOrDefaultAsync(x => x.ExternalId == externalId);
+            .FirstOrDefaultAsync(x => x.ExternalId == externalId)
+            ?? throw new InvalidOperationException($"Customer '{externalId}' was not found.");
 
         return user;
     }
 
     public async Task<string> GetConnectionStringAsync(string serviceName)
     {
-        return await this.app.GetConnectionStringAsync(serviceName);
+        return await this.app.GetConnectionStringAsync(serviceName)
+            ?? throw new InvalidOperationException($"Connection string for '{serviceName}' was not found.");
     }
 
     public async Task<string> GetKeycloakUserIdAsync(string username)
@@ -178,7 +186,7 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
         var authClient = this.serviceProvider.GetRequiredService<IAuthServerAdminClient>();
         var userId = await authClient.GetUserIdAsync(username, CancellationToken.None);
 
-        return userId;
+        return userId ?? throw new InvalidOperationException($"Keycloak user '{username}' was not found.");
     }
 
     public async Task<T> GetQueryProjectionAsync<T>(string key)
@@ -186,7 +194,8 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
     {
         var storeDbQueryProjectionService = this.serviceProvider.GetRequiredService<IQueryProjectionService>();
 
-        return await storeDbQueryProjectionService.RetrieveByKeyAsync<T>(key, CancellationToken.None);
+        return await storeDbQueryProjectionService.RetrieveByKeyAsync<T>(key, CancellationToken.None)
+            ?? throw new InvalidOperationException($"Query projection '{key}' was not found.");
     }
 
     public async Task<int> GetUndispatchedDomainEventCountAsync()
@@ -208,7 +217,10 @@ public sealed class PizzeriaApplicationFactory : IAsyncLifetime
     public async Task<string> GetWebClientBaseUrlAsync()
     {
         using var httpClient = await this.GetServiceClientAsync(ServiceNames.PizzaStoreWeb);
-        var baseAddress = httpClient.BaseAddress.ToString().TrimEnd('/');
+        var baseAddress = (httpClient.BaseAddress
+            ?? throw new InvalidOperationException("Web client base address is not available."))
+            .ToString()
+            .TrimEnd('/');
 
         // If the scheme is tcp, replace it with http (Aspire might return tcp scheme)
         if (baseAddress.StartsWith("tcp://", StringComparison.OrdinalIgnoreCase))

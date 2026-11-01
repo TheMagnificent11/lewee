@@ -70,6 +70,6 @@ public class EnumEntityTests
         var enumEntity = Activator.CreateInstance(typeof(EnumEntity<TestEnum>), nonPublic: true) as EnumEntity<TestEnum>;
 
         // Assert
-        enumEntity.Name.Should().Be("EF");
+        enumEntity!.Name.Should().Be("EF");
     }
 }

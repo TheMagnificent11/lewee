@@ -37,7 +37,7 @@ public class DomainExceptionTests
     {
         // Arrange
         var message = "Domain rule violated";
-        DomainException caughtException = null;
+        DomainException? caughtException = null;
 
         // Act
         try

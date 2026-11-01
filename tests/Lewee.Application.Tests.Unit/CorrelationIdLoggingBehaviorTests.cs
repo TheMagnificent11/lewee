@@ -80,7 +80,7 @@ public class CorrelationIdLoggingBehaviorTests
         var correlationContextAccessor = new Mock<ICorrelationContextAccessor>();
         correlationContextAccessor
             .Setup(x => x.CorrelationContext)
-            .Returns((CorrelationContext)null);
+            .Returns((CorrelationContext)null!);
 
         var behavior = new CorrelationIdLoggingBehavior<TestCommand, CommandResult>(correlationContextAccessor.Object, logger);
         var command = new TestCommand("Test");
