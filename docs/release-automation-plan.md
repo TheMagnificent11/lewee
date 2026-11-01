@@ -114,7 +114,7 @@ Two options were considered.
 | B. In-repo workflows using `git`/`gh` | Full control of tag creation and notes. No new third-party dependency. Fits the CD design | More YAML to own and test |
 
 Recommendation: **Option B**, because the tag must be created by the release process for GitVersion to work, and CD already owns the GitHub Release.
-If Option A is preferred, pin it to a commit SHA and set it up in a dry run first (`dry_run: true`), and let it own only the branch/PR/merge-back, not the Release.
+If Option A is preferred, pin it to a commit SHA and use it only to create the release branch/PR; handle tag creation and merge-back in an in-repo finish workflow. Do not use its post-release path, which creates the GitHub Release before NuGet publishing. Alternatively, require a fork that separates release creation from merge-back.
 
 Option B design:
 
