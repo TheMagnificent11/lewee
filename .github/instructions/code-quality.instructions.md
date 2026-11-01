@@ -95,7 +95,7 @@ All build configuration is centrally managed through a hierarchy of configuratio
 **Root Configuration Files:**
 
 - `Directory.Build.props` - Global MSBuild properties applied to all projects
-- `Directory.Packages.props` - Central package versions and solution-wide nullable reference types
+- `Directory.Packages.props` - Central package versions
 - `Tests.props` - Shared test project configuration
 - `.editorconfig` - Global code style rules and analyzer settings
 
