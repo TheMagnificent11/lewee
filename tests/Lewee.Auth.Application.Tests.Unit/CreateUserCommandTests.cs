@@ -35,7 +35,7 @@ public sealed class CreateUserCommandTests
     {
         const string externalUserId = "external-id";
         var repository = new Mock<IRepository<User>>();
-        User? createdUser = null;
+        User createdUser = null!;
         repository
             .Setup(item => item.AddAsync(It.IsAny<User>(), It.IsAny<CancellationToken>()))
             .Callback<User, CancellationToken>((user, _) => createdUser = user);
