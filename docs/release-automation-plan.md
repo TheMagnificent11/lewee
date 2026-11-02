@@ -75,8 +75,8 @@ Create `.github/workflows/cd.yml`.
   Run only when `conclusion == 'success'` and the CI event was `push` or `workflow_dispatch`.
 - Permissions: `contents: write` (GitHub Release, Phase 3) and `id-token: write` (NuGet trusted publishing).
 - Checkout `github.event.workflow_run.head_sha` with `fetch-depth: 0` (a `workflow_run` job otherwise checks out the default branch, `develop`).
-- Steps: guard that `head_sha` has a SemVer tag (retry for a few minutes, then skip with a notice), GitVersion setup and execute, `dotnet pack --configuration Release /p:Version=...`, NuGet login, `dotnet nuget push ... --skip-duplicate`.
-  No build/test steps: CI has already validated the commit.
+- Steps: set up .NET 10, install Aspire CLI 13.6.4 and trust the Aspire development certificate, then guard that `head_sha` has a SemVer tag (retry for a few minutes, then skip with a notice), set up and execute GitVersion, `dotnet pack --configuration Release /p:Version=...`, NuGet login, and `dotnet nuget push ... --skip-duplicate`.
+  The `workflow_run` job starts on a fresh runner and packs the root solution, which rebuilds the AppHost with `AspireUseCliBundle`; it must install the same .NET and Aspire prerequisites as CI. `dotnet pack` restores and rebuilds by default. No separate build/test steps are needed because CI has already validated the commit.
 - `concurrency` group keyed on the tag so a re-run cannot publish twice. `--skip-duplicate` keeps the workflow idempotent.
 - Optional: run the publish job in a `nuget` GitHub environment with a required reviewer as a manual gate.
 - Note: `workflow_run` workflows always run from the default branch (`develop`), so `cd.yml` must be merged to `develop` before it is effective. It is intentionally not triggered by `develop` builds.
@@ -124,9 +124,9 @@ Option B design:
   - Use a GitHub App token so `pr-checks.yml` runs on the PR (Finding 2).
 - `release-finish.yml` (`pull_request: closed`, merged, head ref `release/*`, base `main`):
   - Create an annotated tag `<version>` (version parsed from the branch name, message from the PR body) on the merge commit and push it.
-  - Open a back-merge PR from `main` to `develop` (auto-merge if it has no conflicts, otherwise left for the maintainer).
+  - Open a back-merge PR from `main` to `develop` and merge it with a merge commit. If enabling auto-merge, explicitly select the merge-commit method (for example, `gh pr merge --auto --merge`); otherwise leave it for the maintainer.
   - Delete the release branch (or enable "Automatically delete head branches").
-- Repository settings: allow merge commits for PRs targeting `main`, protect `main` (require PR and checks), and restrict who may run the release workflows.
+- Repository settings: enable merge commits and disable squash/rebase merges so release and back-merge PRs targeting both `main` and `develop` preserve Git Flow ancestry; protect `main` (require PR and checks), and restrict who may run the release workflows.
 
 Manual `git flow release finish` keeps working throughout: it pushes `main` and the tag, which flows through CI and CD unchanged. The manual process is the fallback until Phase 4 is proven.
 
@@ -153,7 +153,7 @@ Manual `git flow release finish` keeps working throughout: it pushes `main` and 
 | Double publish on re-run | `--skip-duplicate`, a `concurrency` group and an idempotent Release step |
 | Publishing breaks after the move to `cd.yml` | Add the new NuGet policy before cutover, keep the old one until a release succeeds |
 | Automated PRs/tags do not trigger CI | Use a GitHub App token (Finding 2) |
-| Squash-merge of a release PR breaks Git Flow history | Merge-commit-only for PRs targeting `main` |
+| Squash/rebase merge of a release or back-merge PR breaks Git Flow history | Disable squash/rebase merges and require merge commits for PRs targeting `main` and `develop` |
 | CD changes cannot be tested before a release | Test with a pre-release version (for example `1.0.0-beta.1`) and `--skip-duplicate`/a test feed first |
 
 ## Testing Strategy
