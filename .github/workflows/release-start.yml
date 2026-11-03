@@ -151,7 +151,7 @@ jobs:
         run: |
           release_branch="release/$VERSION"
           git switch --create "$release_branch" "$DEVELOP_SHA"
-          git push origin "HEAD:refs/heads/$release_branch"
+          git push --force-with-lease="refs/heads/$release_branch:" origin "HEAD:refs/heads/$release_branch"
           gh pr create \
             --base main \
             --head "$release_branch" \
