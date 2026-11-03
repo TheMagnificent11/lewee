@@ -68,9 +68,6 @@ jobs:
         with:
           dotnet-version: 10.0.*
 
-      - name: Install Aspire CLI
-        run: dotnet tool install --global Aspire.Cli --version 13.6.4
-
       - name: Install GitVersion
         uses: gittools/actions/gitversion/setup@v3.1.11
         with:
