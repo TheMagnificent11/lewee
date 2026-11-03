@@ -104,7 +104,8 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email \
             "41898282+github-actions[bot]@users.noreply.github.com"
-          git tag --annotate "$VERSION" --file "$notes_file" "$MERGE_SHA"
+          git tag --annotate --cleanup=verbatim \
+            "$VERSION" --file "$notes_file" "$MERGE_SHA"
           git push origin "refs/tags/$VERSION"
 
       - name: Open back-merge pull request
@@ -112,6 +113,14 @@ jobs:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           VERSION: ${{ steps.release.outputs.version }}
         run: |
+          set -euo pipefail
+
+          git fetch origin main develop
+          if git merge-base --is-ancestor origin/main origin/develop; then
+            echo "::notice::Main is already merged into develop."
+            exit 0
+          fi
+
           existing_pr="$(gh pr list \
             --repo "$GITHUB_REPOSITORY" \
             --base develop \

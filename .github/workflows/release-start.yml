@@ -32,6 +32,10 @@ jobs:
           fetch-depth: 0
           token: ${{ steps.app-token.outputs.token }}
 
+      - name: Record develop commit
+        id: develop
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
       - name: Validate version
         id: version
         env:
@@ -131,10 +135,11 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           VERSION: ${{ steps.version.outputs.version }}
+          DEVELOP_SHA: ${{ steps.develop.outputs.sha }}
         run: |
           gh api "repos/$GITHUB_REPOSITORY/releases/generate-notes" \
             -f "tag_name=$VERSION" \
-            -f "target_commitish=develop" \
+            -f "target_commitish=$DEVELOP_SHA" \
             --jq .body \
             > release-notes.md
 
@@ -142,9 +147,10 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           VERSION: ${{ steps.version.outputs.version }}
+          DEVELOP_SHA: ${{ steps.develop.outputs.sha }}
         run: |
           release_branch="release/$VERSION"
-          git switch --create "$release_branch" origin/develop
+          git switch --create "$release_branch" "$DEVELOP_SHA"
           git push origin "HEAD:refs/heads/$release_branch"
           gh pr create \
             --base main \
