@@ -128,6 +128,11 @@ Option B design:
   - Delete the release branch (or enable "Automatically delete head branches").
 - Repository settings: enable merge commits and disable squash/rebase merges so release and back-merge PRs targeting both `main` and `develop` preserve Git Flow ancestry; protect `main` (require PR and checks), and restrict who may run the release workflows.
 
+The workflows require repository secrets `RELEASE_APP_ID` and
+`RELEASE_APP_PRIVATE_KEY` for an installed GitHub App with `contents: write` and
+`pull_requests: write` permissions. The App token ensures the generated release
+and back-merge PRs trigger normal PR checks.
+
 Manual `git flow release finish` keeps working throughout: it pushes `main` and the tag, which flows through CI and CD unchanged. The manual process is the fallback until Phase 4 is proven.
 
 ### Phase 5 - Cleanup and Documentation
