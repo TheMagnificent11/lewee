@@ -1,0 +1,26 @@
+changelog:
+  categories:
+    - title: Breaking Changes
+      labels:
+        - breaking change
+    - title: Features
+      labels:
+        - enhancement
+        - sample app
+    - title: Bug Fixes
+      labels:
+        - bug
+        - flaky test
+    - title: Documentation
+      labels:
+        - documentation
+    - title: Maintenance
+      labels:
+        - devops
+        - dependencies
+        - refactor
+        - .NET
+        - test coverage
+    - title: Other Changes
+      labels:
+        - "*"

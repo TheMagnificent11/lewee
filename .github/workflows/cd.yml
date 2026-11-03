@@ -98,3 +98,46 @@ jobs:
 
       - name: Publish to NuGet
         run: dotnet nuget push ./output/*.nupkg --api-key "${{ steps.nuget-login.outputs.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.find-release-tag.outputs.tag }}
+        run: |
+          release_is_draft="$(gh release view "$TAG" --json isDraft --jq '.isDraft' 2>/dev/null || true)"
+          if [[ "$release_is_draft" == "false" ]]; then
+            echo "::notice::GitHub Release $TAG already exists; skipping creation."
+            exit 0
+          fi
+
+          if [[ "$release_is_draft" == "true" ]]; then
+            echo "::notice::GitHub Release $TAG is a draft; resuming asset upload and publishing."
+            gh release upload "$TAG" ./output/*.nupkg ./output/*.snupkg --clobber
+            gh release edit "$TAG" --draft=false
+            exit 0
+          fi
+
+          notes_file="$(mktemp)"
+          tag_notes=""
+          if [[ "$(git cat-file -t "refs/tags/$TAG")" == "tag" ]]; then
+            tag_notes="$(git tag -l --format='%(contents)' "$TAG")"
+          fi
+          if [[ -n "${tag_notes//[[:space:]]/}" ]]; then
+            printf '%s\n' "$tag_notes" > "$notes_file"
+            notes_args=(--notes-file "$notes_file")
+          else
+            notes_args=(--generate-notes)
+          fi
+
+          prerelease_args=()
+          version_without_build_metadata="${TAG%%+*}"
+          if [[ "$version_without_build_metadata" == *-* ]]; then
+            prerelease_args=(--prerelease)
+          fi
+
+          gh release create "$TAG" \
+            --verify-tag \
+            "${notes_args[@]}" \
+            "${prerelease_args[@]}" \
+            ./output/*.nupkg \
+            ./output/*.snupkg
