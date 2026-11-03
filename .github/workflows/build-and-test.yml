@@ -108,7 +108,7 @@ jobs:
           path: coverage-report/SummaryGithub.md
 
       - name: Pack
-        run: dotnet pack --configuration Release --nologo /p:PackageVersion=${{ steps.version.outputs.fullSemVer }} --output ./output
+        run: dotnet pack --configuration Release --nologo /p:Version=${{ steps.version.outputs.semVer }} --output ./output
 
       - name: NuGet Login (Trusted Publishing)
         id: nuget-login
