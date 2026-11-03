@@ -51,19 +51,6 @@ jobs:
         if: ${{ inputs.is-pr == true }}
         run: dotnet tool install --global dotnet-reportgenerator-globaltool
 
-      - name: Install GitVersion
-        uses: gittools/actions/gitversion/setup@v3.1.11
-        with:
-          versionSpec: '6.0.x'
-          preferLatestVersion: true
-          includePrerelease: true
-
-      - name: Determine Version
-        id: version
-        uses: gittools/actions/gitversion/execute@v3.1.11
-        with:
-          useConfigFile: true
-
       - name: Install Dependencies
         run: dotnet restore --nologo
 
@@ -108,15 +95,4 @@ jobs:
           path: coverage-report/SummaryGithub.md
 
       - name: Pack
-        run: dotnet pack --configuration Release --nologo /p:Version=${{ steps.version.outputs.semVer }} --output ./output
-
-      - name: NuGet Login (Trusted Publishing)
-        id: nuget-login
-        uses: NuGet/login@v1
-        with:
-          user: TheMagnificent11
-        if: github.ref == 'refs/heads/main'
-
-      - name: Publish to NuGet
-        run: dotnet nuget push ./output/*.nupkg --api-key "${{ steps.nuget-login.outputs.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
-        if: github.ref == 'refs/heads/main'
+        run: dotnet pack --configuration Release --no-build --nologo --version-suffix ci.${{ github.run_number }} --output ./output

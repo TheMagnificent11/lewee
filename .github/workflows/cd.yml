@@ -1,0 +1,100 @@
+name: Continuous Deployment
+
+on:
+  workflow_run:
+    workflows: ["Continuous Integration"]
+    types: [completed]
+    branches: [main]
+
+permissions: {}
+
+jobs:
+  find-release-tag:
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      (github.event.workflow_run.event == 'push' ||
+       github.event.workflow_run.event == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      tag: ${{ steps.tag.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4.2.2
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 0
+
+      - name: Wait for SemVer tag
+        id: tag
+        env:
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          semver='^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-((0|[1-9][0-9]*|[0-9A-Za-z-]*[A-Za-z-][0-9A-Za-z-]*)(\.(0|[1-9][0-9]*|[0-9A-Za-z-]*[A-Za-z-][0-9A-Za-z-]*))*))?(\+[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$'
+          for attempt in {1..12}; do
+            git fetch --force --tags origin
+            mapfile -t tags < <(git tag --points-at "$HEAD_SHA" | grep -E "$semver" || true)
+            if [ "${#tags[@]}" -gt 1 ]; then
+              echo "::error::Multiple SemVer tags point to $HEAD_SHA: ${tags[*]}"
+              exit 1
+            fi
+            if [ "${#tags[@]}" -eq 1 ]; then
+              echo "tag=${tags[0]}" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            sleep 15
+          done
+          echo "::notice::No SemVer tag found on $HEAD_SHA after waiting; skipping release publishing."
+          echo "tag=" >> "$GITHUB_OUTPUT"
+
+  publish:
+    needs: find-release-tag
+    if: needs.find-release-tag.outputs.tag != ''
+    runs-on: ubuntu-latest
+    concurrency:
+      group: nuget-publish-${{ needs.find-release-tag.outputs.tag }}
+      cancel-in-progress: false
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4.2.2
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.*
+
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v3.1.11
+        with:
+          versionSpec: '6.0.x'
+          preferLatestVersion: true
+          includePrerelease: true
+
+      - name: Attach the CI-tested commit to main
+        env:
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: git checkout -B main "$HEAD_SHA"
+
+      - name: Determine Version
+        id: version
+        uses: gittools/actions/gitversion/execute@v3.1.11
+        with:
+          useConfigFile: true
+          disableNormalization: true
+
+      - name: Pack
+        run: dotnet pack --configuration Release --nologo /p:Version=${{ steps.version.outputs.semVer }} --output ./output
+
+      - name: NuGet Login (Trusted Publishing)
+        id: nuget-login
+        uses: NuGet/login@v1
+        with:
+          user: TheMagnificent11
+
+      - name: Publish to NuGet
+        run: dotnet nuget push ./output/*.nupkg --api-key "${{ steps.nuget-login.outputs.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
