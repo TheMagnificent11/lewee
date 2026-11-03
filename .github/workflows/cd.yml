@@ -75,11 +75,17 @@ jobs:
           preferLatestVersion: true
           includePrerelease: true
 
+      - name: Attach the CI-tested commit to main
+        env:
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: git checkout -B main "$HEAD_SHA"
+
       - name: Determine Version
         id: version
         uses: gittools/actions/gitversion/execute@v3.1.11
         with:
           useConfigFile: true
+          disableNormalization: true
 
       - name: Pack
         run: dotnet pack --configuration Release --nologo /p:Version=${{ steps.version.outputs.semVer }} --output ./output
