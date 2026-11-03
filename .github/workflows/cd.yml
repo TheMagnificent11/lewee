@@ -104,8 +104,16 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ needs.find-release-tag.outputs.tag }}
         run: |
-          if gh release view "$TAG" >/dev/null 2>&1; then
+          release_is_draft="$(gh release view "$TAG" --json isDraft --jq '.isDraft' 2>/dev/null || true)"
+          if [[ "$release_is_draft" == "false" ]]; then
             echo "::notice::GitHub Release $TAG already exists; skipping creation."
+            exit 0
+          fi
+
+          if [[ "$release_is_draft" == "true" ]]; then
+            echo "::notice::GitHub Release $TAG is a draft; resuming asset upload and publishing."
+            gh release upload "$TAG" ./output/*.nupkg ./output/*.snupkg --clobber
+            gh release edit "$TAG" --draft=false
             exit 0
           fi
 
