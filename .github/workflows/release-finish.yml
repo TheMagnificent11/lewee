@@ -1,0 +1,154 @@
+---
+name: Release - Finish
+
+"on":
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+permissions: {}
+
+jobs:
+  finish:
+    if: >-
+      github.event.pull_request.merged == true &&
+      startsWith(github.event.pull_request.head.ref, 'release/') &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.RELEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+
+      - name: Checkout merged commit
+        uses: actions/checkout@v4.2.2
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+          fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Validate merge commit and release version
+        env:
+          MERGE_SHA: ${{ github.event.pull_request.merge_commit_sha }}
+          RELEASE_BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          set -euo pipefail
+
+          python3 - <<'PY'
+          import os
+          import re
+          import sys
+
+          identifier = r"(?:0|[1-9][0-9]*|[0-9A-Za-z-]*[A-Za-z-][0-9A-Za-z-]*)"
+          pattern = re.compile(
+              rf"^release/(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)"
+              rf"\.(0|[1-9][0-9]*)(?:-({identifier}(?:\.{identifier})*))?"
+              r"(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$"
+          )
+          branch = os.environ["RELEASE_BRANCH"]
+          match = pattern.fullmatch(branch)
+          if match is None:
+              print(f"::error::Invalid SemVer release branch: '{branch}'.")
+              sys.exit(1)
+
+          with open(
+              os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8"
+          ) as output:
+              output.write(f"version={branch.removeprefix('release/')}\n")
+          PY
+
+          commit_line="$(git rev-list --parents -n 1 "$MERGE_SHA")"
+          read -r -a commit_parents <<< "$commit_line"
+          if [[ "${#commit_parents[@]}" -ne 3 ]]; then
+            echo "::error::Release PR must use a two-parent merge commit."
+            exit 1
+          fi
+
+          if ! git merge-base --is-ancestor "$MERGE_SHA" origin/main; then
+            echo "::error::Release commit is not present on origin/main."
+            exit 1
+          fi
+
+        id: release
+
+      - name: Create annotated release tag
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          MERGE_SHA: ${{ github.event.pull_request.merge_commit_sha }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          set -euo pipefail
+
+          if git show-ref --verify --quiet "refs/tags/$VERSION"; then
+            if [[ "$(git cat-file -t "refs/tags/$VERSION")" != "tag" ]] ||
+              [[ "$(git rev-parse "$VERSION^{commit}")" != "$MERGE_SHA" ]]; then
+              echo "::error::Existing tag '$VERSION' points elsewhere."
+              exit 1
+            fi
+            echo "::notice::Tag '$VERSION' already exists on this commit."
+            exit 0
+          fi
+
+          notes_file="$(mktemp)"
+          gh pr view "$PR_NUMBER" \
+            --repo "$GITHUB_REPOSITORY" \
+            --json body \
+            --jq .body \
+            > "$notes_file"
+          git config user.name "github-actions[bot]"
+          git config user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag --annotate --cleanup=verbatim \
+            "$VERSION" --file "$notes_file" "$MERGE_SHA"
+          git push origin "refs/tags/$VERSION"
+
+      - name: Open back-merge pull request
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          set -euo pipefail
+
+          git fetch origin main develop
+          if git merge-base --is-ancestor origin/main origin/develop; then
+            echo "::notice::Main is already merged into develop."
+            exit 0
+          fi
+
+          existing_pr="$(gh pr list \
+            --repo "$GITHUB_REPOSITORY" \
+            --base develop \
+            --head main \
+            --state open \
+            --json number,isCrossRepository \
+            --jq '[.[] | select(.isCrossRepository == false)][0].number // empty')"
+
+          if [[ -n "$existing_pr" ]]; then
+            echo "::notice::Back-merge pull request #$existing_pr is open."
+          else
+            gh pr create \
+              --repo "$GITHUB_REPOSITORY" \
+              --base develop \
+              --head main \
+              --title "chore: back-merge main into develop after $VERSION" \
+              --body "Back-merges main into develop; merge with a merge commit."
+          fi
+
+      - name: Delete release branch
+        env:
+          RELEASE_BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          set -euo pipefail
+          branch_ref="$(git ls-remote --heads origin \
+            "refs/heads/$RELEASE_BRANCH")"
+          if [[ -n "$branch_ref" ]]; then
+            git push origin --delete "$RELEASE_BRANCH"
+          else
+            echo "::notice::Release branch is already deleted."
+          fi

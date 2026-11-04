@@ -97,7 +97,7 @@ lewee/
 | `sample/.editorconfig` | Sample-specific analyzer rules | Adjusting sample-specific rules |
 | `sample-tests/.editorconfig` | Sample test-specific analyzer rules | Adjusting sample test-specific rules |
 | `sample/Pizzeria.AppHost/Program.cs` | Aspire orchestration | Configuring services |
-| `.github/workflows/` | CI/CD workflows (`ci.yml`, `build-and-test.yml`, `cd.yml`, `pr-checks.yml`) | Modifying build, test, or publish process |
+| `.github/workflows/` | CI/CD workflows (`ci.yml`, `build-and-test.yml`, `cd.yml`, `pr-checks.yml`, `release-start.yml`, `release-finish.yml`) | Modifying build, test, publish, or release process |
 
 ## Common Development Tasks
 

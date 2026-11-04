@@ -1,0 +1,159 @@
+---
+name: Release - Start
+
+"on":
+  workflow_dispatch:
+    inputs:
+      version:
+        description: >-
+          SemVer version to release (for example 1.2.3 or 1.2.3-beta.1)
+        required: true
+        type: string
+
+permissions: {}
+
+jobs:
+  start:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.RELEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+
+      - name: Checkout develop
+        uses: actions/checkout@v4.2.2
+        with:
+          ref: develop
+          fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Record develop commit
+        id: develop
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Validate version
+        id: version
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          python3 - <<'PY'
+          import os
+          import re
+          import subprocess
+          import sys
+
+          identifier = r"(?:0|[1-9][0-9]*|[0-9A-Za-z-]*[A-Za-z-][0-9A-Za-z-]*)"
+          pattern = re.compile(
+              rf"^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)"
+              rf"(?:-({identifier}(?:\.{identifier})*))?"
+              r"(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$"
+          )
+
+          def precedence(value):
+              match = pattern.fullmatch(value)
+              if match is None:
+                  return None
+
+              major, minor, patch, prerelease = match.groups()
+
+              def number(part):
+                  return len(part), part
+
+              identifiers = ()
+              if prerelease is not None:
+                  identifiers = tuple(
+                      (0, number(part)) if part.isdigit() else (1, part)
+                      for part in prerelease.split(".")
+                  )
+              return (
+                  number(major),
+                  number(minor),
+                  number(patch),
+                  prerelease is None,
+                  identifiers,
+              )
+
+          version = os.environ["VERSION"]
+          version_precedence = precedence(version)
+          if version_precedence is None:
+              print(f"::error::Invalid SemVer version: '{version}'.")
+              sys.exit(1)
+
+          tags = subprocess.check_output(
+              ["git", "tag", "--list"], text=True
+          ).splitlines()
+          if version in tags:
+              print(f"::error::Tag '{version}' already exists.")
+              sys.exit(1)
+
+          latest = max(
+              (precedence(tag) for tag in tags if precedence(tag) is not None),
+              default=None,
+          )
+          if latest is not None and version_precedence <= latest:
+              print(
+                  f"::error::Version '{version}' is not newer "
+                  "than the latest tag."
+              )
+              sys.exit(1)
+
+          result = subprocess.run(
+              [
+                  "git",
+                  "ls-remote",
+                  "--exit-code",
+                  "--heads",
+                  "origin",
+                  f"refs/heads/release/{version}",
+              ],
+              capture_output=True,
+              text=True,
+          )
+          if result.returncode == 0:
+              print(f"::error::Branch 'release/{version}' already exists.")
+              sys.exit(1)
+          if result.returncode != 2:
+              sys.stderr.write(result.stderr)
+              print(
+                  "::error::Unable to check whether the release branch "
+                  "exists."
+              )
+              sys.exit(1)
+
+          with open(
+              os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8"
+          ) as output:
+              output.write(f"version={version}\n")
+          PY
+
+      - name: Generate release notes
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+          DEVELOP_SHA: ${{ steps.develop.outputs.sha }}
+        run: |
+          gh api "repos/$GITHUB_REPOSITORY/releases/generate-notes" \
+            -f "tag_name=$VERSION" \
+            -f "target_commitish=$DEVELOP_SHA" \
+            --jq .body \
+            > release-notes.md
+
+      - name: Create release branch and pull request
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+          DEVELOP_SHA: ${{ steps.develop.outputs.sha }}
+        run: |
+          release_branch="release/$VERSION"
+          git switch --create "$release_branch" "$DEVELOP_SHA"
+          git push --force-with-lease="refs/heads/$release_branch:" origin "HEAD:refs/heads/$release_branch"
+          gh pr create \
+            --base main \
+            --head "$release_branch" \
+            --title "chore: release $VERSION" \
+            --body-file release-notes.md
