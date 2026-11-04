@@ -61,7 +61,7 @@ lewee/
 │   ├── Pizzeria.Tests.E2E/          # Aspire and Playwright end-to-end tests
 │   └── Pizzeria.Store.Domain.Tests/ # Domain unit tests
 │
-├── docs/                         # Project documentation (e.g. release automation plan)
+├── docs/                         # Project documentation, including the release runbook
 │
 ├── Directory.Build.props         # Root build properties (all projects)
 ├── Directory.Packages.props      # Central Package Management
@@ -98,6 +98,7 @@ lewee/
 | `sample-tests/.editorconfig` | Sample test-specific analyzer rules | Adjusting sample test-specific rules |
 | `sample/Pizzeria.AppHost/Program.cs` | Aspire orchestration | Configuring services |
 | `.github/workflows/` | CI/CD workflows (`ci.yml`, `build-and-test.yml`, `cd.yml`, `pr-checks.yml`, `release-start.yml`, `release-finish.yml`) | Modifying build, test, publish, or release process |
+| `docs/releasing.md` | GitHub Actions release procedure and failure recovery | Starting, verifying, or recovering a release |
 
 ## Common Development Tasks
 
