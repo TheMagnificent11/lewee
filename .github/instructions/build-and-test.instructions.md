@@ -16,6 +16,19 @@ applyTo: "**/*.cs,**/*.csproj,**/*.sln,**/*.slnx"
 | E2E Tests | `dotnet test --configuration Release --no-build --nologo` | 300+s | 600s | Includes Aspire containers and Playwright; follow Environment Setup first - **NEVER CANCEL** |
 | Pack | `dotnet pack lewee.slnx --configuration Release --nologo --no-build` | ~2s | 60s | Creates NuGet packages |
 
+## CI/CD Workflows
+
+- `ci.yml` runs `build-and-test.yml` on pushes to `develop` and `main` and
+  supports manual dispatch. The reusable build-and-test workflow builds,
+  tests, and performs a packaging smoke test; it does not publish packages.
+- `cd.yml` runs after successful CI on `main`, waits for a SemVer tag on the
+  tested commit, then publishes NuGet packages and creates the GitHub Release.
+- `release-start.yml` starts a versioned release branch and pull request.
+  `release-finish.yml` tags the merged release and opens a back-merge pull
+  request.
+- See [`docs/releasing.md`](../../docs/releasing.md) for the release procedure
+  and failure recovery.
+
 ## Critical Rules
 
 **NEVER:**
