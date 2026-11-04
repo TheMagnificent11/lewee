@@ -5,10 +5,14 @@ repository's default branch (`develop`).
 
 ## Prerequisites
 
-The repository must have the `RELEASE_APP_ID` and `RELEASE_APP_PRIVATE_KEY`
-secrets configured for an installed GitHub App with `contents: write` and
-`pull_requests: write` permissions. The App token lets release-created pull
-requests trigger the normal checks.
+Create and install a GitHub App using GitHub's documentation for
+[registering a GitHub App](https://docs.github.com/en/apps/creating-github-apps/registering-a-github-app/registering-a-github-app).
+Use its settings page to find the App ID, and follow the instructions for
+[managing private keys](https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/managing-private-keys-for-github-apps)
+to generate the private key. Configure the repository's `RELEASE_APP_ID` and
+`RELEASE_APP_PRIVATE_KEY` secrets with those values. The installed App needs
+`contents: write` and `pull_requests: write` permissions; its token lets
+release-created pull requests trigger the normal checks.
 
 Release pull requests to `main` must be merged with a merge commit. Do not squash
 or rebase them; the release workflow verifies the merge commit and Git Flow
