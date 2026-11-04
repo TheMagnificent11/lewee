@@ -126,8 +126,8 @@ jobs:
             --base develop \
             --head main \
             --state open \
-            --json number \
-            --jq '.[0].number // empty')"
+            --json number,isCrossRepository \
+            --jq '[.[] | select(.isCrossRepository == false)][0].number // empty')"
 
           if [[ -n "$existing_pr" ]]; then
             echo "::notice::Back-merge pull request #$existing_pr is open."
