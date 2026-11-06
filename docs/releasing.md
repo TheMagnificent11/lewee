@@ -8,10 +8,10 @@ repository's default branch (`develop`).
 ### Why a GitHub App is needed
 
 The release workflows need a credential that can push branches and tags and
-open pull requests. The built-in `GITHUB_TOKEN` is not enough, because events
-caused by it (such as the release pull request being opened) do not trigger
-other workflows, so the required checks would never run on release pull
-requests.
+open pull requests. With `GITHUB_TOKEN`, pull request workflows for `opened`,
+`synchronize`, and `reopened` require manual approval before they run; most
+other token-generated events do not trigger workflows. The App token allows
+required checks to run automatically on release pull requests.
 
 A GitHub App is used here purely as a machine identity for the release
 workflows. It is **not** used for signing users in to a website. The workflows
