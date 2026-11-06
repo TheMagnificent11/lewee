@@ -41,7 +41,7 @@ organization, use the organization's settings instead.
 
    | Field | Value |
    | ----- | ----- |
-   | **GitHub App name** | A globally unique name, such as `lewee-release-bot`. Release-created commits, branches, and pull requests are attributed to `<name>[bot]` |
+   | **GitHub App name** | A globally unique name, such as `lewee-release-bot`. Pull requests opened by the workflows are attributed to the App's bot account; pushing existing commits does not change their authorship |
    | **Description** | Optional, such as `Creates release branches, tags, and pull requests for Lewee` |
    | **Homepage URL** | Required but not used by the workflows. Use the repository URL, `https://github.com/TheMagnificent11/lewee` |
    | **Identifying and authorizing users** (Callback URL) | Leave empty. Clear **Expire user authorization tokens** and **Request user authorization (OAuth) during installation**. The App never signs in users |
