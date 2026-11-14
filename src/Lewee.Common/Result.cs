@@ -47,7 +47,7 @@ public abstract class Result
     /// <remarks>Each string in the dictionary is separated by a new-line character</remarks>
     public string GenerateErrorMessage()
     {
-        if (!this.Errors.Any())
+        if (this.Errors.Count == 0)
         {
             return string.Empty;
         }
