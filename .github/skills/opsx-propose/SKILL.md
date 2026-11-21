@@ -1,7 +1,8 @@
 ---
+name: opsx-propose
 description: Propose a new change - create it and generate all artifacts in one step
+disable-model-invocation: true
 ---
-
 Propose a new change - create the change and generate all artifacts in one step.
 
 I'll create a change with artifacts:
