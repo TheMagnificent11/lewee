@@ -8,7 +8,6 @@
     <PackageVersion Include="bunit.web" Version="1.40.0" />
     <PackageVersion Include="EntityFrameworkCore.Exceptions.PostgreSQL" Version="11.0.0" />
     <PackageVersion Include="FastEndpoints" Version="8.3.0" />
-    <PackageVersion Include="Flurl" Version="4.1.0" />
     <PackageVersion Include="MessagePack" Version="3.1.12" />
     <PackageVersion Include="Moq" Version="4.21.0" />
     <PackageVersion Include="MudBlazor" Version="8.15.0" />
@@ -55,13 +54,9 @@
     <PackageVersion Include="MediatR.Contracts" Version="2.0.1" />
   </ItemGroup>
   <ItemGroup Label="Microsoft.AspNetCore">
-    <PackageVersion Include="Microsoft.AspNetCore.Authentication.Abstractions" Version="2.3.14" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="11.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="11.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="11.0.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="11.0.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="11.0.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="11.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="11.0.0" />
   </ItemGroup>
   <ItemGroup Label="Microsoft.EntityFramework">
@@ -75,7 +70,6 @@
     <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="11.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="11.0.0" />
     <PackageVersion Include="Microsoft.Extensions.DependencyModel" Version="11.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="11.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="11.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Diagnostics.Testing" Version="11.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Http" Version="11.0.0" />
@@ -100,8 +94,6 @@
   <ItemGroup Label="xunit">
     <PackageVersion Include="xunit" Version="2.9.3" />
     <PackageVersion Include="xunit.analyzers" Version="1.27.0" />
-    <PackageVersion Include="xunit.core" Version="2.9.3" />
-    <PackageVersion Include="xunit.extensibility.core" Version="2.9.3" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
   </ItemGroup>
   <ItemGroup Label="Analyzers">
