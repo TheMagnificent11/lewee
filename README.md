@@ -32,7 +32,7 @@ Lewee is an opinionated set of packages to assist with setting up a domain-drive
 
 Below is a summary of the dependencies used by Lewee. Note that this isn't a list of NuGet packages, just a high-level list of software used and each can have several related NuGet packages.
 
-- [.NET 10](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
+- [.NET 10](https://dotnet.microsoft.com/en-us/download/dotnet/11.0)
 - [.NET Aspire](https://learn.microsoft.com/en-us/dotnet/aspire/get-started/aspire-overview)
 - [PostgreSQL](https://www.postgresql.org/) with [Npgsql](https://www.npgsql.org/)
 - [Entity Framework Core](https://learn.microsoft.com/en-us/ef)
@@ -46,8 +46,8 @@ Below is a summary of the dependencies used by Lewee. Note that this isn't a lis
 
 ### Prerequisites
 
-- [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
-- [Aspire CLI 13.6.4](https://aspire.dev/) (`dotnet tool install --global Aspire.Cli --version 13.6.4`)
+- [.NET 11 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/11.0)
+- [Aspire CLI 17.0.0](https://aspire.dev/) (`dotnet tool install --global Aspire.Cli --version 13.6.4`)
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/) (for PostgreSQL container)
 
 Trust the Aspire development certificate before starting the application with `aspire certs trust`.
