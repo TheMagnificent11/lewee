@@ -19,7 +19,7 @@ internal sealed class RemovePizzaFromOrderEndpoint : CommandEndpoint<EmptyReques
 
     protected override bool IsAnonymousAllowed => false;
 
-    public override async Task HandleAsync(EmptyRequest request, CancellationToken ct)
+    public override async Task HandleAsync(EmptyRequest req, CancellationToken ct)
     {
         var command = new SetPizzaQuantityInOrderCommand(
             this.Route<Guid>(Endpoints.RouteTokens.OrderId),

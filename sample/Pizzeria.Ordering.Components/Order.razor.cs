@@ -164,7 +164,7 @@ public partial class Order : FluxorComponent
         public const string CheckoutButton = $"[role='button'][aria-label='{AriaLabels.Checkout}']";
         public const string SubmitOrderButton = $"[role='button'][aria-label='{AriaLabels.SubmitOrder}']";
         public const string DeliveryAddressInput = $"[aria-label='{AriaLabels.DeliveryAddress}']";
-        public const string OrderStatus = "[role='status']";
+        public const string OrderStatus = $"[role='status'][aria-label='{AriaLabels.OrderStatus}']";
 
         public static string AddPizzaButton(string pizzaName) => $"[aria-label='add {pizzaName}']";
 
@@ -178,5 +178,6 @@ public partial class Order : FluxorComponent
         public const string Checkout = "checkout";
         public const string SubmitOrder = "submit order";
         public const string DeliveryAddress = "delivery address";
+        public const string OrderStatus = "order status";
     }
 }

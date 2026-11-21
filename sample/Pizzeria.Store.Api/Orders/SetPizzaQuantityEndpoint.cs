@@ -20,9 +20,9 @@ internal sealed class SetPizzaQuantityEndpoint : CommandEndpoint<SetPizzaQuantit
 
     protected override bool IsAnonymousAllowed => false;
 
-    public override async Task HandleAsync(SetPizzaQuantityRequest request, CancellationToken ct)
+    public override async Task HandleAsync(SetPizzaQuantityRequest req, CancellationToken ct)
     {
-        if (request.Quantity <= 0)
+        if (req.Quantity <= 0)
         {
             await this.ToResponseAsync(
                 CommandResult.Fail(ResultStatus.BadRequest, "Pizza quantity must be greater than zero."),
@@ -33,7 +33,7 @@ internal sealed class SetPizzaQuantityEndpoint : CommandEndpoint<SetPizzaQuantit
         var command = new SetPizzaQuantityInOrderCommand(
             this.Route<Guid>(Endpoints.RouteTokens.OrderId),
             this.Route<Guid>(Endpoints.RouteTokens.PizzaId),
-            request.Quantity);
+            req.Quantity);
 
         try
         {

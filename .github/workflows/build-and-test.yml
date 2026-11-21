@@ -19,7 +19,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 10.0.*
+          dotnet-version: 11.0.*
 
       - name: Install Aspire CLI
         run: dotnet tool install --global Aspire.Cli --version 13.6.4
@@ -58,7 +58,7 @@ jobs:
         run: dotnet build --configuration Release --no-restore --nologo
 
       - name: Install Playwright Browsers
-        run: pwsh sample-tests/Pizzeria.Tests.E2E/bin/Release/net10.0/playwright.ps1 install --with-deps chromium
+        run: pwsh sample-tests/Pizzeria.Tests.E2E/bin/Release/net11.0/playwright.ps1 install --with-deps chromium
 
       - name: Test
         run: >

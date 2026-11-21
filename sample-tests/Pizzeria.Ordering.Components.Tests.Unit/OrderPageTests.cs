@@ -232,6 +232,7 @@ public class OrderPageTests : TestContext
         // Assert
         component.Markup.Should().Contain("Order Status");
         component.Markup.Should().Contain("Received");
+        component.Find(Order.Selectors.OrderStatus).TextContent.Should().Contain("Received");
     }
 
     [Fact]

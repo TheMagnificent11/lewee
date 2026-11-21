@@ -1,7 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Sdk Name="Aspire.AppHost.Sdk" Version="13.6.4" />
-
   <PropertyGroup>
     <AspireUseCliBundle>true</AspireUseCliBundle>
     <OutputType>Exe</OutputType>
@@ -10,17 +8,14 @@
 
   <ItemGroup>
     <PackageReference Include="Aspire.Hosting.AppHost" />
+    <PackageReference Include="Aspire.Hosting.Dotnet" />
     <PackageReference Include="Aspire.Hosting.Keycloak" />
     <PackageReference Include="Aspire.Hosting.PostgreSQL" />
     <PackageReference Include="MessagePack" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Pizzeria.Auth.Api\Pizzeria.Auth.Api.csproj" />
-    <ProjectReference Include="..\Pizzeria.Bff\Pizzeria.Bff.csproj" />
     <ProjectReference Include="..\Pizzeria.Common\Pizzeria.Common.csproj" IsAspireProjectResource="false" />
-    <ProjectReference Include="..\Pizzeria.Store.Api\Pizzeria.Store.Api.csproj" />
-    <ProjectReference Include="..\Pizzeria.Ordering.Web\Pizzeria.Ordering.Web.csproj" />
   </ItemGroup>
 
   <ItemGroup>

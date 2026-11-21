@@ -185,11 +185,14 @@ public static class OrderReducer
         [NotNull] OrderState state,
         [NotNull] OrderUpdatedAction action)
     {
-        return state.Data is { } currentOrder
+        if (state.Data is { } currentOrder
             && currentOrder.Id == action.Data.Id
-            && action.Data.Revision >= currentOrder.Revision
-            ? state with { Data = action.Data, ReconciliationErrorMessage = null }
-            : state;
+            && action.Data.Revision >= currentOrder.Revision)
+        {
+            return state with { Data = action.Data, ReconciliationErrorMessage = null };
+        }
+
+        return state;
     }
 
     [ReducerMethod]
