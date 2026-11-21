@@ -16,7 +16,7 @@ internal sealed class StartOrderEndpoint : CommandEndpoint<EmptyRequest>
 
     protected override bool IsAnonymousAllowed => false;
 
-    public override async Task HandleAsync(EmptyRequest request, CancellationToken ct)
+    public override async Task HandleAsync(EmptyRequest req, CancellationToken ct)
     {
         var result = await this.Mediator.Send(new StartOrderCommand(), ct);
         await this.ToResponseAsync(result, ct);

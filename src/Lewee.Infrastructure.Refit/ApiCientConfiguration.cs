@@ -32,7 +32,7 @@ public static class ApiCientConfiguration
             .AddTransient<AuthTokenDelegatingHandler>();
 
         services
-            .AddRefitClient<T>()
+            .AddRefitGeneratedClient<T>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri($"https://{aspireApiServiceName}"))
             .AddHttpMessageHandler<CorrelatingHttpMessageHandler>()
             .AddHttpMessageHandler<AuthTokenDelegatingHandler>();

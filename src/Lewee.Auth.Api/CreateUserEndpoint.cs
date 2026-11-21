@@ -13,9 +13,9 @@ internal sealed class CreateUserEndpoint : CommandEndpoint<CreateUserRequest>
 
     protected override bool IsAnonymousAllowed => true;
 
-    public override async Task HandleAsync(CreateUserRequest request, CancellationToken ct)
+    public override async Task HandleAsync(CreateUserRequest req, CancellationToken ct)
     {
-        var result = await this.Mediator.Send(new CreateUserCommand(request.ExternalUserId), ct);
+        var result = await this.Mediator.Send(new CreateUserCommand(req.ExternalUserId), ct);
         await this.ToResponseAsync(result, ct);
     }
 }

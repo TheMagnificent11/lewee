@@ -15,10 +15,10 @@ internal sealed class AddPizzaEndpoint : CommandEndpoint<AddPizzaRequest>
 
     protected override bool IsAnonymousAllowed => false;
 
-    public override async Task HandleAsync(AddPizzaRequest request, CancellationToken ct)
+    public override async Task HandleAsync(AddPizzaRequest req, CancellationToken ct)
     {
         var result = await this.Mediator.Send(
-            new AddPizzaCommand(request.Name, request.Description, request.Price),
+            new AddPizzaCommand(req.Name, req.Description, req.Price),
             ct);
 
         await this.ToResponseAsync(result, ct);

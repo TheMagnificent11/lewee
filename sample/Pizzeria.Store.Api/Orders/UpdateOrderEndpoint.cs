@@ -24,13 +24,13 @@ internal sealed class UpdateOrderEndpoint : CommandEndpoint<UpdateOrderRequest>
 
     protected override bool IsAnonymousAllowed => false;
 
-    public override async Task HandleAsync(UpdateOrderRequest request, CancellationToken ct)
+    public override async Task HandleAsync(UpdateOrderRequest req, CancellationToken ct)
     {
         var orderId = this.Route<Guid>(Endpoints.RouteTokens.OrderId);
 
-        var actionCount = (request.SubmitAsDelivery ? 1 : 0)
-            + (request.SubmitAsPickup ? 1 : 0)
-            + (request.FulfillmentAction.HasValue ? 1 : 0);
+        var actionCount = (req.SubmitAsDelivery ? 1 : 0)
+            + (req.SubmitAsPickup ? 1 : 0)
+            + (req.FulfillmentAction.HasValue ? 1 : 0);
         if (actionCount != 1)
         {
             await this.ToResponseAsync(
@@ -42,16 +42,16 @@ internal sealed class UpdateOrderEndpoint : CommandEndpoint<UpdateOrderRequest>
         CommandResult result;
         try
         {
-            if (request.SubmitAsDelivery)
+            if (req.SubmitAsDelivery)
             {
                 result = await this.Mediator.Send(
-                    new SubmitDeliveryOrderCommand(orderId, request.DeliveryAddress ?? string.Empty),
+                    new SubmitDeliveryOrderCommand(orderId, req.DeliveryAddress ?? string.Empty),
                     ct);
             }
-            else if (request.FulfillmentAction.HasValue)
+            else if (req.FulfillmentAction.HasValue)
             {
                 result = await this.Mediator.Send(
-                    new UpdateOrderStatusCommand(orderId, request.FulfillmentAction.Value),
+                    new UpdateOrderStatusCommand(orderId, req.FulfillmentAction.Value),
                     ct);
             }
             else
