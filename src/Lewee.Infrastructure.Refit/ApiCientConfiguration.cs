@@ -25,6 +25,8 @@ public static class ApiCientConfiguration
         ArgumentNullException.ThrowIfNull(services);
         ArgumentException.ThrowIfNullOrEmpty(aspireApiServiceName);
 
+        ReflectionSupport.EnsureRegistered();
+
         services
             .AddHttpContextAccessor()
             .AddCorrelate(options => options.RequestHeaders = [RequestHeaders.CorrelationId])

@@ -36,6 +36,7 @@ This automatically configures infrastructure components:
 
 - `AuthTokenDelegatingHandler` (from [Lewee.Infrastructure.Auth](../Lewee.Infrastructure.Auth/README.md)) - Infrastructure handler that adds Bearer tokens from the authentication context
 - `CorrelatingHttpMessageHandler` (from Correlate) - Infrastructure handler that propagates correlation IDs across service boundaries
+- Refit reflection support for JSON serialization and deserialization of client contracts
 
 ### Service Discovery Integration
 

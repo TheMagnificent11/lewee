@@ -70,3 +70,8 @@ This will start the .NET Aspire dashboard and orchestrate the following services
 Navigate to the Aspire dashboard to monitor services and view logs.
 
 The Pizzeria Store API and Web applications will be available at the URLs shown in the Aspire dashboard.
+
+Keycloak data persists between runs, and realm imports do not update an existing realm. If an existing
+`lewee-pizzeria` realm was created before the API clients were added, create the OpenID Connect clients
+`pizzeria-store-api` and `pizzeria-auth-api` as bearer-only clients in Keycloak, then sign out and back in
+to obtain a token with the updated audiences.

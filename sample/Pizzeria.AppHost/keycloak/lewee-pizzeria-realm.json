@@ -13,6 +13,18 @@
   "accessTokenLifespan": 300,
   "clients": [
     {
+      "clientId": "pizzeria-store-api",
+      "enabled": true,
+      "bearerOnly": true,
+      "protocol": "openid-connect"
+    },
+    {
+      "clientId": "pizzeria-auth-api",
+      "enabled": true,
+      "bearerOnly": true,
+      "protocol": "openid-connect"
+    },
+    {
       "clientId": "pizzeria-store-web",
       "name": "Pizzeria Store Web",
       "enabled": true,
