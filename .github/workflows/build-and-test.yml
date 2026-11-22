@@ -95,4 +95,4 @@ jobs:
           path: coverage-report/SummaryGithub.md
 
       - name: Pack
-        run: dotnet pack --configuration Release --no-build --nologo --version-suffix ci.${{ github.run_number }} --output ./output
+        run: dotnet pack --configuration Release --no-build --nologo /p:Version=0.0.0 --output ./output
