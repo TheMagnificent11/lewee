@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Lewee.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Pizzeria.Store.Domain;
 
@@ -14,6 +15,8 @@ internal sealed class OrderPizzaConfiguration : RelationshipConfiguration<OrderP
     protected override void ConfigureRelationship(EntityTypeBuilder<OrderPizza> builder)
     {
         ArgumentNullException.ThrowIfNull(builder);
+
+        builder.HasQueryFilter(op => !op.Order.IsDeleted && !op.Pizza.IsDeleted);
 
         builder
             .HasOne(op => op.Order)

@@ -6,7 +6,7 @@
 public class DomainEventsCollection
 {
     private readonly List<DomainEvent> domainEvents = new();
-    private readonly object syncLock = new();
+    private readonly Lock syncLock = new();
 
     /// <summary>
     /// Raises a domain event

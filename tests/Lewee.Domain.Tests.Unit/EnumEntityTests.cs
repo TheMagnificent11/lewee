@@ -13,30 +13,17 @@ using Xunit;
 namespace Lewee.Domain.Tests.Unit;
 
 [SuppressMessage(
-    "StyleCop.CSharp.MaintainabilityRules",
-    "SA1402:File may only contain a single type",
-    Justification = "Test helper class is tightly coupled with test enum and test class")]
-internal static class EnumDescriptions
-{
-    public const string TestDescription1 = "Test Description 1";
-    public const string TestDescription2 = "Test Description 2";
-    public const string TestDescription3 = "Test Description 3";
-}
-
-[SuppressMessage(
-    "StyleCop.CSharp.MaintainabilityRules",
-    "SA1402:File may only contain a single type",
-    Justification = "Test enum is tightly coupled with test class and helper class")]
-[SuppressMessage(
-    "StyleCop.CSharp.OrderingRules",
-    "SA1201:A enum should not follow a class",
-    Justification = "Test enum is logically grouped with related test components")]
-[SuppressMessage(
     "Minor Code Smell",
     "S2344:Enumeration type names should not have \"Flags\" or \"Enum\" suffixes",
     Justification = "Only for test purposes")]
-internal enum TestEnum
+[SuppressMessage(
+    "Maintainability",
+    "CA1515:Consider making public types internal",
+    Justification = "The test enum must be public for EnumEntity type construction")]
+public enum TestEnum
 {
+    None = 0,
+
     [Description(EnumDescriptions.TestDescription1)]
     Value1 = 1,
 
@@ -72,4 +59,15 @@ public class EnumEntityTests
         // Assert
         enumEntity!.Name.Should().Be("EF");
     }
+}
+
+[SuppressMessage(
+    "StyleCop.CSharp.MaintainabilityRules",
+    "SA1402:File may only contain a single type",
+    Justification = "Test helper class is tightly coupled with test enum and test class")]
+internal static class EnumDescriptions
+{
+    public const string TestDescription1 = "Test Description 1";
+    public const string TestDescription2 = "Test Description 2";
+    public const string TestDescription3 = "Test Description 3";
 }

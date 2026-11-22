@@ -25,6 +25,8 @@ public static class ApiCientConfiguration
         ArgumentNullException.ThrowIfNull(services);
         ArgumentException.ThrowIfNullOrEmpty(aspireApiServiceName);
 
+        ReflectionSupport.EnsureRegistered();
+
         services
             .AddHttpContextAccessor()
             .AddCorrelate(options => options.RequestHeaders = [RequestHeaders.CorrelationId])
@@ -32,7 +34,7 @@ public static class ApiCientConfiguration
             .AddTransient<AuthTokenDelegatingHandler>();
 
         services
-            .AddRefitClient<T>()
+            .AddRefitGeneratedClient<T>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri($"https://{aspireApiServiceName}"))
             .AddHttpMessageHandler<CorrelatingHttpMessageHandler>()
             .AddHttpMessageHandler<AuthTokenDelegatingHandler>();

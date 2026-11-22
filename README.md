@@ -32,7 +32,7 @@ Lewee is an opinionated set of packages to assist with setting up a domain-drive
 
 Below is a summary of the dependencies used by Lewee. Note that this isn't a list of NuGet packages, just a high-level list of software used and each can have several related NuGet packages.
 
-- [.NET 10](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
+- [.NET 10](https://dotnet.microsoft.com/en-us/download/dotnet/11.0)
 - [.NET Aspire](https://learn.microsoft.com/en-us/dotnet/aspire/get-started/aspire-overview)
 - [PostgreSQL](https://www.postgresql.org/) with [Npgsql](https://www.npgsql.org/)
 - [Entity Framework Core](https://learn.microsoft.com/en-us/ef)
@@ -46,8 +46,8 @@ Below is a summary of the dependencies used by Lewee. Note that this isn't a lis
 
 ### Prerequisites
 
-- [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
-- [Aspire CLI 13.6.4](https://aspire.dev/) (`dotnet tool install --global Aspire.Cli --version 13.6.4`)
+- [.NET 11 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/11.0)
+- [Aspire CLI 17.0.0](https://aspire.dev/)
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/) (for PostgreSQL container)
 
 Trust the Aspire development certificate before starting the application with `aspire certs trust`.
@@ -70,3 +70,8 @@ This will start the .NET Aspire dashboard and orchestrate the following services
 Navigate to the Aspire dashboard to monitor services and view logs.
 
 The Pizzeria Store API and Web applications will be available at the URLs shown in the Aspire dashboard.
+
+Keycloak data persists between runs, and realm imports do not update an existing realm. If an existing
+`lewee-pizzeria` realm was created before the API clients were added, create the OpenID Connect clients
+`pizzeria-store-api` and `pizzeria-auth-api` as bearer-only clients in Keycloak, then sign out and back in
+to obtain a token with the updated audiences.

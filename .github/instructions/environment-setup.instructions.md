@@ -8,7 +8,7 @@ applyTo: "**/*"
 
 | Component | Version | Installation Command | Verification |
 | ----------- | --------- | --------------------- | -------------- |
-| .NET SDK | 10.0+ | `curl -sSL https://dotnet.microsoft.com/download/dotnet/scripts/v1/dotnet-install.sh \| bash /dev/stdin --channel 10.0 --install-dir ~/.dotnet` | `dotnet --version` |
+| .NET SDK | 11.0+ | `curl -sSL https://dotnet.microsoft.com/download/dotnet/scripts/v1/dotnet-install.sh \| bash /dev/stdin --channel 11.0 --install-dir ~/.dotnet` | `dotnet --version` |
 | Aspire CLI | 13.6.4 | `dotnet tool install --global Aspire.Cli --version 13.6.4` | `aspire --version` |
 | Docker Desktop | Latest | Platform-specific | `docker --version` |
 | PowerShell | 7+ | [Install PowerShell for your OS](https://learn.microsoft.com/powershell/scripting/install/installing-powershell) | `pwsh --version` |
@@ -24,7 +24,7 @@ dotnet tool install --global Aspire.Cli --version 13.6.4
 aspire certs trust
 dotnet dev-certs https --trust
 dotnet build --configuration Release --nologo
-pwsh sample-tests/Pizzeria.Tests.E2E/bin/Release/net10.0/playwright.ps1 install --with-deps chromium
+pwsh sample-tests/Pizzeria.Tests.E2E/bin/Release/net11.0/playwright.ps1 install --with-deps chromium
 dotnet test --configuration Release --no-build --nologo
 ```
 
@@ -36,4 +36,4 @@ Docker must be running so Aspire can start the PostgreSQL and Keycloak container
 export PATH="$HOME/.dotnet:$HOME/.dotnet/tools:$PATH"
 ```
 
-**Critical:** The repository targets .NET 10.0 and will not build with older versions.
+**Critical:** The repository targets .NET 11.0 and will not build with older versions.

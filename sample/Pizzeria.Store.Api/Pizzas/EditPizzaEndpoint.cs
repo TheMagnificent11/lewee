@@ -15,14 +15,14 @@ internal sealed class EditPizzaEndpoint : CommandEndpoint<EditPizzaRequest>
 
     protected override bool IsAnonymousAllowed => false;
 
-    public override async Task HandleAsync(EditPizzaRequest request, CancellationToken ct)
+    public override async Task HandleAsync(EditPizzaRequest req, CancellationToken ct)
     {
         var result = await this.Mediator.Send(
             new EditPizzaCommand(
                 this.Route<Guid>(CommonEndpoints.RouteTokens.PizzaId),
-                request.Name,
-                request.Description,
-                request.Price),
+                req.Name,
+                req.Description,
+                req.Price),
             ct);
 
         await this.ToResponseAsync(result, ct);
