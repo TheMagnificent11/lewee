@@ -35,32 +35,32 @@ var databaseServer = Environments.IsIntegrationTesting
 
 var pizzeriaDatabase = databaseServer.AddDatabase(ServiceNames.PizzeriaDatabase);
 
-var configuration = builder.AddCSharpApp(ServiceNames.ConfigurationService, "../Pizzeria.Configuration/Pizzeria.Configuration.csproj")
+var configuration = builder.AddDotnetProject(ServiceNames.ConfigurationService, "../Pizzeria.Configuration/Pizzeria.Configuration.csproj")
     .WithReference(authServer)
     .WithReference(pizzeriaDatabase)
     .WaitFor(authServer)
     .WaitFor(pizzeriaDatabase);
 
-var authApi = builder.AddProject<Projects.Pizzeria_Auth_Api>(ServiceNames.AuthApi)
+var authApi = builder.AddDotnetProject(ServiceNames.AuthApi, "../Pizzeria.Auth.Api/Pizzeria.Auth.Api.csproj")
     .WithReference(pizzeriaDatabase)
     .WithReference(authServer)
     .WaitForCompletion(configuration)
     .WithHttpHealthCheck("/health");
 
-var pizzaStoreApi = builder.AddProject<Projects.Pizzeria_Store_Api>(ServiceNames.PizzaStoreApi)
+var pizzaStoreApi = builder.AddDotnetProject(ServiceNames.PizzaStoreApi, "../Pizzeria.Store.Api/Pizzeria.Store.Api.csproj")
     .WithReference(pizzeriaDatabase)
     .WithReference(authServer)
     .WaitForCompletion(configuration)
     .WithHttpHealthCheck("/health");
 
-var bff = builder.AddProject<Projects.Pizzeria_Bff>(ServiceNames.Bff)
+var bff = builder.AddDotnetProject(ServiceNames.Bff, "../Pizzeria.Bff/Pizzeria.Bff.csproj")
     .WithReference(authApi)
     .WithReference(pizzaStoreApi)
     .WaitFor(authApi)
     .WaitFor(pizzaStoreApi)
     .WithHttpHealthCheck("/health");
 
-builder.AddProject<Projects.Pizzeria_Ordering_Web>(ServiceNames.PizzaStoreWeb)
+builder.AddDotnetProject(ServiceNames.PizzaStoreWeb, "../Pizzeria.Ordering.Web/Pizzeria.Ordering.Web.csproj")
     .WithReference(bff)
     .WithReference(authServer)
     .WaitFor(bff)

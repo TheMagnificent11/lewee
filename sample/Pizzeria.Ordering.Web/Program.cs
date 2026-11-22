@@ -52,7 +52,7 @@ app.MapGet("/authentication/sign-in", (string? returnUrl) =>
 {
     var redirectUri = "/";
     if (!string.IsNullOrWhiteSpace(returnUrl)
-        && returnUrl.StartsWith('/')
+        && returnUrl.StartsWith('/', StringComparison.Ordinal)
         && !returnUrl.StartsWith("//", StringComparison.Ordinal)
         && Uri.TryCreate(returnUrl, UriKind.Relative, out _))
     {

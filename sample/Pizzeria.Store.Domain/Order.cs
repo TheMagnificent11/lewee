@@ -235,10 +235,13 @@ public class Order : AggregateRoot
 
         if (this.IsSubmitted)
         {
-            return this.IsDeliveryOrder &&
-                string.Equals(this.DeliveryAddress, deliveryAddress, StringComparison.Ordinal)
-                ? CommandResult.Success()
-                : CommandResult.Fail(ResultStatus.BadRequest, "Order has already been submitted.");
+            if (this.IsDeliveryOrder
+                && string.Equals(this.DeliveryAddress, deliveryAddress, StringComparison.Ordinal))
+            {
+                return CommandResult.Success();
+            }
+
+            return CommandResult.Fail(ResultStatus.BadRequest, "Order has already been submitted.");
         }
 
         var canSubmit = this.EnsureCanSubmit();
