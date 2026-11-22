@@ -1,7 +1,8 @@
 ﻿using Lewee.Application.Mediation.Requests;
+using Lewee.Common;
 using Lewee.Domain;
 using MediatR;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace Lewee.Application.Mediation.Behaviors;
 
@@ -11,20 +12,23 @@ internal class DomainExceptionBehavior<TCommand, TResponse> : IPipelineBehavior<
 {
     private readonly ILogger logger;
 
-    public DomainExceptionBehavior(ILogger logger)
+    public DomainExceptionBehavior(ILogger<DomainExceptionBehavior<TCommand, TResponse>> logger)
     {
-        this.logger = logger.ForContext<DomainExceptionBehavior<TCommand, TResponse>>();
+        this.logger = logger;
     }
 
-    public async Task<TResponse> Handle(TCommand request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+    public async Task<TResponse> Handle(
+        TCommand request,
+        RequestHandlerDelegate<TResponse> next,
+        CancellationToken cancellationToken)
     {
         try
         {
-            return await next();
+            return await next(cancellationToken);
         }
         catch (DomainException ex)
         {
-            this.logger.Information(ex, "Domain exception caught");
+            this.logger.LogDomainExceptionCaught(ex);
 
             var result = CommandResult.Fail(ResultStatus.BadRequest, ex.Message);
 

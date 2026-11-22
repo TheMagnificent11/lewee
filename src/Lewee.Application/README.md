@@ -4,11 +4,9 @@ This package assists with building the application layer of an application using
 
 ## Dependencies
 
-- [FluentValidation](https://github.com/jbogard/MediatR)
-- [Mediatr](https://github.com/jbogard/MediatR)
-- [Serilog](https://github.com/serilog)
+- [FluentValidation](https://docs.fluentvalidation.net/en/latest)
+- [MediatR](https://github.com/jbogard/MediatR)
 - [Lewee.Domain](../Lewee.Domain/README.md)
-- [Lewee.Contracts](../Lewee.Contracts/README.md)
 
 ## Configuration
 
@@ -19,17 +17,17 @@ services.AddApplication(typeof(ApplicationLayerClass).Assembly, typeof(DomainLay
 services.AddPipelineBehaviors();
 ```
 
-The assembly parameters of `AddApplication` are used to configure `Mediatr` (it will scan these assemblies for request and notification classes/handlers).  In addition to this, the application layer assembly will by used to configure `FluentValidation` (it will use this assembly to scan for validators).
+The assembly parameters of `AddApplication` are used to configure `MediatR` (it will scan these assemblies for request and notification classes/handlers). In addition to this, the application layer assembly will by used to configure `FluentValidation` (it will use this assembly to scan for validators).
 
-`AddPipelineBehaviors` adds the `Mediatr` request pipelines behaviors listed in the [Pipeline Behaviors](#pipeline-behaviors) section.  This only needs to be added once per application/solution; not for once each project that uses this package.
+`AddPipelineBehaviors` adds the `MediatR` request pipelines behaviors listed in the [Pipeline Behaviors](#pipeline-behaviors) section. This only needs to be added once per application/solution; not for once each project that uses this package.
 
 Additional behaviors can be added as parameters to `AddPipelineBehaviors`.
 
 ## Mediation
 
-`Mediatr` is used to assist with mediation, which allows the presentation layer of the application to have less dependencies e.g. API controller classes only need to inject the `IMediator` interface to handle web requests.
+`MediatR` is used to assist with mediation, which allows the presentation layer of the application to have less dependencies e.g. API controller classes only need to inject the `IMediator` interface to handle web requests.
 
-There a several interfaces that add a further layer of [command-query responsibility separation (CQRS)](https://learn.microsoft.com/en-us/azure/architecture/patterns/cqrs) on top of the `IRequest` interface in `Mediatr`.
+There a several interfaces that add a further layer of [command-query responsibility separation (CQRS)](https://learn.microsoft.com/en-us/azure/architecture/patterns/cqrs) on top of the `IRequest` interface in `MediatR`.
 
 - [IQuery](./Mediation/Requests/IQuery.cs)
 - [ICommand](./Mediation/Requests/ICommand.cs)
@@ -37,11 +35,7 @@ There a several interfaces that add a further layer of [command-query responsibi
 
 ### IQuery & ICommand
 
-Both `IQuery` and `ICommand` implement [IApplicationRequest](./Mediation/Requests/IApplicationRequest.cs), which has a `CorrelationId` `Guid` property.
-
-As mentioned in the [Pipeline Behaviors](#pipeline-behaviors) section, the `CorrelationId` property is used in the `CorelationIdLoggingBehavior` to decorate the logs with the correlation ID for every `Mediatr` request that implements `IApplicationRequest`.
-
-Query handlers that handle `IQuery` input types are required to have [QueryResult](./Mediation/Requests/QueryResult.cs) as the return type.  `QueryResult` has a type parameter that is used to specify the query data type.
+Query handlers that handle `IQuery` input types are required to have [QueryResult](./Mediation/Requests/QueryResult.cs) as the return type. `QueryResult` has a type parameter that is used to specify the query data type.
 
 Command handlers that handle `ICommand` input types are required to return a [CommandResult](./Mediation/Requests/CommandResult.cs).
 
@@ -56,37 +50,42 @@ Both `QueryResult` and `CommandResult` inherit from [Result](./Mediation/Request
 
 #### Sample Code
 
-[Query](../../sample/Sample.Restaurant.Application/GetTablesQuery.cs)
+[Query](../../sample/Pizzeria.Store.Application/Pizzas/GetPizzasQuery.cs)
 
-[Command](../../sample/Sample.Restaurant.Application/UseTableCommand.cs)
+[Command](../../sample/Pizzeria.Store.Application/Orders/StartOrderCommand.cs)
 
 ### ITenantRequest
 
 `ITenantedRequest` has a `TenantId` `Guid` property used to specify the tenant ID for multi-tenanted applications.
 
-As mentioned in the [Pipeline Behaviors](#pipeline-behaviors) section, the `TenantId` property is used in the `TenantLoggingBehavior` to decorate the logs with tenant ID for every `Mediatr` request that implements `ITenantedRequest`.
+`ITenantRequest` implementations are used by `Lewee.Auth.Application`'s `TenantLoggingBehavior` (which decorates
+logs with the tenant ID) and `TenantRoleAuthorizationBehavior` (which authorizes tenant-role-restricted requests);
+see [Lewee.Auth.Application](../Lewee.Auth.Application/README.md) for details.
 
 ### Pipeline Behaviors
 
 - [CorelationIdLoggingBehavior](./Mediation//Behaviors/CorrelationIdLoggingBehavior.cs)
-  - Adds a `CorrelationId` structured logging property for every request.  Uses `CorrelationId` property if the request implemenats `IApplicationRequest`, otherwise it generates a new GUID.
+  - Adds a `CorrelationId` structured logging property for every request, resolved from the ambient `ICorrelationContextAccessor`.
 - [DomainExceptionBehavior](./Mediation/Behaviors/DomainExceptionBehavior.cs)
   - Catches [DomainException](../Lewee.Domain/DomainException.cs), which is defined in the [Lewee.Domain](../Lewee.Domain/README.md) package, and returns a failure result.
 - [FailureLoggingBehavior](./Mediation/Behaviors/FailureLoggingBehavior.cs)
   - Checks the `Status` of requests that have `Result` return types and logs an error if there was an unexpected failure, or an information log if there was domain/validation failure.
 - [PerformanceLoggingBehavior](./Mediation/Behaviors/PerformanceBehavior.cs)
-  - Uses `Serilog`'s `BeginTimedOperation` functionality to log the time taken to execute the request.
-- [TenantLoggingBehavior](./Mediation/Behaviors/TenantLoggingBehavior.cs)
-  - Adds a `TenantId` structured logging property for every request that implements `ITenantedRequest`.
+  - Logs the time taken to execute the request using high-performance logging.
 - [UnhandledExceptionBehavior](./Mediation//Behaviors/CorrelationIdLoggingBehavior.cs)
   - Catches unhandled exceptions and logs them as errors
 - [ValidationBehavior](./Mediation/Behaviors/ValidationBehavior.cs)
   - Executes `FluentValidation` validators for the request and returns a `CommandResult` with the errors dictionary populated if there are validation errors found, otherwise the rest of the pipeline is executed.
 
+Additional, opt-in behaviors for tenant logging and authorization are provided by
+[Lewee.Auth.Application](../Lewee.Auth.Application/README.md).
+
 ### ClientEvent Notification
 
-The [ClientEvent](./Mediation/Notifications/ClientEvent.cs) can be published via `Mediatr.IMediator.Publish` to send a `SignalR` event to the a client application.
+The [ClientEvent](./Mediation/Notifications/ClientEvent.cs) can be published via `MediatR.IMediator.Publish` to broadcast an event to connected Blazor clients. The `ClientEvent` is handled by infrastructure in the [Lewee.Infrastructure.ServerEvents](../Lewee.Infrastructure.ServerEvents/README.md) package, which writes the event to an SSE channel for streaming to clients.
+
+For the complete server-sent events infrastructure implementation, see the [Lewee.Infrastructure.ServerEvents](../Lewee.Infrastructure.ServerEvents/README.md) package.
 
 #### Sample
 
-[Client Event](../../sample/Sample.Restaurant.Application/TableDomainEventHandler.cs).
+*Note: The current Pizzeria sample application demonstrates the ClientEvent pattern with the `StartOrderCompletedAction` being dispatched when an order is created.*

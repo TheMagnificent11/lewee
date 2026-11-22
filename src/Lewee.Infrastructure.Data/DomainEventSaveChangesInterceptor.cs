@@ -1,4 +1,4 @@
-﻿using Lewee.Application.Data;
+﻿using Lewee.Common;
 using Lewee.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -35,7 +35,7 @@ internal class DomainEventSaveChangesInterceptor<TContext> : SaveChangesIntercep
 
     private void StoreDomainEvents(DbContext? context)
     {
-        if (context == null || context is not TContext)
+        if (context is not TContext)
         {
             return;
         }

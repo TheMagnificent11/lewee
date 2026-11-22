@@ -1,10 +1,11 @@
-﻿using MediatR;
+﻿using Lewee.Common;
+using MediatR;
 
 namespace Lewee.Application.Mediation.Requests;
 
 /// <summary>
 /// Command Interface
 /// </summary>
-public interface ICommand : IApplicationRequest, IRequest<CommandResult>
+public interface ICommand : IRequest<CommandResult>
 {
 }

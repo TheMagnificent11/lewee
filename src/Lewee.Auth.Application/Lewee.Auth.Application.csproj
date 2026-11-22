@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Lewee.Application\Lewee.Application.csproj" />
+    <ProjectReference Include="..\Lewee.Auth.Domain\Lewee.Auth.Domain.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Lewee.Auth.Application.Tests.Unit</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+</Project>

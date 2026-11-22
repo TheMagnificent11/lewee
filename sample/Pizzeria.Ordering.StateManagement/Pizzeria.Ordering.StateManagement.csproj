@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" />
+    <PackageReference Include="Refit" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Lewee.Auth.Api\Lewee.Auth.Api.csproj" />
+    <ProjectReference Include="..\..\src\Lewee.Infrastructure.Fluxor\Lewee.Infrastructure.Fluxor.csproj" />
+    <ProjectReference Include="..\Pizzeria.Common\Pizzeria.Common.csproj" />
+    <ProjectReference Include="..\Pizzeria.Store.Contracts\Pizzeria.Store.Contracts.csproj" />
+  </ItemGroup>
+  
+</Project>

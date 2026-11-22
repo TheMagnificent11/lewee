@@ -1,0 +1,47 @@
+# Auto-approve Renovate PRs
+#
+# This workflow automatically approves PRs that have the 'dependencies' label.
+# The approval appears as the lewee-bot user instead of github-actions.
+#
+# Prerequisites:
+# - LEWEE_BOT_TOKEN secret must be configured in the repository settings
+# - The token should be a Personal Access Token (PAT) or GitHub App token for the lewee-bot user
+# - The token must have 'pull_requests: write' permission
+#
+name: Auto-approve Dependabot PRs
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - labeled
+
+jobs:
+  auto-approve:
+    permissions:
+      contents: read
+      pull-requests: write
+    runs-on: ubuntu-latest
+    # Only approve PRs with the 'dependencies' label (no actor restriction)
+    steps:
+      - name: Check for dependencies label
+        id: check-label
+        run: |
+          # Check if PR has the 'dependencies' label
+          LABELS=$(gh pr view ${{ github.event.pull_request.number }} --repo ${{ github.repository }} --json labels --jq '.labels[].name')
+          if echo "$LABELS" | grep -q "dependencies"; then
+            echo "has_label=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_label=false" >> $GITHUB_OUTPUT
+          fi
+        env:
+          # Use lewee-bot token for checking labels
+          GH_TOKEN: ${{ secrets.LEWEE_BOT_TOKEN }}
+
+      - name: Auto approve
+        if: steps.check-label.outputs.has_label == 'true'
+        run: gh pr review ${{ github.event.pull_request.number }} --repo ${{ github.repository }} --approve
+        env:
+          # Use lewee-bot token so the approval appears as lewee-bot instead of github-actions
+          GH_TOKEN: ${{ secrets.LEWEE_BOT_TOKEN }}

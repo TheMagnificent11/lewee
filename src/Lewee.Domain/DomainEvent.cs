@@ -10,9 +10,10 @@ public abstract class DomainEvent : INotification
     /// <summary>
     /// Initializes a new instance of the <see cref="DomainEvent"/> class
     /// </summary>
-    protected DomainEvent()
+    /// <param name="correlationId">Correlation ID</param>
+    protected DomainEvent(Guid correlationId)
     {
-        this.CorrelationId = Guid.NewGuid();
+        this.CorrelationId = correlationId;
     }
 
     /// <summary>
@@ -24,4 +25,9 @@ public abstract class DomainEvent : INotification
     /// Gets or sets the user ID
     /// </summary>
     public string? UserId { get; set; }
+
+    /// <summary>
+    /// Gets the date-time of the event
+    /// </summary>
+    public DateTime EventDateTime { get; init; }
 }

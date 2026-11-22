@@ -1,0 +1,35 @@
+using System.Diagnostics.CodeAnalysis;
+using Lewee.Auth.Infrastructure.Data;
+using Lewee.Infrastructure.Data;
+using Microsoft.Extensions.Logging;
+using Pizzeria.Store.Data;
+
+namespace Pizzeria.Configuration;
+
+[SuppressMessage(
+    "Performance",
+    "CA1812: Avoid uninstantiated internal classes",
+    Justification = "Use via DI")]
+internal sealed class PizzeriaConfigurationService
+{
+    private readonly IServiceProvider serviceProvider;
+    private readonly ILogger<PizzeriaConfigurationService> logger;
+
+    public PizzeriaConfigurationService(
+        IServiceProvider serviceProvider,
+        ILogger<PizzeriaConfigurationService> logger)
+    {
+        this.serviceProvider = serviceProvider;
+        this.logger = logger;
+    }
+
+    public async Task ConfigureAsync(CancellationToken cancellationToken)
+    {
+        this.logger.LogInformation("Starting database migration and seeding...");
+
+        await this.serviceProvider.MigrateDatabaseAsync<AuthDbContext>(seedData: true, cancellationToken);
+        await this.serviceProvider.MigrateDatabaseAsync<StoreDbContext>(seedData: true, cancellationToken);
+
+        this.logger.LogInformation("Database migration and seeding completed successfully");
+    }
+}

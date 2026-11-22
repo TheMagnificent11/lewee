@@ -1,6 +1,6 @@
-﻿using Lewee.Domain;
+﻿namespace Lewee.Domain.Tests.Unit;
 
-public class Person : Entity
+internal sealed class Person : Entity
 {
     public Person(string givenName, string surname, DateOnly dateOfBirth)
     {
@@ -18,6 +18,8 @@ public class Person : Entity
     }
 
     public string GivenName { get; }
+
     public string Surname { get; }
+
     public DateOnly DateOfBirth { get; }
 }

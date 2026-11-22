@@ -1,18 +1,29 @@
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using Xunit;
 
+[assembly: SuppressMessage(
+    "StyleCop.CSharp.DocumentationRules",
+    "SA1649:File name should match first type name",
+    Justification = "Test file contains multiple related test types",
+    Scope = "type",
+    Target = "~T:Lewee.Domain.Tests.Unit.EnumDescriptions")]
+
 namespace Lewee.Domain.Tests.Unit;
 
-public static class EnumDescriptions
-{
-    public const string TestDescription1 = "Test Description 1";
-    public const string TestDescription2 = "Test Description 2";
-    public const string TestDescription3 = "Test Description 3";
-}
-
+[SuppressMessage(
+    "Minor Code Smell",
+    "S2344:Enumeration type names should not have \"Flags\" or \"Enum\" suffixes",
+    Justification = "Only for test purposes")]
+[SuppressMessage(
+    "Maintainability",
+    "CA1515:Consider making public types internal",
+    Justification = "The test enum must be public for EnumEntity type construction")]
 public enum TestEnum
 {
+    None = 0,
+
     [Description(EnumDescriptions.TestDescription1)]
     Value1 = 1,
 
@@ -43,9 +54,20 @@ public class EnumEntityTests
     public void EnumEntity_DefaultConstructor_SetsNameToEF()
     {
         // Arrange & Act
-        var enumEntity = Activator.CreateInstance(typeof(EnumEntity<TestEnum>), true) as EnumEntity<TestEnum>;
+        var enumEntity = Activator.CreateInstance(typeof(EnumEntity<TestEnum>), nonPublic: true) as EnumEntity<TestEnum>;
 
         // Assert
-        enumEntity.Name.Should().Be("EF");
+        enumEntity!.Name.Should().Be("EF");
     }
+}
+
+[SuppressMessage(
+    "StyleCop.CSharp.MaintainabilityRules",
+    "SA1402:File may only contain a single type",
+    Justification = "Test helper class is tightly coupled with test enum and test class")]
+internal static class EnumDescriptions
+{
+    public const string TestDescription1 = "Test Description 1";
+    public const string TestDescription2 = "Test Description 2";
+    public const string TestDescription3 = "Test Description 3";
 }

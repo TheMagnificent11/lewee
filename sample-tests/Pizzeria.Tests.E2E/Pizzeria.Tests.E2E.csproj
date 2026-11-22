@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.Testing" />
+    <PackageReference Include="Azure.Identity" />
+    <PackageReference Include="Microsoft.Playwright" />
+    <PackageReference Include="Respawn" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Lewee.Auth.Infrastructure.Data\Lewee.Auth.Infrastructure.Data.csproj" />
+    <ProjectReference Include="..\..\sample\Pizzeria.AppHost\Pizzeria.AppHost.csproj" />
+    <ProjectReference Include="..\..\sample\Pizzeria.Auth\Pizzeria.Auth.csproj" />
+    <ProjectReference Include="..\..\sample\Pizzeria.Store.Data\Pizzeria.Store.Data.csproj" />
+    <ProjectReference Include="..\..\sample\Pizzeria.Store.Domain\Pizzeria.Store.Domain.csproj" />
+    <ProjectReference Include="..\..\sample\Pizzeria.Ordering.Web\Pizzeria.Ordering.Web.csproj" />
+    <ProjectReference Include="..\..\src\Lewee.Playwright\Lewee.Playwright.csproj" />
+  </ItemGroup>
+
+</Project>

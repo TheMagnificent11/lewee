@@ -1,0 +1,107 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path="coverage.runsettings" />
+    <File Path="coverage.xml" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="README.md" />
+    <File Path="spelling-exclusion.txt" />
+    <File Path="test-coverage.ps1" />
+    <File Path="Tests.props" />
+  </Folder>
+  <Folder Name="/Solution Items/.github/">
+    <File Path=".github/copilot-instructions.md" />
+    <File Path=".github/workflows/build-and-test.yml" />
+  </Folder>
+  <Folder Name="/Solution Items/src/">
+    <File Path="src/Directory.Build.props" />
+    <File Path="src/README.md" />
+  </Folder>
+  <Folder Name="/Solution Items/tests/">
+    <File Path="tests/.editorconfig" />
+    <File Path="tests/Directory.Build.props" />
+  </Folder>
+  <Folder Name="/Solution Items/sample/">
+    <File Path="sample/.editorconfig" />
+    <File Path="sample/Directory.Build.props" />
+    <File Path="sample/README.md" />
+  </Folder>
+  <Folder Name="/Solution Items/.github/instructions/">
+    <File Path=".github/instructions/blazor.instructions.md" />
+    <File Path=".github/instructions/build-and-test.instructions.md" />
+    <File Path=".github/instructions/code-quality.instructions.md" />
+    <File Path=".github/instructions/decision-making.instructions.md" />
+    <File Path=".github/instructions/development-focus.instructions.md" />
+    <File Path=".github/instructions/environment-setup.instructions.md" />
+    <File Path=".github/instructions/how-to-use.instructions.md" />
+    <File Path=".github/instructions/overview.instructions.md" />
+    <File Path=".github/instructions/repository-structure.instructions.md" />
+    <File Path=".github/instructions/sample-application.instructions.md" />
+    <File Path=".github/instructions/technology-stack.instructions.md" />
+    <File Path=".github/instructions/troubleshooting.instructions.md" />
+    <File Path=".github/instructions/validation-workflows.instructions.md" />
+    <File Path=".github/instructions/visual-studio-solution.instructions.md" />
+  </Folder>
+  <Folder Name="/Solution Items/sample-tests/">
+    <File Path="sample-tests/.editorconfig" />
+    <File Path="sample-tests/Directory.Build.props" />
+    <File Path="sample-tests/README.md" />
+  </Folder>
+  <Project Path="sample-tests/Pizzeria.Ordering.Components.Tests.Unit/Pizzeria.Ordering.Components.Tests.Unit.csproj" />
+  <Project Path="sample-tests/Pizzeria.Store.Domain.Tests/Pizzeria.Store.Domain.Tests.csproj" />
+  <Project Path="sample-tests/Pizzeria.Store.Application.Tests.Unit/Pizzeria.Store.Application.Tests.Unit.csproj" />
+  <Project Path="sample-tests/Pizzeria.Ordering.StateManagement.Tests.Unit/Pizzeria.Ordering.StateManagement.Tests.Unit.csproj" />
+  <Project Path="sample-tests/Pizzeria.Ordering.Web.Tests.Unit/Pizzeria.Ordering.Web.Tests.Unit.csproj" />
+  <Project Path="sample-tests/Pizzeria.Configuration.Tests.Unit/Pizzeria.Configuration.Tests.Unit.csproj" />
+  <Project Path="sample-tests/Pizzeria.Tests.E2E/Pizzeria.Tests.E2E.csproj" />
+  <Project Path="sample/Pizzeria.AppHost/Pizzeria.AppHost.csproj" />
+  <Project Path="sample/Pizzeria.Auth.Api/Pizzeria.Auth.Api.csproj" />
+  <Project Path="sample/Pizzeria.Auth/Pizzeria.Auth.csproj" />
+  <Project Path="sample/Pizzeria.Bff/Pizzeria.Bff.csproj" />
+  <Project Path="sample/Pizzeria.Common/Pizzeria.Common.csproj" />
+  <Project Path="sample/Pizzeria.Configuration/Pizzeria.Configuration.csproj" />
+  <Project Path="sample/Pizzeria.ServiceDefaults/Pizzeria.ServiceDefaults.csproj" />
+  <Project Path="sample/Pizzeria.Store.Api/Pizzeria.Store.Api.csproj" />
+  <Project Path="sample/Pizzeria.Store.Application/Pizzeria.Store.Application.csproj" />
+  <Project Path="sample/Pizzeria.Ordering.Components/Pizzeria.Ordering.Components.csproj" />
+  <Project Path="sample/Pizzeria.Store.Contracts/Pizzeria.Store.Contracts.csproj" />
+  <Project Path="sample/Pizzeria.Store.Data/Pizzeria.Store.Data.csproj" />
+  <Project Path="sample/Pizzeria.Store.Domain/Pizzeria.Store.Domain.csproj" />
+  <Project Path="sample/Pizzeria.Ordering.StateManagement/Pizzeria.Ordering.StateManagement.csproj" />
+  <Project Path="sample/Pizzeria.Ordering.Web/Pizzeria.Ordering.Web.csproj" />
+  <Project Path="src/Lewee.Application/Lewee.Application.csproj" />
+  <Project Path="src/Lewee.Auth.Api/Lewee.Auth.Api.csproj" />
+  <Project Path="src/Lewee.Auth.Application/Lewee.Auth.Application.csproj" />
+  <Project Path="src/Lewee.Auth.Domain/Lewee.Auth.Domain.csproj" />
+  <Project Path="src/Lewee.Auth.Infrastructure.Data/Lewee.Auth.Infrastructure.Data.csproj" />
+  <Project Path="src/Lewee.Common/Lewee.Common.csproj" />
+  <Project Path="src/Lewee.Domain/Lewee.Domain.csproj" />
+  <Project Path="src/Lewee.Infrastructure.Auth/Lewee.Infrastructure.Auth.csproj" />
+  <Project Path="src/Lewee.Infrastructure.Correlate/Lewee.Infrastructure.Correlate.csproj" />
+  <Project Path="src/Lewee.Infrastructure.Data/Lewee.Infrastructure.Data.csproj" />
+  <Project Path="src/Lewee.Infrastructure.FastEndpoints/Lewee.Infrastructure.FastEndpoints.csproj" />
+  <Project Path="src/Lewee.Infrastructure.Fluxor/Lewee.Infrastructure.Fluxor.csproj" />
+  <Project Path="src/Lewee.Infrastructure.Keycloak/Lewee.Infrastructure.Keycloak.csproj" />
+  <Project Path="src/Lewee.Infrastructure.PostgreSQL/Lewee.Infrastructure.PostgreSQL.csproj" />
+  <Project Path="src/Lewee.Infrastructure.Refit/Lewee.Infrastructure.Refit.csproj" />
+  <Project Path="src/Lewee.Infrastructure.ServerEvents/Lewee.Infrastructure.ServerEvents.csproj" />
+  <Project Path="src/Lewee.Playwright/Lewee.Playwright.csproj" />
+  <Project Path="tests/Lewee.Application.Tests.Unit/Lewee.Application.Tests.Unit.csproj" />
+  <Project Path="tests/Lewee.Auth.Application.Tests.Unit/Lewee.Auth.Application.Tests.Unit.csproj" />
+  <Project Path="tests/Lewee.Auth.Domain.Tests.Unit/Lewee.Auth.Domain.Tests.Unit.csproj" />
+  <Project Path="tests/Lewee.Auth.Infrastructure.Data.Tests.Unit/Lewee.Auth.Infrastructure.Data.Tests.Unit.csproj" />
+  <Project Path="tests/Lewee.Common.Tests.Unit/Lewee.Common.Tests.Unit.csproj" />
+  <Project Path="tests/Lewee.Domain.Tests.Unit/Lewee.Domain.Tests.Unit.csproj" />
+  <Project Path="tests/Lewee.Infrastructure.Data.Tests.Unit/Lewee.Infrastructure.Data.Tests.Unit.csproj" />
+  <Project Path="tests/Lewee.Infrastructure.Fluxor.Tests.Unit/Lewee.Infrastructure.Fluxor.Tests.Unit.csproj" />
+  <Project Path="tests/Lewee.Playwright.Tests.Unit/Lewee.Playwright.Tests.Unit.csproj" />
+  <Project Path="tests/Lewee.Tests.Common/Lewee.Tests.Common.csproj" />
+  <Project Path="tests/Lewee.Tests.Contracts/Lewee.Tests.Contracts.csproj" />
+</Solution>

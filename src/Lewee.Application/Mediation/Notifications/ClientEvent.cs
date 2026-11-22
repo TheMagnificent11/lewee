@@ -1,5 +1,5 @@
 ﻿using System.Text.Json;
-using Lewee.Contracts;
+using Lewee.Common;
 using MediatR;
 
 namespace Lewee.Application.Mediation.Notifications;
@@ -17,6 +17,8 @@ public class ClientEvent : INotification
     /// <param name="message">Message</param>
     public ClientEvent(Guid correlationId, string? userId, object message)
     {
+        ArgumentNullException.ThrowIfNull(message);
+
         this.CorrelationId = correlationId;
         this.UserId = userId;
 
@@ -63,7 +65,7 @@ public class ClientEvent : INotification
             CorrelationId = this.CorrelationId,
             ContractAssemblyName = this.ContractAssemblyName,
             ContractFullClassName = this.ContractFullClassName,
-            MessageJson = this.MessageJson
+            MessageJson = this.MessageJson,
         };
     }
 }

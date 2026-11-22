@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Lewee.Common;
+using MediatR;
 
 namespace Lewee.Application.Mediation.Requests;
 
@@ -8,7 +9,7 @@ namespace Lewee.Application.Mediation.Requests;
 /// <typeparam name="T">
 /// Query response type
 /// </typeparam>
-public interface IQuery<T> : IApplicationRequest, IRequest<QueryResult<T>>
+public interface IQuery<T> : IRequest<QueryResult<T>>
     where T : class
 {
 }

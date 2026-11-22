@@ -1,0 +1,24 @@
+@using Pizzeria.Store.Contracts
+
+@attribute [Route(PageRoutes.Error)]
+
+<PageTitle>Error</PageTitle>
+
+<MudText Typo="Typo.h4" Color="Color.Error" GutterBottom="true">
+    An error has occurred
+</MudText>
+
+<MudText Typo="Typo.body1">
+    We apologize for the inconvenience. Please try again later.
+</MudText>
+
+@if (this.ShowRequestId)
+{
+    <MudText Typo="Typo.body1">
+        <strong>Request ID:</strong> <code>@this.RequestId</code>
+    </MudText>
+}
+
+<MudButton Href="/" Variant="Variant.Filled" Color="Color.Primary" Class="mt-4">
+    Return to Home
+</MudButton>

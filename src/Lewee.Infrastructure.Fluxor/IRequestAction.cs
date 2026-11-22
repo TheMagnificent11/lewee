@@ -1,0 +1,12 @@
+﻿namespace Lewee.Infrastructure.Fluxor;
+
+/// <summary>
+/// Query Action
+/// </summary>
+public interface IRequestAction
+{
+    /// <summary>
+    /// Gets the correlation ID
+    /// </summary>
+    Guid CorrelationId { get; init; }
+}

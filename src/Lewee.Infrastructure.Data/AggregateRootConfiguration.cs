@@ -13,6 +13,8 @@ public abstract class AggregateRootConfiguration<T> : EntityConfiguration<T>
     /// <inheritdoc/>
     public override void Configure(EntityTypeBuilder<T> builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
+
         base.Configure(builder);
 
         builder.Ignore(x => x.DomainEvents);

@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  
+  <ItemGroup>
+    <PackageReference Include="FastEndpoints" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Lewee.Application\Lewee.Application.csproj" />
+    <ProjectReference Include="..\Lewee.Infrastructure.Correlate\Lewee.Infrastructure.Correlate.csproj" />
+  </ItemGroup>
+  
+</Project>

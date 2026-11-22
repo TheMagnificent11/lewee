@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\Lewee.Auth.Application\Lewee.Auth.Application.csproj" />
+    <ProjectReference Include="..\Lewee.Infrastructure.FastEndpoints\Lewee.Infrastructure.FastEndpoints.csproj" />
+  </ItemGroup>
+</Project>

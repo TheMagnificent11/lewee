@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using Xunit;
 
@@ -28,6 +29,23 @@ public class ValueObjectTests
 
         // Act
         var result = address1.Equals(address2);
+
+        // Assert
+        result.Should().BeFalse();
+    }
+
+    [Fact]
+    [SuppressMessage(
+        "Maintainability",
+        "CA1508:Avoid dead conditional code",
+        Justification = "Required for test coverage")]
+    public void Equals_ReturnsFalse_WhenOtherIsNull()
+    {
+        // Arrange
+        var address = new Address(123, "Main St", "Suburb", "State", "12345");
+
+        // Act
+        var result = address.Equals(null);
 
         // Assert
         result.Should().BeFalse();

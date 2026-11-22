@@ -1,0 +1,122 @@
+﻿using FluentAssertions;
+using Xunit;
+
+namespace Pizzeria.Store.Domain.Tests;
+
+public sealed class OrderTests
+{
+    [Fact]
+    public void SubmitPickupOrder()
+    {
+        // Arrange
+        var userId = Guid.NewGuid().ToString();
+        var correlationId = Guid.NewGuid();
+        var margherita = Menu.GetPizzaByName(Menu.PizzaNames.Margherita);
+        var fourCheeses = Menu.GetPizzaByName(Menu.PizzaNames.QuattroFormaggi);
+        var now = DateTime.UtcNow;
+
+        // Act
+        var order = Order.StartNewOrder(userId, correlationId);
+
+        order.AddPizza(margherita, correlationId);
+        order.AddPizza(fourCheeses, correlationId);
+        order.AddPizza(fourCheeses, correlationId);
+
+        order.SubmitPickupOrder(correlationId);
+
+        // Assert
+        order.Id.Should().NotBeEmpty();
+        order.UserId.Should().Be(userId);
+        order.SubmittedDateTime.Should().BeCloseTo(now, precision: TimeSpan.FromMilliseconds(500));
+        order.DeliveryAddress.Should().BeNull();
+        order.Pizzas.Should().HaveCount(2);
+
+        foreach (var item in order.Pizzas)
+        {
+            item.Id.Should().NotBeEmpty();
+            item.OrderId.Should().Be(order.Id);
+
+            if (item.PizzaId == margherita.Id)
+            {
+                item.Quantity.Should().Be(1);
+            }
+            else if (item.PizzaId == fourCheeses.Id)
+            {
+                item.Quantity.Should().Be(2);
+            }
+            else
+            {
+                Assert.Fail("Unexpected pizza in the order.");
+            }
+        }
+
+        order.IsDeliveryOrder.Should().BeFalse();
+        order.IsPrepared.Should().BeFalse();
+        order.PreparedDateTime.Should().BeNull();
+        order.IsCompleted.Should().BeFalse();
+        order.CompletedDateTime.Should().BeNull();
+    }
+
+    [Fact]
+    public void OrderPizza_Should_Have_Valid_Id_When_Created()
+    {
+        // Arrange
+        var userId = Guid.NewGuid().ToString();
+        var correlationId = Guid.NewGuid();
+        var margherita = Menu.GetPizzaByName(Menu.PizzaNames.Margherita);
+        var order = Order.StartNewOrder(userId, correlationId);
+
+        // Act
+        order.AddPizza(margherita, correlationId);
+
+        // Assert
+        var orderPizza = order.Pizzas.Single();
+        orderPizza.Id.Should().NotBeEmpty();
+        orderPizza.Id.Should().NotBe(Guid.Empty);
+        orderPizza.OrderId.Should().Be(order.Id);
+        orderPizza.PizzaId.Should().Be(margherita.Id);
+        orderPizza.Quantity.Should().Be(1);
+    }
+
+    [Fact]
+    public void OrderPizza_Should_SnapshotPizzaDetails_When_AddedToOrder()
+    {
+        var pizza = Pizza.Create("Margherita", "Classic", 12.50m);
+        var order = Order.StartNewOrder(Guid.NewGuid().ToString(), Guid.NewGuid());
+
+        order.AddPizza(pizza, Guid.NewGuid());
+        pizza.UpdateDetails("Updated Margherita", "Updated description", 15m);
+
+        var orderPizza = order.Pizzas.Single();
+        orderPizza.PizzaName.Should().Be("Margherita");
+        orderPizza.PizzaPrice.Should().Be(12.50m);
+    }
+
+    [Fact]
+    public void PickedUp_Should_RejectDeliveryOrder()
+    {
+        var correlationId = Guid.NewGuid();
+        var order = Order.StartNewOrder(Guid.NewGuid().ToString(), correlationId);
+        order.AddPizza(Menu.GetPizzaByName(Menu.PizzaNames.Margherita), correlationId);
+        order.SubmitDeliveryOrder("123 Main Street", correlationId);
+        order.Prepared(correlationId);
+
+        var result = order.PickedUp(correlationId);
+
+        result.IsSuccess.Should().BeFalse();
+    }
+
+    [Fact]
+    public void Delivered_Should_RejectPickupOrder()
+    {
+        var correlationId = Guid.NewGuid();
+        var order = Order.StartNewOrder(Guid.NewGuid().ToString(), correlationId);
+        order.AddPizza(Menu.GetPizzaByName(Menu.PizzaNames.Margherita), correlationId);
+        order.SubmitPickupOrder(correlationId);
+        order.Prepared(correlationId);
+
+        var result = order.Delivered(correlationId);
+
+        result.IsSuccess.Should().BeFalse();
+    }
+}

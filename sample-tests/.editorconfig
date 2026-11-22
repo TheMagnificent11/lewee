@@ -1,0 +1,5 @@
+root = false
+
+[*.cs]
+# Sample test-specific rules
+dotnet_diagnostic.CA1707.severity = none           # Identifiers should not contain underscores

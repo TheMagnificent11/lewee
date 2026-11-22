@@ -35,8 +35,9 @@ internal class QueryProjectionReferenceConfiguration : IEntityTypeConfiguration<
         builder.Property(x => x.IsDeleted)
             .IsRequired();
 
-        builder.Property(x => x.Timestamp)
-            .IsRowVersion();
+        builder.Property(x => x.Version)
+            .IsRowVersion()
+            .HasColumnType("xid");
 
         builder.HasIndex(x => new { x.QueryProjectionAssemblyName, x.QueryProjectionClassName, x.Key })
             .IsUnique();

@@ -1,48 +1,77 @@
 # Lewee
 
-Lewee is an opinionated set of packages to assist with setting up a domain-driven design architecture within ASP.Net.
+Lewee is an opinionated set of packages to assist with setting up a domain-driven design architecture within ASP.NET.
 
 ## Status
 
 [![CI Build](https://github.com/TheMagnificent11/Lewee/actions/workflows/ci.yml/badge.svg)](https://github.com/TheMagnificent11/Lewee/actions/workflows/ci.yml)
 
+## Framework Packages
+
+| Package | Description |
+| --------- | ------------- |
+| `Lewee.Auth.Api` | Anonymous user-provisioning endpoint and contracts |
+| `Lewee.Auth.Application` | Authentication and user-provisioning use cases |
+| `Lewee.Auth.Domain` | Tenant, user, and tenant-membership domain model |
+| `Lewee.Auth.Infrastructure.Data` | Authentication persistence in the `auth` schema |
+| `Lewee.Domain` | Domain layer abstractions including entities, aggregate roots, value objects, domain events, specifications, and repository interfaces |
+| `Lewee.Application` | Application layer with CQRS using MediatR, pipeline behaviors for logging, validation, and exception handling |
+| `Lewee.Common` | Cross-cutting utilities including result types, client messaging contracts, logging constants, and HTTP headers |
+| `Lewee.Infrastructure.Data` | Entity Framework Core integration with repository implementation and domain event dispatching |
+| `Lewee.Infrastructure.PostgreSQL` | PostgreSQL-specific database configuration using Npgsql |
+| `Lewee.Infrastructure.Auth` | Authentication infrastructure with authenticated user service implementation |
+| `Lewee.Infrastructure.Correlate` | Correlation ID infrastructure using the Correlate library |
+| `Lewee.Infrastructure.FastEndpoints` | FastEndpoints-based command and query endpoint base classes |
+| `Lewee.Infrastructure.Fluxor` | Fluxor state management infrastructure for Blazor applications with SSE client support |
+| `Lewee.Infrastructure.ServerEvents` | Server-Sent Events infrastructure for real-time client event broadcasting |
+| `Lewee.Infrastructure.Keycloak` | Keycloak OpenID Connect authentication integration with .NET Aspire service discovery |
+| `Lewee.Infrastructure.Refit` | Refit HTTP client infrastructure with authentication and correlation ID support |
+| `Lewee.Playwright` | Playwright browser automation utilities for integration testing |
+
 ## Dependencies
 
-Below is summary of the dependencies used by Lewee. Note that this isn't a list of NuGet packages, just a high-level list of software used and each can have several related NuGet packages.
+Below is a summary of the dependencies used by Lewee. Note that this isn't a list of NuGet packages, just a high-level list of software used and each can have several related NuGet packages.
 
-- [.Net 8](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
-- [Serilog](https://serilog.net)
-- [Entity Framework](https://learn.microsoft.com/en-us/ef) (using SQL Server)
-- [Mediatr](https://github.com/jbogard/MediatR)
+- [.NET 10](https://dotnet.microsoft.com/en-us/download/dotnet/11.0)
+- [.NET Aspire](https://learn.microsoft.com/en-us/dotnet/aspire/get-started/aspire-overview)
+- [PostgreSQL](https://www.postgresql.org/) with [Npgsql](https://www.npgsql.org/)
+- [Entity Framework Core](https://learn.microsoft.com/en-us/ef)
+- [MediatR](https://mediatr.io/) version 12.5.0 (latest free version)
 - [FastEndpoints](https://fast-endpoints.com)
-- [FluentValidation](https://docs.fluentvalidation.net/en/latest)
-- [Ardalis.Specification](http://specification.ardalis.com)
+- [FluentValidation](https://docs.fluentvalidation.net/en/latest) version 12.1.1
+- [Fluxor](https://github.com/mrpmorris/Fluxor) for Blazor state management
 - [xUnit](https://xunit.net)
 
-## Running the sample application
+## Running the Sample Application
 
 ### Prerequisites
 
-- .Net CLI
-- [Docker Desktop](https://www.docker.com/products/docker-desktop)
+- [.NET 11 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/11.0)
+- [Aspire CLI 17.0.0](https://aspire.dev/)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (for PostgreSQL container)
+
+Trust the Aspire development certificate before starting the application with `aspire certs trust`.
 
 ### CLI
 
 Execute the following in a terminal at the root of this Git repository.
 
 ```bash
-docker compose up -d
-dotnet run --project .\sample\Sample.Restaurant.Server\
+dotnet run --project ./sample/Pizzeria.AppHost/
 ```
 
-Navigate to [https://localhost:54577](https://localhost:54577).
+This will start the .NET Aspire dashboard and orchestrate the following services:
 
-## Contributing
+- PostgreSQL database
+- Keycloak authentication server
+- Pizzeria Store API (FastEndpoints Web API)
+- Pizzeria Store Web (Blazor Web App with Interactive Server)
 
-Lewee uses the [Gitflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow) branching model, which keeps the `main` branch clean and essentially represents the latest version available in production.
+Navigate to the Aspire dashboard to monitor services and view logs.
 
-The `develop` branch is the default branch and what you should branch from to implement features and fix bugs.
+The Pizzeria Store API and Web applications will be available at the URLs shown in the Aspire dashboard.
 
-Both `main` and `develop` have branch protection rules applied and can only take commits via pull requests.
-
-The `develop` branch protection rules require a the PR branch to be up-to-date with `develop` and have a [linear history](https://www.bitsnbites.eu/a-tidy-linear-git-history/).
+Keycloak data persists between runs, and realm imports do not update an existing realm. If an existing
+`lewee-pizzeria` realm was created before the API clients were added, create the OpenID Connect clients
+`pizzeria-store-api` and `pizzeria-auth-api` as bearer-only clients in Keycloak, then sign out and back in
+to obtain a token with the updated audiences.

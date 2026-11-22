@@ -8,9 +8,26 @@ public class DomainException : Exception
     /// <summary>
     /// Initializes a new instance of the <see cref="DomainException"/> class
     /// </summary>
+    public DomainException()
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DomainException"/> class
+    /// </summary>
     /// <param name="messsage">Message</param>
     public DomainException(string messsage)
         : base(messsage)
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DomainException"/> class
+    /// </summary>
+    /// <param name="message">Message</param>
+    /// <param name="innerException">Inner exception</param>
+    public DomainException(string message, Exception innerException)
+        : base(message, innerException)
     {
     }
 }

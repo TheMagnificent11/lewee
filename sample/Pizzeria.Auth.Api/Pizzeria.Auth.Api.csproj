@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Lewee.Auth.Api\Lewee.Auth.Api.csproj" />
+    <ProjectReference Include="..\..\src\Lewee.Auth.Infrastructure.Data\Lewee.Auth.Infrastructure.Data.csproj" />
+    <ProjectReference Include="..\..\src\Lewee.Infrastructure.Auth\Lewee.Infrastructure.Auth.csproj" />
+    <ProjectReference Include="..\..\src\Lewee.Infrastructure.Correlate\Lewee.Infrastructure.Correlate.csproj" />
+    <ProjectReference Include="..\..\src\Lewee.Infrastructure.FastEndpoints\Lewee.Infrastructure.FastEndpoints.csproj" />
+    <ProjectReference Include="..\..\src\Lewee.Infrastructure.Keycloak\Lewee.Infrastructure.Keycloak.csproj" />
+    <ProjectReference Include="..\..\src\Lewee.Infrastructure.PostgreSQL\Lewee.Infrastructure.PostgreSQL.csproj" />
+    <ProjectReference Include="..\Pizzeria.Common\Pizzeria.Common.csproj" />
+    <ProjectReference Include="..\Pizzeria.ServiceDefaults\Pizzeria.ServiceDefaults.csproj" />
+  </ItemGroup>
+</Project>

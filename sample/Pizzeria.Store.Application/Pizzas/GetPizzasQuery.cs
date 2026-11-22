@@ -1,0 +1,44 @@
+﻿using System.Diagnostics.CodeAnalysis;
+using Lewee.Application.Mediation.Requests;
+using Lewee.Common;
+using Lewee.Domain;
+using MediatR;
+using Pizzeria.Store.Contracts.Pizzas;
+using Pizzeria.Store.Domain;
+
+namespace Pizzeria.Store.Application.Pizzas;
+
+public sealed class GetPizzasQuery : IQuery<IEnumerable<PizzaDto>>
+{
+    [SuppressMessage(
+        "Performance",
+        "CA1812: Avoid uninstantiated internal classes",
+        Justification = "Used via mediation")]
+    internal sealed class Handler : IRequestHandler<GetPizzasQuery, QueryResult<IEnumerable<PizzaDto>>>
+    {
+        private readonly IRepository<Pizza> repository;
+
+        public Handler(IRepository<Pizza> repository)
+        {
+            this.repository = repository;
+        }
+
+        public async Task<QueryResult<IEnumerable<PizzaDto>>> Handle(
+            GetPizzasQuery request,
+            CancellationToken cancellationToken)
+        {
+            var pizzas = await this.repository.AllAsync(cancellationToken);
+
+            var result = pizzas
+                .Where(x => x.IsAvailable)
+                .Select(x => new PizzaDto(
+                    x.Id,
+                    x.Name,
+                    x.Description,
+                    x.Price))
+                .ToArray();
+
+            return QueryResult<IEnumerable<PizzaDto>>.Success(result);
+        }
+    }
+}

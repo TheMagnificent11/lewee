@@ -1,3 +1,5 @@
+name: Build & Test
+
 on:
   workflow_call:
     inputs:
@@ -8,69 +10,89 @@ on:
 jobs:
   buildAndTest:
     runs-on: ubuntu-latest
-    services:
-      lewee_sql:
-        image: mcr.microsoft.com/mssql/server:2022-latest
-        env:
-          ACCEPT_EULA: Y
-          SA_PASSWORD: <YourStrong@Passw0rd!>
-          MSSQL_PID: Express
-        ports:
-          - 5434:1433
-        volumes:
-          - mssql:/var/opt/mssql
-        options: >-
-          --health-cmd "/opt/mssql-tools/bin/sqlcmd -U sa -P $SA_PASSWORD -Q 'select 1' -b -o /dev/null"
-          --health-interval 60s
-          --health-timeout 30s
-          --health-start-period 20s
-          --health-retries 3
+    timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2
         with:
           fetch-depth: 0
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 7.0.*
-      - name: Install GitVersion
-        uses: gittools/actions/gitversion/setup@v0
+          dotnet-version: 11.0.*
+
+      - name: Install Aspire CLI
+        run: dotnet tool install --global Aspire.Cli --version 13.6.4
+
+      - name: Trust Aspire development certificate
+        run: aspire certs trust
+
+      # The Pizzeria.Tests.E2E tests use Aspire's DistributedApplicationTestingBuilder, which
+      # requires Docker (for Postgres/Keycloak containers), a trusted HTTPS dev certificate and Playwright
+      # browsers. These tests were previously filtered out (see #505) because they could hang the workflow;
+      # they are re-enabled below with bounded timeouts (--blame-hang-timeout) so a stuck run fails fast
+      # with diagnostics instead of hanging indefinitely.
+
+      - name: Cache Docker images
+        uses: ScribeMD/docker-cache@0.5.0
         with:
-          versionSpec: '6.x'
-          preferLatestVersion: true
-          includePrerelease: true
-      - name: Determine Version
-        id: version
-        uses: gittools/actions/gitversion/execute@v0
-        with:
-          useConfigFile: true
-      - name: Install Dependencies
-        run: dotnet restore ./Lewee.sln --nologo
-      - name: Build
-        run: dotnet build ./Lewee.sln --configuration Release --no-restore --nologo
-      - name: Test
-        run: dotnet test ./Lewee.sln --configuration Release --no-build --nologo --settings coverage.runsettings --results-directory ./coverage
-      - name: Code Coverage Report
-        uses: irongut/CodeCoverageSummary@v1.3.0
+          key: docker-${{ runner.os }}-${{ hashFiles('sample/Pizzeria.AppHost/Program.cs', 'sample/Pizzeria.AppHost/Pizzeria.AppHost.csproj') }}
+          restore-keys: |
+            docker-${{ runner.os }}-
+
+      - name: Trust HTTPS development certificate
+        continue-on-error: true
+        run: dotnet dev-certs https --trust
+
+      - name: Install dotnet-coverage tool
+        run: dotnet tool install --global dotnet-coverage
+
+      - name: Install ReportGenerator
         if: ${{ inputs.is-pr == true }}
+        run: dotnet tool install --global dotnet-reportgenerator-globaltool
+
+      - name: Install Dependencies
+        run: dotnet restore --nologo
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore --nologo
+
+      - name: Install Playwright Browsers
+        run: pwsh sample-tests/Pizzeria.Tests.E2E/bin/Release/net11.0/playwright.ps1 install --with-deps chromium
+
+      - name: Test
+        run: >
+          dotnet-coverage collect --settings coverage.xml -f cobertura -o ./coverage/coverage.cobertura.xml --
+          dotnet test --configuration Release --no-build --nologo
+          --logger "trx;LogFileName=test-results.trx"
+          --results-directory ./TestResults
+          --blame-hang-timeout 15m
+          --blame-hang-dump-type full
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
         with:
-          filename: coverage/**/coverage.cobertura.xml
-          badge: true
-          format: markdown
-          hide_branch_rate: false
-          hide_complexity: false
-          indicators: true
-          output: both
-          
-      #- name: Add Coverage PR Comment
-      #  uses: marocchino/sticky-pull-request-comment@v2
-      #  if: ${{ inputs.is-pr == true }}
-      #  with:
-      #    recreate: true
-      #    path: code-coverage-results.md
-          
+          name: test-results
+          path: TestResults/
+          if-no-files-found: warn
+
+      - name: Generate Coverage Report
+        if: ${{ inputs.is-pr == true }}
+        run: |
+          reportgenerator \
+            -reports:"coverage/coverage.cobertura.xml" \
+            -targetdir:"coverage-report" \
+            -reporttypes:"MarkdownSummaryGithub;Cobertura" \
+            -assemblyfilters:"-Fluxor*" \
+            -verbosity:"Warning"
+
+      - name: Add Coverage PR Comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        if: ${{ inputs.is-pr == true && github.actor != 'dependabot[bot]' }}
+        with:
+          recreate: true
+          path: coverage-report/SummaryGithub.md
+
       - name: Pack
-        run: dotnet pack ./Lewee.sln --configuration Release --nologo /p:PackageVersion=${{ steps.version.outputs.fullSemVer }} --output ./output
-      - name: Publish to NuGet
-        run: dotnet nuget push ./output/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
-        if: github.ref == 'refs/heads/main'
+        run: dotnet pack --configuration Release --no-build --nologo --version-suffix ci.${{ github.run_number }} --output ./output

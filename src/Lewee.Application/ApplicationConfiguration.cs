@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
+using Correlate.DependencyInjection;
 using FluentValidation;
 using Lewee.Application.Mediation.Behaviors;
 using MediatR;
-using MediatR.Pipeline;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Lewee.Application;
@@ -24,8 +24,13 @@ public static class ApplicationConfiguration
         Assembly applicationAssembly,
         Assembly domainAssembly)
     {
-        services.AddMediatR(config => config.RegisterServicesFromAssemblies(applicationAssembly, domainAssembly));
+        var leweeApplicationAssembly = typeof(ApplicationConfiguration).Assembly;
+        services.AddMediatR(config => config.RegisterServicesFromAssemblies(
+            applicationAssembly,
+            domainAssembly,
+            leweeApplicationAssembly));
         services.AddValidatorsFromAssembly(applicationAssembly, includeInternalTypes: true);
+        services.AddPipelineBehaviors();
 
         return services;
     }
@@ -38,26 +43,23 @@ public static class ApplicationConfiguration
     /// <returns>Service collection (for chaining)</returns>
     public static IServiceCollection AddPipelineBehaviors(
         this IServiceCollection services,
-        params Type[] additionalBehaviors)
+        params Type[]? additionalBehaviors)
     {
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
+        services.AddCorrelate();
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CorrelationIdLoggingBehavior<,>));
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TenantLoggingBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(FailureLoggingBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(DomainExceptionBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
-        if (additionalBehaviors != null && additionalBehaviors.Any())
+        if (additionalBehaviors != null && additionalBehaviors.Length > 0)
         {
             foreach (var item in additionalBehaviors)
             {
                 services.AddTransient(typeof(IPipelineBehavior<,>), item);
             }
         }
-
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPostProcessorBehavior<,>));
 
         return services;
     }

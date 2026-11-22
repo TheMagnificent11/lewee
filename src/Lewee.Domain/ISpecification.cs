@@ -4,7 +4,7 @@
 /// Specification Interface
 /// </summary>
 /// <typeparam name="T">Type to validate</typeparam>
-public interface ISpecification<T>
+public interface ISpecification<in T>
 {
     /// <summary>
     /// Determines whether the <paramref name="input"/> satifies the this specification/rule

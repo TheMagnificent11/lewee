@@ -2,7 +2,7 @@
 
 internal static class ObjectExtensions
 {
-    public static (string assemblyName, string fullCalssName, Type objectType) GetBasicTypeInfo(this object obj, string errorMessage)
+    public static (string AssemblyName, string FullCalssName, Type ObjectType) GetBasicTypeInfo(this object obj, string errorMessage)
     {
         var objType = obj.GetType();
 

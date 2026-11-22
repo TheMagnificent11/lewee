@@ -19,23 +19,18 @@ public static class DatabaseConfiguration
     /// <param name="services">
     /// Services collection
     /// </param>
-    /// <param name="connectionString">
-    /// Database connection string
-    /// </param>
     /// <param name="domainAssembly">
     /// Assembly containing <see cref="AggregateRoot"/> classes
     /// </param>
     /// <returns>
     /// Services collection for chaining
     /// </returns>
-    public static IServiceCollection ConfigureDatabase<T>(
+    public static IServiceCollection AddLeweeDatabaseServices<T>(
         this IServiceCollection services,
-        string connectionString,
         Assembly domainAssembly)
-        where T : ApplicationDbContext<T>
+        where T : DbContext, IApplicationDbContext
     {
-        services.AddDbContextFactory<T>(options => options.UseSqlServer(connectionString));
-        services.AddScoped<T>();
+        ArgumentNullException.ThrowIfNull(domainAssembly);
 
         var aggregateRootType = typeof(AggregateRoot);
         var aggregateRoots = domainAssembly.GetTypes()
@@ -46,14 +41,18 @@ public static class DatabaseConfiguration
 
         foreach (var ag in aggregateRoots)
         {
-            var repositoryIntefaceType = typeof(IRepository<>).MakeGenericType(ag);
+            var repositoryInterfaceType = typeof(IRepository<>).MakeGenericType(ag);
             var repositoryType = typeof(Repository<,>).MakeGenericType(ag, typeof(T));
-            services.AddTransient(repositoryIntefaceType, repositoryType);
+            services.AddTransient(repositoryInterfaceType, repositoryType);
+
+            // Keyed by aggregate root type so that hosts registering multiple DB contexts
+            // (e.g. a context per bounded context) can unambiguously resolve the
+            // IQueryProjectionService bound to the correct context, without the last
+            // AddLeweeDatabaseServices<T> call silently overriding earlier ones.
+            services.AddKeyedTransient<IQueryProjectionService, QueryProjectionService<T>>(ag);
         }
 
-        services.AddSingleton<DomainEventDispatcher<T>>();
-        services.AddHostedService<DomainEventDispatcherService<T>>();
-
+        services.AddScoped<DomainEventDispatcher<T>>();
         services.AddTransient<IQueryProjectionService, QueryProjectionService<T>>();
 
         return services;
@@ -71,27 +70,15 @@ public static class DatabaseConfiguration
     /// <param name="services">
     /// Services collection
     /// </param>
-    /// <param name="connectionString">
-    /// Database connection string
-    /// </param>
-    /// <param name="domainAssembly">
-    /// Domain assembly
-    /// </param>
     /// <returns>
     /// Services collection for chaining
     /// </returns>
-    public static IServiceCollection ConfigureDatabaseWithSeeder<TContext, TSeeder>(
-        this IServiceCollection services,
-        string connectionString,
-        Assembly domainAssembly)
-        where TContext : ApplicationDbContext<TContext>
+    public static IServiceCollection AddLeweeDatabaseSeeder<TContext, TSeeder>(
+        this IServiceCollection services)
+        where TContext : DbContext, IApplicationDbContext
         where TSeeder : class, IDatabaseSeeder<TContext>
     {
-        var newServices = ConfigureDatabase<TContext>(services, connectionString, domainAssembly);
-
-        newServices.AddScoped<IDatabaseSeeder<TContext>, TSeeder>();
-
-        return newServices;
+        return services.AddScoped<IDatabaseSeeder<TContext>, TSeeder>();
     }
 
     /// <summary>
@@ -100,27 +87,52 @@ public static class DatabaseConfiguration
     /// <typeparam name="T">DB context to migrate</typeparam>
     /// <param name="serviceProvider">Service provider</param>
     /// <param name="seedData">Whether to seed data</param>
+    /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Asynchronous task</returns>
-    public static async Task MigrateDatabase<T>(this IServiceProvider serviceProvider, bool seedData = false)
+    public static async Task MigrateDatabaseAsync<T>(
+        this IServiceProvider serviceProvider,
+        bool seedData = false,
+        CancellationToken cancellationToken = default)
         where T : DbContext
     {
-        using (var serviceScope = serviceProvider.CreateScope())
+        await using var serviceScope = serviceProvider.CreateAsyncScope();
+        await using var dbContext = serviceScope.ServiceProvider.GetRequiredService<T>();
+        var attempt = 0; // Used for exponential back-off
+
+        while (!cancellationToken.IsCancellationRequested)
         {
-            var dbContext = serviceScope.ServiceProvider.GetRequiredService<T>();
-            await dbContext.Database.MigrateAsync();
-
-            if (!seedData)
+            var canConnect = await dbContext.Database.CanConnectAsync(cancellationToken);
+            if (canConnect)
             {
-                return;
+                break;
             }
 
-            var seeder = serviceScope.ServiceProvider.GetService<IDatabaseSeeder<T>>();
-            if (seeder == null)
-            {
-                return;
-            }
+            var delayTimeSpan = CalculateExponentialBackoffDelay(attempt);
 
-            await seeder.Run();
+            await Task.Delay(delayTimeSpan, cancellationToken);
         }
+
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return;
+        }
+
+        await dbContext.Database.MigrateAsync(cancellationToken);
+
+        if (!seedData)
+        {
+            return;
+        }
+
+        var seeder = serviceScope.ServiceProvider.GetService<IDatabaseSeeder<T>>();
+        if (seeder == null)
+        {
+            return;
+        }
+
+        await seeder.RunAsync(cancellationToken);
     }
+
+    private static TimeSpan CalculateExponentialBackoffDelay(int attempt) =>
+        TimeSpan.FromSeconds(Math.Min(Math.Pow(2, attempt), 10));
 }

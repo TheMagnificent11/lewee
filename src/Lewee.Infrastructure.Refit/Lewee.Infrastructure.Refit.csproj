@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Correlate.AspNetCore" />
+    <PackageReference Include="Refit.HttpClientFactory" />
+    <PackageReference Include="Refit.Reflection" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Lewee.Common\Lewee.Common.csproj" />
+    <ProjectReference Include="..\Lewee.Infrastructure.Auth\Lewee.Infrastructure.Auth.csproj" />
+  </ItemGroup>
+
+</Project>

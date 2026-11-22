@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Pizzeria.Configuration.Tests.Unit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Lewee.Auth.Application\Lewee.Auth.Application.csproj" />
+    <ProjectReference Include="..\..\src\Lewee.Auth.Infrastructure.Data\Lewee.Auth.Infrastructure.Data.csproj" />
+    <ProjectReference Include="..\..\src\Lewee.Infrastructure.Auth\Lewee.Infrastructure.Auth.csproj" />
+    <ProjectReference Include="..\Pizzeria.Auth\Pizzeria.Auth.csproj" />
+    <ProjectReference Include="..\Pizzeria.Common\Pizzeria.Common.csproj" />
+    <ProjectReference Include="..\Pizzeria.ServiceDefaults\Pizzeria.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\Pizzeria.Store.Data\Pizzeria.Store.Data.csproj" />
+  </ItemGroup>
+
+</Project>

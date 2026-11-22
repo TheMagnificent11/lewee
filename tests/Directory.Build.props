@@ -1,0 +1,18 @@
+<Project>
+
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <NoWarn>$(NoWarn);CS1591;CS1587</NoWarn>
+  </PropertyGroup>
+  
+  <Import
+    Condition="$(MSBuildProjectName.Contains('.Tests.Unit')) OR $(MSBuildProjectName.Contains('.Tests.E2E'))"
+    Project="$([MSBuild]::GetPathOfFileAbove('Tests.props', '$(MSBuildThisFileDirectory)../'))" />
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
+  </ItemGroup>
+
+</Project>

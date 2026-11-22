@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using Xunit;
 
@@ -5,6 +6,10 @@ namespace Lewee.Domain.Tests.Unit;
 
 public class EntityTests
 {
+    [SuppressMessage(
+        "Maintainability",
+        "CA1508:Avoid dead conditional code",
+        Justification = "Required for test coverage")]
     [Fact]
     public void Equals_Null_ReturnsFalse()
     {
@@ -48,6 +53,15 @@ public class EntityTests
         var person2 = new Person(Guid.NewGuid(), "Jane", "Doe", DateOnly.FromDateTime(DateTime.Now));
 
         person1.Equals(person2).Should().BeFalse();
+    }
+
+    [Fact]
+    public void Equals_DifferentTypes_ReturnsFalse()
+    {
+        var person = new Person(Guid.NewGuid(), "John", "Doe", DateOnly.FromDateTime(DateTime.Now));
+        var employee = new Employee(person.Id, "John", "Doe", DateOnly.FromDateTime(DateTime.Now), "EMP001");
+
+        person.Equals(employee).Should().BeFalse();
     }
 
     [Fact]
@@ -107,6 +121,22 @@ public class EntityTests
         var person = new Person(Guid.NewGuid(), "John", "Doe", DateOnly.FromDateTime(DateTime.Now));
 
         person.Undelete();
+
+        person.IsDeleted.Should().BeFalse();
+    }
+
+    [Fact]
+    public void Entity_ImplementsISoftDeleteEntity()
+    {
+        var person = new Person(Guid.NewGuid(), "John", "Doe", DateOnly.FromDateTime(DateTime.Now));
+
+        person.Should().BeAssignableTo<ISoftDeleteEntity>();
+    }
+
+    [Fact]
+    public void Entity_DefaultIsDeleted_IsFalse()
+    {
+        var person = new Person(Guid.NewGuid(), "John", "Doe", DateOnly.FromDateTime(DateTime.Now));
 
         person.IsDeleted.Should().BeFalse();
     }

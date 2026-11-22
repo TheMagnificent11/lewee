@@ -1,10 +1,11 @@
-﻿using Lewee.Domain;
+﻿using Lewee.Common;
+using Lewee.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Lewee.Infrastructure.Data;
 
-internal class AuditDetailsSaveChangesInterceptor : SaveChangesInterceptor
+internal sealed class AuditDetailsSaveChangesInterceptor : SaveChangesInterceptor
 {
     private readonly IAuthenticatedUserService authenticatedUserService;
 
@@ -37,14 +38,16 @@ internal class AuditDetailsSaveChangesInterceptor : SaveChangesInterceptor
             return;
         }
 
-        foreach (var entry in context.ChangeTracker.Entries<Entity>())
+        foreach (var entry in context.ChangeTracker.Entries<AuditableRecord>())
         {
             if (entry.State == EntityState.Added)
             {
                 entry.Entity.ApplyCreationTrackingData(this.authenticatedUserService.UserId);
             }
 
-            if (entry.State == EntityState.Added || entry.State == EntityState.Modified || entry.HasChangedOwnedEntities())
+            if (entry.State == EntityState.Added ||
+                entry.State == EntityState.Modified ||
+                entry.HasChangedOwnedEntities())
             {
                 entry.Entity.ApplyModificationTrackingData(this.authenticatedUserService.UserId);
             }

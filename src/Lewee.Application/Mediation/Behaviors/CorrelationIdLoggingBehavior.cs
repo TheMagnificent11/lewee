@@ -1,25 +1,37 @@
-﻿using Lewee.Application.Mediation.Requests;
-using Lewee.Shared;
+﻿using Correlate;
+using Lewee.Common;
 using MediatR;
-using Serilog.Context;
+using Microsoft.Extensions.Logging;
 
 namespace Lewee.Application.Mediation.Behaviors;
 
 internal class CorrelationIdLoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
-    public Task<TResponse> Handle(
+    private readonly ICorrelationContextAccessor correlationContextAccessor;
+    private readonly ILogger<CorrelationIdLoggingBehavior<TRequest, TResponse>> logger;
+
+    public CorrelationIdLoggingBehavior(
+        ICorrelationContextAccessor correlationContextAccessor,
+        ILogger<CorrelationIdLoggingBehavior<TRequest, TResponse>> logger)
+    {
+        this.correlationContextAccessor = correlationContextAccessor;
+        this.logger = logger;
+    }
+
+    public async Task<TResponse> Handle(
         TRequest request,
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
-        var correlationId = request is IApplicationRequest applicationRequest
-            ? applicationRequest.CorrelationId
-            : Guid.NewGuid();
+        var correlationId = this.correlationContextAccessor.GetCorrelationId();
 
-        using (LogContext.PushProperty(LoggingConsts.CorrelationId, correlationId))
+        using (this.logger.BeginScope(new Dictionary<string, object>(StringComparer.Ordinal)
         {
-            return next();
+            { LoggingConsts.CorrelationId, correlationId }
+        }))
+        {
+            return await next(cancellationToken);
         }
     }
 }
