@@ -128,13 +128,11 @@ commit, and check the packages on NuGet.org and the published GitHub Release.
   installation permissions.
 - **Release - Finish fails:** Review its run logs and rerun the failed workflow.
   The finish steps tolerate an existing tag only when it is an annotated tag on
-  the same release commit, and they avoid opening a duplicate back-merge pull
-  request. A rerun uses the original workflow revision, so if it rejected a
-  squash or rebase merge before this fix, manually create the annotated version
-  tag on the PR's resulting commit on `main`, using the PR body as its message.
-  Then open a `main` to `develop` back-merge pull request if one is needed and
-  delete the release branch. Check that any existing tag is annotated and points
-  to the same commit before proceeding.
+  the same release commit. A rerun uses the original workflow revision, so if it
+  rejected a squash or rebase merge before this fix, manually create the
+  annotated version tag on the PR's resulting commit on `main`, using the PR
+  body as its message, and delete the release branch. Check that any existing
+  tag is annotated and points to the same commit before proceeding.
 - **CD reports that no tag was found:** Confirm **Release - Finish** succeeded
   or its recovery steps are complete, and that the tag points to the `main`
   commit validated by CI. Once the tag is present, rerun the successful CI
