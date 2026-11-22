@@ -24,8 +24,7 @@ applyTo: "**/*.cs,**/*.csproj,**/*.sln,**/*.slnx"
 - `cd.yml` runs after successful CI on `main`, waits for a SemVer tag on the
   tested commit, then publishes NuGet packages and creates the GitHub Release.
 - `release-start.yml` starts a versioned release branch and pull request.
-  `release-finish.yml` tags the merged release and opens a back-merge pull
-  request.
+  `release-finish.yml` tags the merged release and deletes the release branch.
 - See [`docs/releasing.md`](../../docs/releasing.md) for the release procedure
   and failure recovery.
 

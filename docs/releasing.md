@@ -22,7 +22,7 @@ using
 | Workflow | What it does with the App token |
 | -------- | ------------------------------- |
 | `release-start.yml` (**Release - Start**) | Checks out `develop`, generates release notes, pushes the `release/<version>` branch, and opens the pull request to `main` |
-| `release-finish.yml` (**Release - Finish**) | Pushes the annotated version tag, opens the `main` to `develop` back-merge pull request, and deletes the release branch |
+| `release-finish.yml` (**Release - Finish**) | Pushes the annotated version tag and deletes the release branch |
 
 The **Continuous Deployment** workflow (`cd.yml`) does not use the App. It
 publishes to NuGet.org with NuGet trusted publishing (OIDC) and creates the
@@ -93,9 +93,8 @@ step succeeds and the release pull request is created, the App is configured
 correctly. Checks should run on that pull request because it was opened with the
 App's token.
 
-Prefer a merge commit for release pull requests to `main` to preserve Git Flow
-ancestry. Squash and rebase merges are also accepted, but do not preserve the
-release branch's ancestry; the back-merge is especially important in those cases.
+Prefer a merge commit for release pull requests to `main`. Squash and rebase
+merges are also accepted.
 
 ## Start a release
 
@@ -112,9 +111,7 @@ release branch's ancestry; the back-merge is especially important in those cases
 ## Verify the release
 
 After the merge, **Release - Finish** creates the annotated version tag on the
-resulting commit on `main`, opens a back-merge pull request from `main` to
-`develop`, and deletes the release branch. Merge the back-merge pull request
-with a merge commit.
+resulting commit on `main` and deletes the release branch.
 
 Successful CI on `main` starts **Continuous Deployment**. It waits up to three
 minutes for the tag, then packs and publishes the NuGet packages and creates a

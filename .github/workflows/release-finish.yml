@@ -101,38 +101,6 @@ jobs:
             "$VERSION" --file "$notes_file" "$MERGE_SHA"
           git push origin "refs/tags/$VERSION"
 
-      - name: Open back-merge pull request
-        env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
-          VERSION: ${{ steps.release.outputs.version }}
-        run: |
-          set -euo pipefail
-
-          git fetch origin main develop
-          if git merge-base --is-ancestor origin/main origin/develop; then
-            echo "::notice::Main is already merged into develop."
-            exit 0
-          fi
-
-          existing_pr="$(gh pr list \
-            --repo "$GITHUB_REPOSITORY" \
-            --base develop \
-            --head main \
-            --state open \
-            --json number,isCrossRepository \
-            --jq '[.[] | select(.isCrossRepository == false)][0].number // empty')"
-
-          if [[ -n "$existing_pr" ]]; then
-            echo "::notice::Back-merge pull request #$existing_pr is open."
-          else
-            gh pr create \
-              --repo "$GITHUB_REPOSITORY" \
-              --base develop \
-              --head main \
-              --title "chore: back-merge main into develop after $VERSION" \
-              --body "Back-merges main into develop; merge with a merge commit."
-          fi
-
       - name: Delete release branch
         env:
           RELEASE_BRANCH: ${{ github.event.pull_request.head.ref }}
