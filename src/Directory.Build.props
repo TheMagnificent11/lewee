@@ -15,6 +15,14 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
+  <!--
+    TODO: Remove this exemption when Aspire.Keycloak.Authentication moves from a preview package to a stable release.
+    The preview dependency causes NU5104 when this package is packed.
+  -->
+  <PropertyGroup Condition="'$(MSBuildProjectName)' == 'Lewee.Infrastructure.Keycloak'">
+    <WarningsNotAsErrors>$(WarningsNotAsErrors);NU5104</WarningsNotAsErrors>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
