@@ -62,13 +62,6 @@ jobs:
               output.write(f"version={branch.removeprefix('release/')}\n")
           PY
 
-          commit_line="$(git rev-list --parents -n 1 "$MERGE_SHA")"
-          read -r -a commit_parents <<< "$commit_line"
-          if [[ "${#commit_parents[@]}" -ne 3 ]]; then
-            echo "::error::Release PR must use a two-parent merge commit."
-            exit 1
-          fi
-
           if ! git merge-base --is-ancestor "$MERGE_SHA" origin/main; then
             echo "::error::Release commit is not present on origin/main."
             exit 1

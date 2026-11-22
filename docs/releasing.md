@@ -93,9 +93,9 @@ step succeeds and the release pull request is created, the App is configured
 correctly. Checks should run on that pull request because it was opened with the
 App's token.
 
-Release pull requests to `main` must be merged with a merge commit. Do not squash
-or rebase them; the release workflow verifies the merge commit and Git Flow
-ancestry depends on it.
+Prefer a merge commit for release pull requests to `main` to preserve Git Flow
+ancestry. Squash and rebase merges are also accepted, but do not preserve the
+release branch's ancestry; the back-merge is especially important in those cases.
 
 ## Start a release
 
@@ -106,20 +106,21 @@ ancestry depends on it.
 3. Review the generated pull request to `main` and edit its body to finalize
    the release notes. The body becomes the annotated tag message and GitHub
    Release notes.
-4. After the required checks pass, merge the pull request using a merge commit.
+4. After the required checks pass, preferably merge the pull request using a
+   merge commit.
 
 ## Verify the release
 
 After the merge, **Release - Finish** creates the annotated version tag on the
-merge commit, opens a back-merge pull request from `main` to `develop`, and
-deletes the release branch. Merge the back-merge pull request with a merge
-commit.
+resulting commit on `main`, opens a back-merge pull request from `main` to
+`develop`, and deletes the release branch. Merge the back-merge pull request
+with a merge commit.
 
 Successful CI on `main` starts **Continuous Deployment**. It waits up to three
 minutes for the tag, then packs and publishes the NuGet packages and creates a
 GitHub Release with the package and symbol-package assets. A version with a
 SemVer prerelease suffix is marked as a pre-release. Verify the finish and CD
-workflow runs in **Actions**, confirm the tag points to the release merge
+workflow runs in **Actions**, confirm the tag points to the release
 commit, and check the packages on NuGet.org and the published GitHub Release.
 
 ## Recover from failures
@@ -130,11 +131,17 @@ commit, and check the packages on NuGet.org and the published GitHub Release.
   installation permissions.
 - **Release - Finish fails:** Review its run logs and rerun the failed workflow.
   The finish steps tolerate an existing tag only when it is an annotated tag on
-  the same merge commit, and they avoid opening a duplicate back-merge pull
-  request.
+  the same release commit, and they avoid opening a duplicate back-merge pull
+  request. A rerun uses the original workflow revision, so if it rejected a
+  squash or rebase merge before this fix, manually create the annotated version
+  tag on the PR's resulting commit on `main`, using the PR body as its message.
+  Then open a `main` to `develop` back-merge pull request if one is needed and
+  delete the release branch. Check that any existing tag is annotated and points
+  to the same commit before proceeding.
 - **CD reports that no tag was found:** Confirm **Release - Finish** succeeded
-  and that the tag points to the `main` commit validated by CI. Once the tag is
-  present, rerun the successful CI workflow on `main` to trigger CD again.
+  or its recovery steps are complete, and that the tag points to the `main`
+  commit validated by CI. Once the tag is present, rerun the successful CI
+  workflow on `main` to trigger CD again.
 - **Publishing or GitHub Release creation fails:** Review the CD run logs and
   rerun the failed CD workflow. Package publishing skips duplicates, and an
   existing draft GitHub Release can resume asset upload and publication.
